@@ -1,10 +1,13 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VibeSync.DAL.Models;
 
 namespace VibeSyncApp
 {
@@ -22,6 +25,15 @@ namespace VibeSyncApp
         {
 
             services.AddControllersWithViews();
+
+            var mapperConfig = new MapperConfiguration(mc => {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            //string connection = Configuration.GetConnectionString("VibeSyncDB");
+            //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
+            services.AddScoped<IIndexRepository, IndexRepository>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VibeSync.DAL.Models;
+using VibeSync.DAL.Models.DAL;
 
 namespace VibeSyncApp
 {
@@ -33,7 +34,9 @@ namespace VibeSyncApp
             services.AddSingleton(mapper);
             //string connection = Configuration.GetConnectionString("VibeSyncDB");
             //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
-            services.AddScoped<IIndexRepository, IndexRepository>();
+            services.AddTransient<IIndexRepository, IndexRepository>();
+            services.AddSingleton<IDBContextFactory, DBContextFactory>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

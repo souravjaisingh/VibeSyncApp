@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VibeSync.DAL.Models.DAL;
 
 namespace VibeSync.DAL.Models
 {
     public class IndexRepository :IIndexRepository
     {
-        public VibeSyncContext _context;
-        public IndexRepository()
+        private readonly IUserRepository _user;
+        public IndexRepository(IUserRepository user)
         {
-            _context = new VibeSyncContext();
+            _user = user;
         }
         
         public IEnumerable<User> GetUsers()
         {
-            return _context.Users.ToList();
+            return _user.GetUsers();
         }
+        
     }
 }

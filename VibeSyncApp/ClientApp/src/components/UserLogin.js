@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserLogin.css';
-import CardItem from './CardItem';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
+import GoogleLogin, { LoginWithGoogle } from './GoogleLogin';
 
 function Cards() {
+  
   return (
     <div className='cards'>
       <div className='cards__container'>
       <h1>Are you here to request a song?</h1>
       <br></br>
-      <Button buttonStyle='btn--outline'>Login with Facebook</Button>
+      <GoogleLogin/>
       <Button buttonStyle='btn--outline'>Login with Email</Button>
       <p className='signup-label'>Don't have an account yet? <Link className='signup-link' to='/'>Sign up</Link></p>
 

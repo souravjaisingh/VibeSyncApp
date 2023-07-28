@@ -26,7 +26,7 @@ namespace VibeSyncApp
         {
 
             services.AddControllersWithViews();
-
+            services.AddCors();
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.AddProfile(new MappingProfile());
             });
@@ -60,6 +60,9 @@ namespace VibeSyncApp
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(
+        options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    );
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

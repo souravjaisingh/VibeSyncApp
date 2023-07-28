@@ -47,5 +47,14 @@ namespace VibeSyncApp.Controllers
             var isDeleted = _user.DeleteUser(id);
             return isDeleted > 0 ? HttpStatusCode.OK : HttpStatusCode.BadRequest;
         }
+        [HttpPost]
+        public Boolean RegisterUser(Models.User user)
+        {
+            if(!ModelState.IsValid)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

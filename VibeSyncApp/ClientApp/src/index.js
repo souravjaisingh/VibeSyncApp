@@ -4,14 +4,16 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
-
 ReactDOM.render(
-    <BrowserRouter basename={baseUrl}>
-        <App />
-    </BrowserRouter>,
+    <GoogleOAuthProvider clientId='1079194116900-ne6rek0mtie8c6vflmga1t4bfkc8i1ku.apps.googleusercontent.com'>
+        <BrowserRouter basename={baseUrl}>
+            <App />
+        </BrowserRouter>
+    </GoogleOAuthProvider>,
     rootElement);
 
 registerServiceWorker();

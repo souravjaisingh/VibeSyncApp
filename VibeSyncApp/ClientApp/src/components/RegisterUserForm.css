@@ -1,0 +1,100 @@
+    body{
+        background: #bdc3c7;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #2c3e50, #bdc3c7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .form{
+        /* background-color: white; */
+        border-radius: 5px;
+        width: 550px;
+        margin: 20px auto;
+        padding: 20px;
+        margin-left: 20px;
+        background-color: gainsboro;
+        /* height: 600px; */
+        color:black;
+    }
+
+    .password-warning{
+        display: block;
+        font-size: smaller;
+        color: orangered;
+    }
+    .btn {
+        padding: 8px 20px;
+        border-radius: 2px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        width: auto;
+    }
+    
+    .btn--primary {
+        background-color: var(--primary);
+        color: #242424;
+        border: 1px solid var(--primary);
+    }
+    
+    .btn--outline {
+        background-color: transparent;
+        color: #fff;
+        padding: 8px 20px;
+        border: 1px solid var(--primary);
+        transition: all 0.3s ease-out;
+    }
+    
+    .btn--medium {
+        padding: 8px 20px;
+        font-size: 18px;
+    }
+    
+    .btn--large {
+        padding: 12px 26px;
+        font-size: 20px;
+    }
+    
+    .btn--large:hover,
+    .btn--medium:hover {
+        transition: all 0.3s ease-out;
+        background: #fff;
+        color: #242424;
+        transition: 250ms;
+    }
+    .form-body{
+        text-align: left;
+        padding: 20px 10px;
+    }
+
+    .form-body > *{
+        padding: 5px;
+    }
+
+    .form__label{
+        width: 40%;
+    }
+
+    .form_input{
+        width: 60%;
+    }
+    .input_error{
+        border-block-color: red;
+    }
+    #gender{
+        width:198px;
+    }
+    /* .phone{
+        display: flex;
+        width: 200px;
+    }
+    .react-tel-input{
+        margin-left:115px;
+        width : 200px !important;
+    }
+    .form-control{
+        width: 200px !important;
+    } */
+    
+    .footer{
+        text-align: center;
+    }

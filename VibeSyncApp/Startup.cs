@@ -1,4 +1,5 @@
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -6,8 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using VibeSync.DAL.Models;
-using VibeSync.DAL.Models.DAL;
+using System.Reflection;
+using VibeSync.DAL.DBContext;
+using VibeSync.DAL.Repository.CommandRepository;
+using VibeSync.DAL.Repository.QueryRepository;
+using VibeSyncModels;
 
 namespace VibeSyncApp
 {
@@ -26,16 +30,19 @@ namespace VibeSyncApp
 
             services.AddControllersWithViews();
             services.AddCors();
-            var mapperConfig = new MapperConfiguration(mc => {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
                 mc.AddProfile(new MappingProfile());
             });
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(UserCommandRepository).GetTypeInfo().Assembly);
             //string connection = Configuration.GetConnectionString("VibeSyncDB");
             //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
-            services.AddTransient<IIndexRepository, IndexRepository>();
             services.AddSingleton<IDBContextFactory, DBContextFactory>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserCommandRepository, UserCommandRepository>();
+            services.AddSingleton<IUserQueryRepository, UserQueryRepository>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

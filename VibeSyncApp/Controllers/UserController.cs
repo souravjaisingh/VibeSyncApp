@@ -1,60 +1,52 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using VibeSync.DAL.Models;
-using VibeSync.DAL.Models.DAL;
+using User = VibeSyncModels.Request_ResponseModels.User;
 
 namespace VibeSyncApp.Controllers
 {
+    /// <summary>
+    /// User Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
-        private readonly IIndexRepository _iRepository;
-        private readonly IUserRepository _user;
-        private readonly IMapper _mapper;
+        /// <summary>
+        /// The mediator
+        /// </summary>
+        private readonly IMediator _mediator;
 
-        public UserController(ILogger<UserController> logger,
-            IIndexRepository irepository,
-            IUserRepository user,
-            IMapper mapper)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="mediator">The mediator.</param>
+        public UserController(IMediator mediator)
         {
-            _logger = logger;
-            _iRepository = irepository;
-            _user = user;
-            _mapper = mapper;
+            _mediator = mediator;
         }
+        /// <summary>
+        /// Gets the user by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         [HttpGet]
-        public IEnumerable<Models.User> GetUsers()
+        public User GetUserById(int id)
         {
-            return _mapper.Map<IEnumerable<Models.User>>(_iRepository.GetUsers());
+            return new User();
         }
-        [HttpGet]
-        public Models.User GetUserById(int id)
-        {
-            return _mapper.Map<Models.User>(_user.GetUserById(id));
-        }
-        [HttpDelete]
-        public HttpStatusCode DeleteUser(int id)
-        {
-            var isDeleted = _user.DeleteUser(id);
-            return isDeleted > 0 ? HttpStatusCode.OK : HttpStatusCode.BadRequest;
-        }
+
+        /// <summary>
+        /// Registers the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         [HttpPost]
-        public Boolean RegisterUser(Models.User user)
+        public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
-            if(!ModelState.IsValid)
-            {
-                return false;
-            }
-            return true;
+            var result = await _mediator.Send(user);
+            return Created("RegisterUser", result);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace VibeSync.DAL.Models
+namespace VibeSyncModels.EntityModels
 {
     public partial class Dj
     {

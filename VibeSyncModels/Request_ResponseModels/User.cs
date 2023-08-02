@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MediatR;
+using System;
+using System.ComponentModel.DataAnnotations;
 
-#nullable disable
-
-namespace VibeSync.DAL.Models
+namespace VibeSyncModels.Request_ResponseModels
 {
-    public partial class User
+    public class User : IRequest<string>
     {
-        public User()
-        {
-            Djs = new HashSet<Dj>();
-            Logs = new HashSet<Log>();
-            SongHistories = new HashSet<SongHistory>();
-        }
-
         public long Id { get; set; }
+        [Required]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        [RegularExpression(@"^([0]|\+91)?[789]\d{9}$")]
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public string Gender { get; set; }
@@ -28,9 +22,5 @@ namespace VibeSync.DAL.Models
         public string ModifiedBy { get; set; }
         public bool IsSsologin { get; set; }
         public string UserOrDj { get; set; }
-
-        public virtual ICollection<Dj> Djs { get; set; }
-        public virtual ICollection<Log> Logs { get; set; }
-        public virtual ICollection<SongHistory> SongHistories { get; set; }
     }
 }

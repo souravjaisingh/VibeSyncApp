@@ -16,6 +16,15 @@
   font-size: 3rem;
 }
 
+.sign-up,
+.loginForm {
+  display: flex;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+  /* font-size: 3rem; */
+}
+
 .services {
   background-image: url('../public/images/img-2.jpg');
   background-position: center;
@@ -41,4 +50,13 @@
     background-repeat: no-repeat;
     color: #fff;
     font-size: 100px;
+}
+.loginForm {
+  background-image: url('../public/images/DJWhite2.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  display: flow-root;
+  /* font-size: 100px; */
 }

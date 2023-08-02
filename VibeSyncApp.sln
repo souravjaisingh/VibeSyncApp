@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.33801.447
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibeSyncApp", "VibeSyncApp\VibeSyncApp.csproj", "{734A05F8-3F82-4681-9C7C-127A2478FE91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VibeSyncApp", "VibeSyncApp\VibeSyncApp.csproj", "{734A05F8-3F82-4681-9C7C-127A2478FE91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibeSync.DAL", "VibeSync.DAL\VibeSync.DAL.csproj", "{EE6E6FC9-94F5-42C2-99A6-70A16D1C2FD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VibeSync.DAL", "VibeSync.DAL\VibeSync.DAL.csproj", "{EE6E6FC9-94F5-42C2-99A6-70A16D1C2FD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibeSyncModels", "VibeSyncModels\VibeSyncModels.csproj", "{2C02A8B9-AF69-4DFF-ADD0-D68409184BCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EE6E6FC9-94F5-42C2-99A6-70A16D1C2FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE6E6FC9-94F5-42C2-99A6-70A16D1C2FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE6E6FC9-94F5-42C2-99A6-70A16D1C2FD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C02A8B9-AF69-4DFF-ADD0-D68409184BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C02A8B9-AF69-4DFF-ADD0-D68409184BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C02A8B9-AF69-4DFF-ADD0-D68409184BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C02A8B9-AF69-4DFF-ADD0-D68409184BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

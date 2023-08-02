@@ -45,6 +45,10 @@ namespace VibeSyncApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var result = await _mediator.Send(user);
             return Created("RegisterUser", result);
         }

@@ -10,10 +10,13 @@ namespace VibeSyncModels.Request_ResponseModels
         [Required]
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [RegularExpression(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z")]
         public string Email { get; set; }
         [RegularExpression(@"^([0]|\+91)?[789]\d{9}$")]
         public string PhoneNumber { get; set; }
+        [MinLength(8)]
         public string Password { get; set; }
+        [RegularExpression("male|female|other|m|f|o")]
         public string Gender { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -21,6 +24,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public DateTime? ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }
         public bool IsSsologin { get; set; }
+        [RegularExpression("user|dj")]
         public string UserOrDj { get; set; }
     }
 }

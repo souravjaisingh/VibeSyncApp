@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
 using VibeSyncModels.EntityModels;
 
 namespace VibeSync.DAL.DBContext
 {
     public partial class VibeSyncContext : DbContext
     {
-        private const string ConnectionString = "Server=PG0276YP\\SQLEXPRESS; Database=VibeSync;Trusted_Connection=True;";
-
         public VibeSyncContext()
         {
         }
@@ -27,7 +27,12 @@ namespace VibeSync.DAL.DBContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ConnectionString);
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+                    optionsBuilder.UseSqlServer(configuration.GetConnectionString("VibeSyncDB"));
+                //VibeSyncDBBhavikLocal -- replace VibeSyncDB with this
             }
         }
 

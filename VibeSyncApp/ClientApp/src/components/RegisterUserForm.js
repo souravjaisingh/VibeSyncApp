@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import './RegisterUserForm.css';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import registerUserHelper from '../Helpers/UserHelper';
 
 const errorCssClass = 'input_error';
 const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
@@ -12,7 +13,7 @@ export default function RegisterUser(){
     const [firstName, setFirstName] = useState(null);
     const [lastName, setLastName] = useState(null);
     const [email, setEmail] = useState(null);
-    const [gender, setGender] = useState(null);
+    const [gender, setGender] = useState("male");
     const [password,setPassword] = useState(null);
     const [phoneNumber,setphoneNumber] = useState(null);
     const [confirmPassword,setConfirmPassword] = useState(null);
@@ -78,7 +79,7 @@ export default function RegisterUser(){
         phoneRegex.test(number) ? setPhoneError(false) : setPhoneError(true);
     }
 
-    const handleSubmit  = () => {
+    const handleSubmit  = async () => {
         console.log(firstName,lastName,email,password,confirmPassword);
         if(firstName == null || firstName == '' || firstName == undefined){
             setfirstNameError(true);
@@ -92,8 +93,14 @@ export default function RegisterUser(){
         if(password == null || password == '' || password == undefined){
             setpasswordError(true);
         }
+        validatePhoneNumber(phoneNumber);
         validatePassword(password);
         validateConfirmPassword(confirmPassword);
+        if(!(firstNameError || emailError || passwordError || phoneError || confirmPasswordError)){
+            var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender);
+            console.log("Load new page after following response:")
+            console.log(response);     
+        }   
     }
 
     return(

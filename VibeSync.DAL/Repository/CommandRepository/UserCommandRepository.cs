@@ -50,6 +50,11 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 return Constants.UserAlreadyExists;
             else
             {
+                user.CreatedOn = System.DateTime.Now;
+                user.CreatedBy = user.Email;
+                //user.IsActive = true;
+                user.Gender = (char.ToUpper(user.Gender[0])).ToString();
+
                 _context.Users.Add(_mapper.Map<VibeSyncModels.EntityModels.User>(user));
                 var response = await _context.SaveChangesAsync();
                 if (response > 0)

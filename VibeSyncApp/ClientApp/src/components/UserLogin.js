@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './UserLogin.css';
 import { Button } from './Button';
+import './Button.css';
 import { Link } from 'react-router-dom';
 import GoogleLogin, { LoginWithGoogle } from './GoogleLogin';
 
@@ -12,8 +13,13 @@ function Cards() {
       <h1>Are you here to request a song?</h1>
       <br></br>
       <GoogleLogin/>
-      <Button buttonStyle='btn--outline'>Login with Email</Button>
-      <p className='signup-label'>Don't have an account yet? <Link className='signup-link' to='/'>Sign up</Link></p>
+      {/* <button buttonStyle='btn--outline'>Login with Email</button> */}
+      <Link to='/login' className='btn-mobile'>
+      <button className='btn btn--outline btn--medium'>
+        Login with Email
+      </button>
+    </Link>
+      <p className='signup-label'>Don't have an account yet? <Link className='signup-link' to='/sign-up'>Sign up</Link></p>
 
       
         {/* <div className='cards__wrapper'>

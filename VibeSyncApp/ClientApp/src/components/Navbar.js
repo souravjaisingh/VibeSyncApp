@@ -26,7 +26,19 @@ function Navbar() {
 
   return (
     <>
-      <nav className='navbar'>
+      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
+            VibeSync 
+            <i class='fab fa-typo3' />
+          </Link>
+          {/* <button class="btn btn-success ml-auto mr-1 btn--outline">Login</button> */}
+          {/* <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+              <span class="navbar-toggler-icon"></span>
+          </button> */}
+      </nav>
+
+
+      {/* <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
             Request your song 
@@ -34,9 +46,9 @@ function Navbar() {
           </Link>
           {/* <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
-          </div>
-          <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
+          </div> */}
+          {/* <ul className={click ? 'nav-menu active' : 'nav-menu'}> */}
+            {/* <li className='nav-item'>
               <Link to='/' className='nav-links' onClick={closeMobileMenu}>
                 Home
               </Link>
@@ -58,9 +70,10 @@ function Navbar() {
               >
                 Products
               </Link>
-            </li>
+            </li> */}
 
-            <li>
+            {/* <li> 
+            
               <Link
                 to='/sign-up'
                 className='nav-links-mobile'
@@ -68,11 +81,11 @@ function Navbar() {
               >
                 Sign Up
               </Link>
-            </li>
-          </ul>
-          {button && <Button buttonStyle='btn--outline'>SIGN UP</Button>} */}
+            {/* </li> */}
+          {/* </ul> *
+          {button && <Button buttonStyle='btn--outline navbar-right'>SIGN UP</Button>}
         </div>
-      </nav>
+      </nav> */}
     </>
   );
 }

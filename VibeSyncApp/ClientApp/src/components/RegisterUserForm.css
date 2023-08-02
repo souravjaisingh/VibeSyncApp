@@ -6,12 +6,14 @@
 
     .form{
         /* background-color: white; */
+        background-image: url("../../public/images/DJWhite.jpg");
         border-radius: 5px;
         width: 550px;
         margin: 20px auto;
         padding: 20px;
         margin-left: 20px;
         background-color: gainsboro;
+        background-blend-mode: lighten;
         /* height: 600px; */
         color:black;
     }

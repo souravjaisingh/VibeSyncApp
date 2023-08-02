@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './UserLogin.css';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import registerUser, { GetUserById } from './services/UserService';
 import { Button } from './Button';
 
 
@@ -27,7 +26,7 @@ export default function GoogleLogin(){
                 .then(async (res) => {
                     setProfile(res.data);
                     console.log(res.data);
-                    await registerUser(res.data);
+                    //await registerUser(res.data);
                     window.location.href='/userhome';
                 })
                 .catch((err) => console.log(err));

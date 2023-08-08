@@ -43,6 +43,7 @@ namespace VibeSyncApp
             services.AddSingleton<IDBContextFactory, DBContextFactory>();
             services.AddSingleton<IUserCommandRepository, UserCommandRepository>();
             services.AddSingleton<IUserQueryRepository, UserQueryRepository>();
+            services.AddSingleton<IEventQueryRepository, EventQueryRepository>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

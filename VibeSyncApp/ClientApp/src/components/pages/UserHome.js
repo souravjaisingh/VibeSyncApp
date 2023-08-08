@@ -1,6 +1,12 @@
 import React from 'react';
 import '../../App.css';
+import DjList from '../DJList';
+
 
 export default function UserHome() {
-  return <h1 className='services'>SERVICES</h1>;
+  return (
+    <div className='userHome'>
+      <DjList />
+    </div>
+  );
 }

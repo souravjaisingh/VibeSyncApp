@@ -15,6 +15,18 @@
   font-size: 3rem;
 }
 
+.userHome{
+  background-image: url('../public/images/wbg.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  /* display: flex; */
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+}
+
 .sign-up {
   display: flex;
   height: 90vh;

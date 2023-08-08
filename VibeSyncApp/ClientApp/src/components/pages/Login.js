@@ -10,7 +10,6 @@ export default function Login() {
   return(
     <div className='loginForm'>
       <LoginForm />
-      <Footer />
     </div>
   )
 }

@@ -13,7 +13,6 @@ export default function SignUp() {
   return(
     <div className='sign-up'>
       <RegisterUser />
-      <Footer />
     </div>
   )
 }

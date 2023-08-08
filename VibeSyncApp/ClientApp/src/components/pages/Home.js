@@ -10,8 +10,7 @@ function Home() {
     <>
       <HeroSection />
       <Cards />
-      <DJCards />
-      <Footer />
+      {/* <DJCards /> */}
     </>
   );
 }

@@ -100,7 +100,7 @@ export default function RegisterUser(){
             var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender);
             console.log("Load new page after following response:")
             console.log(response);     
-        }   
+        }
     }
 
     return(

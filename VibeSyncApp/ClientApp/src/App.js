@@ -9,6 +9,7 @@ import SignUp from './components/pages/SignUp';
 import UserHome from './components/pages/UserHome';
 import LoginUser from './components/LoginForm';
 import Login from './components/pages/Login';
+import Footer from './components/Footer';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path='/sign-up' component={SignUp} />
                     <Route path='/loginForm' component={Login} />
                 </Switch>
+                <Footer />
             </Router>
         </>
     );

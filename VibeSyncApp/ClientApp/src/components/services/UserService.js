@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import * as Constants from '../Constants'
 
-const baseUri = 'https://localhost:44369/';
 export default async function registerUser(data) {
-    const response = await fetch(baseUri + 'User/RegisterUser', {
+    const response = await fetch(Constants.baseUri + 'User/RegisterUser', {
                     //mode: 'no-cors',
                     method: 'POST',
                     body: JSON.stringify(data),
@@ -13,7 +13,7 @@ export default async function registerUser(data) {
     return await response.text();
 }
 export async function GetUserById(id){
-    await fetch(baseUri + 'User/GetUserById?id=' + id)
+    await fetch(Constants.baseUri + 'User/GetUserById?id=' + id)
     .then(result=> result.json())
     .then(data=> console.log(data));
 }

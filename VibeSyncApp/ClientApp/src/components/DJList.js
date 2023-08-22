@@ -15,7 +15,6 @@ export default function DjList(){
     },[events])
 return(
     <>
-    <div className='heading'>DJs near you</div>
     <div>
     {
         events.map(item => <div>{item.eventName} </div>)

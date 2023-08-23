@@ -57,7 +57,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                            CreatedBy = e.CreatedBy,
                            CreatedOn = e.CreatedOn,
                            ModifiedBy = e.ModifiedBy,
-                           ModifiedOn = e.ModifiedOn
+                           ModifiedOn = e.ModifiedOn,
+                           Latitude = e.Latitude,
+                           Longitude = e.Longitude
                        }).ToList().AsEnumerable();
             return Task.FromResult(response);
         }

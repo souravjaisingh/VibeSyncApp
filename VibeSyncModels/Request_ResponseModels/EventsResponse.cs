@@ -28,5 +28,6 @@ namespace VibeSyncModels.Request_ResponseModels
         public string ModifiedBy { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
+        public decimal? DistanceFromCurrLoc { get; set; }
     }
 }

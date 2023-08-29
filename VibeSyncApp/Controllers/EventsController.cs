@@ -35,7 +35,7 @@ namespace VibeSyncApp.Controllers
         {
             return await _mediator.Send(new GetEventsRequest()).ConfigureAwait(false);
         }
-        [HttpGet]
+        [HttpPost]
         public async Task<IEnumerable<EventsResponse>> GetLiveEvents([FromBody]Coordinates coord)
         {
             return (IEnumerable<EventsResponse>)await _mediator.Send(coord).ConfigureAwait(false);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './UserTabs.css';
 import DjList from './DJList';
+import LiveDjList from './LiveDjList';
 
 export const Tabs = () => {
 const [activeIndex, setActiveIndex] = useState(1);
@@ -27,7 +28,7 @@ return (
         <DjList />
         </div>
         <div className={`panel ${checkActive(2, "active")}`}>
-        <DjList />
+        <LiveDjList />
         </div>
     </div>
     </>

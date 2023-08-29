@@ -2,17 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
 import { GetEventsWithDjInfo } from './services/EventsService';
 import './DJList.css'
-import photo from '../Resources/DJWhite.jpg';
+import getLiveEventsHelper from '../Helpers/EventsHelper';
 
-export default function DjList(){
+export default function LiveDjList(){
     const [events, setEvents] = useState([])
-    async function getEventsData(){
-        const res = await GetEventsWithDjInfo();
+    async function getEventsData(lat, lng){
+        const res = await getLiveEventsHelper(lat, lng);
         //console.log(res);
         setEvents(res);
     }
     useEffect(()=>{
-        getEventsData();
+        navigator.geolocation.getCurrentPosition(function(position) {
+            getEventsData(position.coords.latitude, position.coords.longitude);
+            console.log("Latitude is :", position.coords.latitude);
+            console.log("Longitude is :", position.coords.longitude);
+            });
     },[])
 return(
     <>

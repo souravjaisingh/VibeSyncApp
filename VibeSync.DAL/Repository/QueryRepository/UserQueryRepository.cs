@@ -57,5 +57,15 @@ namespace VibeSync.DAL.Repository.QueryRepository
         {
             return _context.Users.ToList();
         }
+        /// <summary>
+        /// Checkses if user is valid.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public User ChecksIfUserIsValid(string email, string password)
+        {
+            return _context.Users.Where(x => x.Email == email && x.Password == password).FirstOrDefault();
+        }
     }
 }

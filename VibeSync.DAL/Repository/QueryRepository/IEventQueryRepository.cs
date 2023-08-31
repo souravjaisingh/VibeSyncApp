@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using VibeSync.DAL.Helpers;
-using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository

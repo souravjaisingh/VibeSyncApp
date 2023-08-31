@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -36,7 +33,7 @@ namespace VibeSyncApp.Controllers
             return await _mediator.Send(new GetEventsRequest()).ConfigureAwait(false);
         }
         [HttpPost]
-        public async Task<IEnumerable<EventsResponse>> GetLiveEvents([FromBody]Coordinates coord)
+        public async Task<IEnumerable<EventsResponse>> GetLiveEvents([FromBody] Coordinates coord)
         {
             return (IEnumerable<EventsResponse>)await _mediator.Send(coord).ConfigureAwait(false);
         }

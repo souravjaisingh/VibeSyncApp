@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using VibeSyncModels.Request_ResponseModels;
 using User = VibeSyncModels.Request_ResponseModels.User;
 
 namespace VibeSyncApp.Controllers
@@ -45,12 +46,32 @@ namespace VibeSyncApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             var result = await _mediator.Send(user);
             return Created("RegisterUser", result);
+        }
+
+        /// <summary>
+        /// checks if user is valid.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Login")]
+        public async Task<IActionResult> LoginUser([FromQuery] LoginUser user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var result = await _mediator.Send(user);
+            if(result)
+                return Ok(result);
+            else
+                return Unauthorized();
         }
     }
 }

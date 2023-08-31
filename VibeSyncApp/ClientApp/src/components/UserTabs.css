@@ -1,0 +1,26 @@
+.tabs {  
+display: flex;  
+}
+.tab {  
+justify-content: center;
+align-items: center;
+width: 100%;
+background: lightsteelblue; 
+padding: 2em 0;  
+border: none;
+}
+.tab:not(:last-child) {
+border-right: 1px solid steelblue;  
+}
+.tab.active {
+background: steelblue;
+font-weight: bold;
+}
+.panel {
+display: none;
+background-color: #eaeaea;
+padding: 10px;
+}
+.panel.active {
+display: block;
+}

@@ -27,15 +27,24 @@ namespace VibeSyncApp.Controllers
         {
             _mediator = mediator;
         }
+        /// <summary>
+        /// Gets all events.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IEnumerable<EventsResponse>> GetAllEvents()
         {
             return await _mediator.Send(new GetEventsRequest()).ConfigureAwait(false);
         }
+        /// <summary>
+        /// Gets the live events.
+        /// </summary>
+        /// <param name="coord">The coord.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IEnumerable<EventsResponse>> GetLiveEvents([FromBody] Coordinates coord)
         {
-            return (IEnumerable<EventsResponse>)await _mediator.Send(coord).ConfigureAwait(false);
+            return await _mediator.Send(coord).ConfigureAwait(false);
         }
     }
 }

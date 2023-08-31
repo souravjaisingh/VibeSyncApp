@@ -10,7 +10,7 @@ namespace VibeSync.DAL.Handler
     /// <summary>
     /// GetLiveEventsHandler
     /// </summary>
-    public class GetLiveEventsHandler : IRequestHandler<Coordinates, IEnumerable<EventsResponse>>
+    public class LiveEventsHandler : IRequestHandler<Coordinates, IEnumerable<EventsResponse>>
     {
         /// <summary>
         /// IEventQueryRepository
@@ -20,7 +20,7 @@ namespace VibeSync.DAL.Handler
         /// Constructor
         /// </summary>
         /// <param name="eventR"></param>
-        public GetLiveEventsHandler(IEventQueryRepository eventR)
+        public LiveEventsHandler(IEventQueryRepository eventR)
         {
             _event = eventR;
         }

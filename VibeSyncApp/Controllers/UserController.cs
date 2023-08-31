@@ -46,10 +46,6 @@ namespace VibeSyncApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             var result = await _mediator.Send(user);
             return Created("RegisterUser", result);
         }
@@ -63,12 +59,8 @@ namespace VibeSyncApp.Controllers
         [Route("Login")]
         public async Task<IActionResult> LoginUser([FromQuery] LoginUser user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             var result = await _mediator.Send(user);
-            if(result)
+            if (result)
                 return Ok(result);
             else
                 return Unauthorized();

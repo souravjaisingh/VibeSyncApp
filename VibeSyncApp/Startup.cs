@@ -7,10 +7,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Net.Http;
 using System.Reflection;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
+using VibeSyncApp.Filters;
 using VibeSyncModels;
 
 namespace VibeSyncApp
@@ -28,7 +30,10 @@ namespace VibeSyncApp
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<ValidateModelStateAttribute>();
+            });
             services.AddCors();
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -44,6 +49,7 @@ namespace VibeSyncApp
             services.AddSingleton<IUserCommandRepository, UserCommandRepository>();
             services.AddSingleton<IUserQueryRepository, UserQueryRepository>();
             services.AddSingleton<IEventQueryRepository, EventQueryRepository>();
+            services.AddSingleton<HttpClient>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

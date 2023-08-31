@@ -29,7 +29,7 @@ namespace VibeSync.DAL.Handler
         }
         public Task<IEnumerable<EventsResponse>> Handle(Coordinates request, CancellationToken cancellationToken)
         {
-            return _event.GetLiveEvents((double)request.Latitude, (double)request.Longitude);
+            return _event.GetLiveEvents(request.Latitude, request.Longitude);
         }
     }
 }

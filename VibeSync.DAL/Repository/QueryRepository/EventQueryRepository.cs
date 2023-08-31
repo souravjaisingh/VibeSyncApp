@@ -96,15 +96,15 @@ namespace VibeSync.DAL.Repository.QueryRepository
             for (int i = 0; i < response.Count; i++)
             {
                 response[i].DistanceFromCurrLoc = (decimal?)HaversineDistance(
-                                        new LatLng(latitude, longitude),
-                                        new LatLng((double)response[i].Latitude, (double)response[i].Longitude),
+                                        new Coordinates(latitude, longitude),
+                                        new Coordinates((double)response[i].Latitude, (double)response[i].Longitude),
                                         DistanceUnit.Miles);
             }
             var sortedEvents = response.OrderBy(x => x.DistanceFromCurrLoc).ToList().AsEnumerable();
             return Task.FromResult(sortedEvents);
         }
 
-        public double HaversineDistance(LatLng pos1, LatLng pos2, DistanceUnit unit)
+        public double HaversineDistance(Coordinates pos1, Coordinates pos2, DistanceUnit unit)
         {
             double R = (unit == DistanceUnit.Miles) ? 3960 : 6371;
             var lat = (pos2.Latitude - pos1.Latitude).ToRadians();

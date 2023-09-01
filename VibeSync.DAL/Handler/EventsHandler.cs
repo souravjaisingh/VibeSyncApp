@@ -1,8 +1,5 @@
 ﻿using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.QueryRepository;
@@ -11,9 +8,9 @@ using VibeSyncModels.Request_ResponseModels;
 namespace VibeSync.DAL.Handler
 {
     /// <summary>
-    /// GetLiveEventsHandler
+    /// GetEvents Handler
     /// </summary>
-    public class GetLiveEventsHandler : IRequestHandler<Coordinates, IEnumerable<EventsResponse>>
+    public class EventsHandler : IRequestHandler<GetEventsRequest, IEnumerable<EventsResponse>>
     {
         /// <summary>
         /// IEventQueryRepository
@@ -23,13 +20,13 @@ namespace VibeSync.DAL.Handler
         /// Constructor
         /// </summary>
         /// <param name="eventR"></param>
-        public GetLiveEventsHandler(IEventQueryRepository eventR)
+        public EventsHandler(IEventQueryRepository eventR)
         {
             _event = eventR;
         }
-        public Task<IEnumerable<EventsResponse>> Handle(Coordinates request, CancellationToken cancellationToken)
+        public Task<IEnumerable<EventsResponse>> Handle(GetEventsRequest request, CancellationToken cancellationToken)
         {
-            return _event.GetLiveEvents(request.Latitude, request.Longitude);
+            return _event.GetEventsWithDjInfo();
         }
     }
 }

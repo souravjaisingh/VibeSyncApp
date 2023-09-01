@@ -1,20 +1,16 @@
 ﻿using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncModels.Request_ResponseModels;
-using VibeSyncModels.EntityModels;
 
 namespace VibeSync.DAL.Handler
 {
     /// <summary>
-    /// GetEvents Handler
+    /// GetLiveEventsHandler
     /// </summary>
-    public class GetEventsHandler : IRequestHandler<GetEventsRequest, IEnumerable<EventsResponse>>
+    public class LiveEventsHandler : IRequestHandler<Coordinates, IEnumerable<EventsResponse>>
     {
         /// <summary>
         /// IEventQueryRepository
@@ -24,13 +20,13 @@ namespace VibeSync.DAL.Handler
         /// Constructor
         /// </summary>
         /// <param name="eventR"></param>
-        public GetEventsHandler(IEventQueryRepository eventR)
+        public LiveEventsHandler(IEventQueryRepository eventR)
         {
             _event = eventR;
         }
-        public Task<IEnumerable<EventsResponse>> Handle(GetEventsRequest request, CancellationToken cancellationToken)
+        public Task<IEnumerable<EventsResponse>> Handle(Coordinates request, CancellationToken cancellationToken)
         {
-            return _event.GetEventsWithDjInfo();
+            return _event.GetLiveEvents(request.Latitude, request.Longitude);
         }
     }
 }

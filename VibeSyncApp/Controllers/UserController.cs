@@ -56,7 +56,6 @@ namespace VibeSyncApp.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("Login")]
         public async Task<IActionResult> LoginUser([FromQuery] LoginUser user)
         {
             var result = await _mediator.Send(user);

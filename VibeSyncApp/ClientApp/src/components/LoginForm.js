@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 import './LoginForm.css';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import { LoginUser } from './services/UserService';
+import { useNavigate } from 'react-router-dom';
 
 const errorCssClass = 'input_error';
 const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
 const phoneRegex = /^[6-9]\d{9}$/;
 export default function LoginForm(){
-    
-    const [email, setEmail] = useState(null);
-    const [password,setPassword] = useState(null);
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password,setPassword] = useState('');
     const [error, setError] = useState(null);
     // useEffect( () => {
     //     console.log(firstNameError);
@@ -30,13 +32,20 @@ export default function LoginForm(){
         }
     }
 
-    const handleSubmit  = () => {
+    const handleSubmit  = async () => {
         setError(false);
         console.log(email,password);
         if(email == null || email == '' || email == undefined){
             setError(true);
         }
         if(password == null || password == '' || password == undefined){
+            setError(true);
+        }
+        const response = await LoginUser(email, password);
+        if(response == true){
+            navigate('/userhome')
+        }
+        else{
             setError(true);
         }
     }

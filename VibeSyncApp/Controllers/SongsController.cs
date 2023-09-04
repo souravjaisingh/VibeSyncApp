@@ -35,5 +35,17 @@ namespace VibeSyncApp.Controllers
             var result = await _mediator.Send(request);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Gets the song history.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetSongHistory([FromQuery] GetSongHistoryRequestModel request)
+        {
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
     }
 }

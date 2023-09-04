@@ -24,9 +24,18 @@ namespace VibeSync.DAL.Handler
         {
             _event = eventR;
         }
+
+        /// <summary>
+        /// Handles a request
+        /// </summary>
+        /// <param name="request">The request</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>
+        /// Response from the request
+        /// </returns>
         public async Task<IEnumerable<EventsResponse>> Handle(GetEventsRequest request, CancellationToken cancellationToken)
         {
-            return await _event.GetEventsWithDjInfo();
+            return await Task.Run(() => _event.GetEventsWithDjInfo());
         }
     }
 }

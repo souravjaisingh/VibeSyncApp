@@ -49,6 +49,7 @@ namespace VibeSyncApp
             services.AddScoped<IUserCommandRepository, UserCommandRepository>();
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();
             services.AddScoped<IEventQueryRepository, EventQueryRepository>();
+            services.AddScoped<ISongQueryRepository, SongQueryRepository>();
             services.AddSingleton<HttpClient>();
 
             // In production, the React files will be served from this directory

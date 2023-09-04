@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using VibeSyncModels.EntityModels;
+using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSyncModels
 {
@@ -7,6 +9,7 @@ namespace VibeSyncModels
         public MappingProfile()
         {
             CreateMap<EntityModels.User, Request_ResponseModels.User>().ReverseMap();
+            CreateMap<SongHistory, SongHistoryResponseModel>().ReverseMap();
         }
     }
 }

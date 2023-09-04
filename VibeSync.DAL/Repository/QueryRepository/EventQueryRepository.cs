@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Helpers;
 using VibeSyncModels;
+using VibeSyncModels.Enums;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository
@@ -15,10 +15,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
     public class EventQueryRepository : IEventQueryRepository
     {
         /// <summary>
-        /// The database context
-        /// </summary>
-        private readonly IDBContextFactory _dbContext;
-        /// <summary>
         /// The context
         /// </summary>
         private readonly VibeSyncContext _context;
@@ -28,11 +24,14 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <param name="context">The context.</param>
         public EventQueryRepository(IDBContextFactory context)
         {
-            _dbContext = context;
-            _context = _dbContext.GetDBContext();
+            _context = context.GetDBContext();
         }
 
-        public async Task<IEnumerable<EventsResponse>> GetEventsWithDjInfo()
+        /// <summary>
+        /// Gets the events with dj information.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<EventsResponse> GetEventsWithDjInfo()
         {
             var response = (from e in _context.Events
                             join d in _context.Djs
@@ -63,7 +62,13 @@ namespace VibeSync.DAL.Repository.QueryRepository
             return response;
         }
 
-        public async Task<IEnumerable<EventsResponse>> GetLiveEvents(double latitude, double longitude)
+        /// <summary>
+        /// Gets the live events.
+        /// </summary>
+        /// <param name="latitude">The latitude.</param>
+        /// <param name="longitude">The longitude.</param>
+        /// <returns></returns>
+        public IEnumerable<EventsResponse> GetLiveEvents(double latitude, double longitude)
         {
             var response = (from e in _context.Events
                             join d in _context.Djs
@@ -90,7 +95,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 ModifiedOn = e.ModifiedOn,
                                 Latitude = e.Latitude,
                                 Longitude = e.Longitude
-                            }).Where(x=> x.EventStatus == Constants.Live).ToList();
+                            }).Where(x => x.EventStatus == Constants.Live).ToList();
             for (int i = 0; i < response.Count; i++)
             {
                 response[i].DistanceFromCurrLoc = (decimal?)HaversineDistance(
@@ -102,6 +107,13 @@ namespace VibeSync.DAL.Repository.QueryRepository
             return sortedEvents;
         }
 
+        /// <summary>
+        /// Haversines the distance.
+        /// </summary>
+        /// <param name="pos1">The pos1.</param>
+        /// <param name="pos2">The pos2.</param>
+        /// <param name="unit">The unit.</param>
+        /// <returns></returns>
         public double HaversineDistance(Coordinates pos1, Coordinates pos2, DistanceUnit unit)
         {
             double R = (unit == DistanceUnit.Miles) ? 3960 : 6371;
@@ -113,7 +125,5 @@ namespace VibeSync.DAL.Repository.QueryRepository
             var h2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(h1)));
             return R * h2;
         }
-
-        public enum DistanceUnit { Miles, Kilometers };
     }
 }

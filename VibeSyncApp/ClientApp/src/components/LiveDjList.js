@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
+import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import { GetEventsWithDjInfo } from './services/EventsService';
 import './DJList.css'
 import getLiveEventsHelper from '../Helpers/EventsHelper';
 
 export default function LiveDjList(){
     const [events, setEvents] = useState([])
+    
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredData = events.filter((item) =>
+    Object.values(item).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    );
+    
     async function getEventsData(lat, lng){
         const res = await getLiveEventsHelper(lat, lng);
         //console.log(res);
@@ -20,6 +33,12 @@ export default function LiveDjList(){
     },[])
 return(
     <>
+    <MDBInput
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder="Search DJ/Venue"
+    />
     <MDBTable align='middle' responsive hover>
     <MDBTableHead>
     <tr>
@@ -32,7 +51,7 @@ return(
     </MDBTableHead>
     <MDBTableBody>
     {
-        events.map(item => 
+        filteredData.map(item => 
             <>
             <tr onClick={(e) => { console.log(e.target) }}>
             <td>

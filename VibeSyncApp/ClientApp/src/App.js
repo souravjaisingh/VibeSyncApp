@@ -2,29 +2,28 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/pages/Home';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Services from './components/pages/UserHome';
+import { BrowserRouter as Router, Switch, Route, Routes } from 'react-router-dom';
 import Products from './components/pages/Products';
 import SignUp from './components/pages/SignUp';
 import UserHome from './components/pages/UserHome';
 import LoginUser from './components/LoginForm';
 import Login from './components/pages/Login';
 import Footer from './components/Footer';
+import SongSearch from './components/SongSearch';
 
 function App() {
     return (
         <>
-            <Router>
-                <Navbar />
-                <Switch>
-                    <Route path='/' exact component={Home} />
-                    <Route path='/userhome' component={UserHome} />
-                    <Route path='/products' component={Products} />
-                    <Route path='/sign-up' component={SignUp} />
-                    <Route path='/loginForm' component={Login} />
-                </Switch>
-                <Footer />
-            </Router>
+            <Navbar />
+                <Routes>
+                    <Route path='/' exact element={<Home />} />
+                    <Route path='/userhome' element={<UserHome/>} />
+                    <Route path='/products' element={<Products />} />
+                    <Route path='/sign-up' element={<SignUp/>} />
+                    <Route path='/loginForm' element={<Login/>} />
+                    <Route path="/SongSearch" element={<SongSearch />} />
+                </Routes>
+            <Footer />
         </>
     );
 }

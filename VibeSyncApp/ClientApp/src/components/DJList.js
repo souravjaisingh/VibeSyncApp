@@ -1,11 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
+import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import { GetEventsWithDjInfo } from './services/EventsService';
+import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import photo from '../Resources/DJWhite.jpg';
+import SongSearch from './SongSearch';
 
 export default function DjList(){
+    const navigate = useNavigate();
     const [events, setEvents] = useState([])
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedRow, setSelectedRow] = useState(null); 
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredData = events.filter((item) =>
+    Object.values(item).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    );
+    const handleRowClick = (rowData) => {
+        // Serialize the rowData object to a JSON string and encode it
+        const rowDataString = encodeURIComponent(JSON.stringify(rowData));
+
+        // Navigate to the detail view with the serialized rowData as a parameter
+        navigate(`/SongSearch?data=${rowDataString}`);
+        //navigate('/SongSearch');
+    };
+
     async function getEventsData(){
         const res = await GetEventsWithDjInfo();
         //console.log(res);
@@ -16,6 +39,12 @@ export default function DjList(){
     },[])
 return(
     <>
+    <MDBInput
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder="Search DJ/Venue"
+    />
     <MDBTable align='middle' responsive hover>
     <MDBTableHead>
     <tr>
@@ -28,9 +57,9 @@ return(
     </MDBTableHead>
     <MDBTableBody>
     {
-        events.map(item => 
+        filteredData.map(item => 
             <>
-            <tr onClick={(e) => { console.log(e.target) }}>
+            <tr onClick={(e) => { handleRowClick(item) }}>
             <td>
                 <div className='d-flex align-items-center'>
                     <img

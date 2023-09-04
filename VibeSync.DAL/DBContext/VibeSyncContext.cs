@@ -182,7 +182,7 @@ namespace VibeSync.DAL.DBContext
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.Payments)
-                    .HasForeignKey(d => d.SongId)
+                    .HasForeignKey(d => d.SongHistoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Event_SongHistory");
             });

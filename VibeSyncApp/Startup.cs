@@ -45,10 +45,10 @@ namespace VibeSyncApp
             services.AddMediatR(typeof(UserCommandRepository).GetTypeInfo().Assembly);
             //string connection = Configuration.GetConnectionString("VibeSyncDB");
             //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
-            services.AddSingleton<IDBContextFactory, DBContextFactory>();
-            services.AddSingleton<IUserCommandRepository, UserCommandRepository>();
-            services.AddSingleton<IUserQueryRepository, UserQueryRepository>();
-            services.AddSingleton<IEventQueryRepository, EventQueryRepository>();
+            services.AddScoped<IDBContextFactory, DBContextFactory>();
+            services.AddScoped<IUserCommandRepository, UserCommandRepository>();
+            services.AddScoped<IUserQueryRepository, UserQueryRepository>();
+            services.AddScoped<IEventQueryRepository, EventQueryRepository>();
             services.AddSingleton<HttpClient>();
 
             // In production, the React files will be served from this directory

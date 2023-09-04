@@ -29,6 +29,7 @@ return (
         </div>
         <div className={`panel ${checkActive(2, "active")}`}>
         <LiveDjList />
+        {/* <DatatablePage /> */}
         </div>
     </div>
     </>

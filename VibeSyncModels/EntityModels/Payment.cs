@@ -7,7 +7,7 @@ namespace VibeSyncModels.EntityModels
     public partial class Payment
     {
         public long Id { get; set; }
-        public long SongId { get; set; }
+        public long SongHistoryId { get; set; }
         public string PaymentStatus { get; set; }
         public string TransactionId { get; set; }
         public int BidAmount { get; set; }

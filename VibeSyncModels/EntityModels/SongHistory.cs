@@ -23,7 +23,10 @@ namespace VibeSyncModels.EntityModels
         public string CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }
-
+        public string Image { get; set; }
+        public string ArtistId { get; set; }
+        public string ArtistName { get; set; }
+        public string AlbumName { get; set; }
         public virtual Dj Dj { get; set; }
         public virtual Event Event { get; set; }
         public virtual User User { get; set; }

@@ -30,7 +30,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <returns></returns>
         public List<SongHistory> GetSongHistoryByEventId(long eventId)
         {
-            return _context.SongHistories.Where(x => x.EventId == eventId).ToList();
+            return _context.SongHistories.Where(x => x.EventId == eventId).OrderByDescending(x => x.CreatedOn).ToList();
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <returns></returns>
         public List<SongHistory> GetSongHistoryByUserId(long userId)
         {
-            return _context.SongHistories.Where(x => x.UserId == userId).ToList();
+            return _context.SongHistories.Where(x => x.UserId == userId).OrderByDescending(x=>x.CreatedOn).ToList();
         }
     }
 }

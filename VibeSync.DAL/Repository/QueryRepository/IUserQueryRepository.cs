@@ -8,7 +8,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
         IEnumerable<User> GetUsers();
         User GetUserById(int userId);
         User GetUserByEmail(string email);
-        //User GetUserNyPhoneNumber(string phoneNumber);
         User ChecksIfUserIsValid(string email, string password);
     }
 }

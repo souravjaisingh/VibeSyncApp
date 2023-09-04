@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
@@ -13,10 +14,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
     /// <seealso cref="VibeSync.DAL.Repository.CommandRepository.IUserCommandRepository" />
     public class UserCommandRepository : IUserCommandRepository
     {
-        /// <summary>
-        /// The database context
-        /// </summary>
-        private readonly IDBContextFactory _dbContext;
         /// <summary>
         /// The context
         /// </summary>
@@ -33,8 +30,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <param name="mapper">The mapper.</param>
         public UserCommandRepository(IDBContextFactory context, IMapper mapper)
         {
-            _dbContext = context;
-            _context = _dbContext.GetDBContext();
+            _context = context.GetDBContext();
             _mapper = mapper;
         }
 
@@ -43,24 +39,26 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public async Task<string> CreateUser(User user)
+        public async Task<long> CreateUser(User user)
         {
             var getUser = _context.Users.Where(x => x.Email == user.Email).FirstOrDefault();
-            if (getUser != null)
-                return Constants.UserAlreadyExists;
+            if (getUser != null && !user.IsSsologin)
+                throw new CustomException(Constants.UserAlreadyExists);
+            else if (user.IsSsologin && getUser != null)
+                return getUser.Id;
             else
             {
-                user.CreatedOn = System.DateTime.Now;
+                user.CreatedOn = DateTime.Now;
                 user.CreatedBy = user.Email;
-                //user.IsActive = true;
-                user.Gender = (char.ToUpper(user.Gender[0])).ToString();
+                user.IsActive = true;
+                user.Gender = char.ToUpper(user.Gender[0]).ToString();
 
                 _context.Users.Add(_mapper.Map<VibeSyncModels.EntityModels.User>(user));
                 var response = await _context.SaveChangesAsync();
                 if (response > 0)
-                    return Constants.UserCreated;
+                    return Convert.ToInt64(response);
                 else
-                    return Constants.Failed;
+                    throw new CustomException(Constants.DbOperationFailed);
             }
         }
 

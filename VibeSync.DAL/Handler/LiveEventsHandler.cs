@@ -26,7 +26,7 @@ namespace VibeSync.DAL.Handler
         }
         public async Task<IEnumerable<EventsResponse>> Handle(Coordinates request, CancellationToken cancellationToken)
         {
-            return await _event.GetLiveEvents(request.Latitude, request.Longitude);
+            return await Task.Run(() => _event.GetLiveEvents(request.Latitude, request.Longitude));
         }
     }
 }

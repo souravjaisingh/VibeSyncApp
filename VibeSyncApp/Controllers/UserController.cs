@@ -47,7 +47,7 @@ namespace VibeSyncApp.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
             var result = await _mediator.Send(user);
-            return Created("RegisterUser", result);
+            return Ok(result);
         }
 
         /// <summary>

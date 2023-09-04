@@ -6,5 +6,6 @@
         public const string UserAlreadyExists = "User Already Exists";
         public const string Failed = "Failed";
         public const string Live = "Live";
+        public const string DbOperationFailed = "Failed to enter or update record in database";
     }
 }

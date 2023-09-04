@@ -12,10 +12,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
     public class UserQueryRepository : IUserQueryRepository
     {
         /// <summary>
-        /// The database context
-        /// </summary>
-        private readonly IDBContextFactory _dbContext;
-        /// <summary>
         /// The context
         /// </summary>
         private readonly VibeSyncContext _context;
@@ -25,8 +21,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <param name="context">The context.</param>
         public UserQueryRepository(IDBContextFactory context)
         {
-            _dbContext = context;
-            _context = _dbContext.GetDBContext();
+            _context = context.GetDBContext();
         }
 
         /// <summary>

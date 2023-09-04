@@ -14,6 +14,7 @@ using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncApp.Filters;
 using VibeSyncModels;
+using VibeSyncModels.Middleware;
 
 namespace VibeSyncApp
 {
@@ -49,6 +50,7 @@ namespace VibeSyncApp
             services.AddScoped<IUserCommandRepository, UserCommandRepository>();
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();
             services.AddScoped<IEventQueryRepository, EventQueryRepository>();
+            services.AddScoped<ISongQueryRepository, SongQueryRepository>();
             services.AddSingleton<HttpClient>();
 
             // In production, the React files will be served from this directory
@@ -87,7 +89,7 @@ namespace VibeSyncApp
     );
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

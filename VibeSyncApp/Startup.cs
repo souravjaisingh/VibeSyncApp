@@ -14,6 +14,7 @@ using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncApp.Filters;
 using VibeSyncModels;
+using VibeSyncModels.Middleware;
 
 namespace VibeSyncApp
 {
@@ -88,7 +89,7 @@ namespace VibeSyncApp
     );
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

@@ -52,10 +52,9 @@ return(
     <MDBTableHead>
     <tr>
         <th scope='col'>Name</th>
+        <th scope='col'>Event Name</th>
         <th scope='col'>Venue</th>
         <th scope='col'>Status</th>
-        <th scope='col'>Position</th>
-        <th scope='col'>Actions</th>
     </tr>
     </MDBTableHead>
     <MDBTableBody>
@@ -66,7 +65,7 @@ return(
             <td>
                 <div className='d-flex align-items-center'>
                     <img
-                        src={`/images/${item.djPhoto}`}
+                        src={item.djPhoto}
                         alt=''
                         style={{ width: '45px', height: '45px' }}
                         className='rounded-circle' />
@@ -75,17 +74,19 @@ return(
                         <p className='text-muted mb-0'>{item.djDescription}</p>
                     </div>
                 </div>
-            </td><td>
+            </td>
+            <td>
+                    <p className='fw-normal mb-1'>{item.eventName}</p>
+                    {/* <p className='text-muted mb-0'>IT department</p> */}
+                </td>
+            <td>
                     <p className='fw-normal mb-1'>{item.venue}</p>
                     {/* <p className='text-muted mb-0'>IT department</p> */}
-                </td><td>
-                    <MDBBadge color='success' pill>
-                        Active
+                </td>
+                <td>
+                    <MDBBadge color={item.eventStatus == 'Live' ? 'danger' : 'success'} pill>
+                        {item.eventStatus}
                     </MDBBadge>
-                </td><td>Senior</td><td>
-                    <MDBBtn color='link' rounded size='sm'>
-                        Edit
-                    </MDBBtn>
                 </td>
                 </tr>
                 </>

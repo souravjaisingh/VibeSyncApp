@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Helpers;
+using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository
@@ -89,7 +90,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 ModifiedOn = e.ModifiedOn,
                                 Latitude = e.Latitude,
                                 Longitude = e.Longitude
-                            }).ToList();
+                            }).Where(x=> x.EventStatus == Constants.Live).ToList();
             for (int i = 0; i < response.Count; i++)
             {
                 response[i].DistanceFromCurrLoc = (decimal?)HaversineDistance(

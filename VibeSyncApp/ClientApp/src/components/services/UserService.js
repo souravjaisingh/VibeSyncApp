@@ -18,8 +18,14 @@ export async function GetUserById(id){
     .then(data=> console.log(data));
 }
 
-export async function LoginUser(eMail, pass){
-    const res = await fetch(Constants.baseUri + 'User/LoginUser?email=' + eMail+ '&password=' +pass)
-    .then(result=> result.json());
-    return await res;
+export async function LoginUser(data){
+    const response = await fetch(Constants.baseUri + 'User/LoginUser', {
+        //mode: 'no-cors',
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+return await response.json();
 }

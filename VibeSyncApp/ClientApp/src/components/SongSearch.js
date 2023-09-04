@@ -110,7 +110,11 @@ import './SongSearch.css';
                                 className='rounded-circle'
                                 />
                             </td>
-                            <td>{result.name}</td>
+                            <td>
+                                <p className='fw-bold mb-1'>{result.name}</p>
+                                <p className='text-muted mb-0'>{result.artists[0].name}</p>
+                                {/* {result.name} */}
+                            </td>
                             <td>{result.album.name}</td>
                         </tr>
                         ))}

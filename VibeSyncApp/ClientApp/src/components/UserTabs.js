@@ -14,13 +14,13 @@ return (
         className={`tab ${checkActive(1, "active")}`}
         onClick={() => handleClick(1)}
         >
-        DJs near you
+        Upcoming Events
         </button>
         <button
         className={`tab ${checkActive(2, "active")}`}
         onClick={() => handleClick(2)}
         >
-        Live DJs
+        Live Events
         </button>
     </div>
     <div className="panels">

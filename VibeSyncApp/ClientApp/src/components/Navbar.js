@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   
@@ -17,7 +19,9 @@ function Navbar() {
       setButton(true);
     }
   };
-
+  function handleRequestsClick(){
+    navigate('/songhistory');
+  }
   useEffect(() => {
     showButton();
   }, []);
@@ -31,6 +35,12 @@ function Navbar() {
             VibeSync 
             <i class='fab fa-typo3' />
           </Link>
+
+          {(location.pathname === '/userhome' 
+            || location.pathname.startsWith('/SongSearch') 
+            || location.pathname.startsWith('/paymentIndex')) && (
+                <button className='btnNav btn--outlineNav btn--medium' onClick={(e) => handleRequestsClick()}>Your Requests</button>
+          )}
           {/* <button class="btn btn-success ml-auto mr-1 btn--outline">Login</button> */}
           {/* <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
               <span class="navbar-toggler-icon"></span>

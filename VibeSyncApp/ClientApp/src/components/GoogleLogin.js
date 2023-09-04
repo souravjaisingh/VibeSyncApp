@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './UserLogin.css';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import { Button } from './Button';
+import { googleLoginHelper } from '../Helpers/UserHelper';
 
 
 export default function GoogleLogin(){
@@ -26,8 +26,12 @@ export default function GoogleLogin(){
                 .then(async (res) => {
                     setProfile(res.data);
                     console.log(res.data);
+                    const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email);
+                    if(response && response.status == 200){
+                        localStorage.setItem('userId', response.userId);
+                        window.location.href='/userhome';
+                    }
                     //await registerUser(res.data);
-                    window.location.href='/userhome';
                 })
                 .catch((err) => console.log(err));
         }
@@ -43,7 +47,6 @@ export default function GoogleLogin(){
     return(
     <>
         <div>
-            <h2>React Google Login</h2>
             <br />
             <br />
             { profile.length!=0 && profile != null ? (

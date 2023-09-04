@@ -11,7 +11,7 @@ namespace VibeSync.DAL.Handler
     /// User Handler
     /// </summary>
     /// <seealso cref="IRequestHandler&lt;User, string&gt;" />
-    public class UserHandler : IRequestHandler<User, string>,
+    public class UserHandler : IRequestHandler<User, long>,
         IRequestHandler<LoginUser, bool>
     {
         /// <summary>
@@ -41,7 +41,7 @@ namespace VibeSync.DAL.Handler
         /// <returns>
         /// Response from the request
         /// </returns>
-        public async Task<string> Handle(User request, CancellationToken cancellationToken)
+        public async Task<long> Handle(User request, CancellationToken cancellationToken)
         {
             return await _userCommandRepository.CreateUser(request);
         }

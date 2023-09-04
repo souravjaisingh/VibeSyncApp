@@ -1,4 +1,4 @@
-import registerUser from "../components/services/UserService"
+import RegisterUser, { LoginUser } from "../components/services/UserService"
 
 export default async function registerUserHelper(fName,lName,emailid,pass,phoneNum,gen,isUserOrDj='user') {
     var userModel = {
@@ -11,6 +11,6 @@ export default async function registerUserHelper(fName,lName,emailid,pass,phoneN
         isSsologin:true,
         userOrDj:isUserOrDj
     }
-    var res = await registerUser(userModel);
+    var res = await RegisterUser(userModel);
     return res;
 }

@@ -14,7 +14,7 @@ function Cards() {
       <br></br>
       <GoogleLogin/>
       {/* <button buttonStyle='btn--outline'>Login with Email</button> */}
-      <Link to='/login' className='btn-mobile'>
+      <Link to='/loginForm' className='btn-mobile'>
       <button className='btn btn--outline btn--medium'>
         Login with Email
       </button>

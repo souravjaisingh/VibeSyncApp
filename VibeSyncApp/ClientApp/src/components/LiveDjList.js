@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
-import { GetEventsWithDjInfo } from './services/EventsService';
+import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import getLiveEventsHelper from '../Helpers/EventsHelper';
 
 export default function LiveDjList(){
     const [events, setEvents] = useState([])
+    const navigate = useNavigate();
     
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -19,6 +20,14 @@ export default function LiveDjList(){
     )
     );
     
+    const handleRowClick = (rowData) => {
+        // Serialize the rowData object to a JSON string and encode it
+        const rowDataString = encodeURIComponent(JSON.stringify(rowData));
+
+        // Navigate to the detail view with the serialized rowData as a parameter
+        navigate(`/SongSearch?data=${rowDataString}`);
+        //navigate('/SongSearch');
+    };
     async function getEventsData(lat, lng){
         const res = await getLiveEventsHelper(lat, lng);
         //console.log(res);
@@ -53,7 +62,7 @@ return(
     {
         filteredData.map(item => 
             <>
-            <tr onClick={(e) => { console.log(e.target) }}>
+            <tr onClick={(e) => { handleRowClick(item) }}>
             <td>
                 <div className='d-flex align-items-center'>
                     <img

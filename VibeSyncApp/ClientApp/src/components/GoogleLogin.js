@@ -46,7 +46,7 @@ export default function GoogleLogin(){
             <h2>React Google Login</h2>
             <br />
             <br />
-            { profile != null ? (
+            { profile.length!=0 && profile != null ? (
                 <div>
                     {/* <Link to='/services'></Link> */}
                     <img src={profile.picture} alt="user image" />

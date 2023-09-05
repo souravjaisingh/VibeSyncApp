@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VibeSyncModels.Request_ResponseModels
 {
-    public class Coordinates : IRequest<IEnumerable<EventsResponse>>
+    public class Coordinates : IRequest<IEnumerable<EventsDetails>>
     {
         public Coordinates()
         {

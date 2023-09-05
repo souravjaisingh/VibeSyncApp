@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VibeSync.DAL.DBContext;
@@ -19,24 +20,40 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         private readonly VibeSyncContext _context;
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserQueryRepository"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public EventQueryRepository(IDBContextFactory context)
+        public EventQueryRepository(IDBContextFactory context, IMapper mapper)
         {
             _context = context.GetDBContext();
+            _mapper = mapper;
+        }
+
+        /// <summary>
+        /// Gets the events by dj identifier.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        public List<EventsDetails> GetEventsByDjId(GetEventsByDjId request)
+        {
+            var eventList =  _context.Events.Where(x => x.DjId == request.DjId).OrderByDescending(x => x.CreatedOn).ToList();
+            return _mapper.Map<List<EventsDetails>>(eventList);
         }
 
         /// <summary>
         /// Gets the events with dj information.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<EventsResponse> GetEventsWithDjInfo()
+        public IEnumerable<EventsDetails> GetEventsWithDjInfo()
         {
             var response = (from e in _context.Events
                             join d in _context.Djs
                             on e.DjId equals d.Id
-                            select new EventsResponse()
+                            select new EventsDetails()
                             {
                                 Id = e.Id,
                                 DjId = e.DjId,
@@ -68,12 +85,12 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <param name="latitude">The latitude.</param>
         /// <param name="longitude">The longitude.</param>
         /// <returns></returns>
-        public IEnumerable<EventsResponse> GetLiveEvents(double latitude, double longitude)
+        public IEnumerable<EventsDetails> GetLiveEvents(double latitude, double longitude)
         {
             var response = (from e in _context.Events
                             join d in _context.Djs
                             on e.DjId equals d.Id
-                            select new EventsResponse()
+                            select new EventsDetails()
                             {
                                 Id = e.Id,
                                 DjId = e.DjId,

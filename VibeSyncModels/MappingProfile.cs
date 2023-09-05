@@ -10,6 +10,7 @@ namespace VibeSyncModels
         {
             CreateMap<EntityModels.User, Request_ResponseModels.User>().ReverseMap();
             CreateMap<SongHistory, SongHistoryResponseModel>().ReverseMap();
+            CreateMap<EventsDetails, Event>().ReverseMap();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
@@ -32,7 +33,7 @@ namespace VibeSyncApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<EventsResponse>> GetAllEvents()
+        public async Task<IEnumerable<EventsDetails>> GetAllEvents()
         {
             return await _mediator.Send(new GetEventsRequest()).ConfigureAwait(false);
         }
@@ -42,9 +43,43 @@ namespace VibeSyncApp.Controllers
         /// <param name="coord">The coord.</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IEnumerable<EventsResponse>> GetLiveEvents([FromBody] Coordinates coord)
+        public async Task<IEnumerable<EventsDetails>> GetLiveEvents([FromBody] Coordinates coord)
         {
             return await _mediator.Send(coord).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Creates the event.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> CreateEvent([FromBody] EventsDetails request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        /// <summary>
+        /// Updates the event.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> UpdateEvent([FromBody] EventsDetails request)
+        {
+            await _mediator.Publish(request);
+            return Ok(VibeSyncModels.Constants.EventUpdatedSuccessfully);
+        }
+
+        /// <summary>
+        /// Gets the events by dj identifier.
+        /// </summary>
+        /// <param name="djId">The dj identifier.</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetEventsByDjId([FromQuery]GetEventsByDjId request)
+        {
+            return Ok(await _mediator.Send(request));
         }
     }
 }

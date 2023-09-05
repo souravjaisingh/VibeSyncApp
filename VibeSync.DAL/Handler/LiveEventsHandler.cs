@@ -10,7 +10,7 @@ namespace VibeSync.DAL.Handler
     /// <summary>
     /// GetLiveEventsHandler
     /// </summary>
-    public class LiveEventsHandler : IRequestHandler<Coordinates, IEnumerable<EventsResponse>>
+    public class LiveEventsHandler : IRequestHandler<Coordinates, IEnumerable<EventsDetails>>
     {
         /// <summary>
         /// IEventQueryRepository
@@ -24,7 +24,7 @@ namespace VibeSync.DAL.Handler
         {
             _event = eventR;
         }
-        public async Task<IEnumerable<EventsResponse>> Handle(Coordinates request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EventsDetails>> Handle(Coordinates request, CancellationToken cancellationToken)
         {
             return await Task.Run(() => _event.GetLiveEvents(request.Latitude, request.Longitude));
         }

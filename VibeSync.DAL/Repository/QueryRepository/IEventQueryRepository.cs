@@ -12,13 +12,18 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// Gets the events with dj information.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<EventsResponse> GetEventsWithDjInfo();
+        IEnumerable<EventsDetails> GetEventsWithDjInfo();
         /// <summary>
         /// Gets the live events.
         /// </summary>
         /// <param name="latitude">The latitude.</param>
         /// <param name="longitude">The longitude.</param>
         /// <returns></returns>
-        IEnumerable<EventsResponse> GetLiveEvents(double latitude, double longitude);
+        IEnumerable<EventsDetails> GetLiveEvents(double latitude, double longitude);
+        /// <summary>
+        /// Gets the events by dj identifier.
+        /// </summary>
+        /// <returns></returns>
+        List<EventsDetails> GetEventsByDjId(GetEventsByDjId request);
     }
 }

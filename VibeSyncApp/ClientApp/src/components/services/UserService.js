@@ -30,8 +30,8 @@ export async function LoginUser(data){
 return await response.json();
 }
 
-export async function getUserRequestHistoryData(){
-    const res = await fetch(Constants.baseUri + `Songs/GetSong`)
+export async function getUserRequestHistoryData(userid){
+    const res = await fetch(Constants.baseUri + `Songs/GetSongHistory?userId=${userid}`)
     .then((response) => response.json())
     .catch((error) => {
         console.error('Error fetching data:', error);

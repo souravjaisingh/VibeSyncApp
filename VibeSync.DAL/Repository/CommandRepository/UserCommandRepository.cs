@@ -51,7 +51,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 user.CreatedOn = DateTime.Now;
                 user.CreatedBy = user.Email;
                 user.IsActive = true;
-                user.Gender = char.ToUpper(user.Gender[0]).ToString();
+                user.Gender = user.Gender != null ? char.ToUpper(user.Gender[0]).ToString() : null;
+                user.Password = user.IsSsologin == true ? System.Guid.NewGuid().ToString() : user.Password;
 
                 _context.Users.Add(_mapper.Map<VibeSyncModels.EntityModels.User>(user));
                 var response = await _context.SaveChangesAsync();

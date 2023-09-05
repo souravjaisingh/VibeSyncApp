@@ -7,10 +7,19 @@ import { getUserRequestHistoryData } from './services/UserService';
 
 export default function SongHistory(){
     const [userHistory, setUserHistory] = useState();
-
+    async function fetchData() {
+        if (localStorage.getItem('userId') !== null) {
+            try {
+            const res = await getUserRequestHistoryData(localStorage.getItem('userId'));
+            setUserHistory(res);
+            } catch (error) {
+            // Handle any errors here
+            console.error('Error fetching user request history:', error);
+            }
+        }
+    }
     useEffect(async ()=>{
-        const res = await getUserRequestHistoryData();
-        setUserHistory(res);
+        await fetchData(); // Call the async function immediately
     },[])
 return(
     <>
@@ -28,18 +37,17 @@ return(
                         <tr key={index} onClick={(e) => { }}>
                             <td>
                                 <img
-                                src={result.album.images[result.album.images.length-1].url}
-                                alt={`Album Cover for ${result.album.name}`}
+                                src={result.image}
+                                alt={`Album Cover for ${result.albumName}`}
                                 style={{ width: '45px', height: '45px' }}
                                 className='rounded-circle'
                                 />
                             </td>
                             <td>
-                                <p className='fw-bold mb-1'>{result.name}</p>
-                                <p className='text-muted mb-0'>{result.artists[0].name}</p>
-                                {/* {result.name} */}
+                                <p className='fw-bold mb-1'>{result.songName}</p>
+                                <p className='text-muted mb-0'>{result.artistName}</p>
                             </td>
-                            <td>{result.album.name}</td>
+                            <td>{result.albumName}</td>
                         </tr>
                         ))}
                         </MDBTableBody>

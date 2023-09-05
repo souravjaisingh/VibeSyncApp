@@ -27,8 +27,8 @@ export default function GoogleLogin(){
                     setProfile(res.data);
                     console.log(res.data);
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email);
-                    if(response && response.status == 200){
-                        localStorage.setItem('userId', response.userId);
+                    if(response){
+                        localStorage.setItem('userId', response);
                         window.location.href='/userhome';
                     }
                     //await registerUser(res.data);

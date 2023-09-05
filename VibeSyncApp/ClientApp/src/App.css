@@ -29,7 +29,7 @@
 
 .sign-up {
   display: flex;
-  height: 90vh;
+  height: 140vh;
   align-items: center;
   justify-content: center;
   /* font-size: 3rem; */
@@ -38,7 +38,7 @@
 .sign-up,
 .loginForm {
   display: flex;
-  height: 90vh;
+  height: 140vh;
   align-items: center;
   justify-content: center;
   /* font-size: 3rem; */

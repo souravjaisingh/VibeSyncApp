@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GetSongsUsingSearchTerm } from './services/SongsService';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import './SongSearch.css';
     function SongSearch() {
         const location = useLocation();
+        const navigate = useNavigate();
         const searchParams = new URLSearchParams(location.search);
         const rowDataString = searchParams.get('data');
         const [searchQuery, setSearchQuery] = useState('');
@@ -68,10 +70,18 @@ import './SongSearch.css';
         };
         // Function to fetch results from the API
         const fetchResultsFromAPI = async (query) => {
-            var res = await GetSongsUsingSearchTerm(query, 1, 20);
+            var res = await GetSongsUsingSearchTerm(query, 0, 20);
             setResults(res);
         };
-
+        
+        const handleRowClick = (rowData) => {
+            // Serialize the rowData object to a JSON string and encode it
+            const rowDataString = encodeURIComponent(JSON.stringify(rowData));
+    
+            // Navigate to the detail view with the serialized rowData as a parameter
+            navigate(`/paymentIndex?data=${rowDataString}`);
+            //navigate('/SongSearch');
+        };
         // Parse the rowDataString back into a JavaScript object
         const rowData = JSON.parse(decodeURIComponent(rowDataString));
         console.log(rowData);
@@ -101,7 +111,7 @@ import './SongSearch.css';
                     </MDBTableHead> */}
                         <MDBTableBody>
                         {results && results.map((result, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={(e) => { handleRowClick(result) }}>
                             <td>
                                 <img
                                 src={result.album.images[result.album.images.length-1].url}

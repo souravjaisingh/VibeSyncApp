@@ -10,6 +10,8 @@ import LoginUser from './components/LoginForm';
 import Login from './components/pages/Login';
 import Footer from './components/Footer';
 import SongSearch from './components/SongSearch';
+import PaymentIndex from './components/PaymentIndex';
+import SongHistory from './components/SongHistory';
 
 function App() {
     return (
@@ -22,6 +24,8 @@ function App() {
                     <Route path='/sign-up' element={<SignUp/>} />
                     <Route path='/loginForm' element={<Login/>} />
                     <Route path="/SongSearch" element={<SongSearch />} />
+                    <Route path="/paymentIndex" element={<PaymentIndex />} />
+                    <Route path="/songhistory" element={<SongHistory />} />
                 </Routes>
             <Footer />
         </>

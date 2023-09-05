@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.CommandRepository;
@@ -12,7 +13,8 @@ namespace VibeSync.DAL.Handler
     /// </summary>
     /// <seealso cref="IRequestHandler&lt;User, string&gt;" />
     public class UserHandler : IRequestHandler<User, long>,
-        IRequestHandler<LoginUser, bool>
+        IRequestHandler<LoginUser, bool>,
+        IRequestHandler<GetUserId, long>
     {
         /// <summary>
         /// The user command repository
@@ -60,6 +62,21 @@ namespace VibeSync.DAL.Handler
             if (userDetails != null)
                 return Task.FromResult(true);
             return Task.FromResult(false);
+        }
+
+        public Task<long> Handle(GetUserId request, CancellationToken cancellationToken)
+        {
+            var user = _userQueryRepository.GetUserByEmail(request.email);
+            if (user != null)
+            {
+                return Task.FromResult(user.Id); // Assuming user.Id is of type long
+            }
+            else
+            {
+                // Handle the case where the user is not found, for example:
+                // return Task.FromResult(-1); // Or any other appropriate default value
+                throw new Exception("User not found.");
+            }
         }
     }
 }

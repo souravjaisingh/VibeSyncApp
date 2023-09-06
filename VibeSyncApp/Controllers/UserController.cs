@@ -47,11 +47,6 @@ namespace VibeSyncApp.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
             var response = await _mediator.Send(user);
-            if(response > 0)
-            {
-                var userId = await _mediator.Send(new GetUserId { email = user.Email });
-                return Ok(userId);
-            }
             return Ok(response);
         }
 

@@ -8,7 +8,7 @@ using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
-    public class EventCommandRepository : IEventCommandRepository
+    public class DjCommandRepository : IDjCommandRepository
     {
         /// <summary>
         /// The context
@@ -24,42 +24,25 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="mapper">The mapper.</param>
-        public EventCommandRepository(IDBContextFactory context, IMapper mapper)
+        public DjCommandRepository(IDBContextFactory context, IMapper mapper)
         {
             _context = context.GetDBContext();
             _mapper = mapper;
         }
-
         /// <summary>
-        /// Creates the event.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns></returns>
-        public async Task<long> CreateEvent(EventsDetails request)
-        {
-            var eventDetails = _mapper.Map<Event>(request);
-            _context.Events.Add(eventDetails);
-            var response = await _context.SaveChangesAsync();
-            if (response > 0)
-                return Convert.ToInt64(eventDetails.Id);
-            else
-                throw new CustomException(Constants.DbOperationFailed);
-        }
-
-        /// <summary>
-        /// Updates the event.
+        /// Updates the dj.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
         /// <exception cref="VibeSyncModels.CustomException"></exception>
-        public async Task<EventsDetails> UpdateEvent(EventsDetails request)
+        public async Task<string> UpdateDj(UpdateDjCommandModel request)
         {
-            var eventDetails = _mapper.Map<Event>(request);
+            var djDetails = _mapper.Map<Dj>(request);
             request.ModifiedOn = DateTime.Now;
-            _context.Events.Update(eventDetails);
+            _context.Djs.Update(djDetails);
             var response = await _context.SaveChangesAsync();
             if (response > 0)
-                return request;
+                return request.Id.ToString();
             else
                 throw new CustomException(Constants.DbOperationFailed);
         }

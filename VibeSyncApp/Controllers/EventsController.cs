@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
@@ -68,7 +67,7 @@ namespace VibeSyncApp.Controllers
         public async Task<IActionResult> UpdateEvent([FromBody] EventsDetails request)
         {
             await _mediator.Publish(request);
-            return Ok(VibeSyncModels.Constants.EventUpdatedSuccessfully);
+            return Ok(VibeSyncModels.Constants.UpdatedSuccessfully);
         }
 
         /// <summary>

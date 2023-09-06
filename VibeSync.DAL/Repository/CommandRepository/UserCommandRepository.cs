@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
-using VibeSyncModels.Request_ResponseModels;
+using VibeSyncModels.EntityModels;
+using User = VibeSyncModels.Request_ResponseModels.User;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -53,22 +54,36 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 user.IsActive = true;
                 user.Gender = user.Gender != null ? char.ToUpper(user.Gender[0]).ToString() : null;
                 user.Password = user.IsSsologin ? Guid.NewGuid().ToString() : user.Password;
-
-                _context.Users.Add(_mapper.Map<VibeSyncModels.EntityModels.User>(user));
+                var userEntity = _mapper.Map<VibeSyncModels.EntityModels.User>(user);
+                _context.Users.Add(userEntity);
                 var response = await _context.SaveChangesAsync();
+
+                if (response > 0 && user.UserOrDj.Equals("dj", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //create an insertion in dj table
+                    var djEntity = new Dj
+                    {
+                        UserId = userEntity.Id,
+                        CreatedBy = userEntity.CreatedBy,
+                        CreatedOn = userEntity.CreatedOn,
+                        DjName = userEntity.FirstName + " " + userEntity.LastName,
+                    };
+                    _context.Djs.Add(djEntity);
+                    await _context.SaveChangesAsync();
+                }
                 if (response > 0)
-                    return Convert.ToInt64(response);
+                    return Convert.ToInt64(userEntity.Id);
                 else
                     throw new CustomException(Constants.DbOperationFailed);
             }
         }
 
-        /// <summary>
-        /// Deletes the user.
-        /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
-        public async Task<int> DeleteUser(int userId)
+    /// <summary>
+    /// Deletes the user.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <returns></returns>
+    public async Task<int> DeleteUser(int userId)
         {
             var user = _context.Users.Where(x => x.Id == userId).FirstOrDefault();
             user.IsActive = false;

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MediatR;
+using System;
 
 namespace VibeSyncModels.Request_ResponseModels
 {
-    public class EventsResponse
+    public class EventsDetails : IRequest<long>, INotification
     {
         public long Id { get; set; }
         public string EventName { get; set; }

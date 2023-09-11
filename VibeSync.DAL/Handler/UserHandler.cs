@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
+using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Handler
@@ -64,6 +64,13 @@ namespace VibeSync.DAL.Handler
             return Task.FromResult(false);
         }
 
+        /// <summary>
+        /// Handles the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <exception cref="VibeSyncModels.CustomException">User not found.</exception>
         public Task<long> Handle(GetUserId request, CancellationToken cancellationToken)
         {
             var user = _userQueryRepository.GetUserByEmail(request.email);
@@ -75,7 +82,7 @@ namespace VibeSync.DAL.Handler
             {
                 // Handle the case where the user is not found, for example:
                 // return Task.FromResult(-1); // Or any other appropriate default value
-                throw new Exception("User not found.");
+                throw new CustomException("User not found.");
             }
         }
     }

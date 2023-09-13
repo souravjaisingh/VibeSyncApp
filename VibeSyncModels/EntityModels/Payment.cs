@@ -7,11 +7,11 @@ namespace VibeSyncModels.EntityModels
     public partial class Payment
     {
         public long Id { get; set; }
-        public long SongHistoryId { get; set; }
+        public long? SongHistoryId { get; set; }
         public string PaymentStatus { get; set; }
-        public string TransactionId { get; set; }
-        public int BidAmount { get; set; }
-        public int TotalAmount { get; set; }
+        public string PaymentId { get; set; }
+        public decimal? BidAmount { get; set; }
+        public decimal? TotalAmount { get; set; }
         public string Promocode { get; set; }
         public int? Discount { get; set; }
         public string PaymentSource { get; set; }
@@ -19,7 +19,11 @@ namespace VibeSyncModels.EntityModels
         public string CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }
+        public long? UserId { get; set; }
+        public string OrderId { get; set; }
+        public string Signature { get; set; }
 
-        public virtual SongHistory Song { get; set; }
+        public virtual SongHistory SongHistory { get; set; }
+        public virtual User User { get; set; }
     }
 }

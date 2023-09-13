@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import SongSearch from './components/SongSearch';
 import PaymentIndex from './components/PaymentIndex';
 import SongHistory from './components/SongHistory';
+import RazorpayPayment from './components/RazorpayPayment';
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/SongSearch" element={<SongSearch />} />
                     <Route path="/paymentIndex" element={<PaymentIndex />} />
                     <Route path="/songhistory" element={<SongHistory />} />
+                    <Route path="/razorpayment" element={<RazorpayPayment />} />
                 </Routes>
             <Footer />
         </>

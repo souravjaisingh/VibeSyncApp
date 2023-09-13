@@ -62,7 +62,7 @@ namespace VibeSync.DAL.DBContext
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.DjPhoto).HasMaxLength(50);
+                entity.Property(e => e.DjPhoto).HasMaxLength(1000);
 
                 entity.Property(e => e.Ifsccode)
                     .HasMaxLength(20)
@@ -106,6 +106,10 @@ namespace VibeSync.DAL.DBContext
                 entity.Property(e => e.EventStatus)
                     .IsRequired()
                     .HasMaxLength(10);
+
+                entity.Property(e => e.Latitude).HasColumnType("decimal(9, 6)");
+
+                entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
 
                 entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 
@@ -158,6 +162,8 @@ namespace VibeSync.DAL.DBContext
             {
                 entity.ToTable("Payment");
 
+                entity.Property(e => e.BidAmount).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -167,6 +173,12 @@ namespace VibeSync.DAL.DBContext
                 entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.PaymentId).HasMaxLength(50);
 
                 entity.Property(e => e.PaymentSource)
                     .IsRequired()
@@ -178,24 +190,46 @@ namespace VibeSync.DAL.DBContext
 
                 entity.Property(e => e.Promocode).HasMaxLength(20);
 
-                entity.Property(e => e.TransactionId).HasMaxLength(50);
+                entity.Property(e => e.Signature).HasMaxLength(150);
 
-                entity.HasOne(d => d.Song)
+                entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 0)");
+
+                entity.HasOne(d => d.SongHistory)
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.SongHistoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Event_SongHistory");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__Payment__UserId__5AEE82B9");
             });
 
             modelBuilder.Entity<SongHistory>(entity =>
             {
                 entity.ToTable("SongHistory");
 
+                entity.Property(e => e.AlbumName)
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ArtistId)
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ArtistName)
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 

@@ -3,23 +3,39 @@ import './UserLogin.css';
 import { Button } from './Button';
 import './Button.css';
 import { Link } from 'react-router-dom';
-import GoogleLogin, { LoginWithGoogle } from './GoogleLogin';
+import GoogleLogin from './GoogleLogin';
+import Switch from './LoginToggleButton';
+
 
 function Cards() {
-  
+  const [isUser, setIsUser] = useState(false);
   return (
     <div className='cards'>
       <div className='cards__container'>
       <h1>Are you here to request a song?</h1>
       <br></br>
-      <GoogleLogin/>
+      {/* <LoginToggleButton /> */}
+      <Switch
+        isOn={isUser}
+        onColor="#f58da6"
+        handleToggle={() => setIsUser(!isUser)}
+      />
+      {/* <ToggleButtonComponent /> */}
+      <br></br>
+      <GoogleLogin isUser={!isUser}/>
       {/* <button buttonStyle='btn--outline'>Login with Email</button> */}
       <Link to='/loginForm' className='btn-mobile'>
       <button className='btn btn--outline btn--medium'>
         Login with Email
       </button>
     </Link>
-      <p className='signup-label'>Don't have an account yet? <Link className='signup-link' to='/sign-up'>Sign up</Link></p>
+      <p className='signup-label'>Don't have an account yet? 
+      <Link 
+        className='signup-link' 
+        to={`/sign-up/${isUser ? 'false' : 'true'}`}
+      >
+          Sign up
+      </Link></p>
 
       
         {/* <div className='cards__wrapper'>

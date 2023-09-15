@@ -1,6 +1,6 @@
 import RegisterUser, { LoginUser } from "../components/services/UserService"
 
-export default async function registerUserHelper(fName,lName,emailid,pass,phoneNum,gen,isSsologin = false, isUserOrDj='user') {
+export default async function registerUserHelper(fName,lName,emailid,pass,phoneNum,gen, isUserOrDj='user', isSsologin = false) {
     var userModel = {
         firstName:fName,
         lastName:lName,
@@ -15,7 +15,7 @@ export default async function registerUserHelper(fName,lName,emailid,pass,phoneN
     return res;
 }
 
-export async function googleLoginHelper(fName,lName,emailid,isSsologin = true, isUserOrDj='user') {
+export async function googleLoginHelper(fName,lName,emailid, isUserOrDj='user', isSsologin = true) {
     var userModel = {
         firstName:fName,
         lastName:lName,

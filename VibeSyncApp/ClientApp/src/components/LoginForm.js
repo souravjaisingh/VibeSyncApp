@@ -19,6 +19,7 @@ export default function LoginForm(){
     // useEffect( () => {
     //     console.log(firstNameError);
     // }, [firstNameError, emailError, firstName]);
+    //just a comment to trigger azure build
 
     const handleInputChange = (e) => {
         const {id , value} = e.target;

@@ -5,11 +5,12 @@ import './RegisterUserForm.css';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import registerUserHelper from '../Helpers/UserHelper';
+import {useNavigate} from 'react-router-dom'
 
 const errorCssClass = 'input_error';
 const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
 const phoneRegex = /^[6-9]\d{9}$/;
-export default function RegisterUser(){
+export default function RegisterUser(isUser){
     const [firstName, setFirstName] = useState(null);
     const [lastName, setLastName] = useState(null);
     const [email, setEmail] = useState(null);
@@ -22,7 +23,9 @@ export default function RegisterUser(){
     const [phoneError, setPhoneError] = useState(false);
     const [passwordError, setpasswordError] = useState(false);
     const [confirmPasswordError, setconfirmPasswordError] = useState(false);
-
+    const navigate = useNavigate()
+    const isUserRegistration = isUser.isUser;
+    console.log(isUserRegistration);
     // useEffect( () => {
     //     console.log(firstNameError);
     // }, [firstNameError, emailError, firstName]);
@@ -97,9 +100,10 @@ export default function RegisterUser(){
         validatePassword(password);
         validateConfirmPassword(confirmPassword);
         if(!(firstNameError || emailError || passwordError || phoneError || confirmPasswordError)){
-            var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender);
+            var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender, isUserRegistration == 'true' ? 'user' : 'dj');
             console.log("Load new page after following response:")
-            console.log(response);     
+            console.log(response);  
+            navigate('/loginForm');
         }
     }
 

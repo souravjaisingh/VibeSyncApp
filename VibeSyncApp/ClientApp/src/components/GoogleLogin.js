@@ -5,7 +5,11 @@ import axios from 'axios';
 import { googleLoginHelper } from '../Helpers/UserHelper';
 
 
-export default function GoogleLogin(){
+export default function GoogleLogin(isUser){
+    const isUserRegistration = isUser.isUser;
+    console.log(isUserRegistration);
+
+
     const [ user, setUser ] = useState([]);
     const [ profile, setProfile ] = useState([]);
     var baseUri = 'http'
@@ -26,7 +30,7 @@ export default function GoogleLogin(){
                 .then(async (res) => {
                     setProfile(res.data);
                     console.log(res.data);
-                    const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email);
+                    const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
                     if(response){
                         localStorage.setItem('userId', response);
                         window.location.href='/userhome';

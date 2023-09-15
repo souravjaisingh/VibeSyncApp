@@ -22,7 +22,7 @@ function App() {
                     <Route path='/' exact element={<Home />} />
                     <Route path='/userhome' element={<UserHome/>} />
                     <Route path='/products' element={<Products />} />
-                    <Route path='/sign-up' element={<SignUp/>} />
+                    <Route path='/sign-up/:isUser' element={<SignUp/>} />
                     <Route path='/loginForm' element={<Login/>} />
                     <Route path="/SongSearch" element={<SongSearch />} />
                     <Route path="/paymentIndex" element={<PaymentIndex />} />

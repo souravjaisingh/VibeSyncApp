@@ -5,7 +5,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@material-ui/core": "^4.12.4",
     "@mui/icons-material": "^5.14.8",
     "@mui/material": "^5.14.9",
     "@react-oauth/google": "^0.11.1",
@@ -16,7 +15,7 @@
     "mdbreact": "^5.2.0",
     "merge": "^2.1.1",
     "oidc-client": "~1.11.5",
-    "react": "^17.0.0 || ^18.0.0",
+    "react": "^18.2.0",
     "react-dom": "~16.14.0",
     "react-hook-form": "^7.45.2",
     "react-phone-input-2": "^2.15.1",

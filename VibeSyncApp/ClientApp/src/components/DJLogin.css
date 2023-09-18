@@ -1,7 +1,7 @@
 .DJcards {
     padding: 4rem;
     background: #fff;
-    background-image: url("../../public/images/DJ.jpg");
+    background-image: url("../../src/Resources/DJ.jpg");
     background-size: cover;
 }
 

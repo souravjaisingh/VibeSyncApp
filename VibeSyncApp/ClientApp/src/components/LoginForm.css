@@ -5,7 +5,7 @@ body{
 }
 
 .form{
-    background-image: url("../../public/images/DJWhite.jpg");
+    background-image: url("../../src/Resources/DJWhite.jpg");
     border-radius: 5px;
     width: 550px;
     margin: 20px auto;

@@ -16,7 +16,7 @@
 }
 
 .userHome{
-  background-image: url('../public/images/wbg.jpg');
+  background-image: url('../src/Resources/wbg.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -45,7 +45,7 @@
 }
 
 .services {
-  background-image: url('../public/images/img-2.jpg');
+  background-image: url('../src/Resources/img-2.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -54,7 +54,7 @@
 }
 
 .products {
-    background-image: url('../public/images/img-1.jpg');
+    background-image: url('../src/Resources/img-1.jpg');
     background-position: center;
     background-size: fill;
     background-repeat: no-repeat;
@@ -63,7 +63,7 @@
 }
 
 .sign-up {
-    background-image: url('../public/images/DJWhite2.jpg');
+    background-image: url('../src/Resources/DJWhite2.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -72,7 +72,7 @@
     /* font-size: 100px; */
 }
 .loginForm {
-  background-image: url('../public/images/DJWhite2.jpg');
+  background-image: url('../src/Resources/DJWhite2.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

@@ -12,7 +12,7 @@ namespace VibeSync.DAL.Handler
     /// GetEvents Handler
     /// </summary>
     public class EventsHandler : IRequestHandler<GetEventsRequest, IEnumerable<EventsDetails>>,
-        IRequestHandler<EventsDetails, long>, INotificationHandler<EventsDetails>, IRequestHandler<GetEventsByDjId, List<EventsDetails>>
+        IRequestHandler<EventsDetails, long>, INotificationHandler<EventsDetails>, IRequestHandler<GetEventsByUserId, List<EventsDetails>>
     {
         /// <summary>
         /// IEventQueryRepository
@@ -62,7 +62,7 @@ namespace VibeSync.DAL.Handler
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public async Task<List<EventsDetails>> Handle(GetEventsByDjId request, CancellationToken cancellationToken)
+        public async Task<List<EventsDetails>> Handle(GetEventsByUserId request, CancellationToken cancellationToken)
         {
             return await Task.Run(() => _eventQueryRepository.GetEventsByDjId(request));
         }

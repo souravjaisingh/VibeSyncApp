@@ -13,6 +13,7 @@ import SongSearch from './components/SongSearch';
 import PaymentIndex from './components/PaymentIndex';
 import SongHistory from './components/SongHistory';
 import RazorpayPayment from './components/RazorpayPayment';
+import DjHome from './components/pages/DjHome';
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/paymentIndex" element={<PaymentIndex />} />
                     <Route path="/songhistory" element={<SongHistory />} />
                     <Route path="/razorpayment" element={<RazorpayPayment />} />
+                    <Route path="/djhome" element={<DjHome />} />
                 </Routes>
             <Footer />
         </>

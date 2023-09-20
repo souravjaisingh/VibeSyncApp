@@ -2,10 +2,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #f0f7f9;
     }
     .song-name {
     margin-top: 8px;
-    color: #fff;
+    /* color: #fff; */
     font-size: 32px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
@@ -15,7 +16,6 @@
     }
     .label{
     margin-top: 8px;
-    color: #fff;
     font-size: 18px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
@@ -33,7 +33,7 @@
     .btn--primaryPayment {
     background-color: var(--primary);
     color: #242424;
-    border: 1px solid var(--primary);
+    border: ridge;
     }
 
     .btn--outline {

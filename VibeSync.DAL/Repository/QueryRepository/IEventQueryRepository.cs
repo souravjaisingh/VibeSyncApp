@@ -24,6 +24,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// Gets the events by dj identifier.
         /// </summary>
         /// <returns></returns>
-        List<EventsDetails> GetEventsByDjId(GetEventsByDjId request);
+        List<EventsDetails> GetEventsByDjId(GetEventsByUserId request);
     }
 }

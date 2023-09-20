@@ -62,11 +62,16 @@ import './SongSearch.css';
             const newQuery = event.target.value;
             setSearchQuery(newQuery);
             clearTimeout(typingTimeout);
-            const newTypingTimeout = setTimeout(() => {
+              // Check if the new query is not empty before setting the timeout
+            if (newQuery.trim() !== '') {
+                const newTypingTimeout = setTimeout(() => {
                 fetchResultsFromAPI(newQuery);
-            }, 400);
-        
-            setTypingTimeout(newTypingTimeout);
+                }, 400);
+                setTypingTimeout(newTypingTimeout);
+            } else {
+                // If the query is empty, you may want to clear the results or handle it in another way
+                setResults([]);
+            }
         };
         // Function to fetch results from the API
         const fetchResultsFromAPI = async (query) => {
@@ -88,49 +93,70 @@ import './SongSearch.css';
 
     // Render the detailed view using the data from the selected row
     return (
-        <div className="search-container">
-            <h1 className="search-heading">{rowData.djName}</h1>
-            <div className="search-bar">
-                <input
-                type="text"
-                className="search-input"
-                placeholder="Type your search here..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-                />
+        <div>
+            {/* <h1 className="search-heading">{rowData.djName}</h1> */}
+            <div className="search-container">
+                <div className="left-content">
+                    <img
+                        src={rowData.djPhoto}
+                        alt="DJ Image"
+                        style={{ width: '300px', height: 'auto' }}
+                        className='dj-image'
+                    />
+                </div>
+                <div className="right-content">
+                    <p className='dj-name'>{rowData.djName}</p>
+                    <p className='text-muted event-name'>{rowData.eventName}</p>
+                    <p className='text-muted event-desc'>{rowData.eventDescription}</p>
+                </div>
             </div>
-            <br></br>
-            <div style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
-                <MDBTable align='middle' responsive hover>
-                    {/* <MDBTableHead>
-                        <tr>
-                            <th scope='col'>Song</th>
-                            <th scope='col'>Album</th>
-                            <th scope='col'>Image</th>
-                        </tr>
-                    </MDBTableHead> */}
-                        <MDBTableBody>
-                        {results && results.map((result, index) => (
-                        <tr key={index} onClick={(e) => { handleRowClick(result) }}>
-                            <td>
-                                <img
-                                src={result.album.images[result.album.images.length-1].url}
-                                alt={`Album Cover for ${result.album.name}`}
-                                style={{ width: '45px', height: '45px' }}
-                                className='rounded-circle'
-                                />
-                            </td>
-                            <td>
-                                <p className='fw-bold mb-1'>{result.name}</p>
-                                <p className='text-muted mb-0'>{result.artists[0].name}</p>
-                                {/* {result.name} */}
-                            </td>
-                            <td>{result.album.name}</td>
-                        </tr>
-                        ))}
-                        </MDBTableBody>
-                </MDBTable>
-                {loading && <p>Loading...</p>}
+            <div className="search-page">
+                <div className="search-bar">
+                    <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Type your search here..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    />
+                </div>
+                <br></br>
+                <div style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
+                    <MDBTable align='middle' responsive hover>
+                        {/* <MDBTableHead>
+                            <tr>
+                                <th scope='col'>Song</th>
+                                <th scope='col'>Album</th>
+                                <th scope='col'>Image</th>
+                            </tr>
+                        </MDBTableHead> */}
+                            <MDBTableBody>
+                            {results && results.map((result, index) => (
+                            <tr key={index} onClick={(e) => { handleRowClick(result) }}>
+                                <td>
+                                    <img
+                                    src={result.album.images[result.album.images.length-1].url}
+                                    alt={`Album Cover for ${result.album.name}`}
+                                    style={{ width: '45px', height: '45px' }}
+                                    className='rounded-circle'
+                                    />
+                                </td>
+                                <td>
+                                    <p className='fw-bold mb-1'>{result.name}</p>
+                                    {/* <p className='text-muted mb-0'>{result.artists[0].name}</p> */}
+
+                                    <p className='text-muted mb-0'>
+                                    {result.artists.map((artist) => artist.name).join(', ')}
+                                    </p>
+                                    
+                                </td>
+                                <td>{result.album.name}</td>
+                            </tr>
+                            ))}
+                            </MDBTableBody>
+                    </MDBTable>
+                    {loading && <p>Loading...</p>}
+                </div>
             </div>
         </div>
     );

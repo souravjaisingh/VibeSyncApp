@@ -38,10 +38,35 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-        public List<EventsDetails> GetEventsByDjId(GetEventsByDjId request)
+        public List<EventsDetails> GetEventsByDjId(GetEventsByUserId request)
         {
-            var eventList =  _context.Events.Where(x => x.DjId == request.DjId).OrderByDescending(x => x.CreatedOn).ToList();
-            return _mapper.Map<List<EventsDetails>>(eventList);
+            var events = _context.Events.Join(
+                _context.Djs.Where(d => d.UserId == request.UserId)
+                , events => events.DjId
+                , dj => dj.Id,
+                (events, dj) => new EventsDetails
+                {
+                    Id = events.Id,
+                    DjId = events.DjId,
+                    DjDescription = dj.DjDescription,
+                    DjPhoto = dj.DjPhoto,
+                    DjName = dj.DjName,
+                    DjGenre = dj.DjGenre,
+                    EventDescription = events.EventDescription,
+                    EventEndDateTime = events.EventEndDateTime,
+                    EventStartDateTime = events.EventStartDateTime,
+                    EventGenre = events.EventGenre,
+                    EventName = events.EventName,
+                    EventStatus = events.EventStatus,
+                    Latitude = events.Latitude,
+                    Longitude = events.Longitude,
+                    MinimumBid = events.MinimumBid,
+                    Venue = events.Venue,
+                    CreatedBy = events.CreatedBy,
+                    CreatedOn = events.CreatedOn
+                }
+                ).OrderByDescending(res => res.CreatedOn).ToList();
+            return events;
         }
 
         /// <summary>

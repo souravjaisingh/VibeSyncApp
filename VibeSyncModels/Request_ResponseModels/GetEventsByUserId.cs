@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace VibeSyncModels.Request_ResponseModels
 {
-    public class GetEventsByDjId : IRequest<List<EventsDetails>>
+    public class GetEventsByUserId : IRequest<List<EventsDetails>>
     {
-        public long DjId { get; set; }
+        public long UserId { get; set; }
     }
 }

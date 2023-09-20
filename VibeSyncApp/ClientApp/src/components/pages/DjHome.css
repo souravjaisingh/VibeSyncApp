@@ -1,0 +1,24 @@
+/* DjHome.css */
+.DjHome{
+    background-color: #f0f7f9;
+}
+.center-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; Center vertically on the viewport height */
+}
+
+.btn-medium {
+    padding: 8px 20px;
+    font-size: 32px;
+    border: ridge;
+}
+
+/* Media query for responsive button size */
+@media (max-width: 768px) {
+    .btn-medium {
+        padding: 8px 20px;
+        font-size: 22px;
+    }
+}

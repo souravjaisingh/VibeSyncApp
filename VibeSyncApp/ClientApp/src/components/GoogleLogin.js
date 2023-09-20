@@ -33,7 +33,13 @@ export default function GoogleLogin(isUser){
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
                     if(response){
                         localStorage.setItem('userId', response);
-                        window.location.href='/userhome';
+                        if(isUserRegistration){
+                            window.location.href='/userhome';
+                        }
+                        else{
+                            window.location.href='/djhome';
+                        }
+                        
                     }
                     //await registerUser(res.data);
                 })

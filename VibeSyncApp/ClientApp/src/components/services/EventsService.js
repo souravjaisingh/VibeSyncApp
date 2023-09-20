@@ -17,3 +17,9 @@ export async function GetLiveEvents(data) {
                 });
     return await response.json();
 }
+
+export async function GetDjEvents(id){
+    const res = await fetch(Constants.baseUri + 'Events/GetEventsByUserId?UserId=' + id)
+    .then(result=>result.json());
+    return res;
+}

@@ -9,3 +9,12 @@ export async function GetSongsUsingSearchTerm(query, offset, limit){
     });
     return res;
 };
+
+export async function GetSongsByEventId(id){
+    const res = await fetch(Constants.baseUri + `Songs/GetSongHistory?EventId=${id}`)
+    .then((response) => response.json())
+    .catch((error) => {
+        console.error('Error fetching data:', error);
+    });
+    return res;
+}

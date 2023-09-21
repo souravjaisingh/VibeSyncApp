@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { GetSongsUsingSearchTerm } from './services/SongsService';
+import { GetSongsByEventId, GetSongsUsingSearchTerm } from './services/SongsService';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import './SongSearch.css';
@@ -12,49 +12,60 @@ import './SongSearch.css';
         const rowDataString = searchParams.get('data');
         const [searchQuery, setSearchQuery] = useState('');
         const [results, setResults] = useState([]);
+        const [enqueuedSongs, setEnqueuedSongs] = useState([]);
         const [typingTimeout, setTypingTimeout] = useState(null);
         const [currentPage, setCurrentPage] = useState(2);
         const [loading, setLoading] = useState(false);
+        const [isListOpen, setListOpen] = useState(false);
         const tableRef = useRef(null);
 
         useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                //GetSongsUsingSearchTerm(searchterm, offset, limit)
-                const response = await GetSongsUsingSearchTerm(searchQuery, ((currentPage-1)*20)+1, 20);
-                const newData = response;
-        
-                setResults((prevData) => [...prevData, ...newData]);
-                setCurrentPage((prevPage) => prevPage + 1);
+            const fetchEnqSongs = async () => {
+                try {
+                    const response = await GetSongsByEventId(rowData.id);
+                    setEnqueuedSongs(response);
                 } catch (error) {
-                console.error('Error fetching data:', error);
+                    console.error('Error fetching data:', error);
+                    }
+            }
+            fetchEnqSongs();
+            const fetchData = async () => {
+                setLoading(true);
+                try {
+                    //GetSongsUsingSearchTerm(searchterm, offset, limit)
+                    const response = await GetSongsUsingSearchTerm(searchQuery, ((currentPage-1)*20)+1, 20);
+                    const newData = response;
+            
+                    setResults((prevData) => [...prevData, ...newData]);
+                    setCurrentPage((prevPage) => prevPage + 1);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
-    
-                setLoading(false);
+        
+                    setLoading(false);
+                };
+        
+            const handleScroll = () => {
+                const table = tableRef.current;
+                if (
+                table &&
+                table.scrollTop + table.clientHeight >= table.scrollHeight &&
+                !loading
+                ) {
+                fetchData();
+                }
             };
-    
-        const handleScroll = () => {
+        
             const table = tableRef.current;
-            if (
-            table &&
-            table.scrollTop + table.clientHeight >= table.scrollHeight &&
-            !loading
-            ) {
-            fetchData();
-            }
-        };
-    
-        const table = tableRef.current;
-        if (table) {
-            table.addEventListener('scroll', handleScroll);
-        }
-    
-        return () => {
             if (table) {
-            table.removeEventListener('scroll', handleScroll);
+                table.addEventListener('scroll', handleScroll);
             }
-        };
+        
+            return () => {
+                if (table) {
+                table.removeEventListener('scroll', handleScroll);
+                }
+            };
         }, [currentPage, loading, searchQuery]);
 
         // Function to handle changes in the search input
@@ -91,9 +102,13 @@ import './SongSearch.css';
         const rowData = JSON.parse(decodeURIComponent(rowDataString));
         console.log(rowData);
 
+        const toggleList = () => {
+            setListOpen(!isListOpen);
+        };
+
     // Render the detailed view using the data from the selected row
     return (
-        <div>
+        <div className='song-search'>
             {/* <h1 className="search-heading">{rowData.djName}</h1> */}
             <div className="search-container">
                 <div className="left-content">
@@ -110,6 +125,50 @@ import './SongSearch.css';
                     <p className='text-muted event-desc'>{rowData.eventDescription}</p>
                 </div>
             </div>
+            
+            <div className="custom-toggle-bar" onClick={toggleList}>
+                <span className="toggle-label">Show enqueued songs</span>
+                <span className={`toggle-icon ${isListOpen ? 'rotate' : ''}`}></span>
+            </div>
+            {isListOpen && ( // Conditionally render the list based on the state
+                <div className="collapsible-list">
+                {/* Content of the collapsible list */}
+                    <MDBTable align='middle' responsive>
+                            {/* <MDBTableHead>
+                                <tr>
+                                    <th scope='col'>Song</th>
+                                    <th scope='col'>Album</th>
+                                    <th scope='col'>Image</th>
+                                </tr>
+                            </MDBTableHead> */}
+                                <MDBTableBody>
+                                {enqueuedSongs && enqueuedSongs.map((result, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        <img
+                                        src={result.image}
+                                        style={{ width: '45px', height: '45px' }}
+                                        className='rounded-circle'
+                                        />
+                                    </td>
+                                    <td>
+                                        <p className='fw-bold mb-1'>{result.songName}</p>
+                                        {/* <p className='text-muted mb-0'>{result.artists[0].name}</p> */}
+
+                                        <p className='text-muted mb-0'>
+                                        {result.artistName}
+                                        </p>
+                                        
+                                    </td>
+                                    <td>{result.albumName}</td>
+                                </tr>
+                                ))}
+                                </MDBTableBody>
+                    </MDBTable>
+                </div>
+            )}
+
+
             <div className="search-page">
                 <div className="search-bar">
                     <input

@@ -6,8 +6,9 @@ namespace VibeSyncModels.Request_ResponseModels
     public class EventsDetails : IRequest<long>, INotification
     {
         public long Id { get; set; }
+        public long UserId { get; set; }
         public string EventName { get; set; }
-        public long DjId { get; set; }
+        public long? DjId { get; set; }
         public string DjName { get; set; }
         public string DjGenre { get; set; }
         public string DjDescription { get; set; }
@@ -19,7 +20,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public DateTime EventStartDateTime { get; set; }
         public DateTime EventEndDateTime { get; set; }
         public int MinimumBid { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }

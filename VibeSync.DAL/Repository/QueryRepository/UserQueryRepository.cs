@@ -45,6 +45,16 @@ namespace VibeSync.DAL.Repository.QueryRepository
         }
 
         /// <summary>
+        /// Gets the dj by user identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public long GetDjByUserId(long userId)
+        {
+            return _context.Djs.Where(x => x.UserId == userId).FirstOrDefault().Id;
+        }
+
+        /// <summary>
         /// Gets the users.
         /// </summary>
         /// <returns></returns>

@@ -23,3 +23,15 @@ export async function GetDjEvents(id){
     .then(result=>result.json());
     return res;
 }
+
+export async function AddEventByUserId(data){
+    const response = await fetch(Constants.baseUri + 'Events/CreateEvent', {
+        //mode: 'no-cors',
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+return await response.json();
+}

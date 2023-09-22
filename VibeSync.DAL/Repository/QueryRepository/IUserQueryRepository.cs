@@ -9,5 +9,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
         User GetUserById(int userId);
         User GetUserByEmail(string email);
         User ChecksIfUserIsValid(string email, string password);
+        long GetDjByUserId(long userId);
     }
 }

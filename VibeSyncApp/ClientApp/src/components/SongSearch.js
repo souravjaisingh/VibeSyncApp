@@ -179,7 +179,7 @@ import './SongSearch.css';
                     onChange={handleSearchChange}
                     />
                 </div>
-                <br></br>
+                <br/>
                 <div style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
                     <MDBTable align='middle' responsive hover>
                         {/* <MDBTableHead>

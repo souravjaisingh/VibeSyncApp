@@ -81,6 +81,7 @@ return(
                 </td>
             <td>
                     <p className='fw-normal mb-1'>{item.venue}</p>
+                    <p className='text-muted mb-0'>{Math.round((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100} miles</p>
                     {/* <p className='text-muted mb-0'>IT department</p> */}
                 </td>
                 <td>

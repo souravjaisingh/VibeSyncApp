@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace VibeSyncModels.EntityModels
+namespace VibeSyncModels.Request_ResponseModels
 {
-    public partial class Dj
+    public class DjProfileResponseModel
     {
-        public Dj()
-        {
-            Events = new HashSet<Event>();
-            Logs = new HashSet<Log>();
-            SongHistories = new HashSet<SongHistory>();
-        }
-
         public long Id { get; set; }
         public long UserId { get; set; }
         public string DjName { get; set; }
@@ -30,10 +20,5 @@ namespace VibeSyncModels.EntityModels
         public string CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }
-
-        public virtual User User { get; set; }
-        public virtual ICollection<Event> Events { get; set; }
-        public virtual ICollection<Log> Logs { get; set; }
-        public virtual ICollection<SongHistory> SongHistories { get; set; }
     }
 }

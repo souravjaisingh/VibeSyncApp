@@ -17,21 +17,20 @@ return (
         >
         Upcoming Events
         </button>
-        <button
+        {/* <button
         className={`tab ${checkActive(2, "active")}`}
         onClick={() => handleClick(2)}
         >
         Live Events
-        </button>
+        </button> */}
     </div>
     <div className="panels">
         <div className={`panel ${checkActive(1, "active")}`}>
         <DjEventList />
         </div>
-        <div className={`panel ${checkActive(2, "active")}`}>
+        {/* <div className={`panel ${checkActive(2, "active")}`}>
         <DjEventList />
-        {/* <DatatablePage /> */}
-        </div>
+        </div> */}
     </div>
     </>
 );

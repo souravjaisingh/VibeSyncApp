@@ -6,7 +6,7 @@ namespace VibeSyncModels.Request_ResponseModels
     /// <summary>
     /// Login User
     /// </summary>
-    public class LoginUser : IRequest<bool>
+    public class LoginUser : IRequest<LoginDetails>
     {
         /// <summary>
         /// Gets or sets the email.

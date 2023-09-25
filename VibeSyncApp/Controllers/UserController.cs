@@ -59,7 +59,7 @@ namespace VibeSyncApp.Controllers
         public async Task<IActionResult> LoginUser([FromBody] LoginUser user)
         {
             var result = await _mediator.Send(user);
-            if (result)
+            if (result.Id != 0)
                 return Ok(result);
             else
                 return Unauthorized();

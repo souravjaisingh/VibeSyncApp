@@ -180,3 +180,18 @@
   padding: 8px 20px;
   font-size: 18px;
 }
+/* Add this media query to make buttons smaller on small screens */
+@media screen and (max-width: 768px) {
+  .btnNav {
+    padding: 6px 12px; /* Adjust the padding for smaller buttons */
+    font-size: 14px; /* Adjust the font size for smaller buttons */
+  }
+}
+/* Adjust navbar-logo for smaller screens */
+@media screen and (max-width: 768px) {
+  .navbar-logo {
+    font-size: 1.5rem; /* Reduce the font size for smaller screens */
+    margin-left: 10px; /* Adjust the left margin to push it to the extreme left */
+    transform: translate(25%, 60%);
+  }
+}

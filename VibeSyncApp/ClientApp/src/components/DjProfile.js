@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './DjProfile.css';
-import { UpdateDjDetails, GetDjProfile } from '../services/DjService';
-import * as Constants from '../Constants';
+import { UpdateDjDetails, GetDjProfile } from './services/DjService';
 
 const DjProfile = () => {
+  const [id, setId] = useState('');
+  const [userid, setUserId] = useState('');
   const [djName, setDjName] = useState('');
-  const [artistName, setArtistName] = useState(''); // Added artistName state
+  const [artistName, setArtistName] = useState(''); 
   const [djGenre, setDjGenre] = useState('');
   const [djDescription, setDjDescription] = useState('');
   const [djPhoto, setDjPhoto] = useState('');
@@ -14,19 +15,28 @@ const DjProfile = () => {
   const [branchName, setBranchName] = useState('');
   const [ifscCode, setIfscCode] = useState('');
   const [socialLinks, setSocialLinks] = useState('');
-  const [events, setEvents] = useState(null); // State to store DJ profile data
+  const [successMessage, setSuccessMessage] = useState(''); 
+  const [errorMessage, setErrorMessage] = useState(''); 
 
   const handleSubmit = async () => {
+    setErrorMessage('');
+    setSuccessMessage('');
     // Validation: Check if any input field is empty
-    if (!djName) {
-      console.error('All fields are mandatory');
+    if (!djName || !userid) { // Add required fields here  
+      setErrorMessage('All required fields must be filled in.'); // Set error message
+      return; // Don't proceed with the API call
+    }
+
+    // Validation: Check the data type of bankAccountNumber
+    if (bankAccountNumber && isNaN(parseInt(bankAccountNumber))) {
+      setErrorMessage('Bank Account Number must be a number.'); // Set error message
       return; // Don't proceed with the API call
     }
 
     // Create a DJ profile object with the form data
     const djProfile = {
       DjName: djName,
-      ArtistName: artistName, // Include artistName in the object
+      ArtistName: artistName, 
       DjGenre: djGenre,
       DjDescription: djDescription,
       DjPhoto: djPhoto,
@@ -35,47 +45,53 @@ const DjProfile = () => {
       BranchName: branchName,
       IFSCCode: ifscCode,
       SocialLinks: socialLinks,
+      Id: id,
+      UserId: userid,
+      ModifiedBy: localStorage.getItem('userId')
     };
 
     // Call the UpdateDjDetails function to save the DJ profile
     try {
       const response = await UpdateDjDetails(djProfile);
-      if (response.status === Constants.statusCodes.OK) {
-        // Handle success and possibly navigate to another page
+      if(response.errors != null){
+        console.error('Error saving DJ profile:', response.errors);
+        setErrorMessage('Error saving DJ profile. Please try again'); 
+      }
+      else{
         console.log('DJ profile saved successfully:', response.data);
-      } else {
-        // Handle errors, e.g., display an error message
-        console.error('Error saving DJ profile:', response.data.message);
+        setSuccessMessage('DJ profile saved successfully');
       }
     } catch (error) {
       // Handle network or other errors
       console.error('Error saving DJ profile:', error);
+      setErrorMessage('Error saving DJ profile. Please try again.'); 
     }
   };
-
+  const handleBankAccountNumberChange = (e) => {
+    const input = e.target.value;
+    // Use a regular expression to allow only numeric characters
+    const numericInput = input.replace(/[^0-9]/g, '');
+    setBankAccountNumber(numericInput);
+  };
+  
   // Fetch DJ profile data when the component mounts
   useEffect(() => {
     async function getDjProfile() {
       try {
         const res = await GetDjProfile(localStorage.getItem('userId'));
-        if (res.status === Constants.statusCodes.OK) {
-          // Set the DJ profile data in state
-          setEvents(res.data);
-          // Populate the form fields with fetched data
-          setDjName(res.data.DjName);
-          setArtistName(res.data.ArtistName);
-          setDjGenre(res.data.DjGenre);
-          setDjDescription(res.data.DjDescription);
-          setDjPhoto(res.data.DjPhoto);
-          setBankName(res.data.BankName);
-          setBankAccountNumber(res.data.BankAccountNumber);
-          setBranchName(res.data.BranchName);
-          setIfscCode(res.data.IFSCCode);
-          setSocialLinks(res.data.SocialLinks);
-        } else {
-          // Handle errors, e.g., display an error message
-          console.error('Error fetching DJ profile:', res.data.message);
-        }
+        // Populate the form fields with fetched data
+        setDjName(res.djName);
+        setArtistName(res.artistName);
+        setDjGenre(res.djGenre);
+        setDjDescription(res.djDescription);
+        setDjPhoto(res.djPhoto);
+        setBankName(res.bankName);
+        setBankAccountNumber(res.bankAccountNumber);
+        setBranchName(res.branchName);
+        setIfscCode(res.ifsccode);
+        setSocialLinks(res.socialLinks);
+        setId(res.id);
+        setUserId(res.userId)
       } catch (error) {
         // Handle network or other errors
         console.error('Error fetching DJ profile:', error);
@@ -88,7 +104,9 @@ const DjProfile = () => {
   return (
     <div className="dj-profile">
       <form className="profile-form">
-        <p>All fields are mandatory</p>
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>} 
+      <p className="dj-profile-heading">DJ Profile</p>
         <div className="input-group">
           <label htmlFor="djNameInput">Name</label>
           <input
@@ -139,23 +157,13 @@ const DjProfile = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="bankNameInput">Bank Name</label>
-          <input
-            type="text"
-            id="bankNameInput"
-            placeholder="Bank Name"
-            value={bankName}
-            onChange={(e) => setBankName(e.target.value)}
-          />
-        </div>
-        <div className="input-group">
           <label htmlFor="bankAccountNumberInput">Account Number</label>
           <input
             type="text"
             id="bankAccountNumberInput"
             placeholder="Account Number"
             value={bankAccountNumber}
-            onChange={(e) => setBankAccountNumber(e.target.value)}
+            onChange={handleBankAccountNumberChange} // Use the custom change handler
           />
         </div>
         <div className="input-group">

@@ -22,6 +22,22 @@ function Navbar() {
   function handleRequestsClick(){
     navigate('/songhistory');
   }
+  function handleLogoutClick(){
+    localStorage.removeItem('userId');
+    navigate('/');
+  }
+  function handleHomeClick(){
+    if(localStorage.getItem('userId')!=null){
+      if(localStorage.getItem('isUser') == 'true'){
+        return '/userhome';
+      }
+      else{
+        return '/djhome';
+      }
+
+    }
+  }
+  const linkDecider = handleHomeClick();
   useEffect(() => {
     showButton();
   }, []);
@@ -30,22 +46,25 @@ function Navbar() {
 
   return (
     <>
-      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
-            VibeSync 
-            <i class='fab fa-typo3' />
-          </Link>
+      <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+  <Link to={linkDecider} className='navbar-logo'>
+    VibeSync 
+    <i className='fab fa-typo3' />
+  </Link>
 
-          {(location.pathname === '/userhome' 
-            || location.pathname.startsWith('/SongSearch') 
-            || location.pathname.startsWith('/paymentIndex')) && (
-                <button className='btnNav btn--outlineNav btn--medium' onClick={(e) => handleRequestsClick()}>Your Requests</button>
-          )}
-          {/* <button class="btn btn-success ml-auto mr-1 btn--outline">Login</button> */}
-          {/* <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-              <span class="navbar-toggler-icon"></span>
-          </button> */}
-      </nav>
+  <div className="ml-auto"> {/* Use ml-auto to push the buttons to the right */}
+    {(location.pathname === '/userhome' 
+      || location.pathname.startsWith('/SongSearch') 
+      || location.pathname.startsWith('/paymentIndex')) && (
+      <button className='btnNav btn--outlineNav btn-sm' onClick={(e) => handleRequestsClick()}>Your Requests</button>
+    )}
+
+    {localStorage.getItem('userId') != null && (
+      <button className='btnNav btn--outlineNav  btn-sm' style={{ marginLeft: '5px' }} onClick={(e) => handleLogoutClick()}>Logout</button>
+    )}
+  </div>
+</nav>
+
 
 
       {/* <nav className='navbar'>

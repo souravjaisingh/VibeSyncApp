@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './UserLogin.css';
+import './GoogleLogin.css';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { googleLoginHelper } from '../Helpers/UserHelper';
@@ -9,7 +10,7 @@ export default function GoogleLogin(isUser){
     const isUserRegistration = isUser.isUser;
     console.log(isUserRegistration);
 
-
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [ user, setUser ] = useState([]);
     const [ profile, setProfile ] = useState([]);
     var baseUri = 'http'
@@ -31,8 +32,9 @@ export default function GoogleLogin(isUser){
                     setProfile(res.data);
                     console.log(res.data);
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
-                    if(response){
+                    if(!response.includes('Error')){
                         localStorage.setItem('userId', response);
+                        localStorage.setItem('isUser', isUserRegistration);
                         if(isUserRegistration){
                             window.location.href='/userhome';
                         }
@@ -40,6 +42,9 @@ export default function GoogleLogin(isUser){
                             window.location.href='/djhome';
                         }
                         
+                    }
+                    else{
+                        setShowErrorMessage(true);
                     }
                     //await registerUser(res.data);
                 })
@@ -59,21 +64,13 @@ export default function GoogleLogin(isUser){
         <div>
             <br />
             <br />
-            { profile.length!=0 && profile != null ? (
-                <div>
-                    {/* <Link to='/services'></Link> */}
-                    <img src={profile.picture} alt="user image" />
-                    <h3>User Logged in</h3>
-                    <p>Name: {profile.name}</p>
-                    <p>Email Address: {profile.email}</p>
-                    <br />
-                    <br />
-                    <button onClick={logOut}>Log out</button>
-                </div>
-            ) : (
-                <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google 🚀 </button>
-            )}
+            <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google 🚀 </button>
         </div>
+        {showErrorMessage && (
+        <div className="err-message">
+            You cannot impersonate different role!
+        </div>
+    )}
     </>
     )
 }

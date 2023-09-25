@@ -44,8 +44,15 @@ export default function LoginForm(){
             setError(true);
         }
         const response = await loginUserHelper(email, password);
-        if(response == true){
+        if(response && response.isUser == true){
+            localStorage.setItem('userId', response.id);
+            localStorage.setItem('isUser', true);
             navigate('/userhome')
+        }
+        else if(response && response.isUser == false){
+            localStorage.setItem('userId', response.id);
+            localStorage.setItem('isUser', false);
+            navigate('/djhome')
         }
         else{
             setError(true);

@@ -13,7 +13,7 @@ namespace VibeSync.DAL.Handler
     /// </summary>
     /// <seealso cref="IRequestHandler&lt;User, string&gt;" />
     public class UserHandler : IRequestHandler<User, long>,
-        IRequestHandler<LoginUser, bool>,
+        IRequestHandler<LoginUser, LoginDetails>,
         IRequestHandler<GetUserId, long>
     {
         /// <summary>
@@ -56,12 +56,12 @@ namespace VibeSync.DAL.Handler
         /// <returns>
         /// Response from the request
         /// </returns>
-        public Task<bool> Handle(LoginUser request, CancellationToken cancellationToken)
+        public Task<LoginDetails> Handle(LoginUser request, CancellationToken cancellationToken)
         {
             var userDetails = _userQueryRepository.ChecksIfUserIsValid(request.Email, request.Password);
             if (userDetails != null)
-                return Task.FromResult(true);
-            return Task.FromResult(false);
+                return Task.FromResult(new LoginDetails {Id = userDetails.Id, IsUser = userDetails.UserOrDj=="dj" ? false : true });
+            return Task.FromResult(new LoginDetails());
         }
 
         /// <summary>

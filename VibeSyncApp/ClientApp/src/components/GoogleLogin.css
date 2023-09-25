@@ -1,7 +1,7 @@
-.cards {
+/* .cards {
     padding: 4rem;
     background: #fff;
-    background-image: url("../../public/images/closeup-dj-working-blue-light.jpg");
+    /* background-image: url("../../public/images/closeup-dj-working-blue-light.jpg"); 
     background-size: cover;
 }
 
@@ -179,4 +179,39 @@ h1 {
   .cards__item {
     margin-bottom: 2rem;
   }
-}
+} */
+
+.err-message {
+  background-color: #ec323c;
+  color: white;
+  text-align: center;
+  padding: 16px;
+  position: fixed;
+  bottom: 0; /* Display at the bottom of the screen */
+  left: 0;
+  right: 0; /* Stretch the message to full width */
+  z-index: 999;
+  width: 100%;
+  animation: slideUp 0.5s ease-in-out, fadeOut 4s ease-in-out forwards;
+  }
+  
+  @keyframes slideUp {
+      0% {
+      transform: translateY(100%);
+      }
+      100% {
+      transform: translateY(0);
+      }
+  }
+  
+  @keyframes fadeOut {
+      0%, 100% {
+      opacity: 1;
+      }
+      50% {
+      opacity: 0.5;
+      }
+      100% {
+      opacity: 0;
+      }
+  }

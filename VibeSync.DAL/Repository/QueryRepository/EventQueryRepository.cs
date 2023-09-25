@@ -65,7 +65,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                     CreatedBy = events.CreatedBy,
                     CreatedOn = events.CreatedOn
                 }
-                ).OrderByDescending(res => res.CreatedOn).ToList();
+                ).OrderBy(x => x.EventStatus).ThenByDescending(res => res.CreatedOn).ToList();
             return events;
         }
 

@@ -9,5 +9,6 @@
         public const string DbOperationFailed = "Failed to enter or update record in database";
         public const string UpdatedSuccessfully = "Updated Successfully";
         public const string PaymentOrderIdCreated = "Payment-OrderId created";
+        public const string Impersonating = "User is impersonating another role which is not allowed";
     }
 }

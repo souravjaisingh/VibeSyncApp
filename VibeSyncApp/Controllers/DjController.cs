@@ -29,10 +29,16 @@ namespace VibeSyncApp.Controllers
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateDj([FromBody] UpdateDjCommandModel request)
+        public async Task<IActionResult> UpdateDjProfile([FromBody] UpdateDjCommandModel request)
         {
             await _mediator.Send(request);
             return Ok(VibeSyncModels.Constants.UpdatedSuccessfully);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDjProfile([FromQuery] GetDjProfileRequestModel request)
+        {
+            return Ok(await _mediator.Send(request));
         }
     }
 }

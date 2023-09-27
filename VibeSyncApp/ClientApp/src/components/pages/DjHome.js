@@ -14,7 +14,7 @@ export default function DjHome() {
                         Update Dj Profile
                     </button>
                 </Link>
-                <Link to='/addevent' className='btn-mobile'>
+                <Link to='/eventdetails' className='btn-mobile'>
                     <button className='btn btn--primary btn-medium'>
                         Click here to add Event
                     </button>

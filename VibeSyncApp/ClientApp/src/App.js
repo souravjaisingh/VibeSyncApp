@@ -16,6 +16,7 @@ import RazorpayPayment from './components/RazorpayPayment';
 import DjHome from './components/pages/DjHome';
 import AddEvent from './components/AddEvent';
 import DjProfile from './components/DjProfile';
+import DjLiveSongs from './components/DjLiveSongs';
 
 function App() {
     return (

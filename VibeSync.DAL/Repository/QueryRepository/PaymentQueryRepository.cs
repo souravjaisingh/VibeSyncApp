@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Razorpay.Api;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
+using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -19,12 +16,61 @@ namespace VibeSync.DAL.Repository.QueryRepository
     {
         private readonly IUserQueryRepository _user;
         private readonly IPaymentCommandRepository _paymentCommand;
+        private readonly VibeSyncContext _context;
         public PaymentQueryRepository(IPaymentCommandRepository paymentCommand
-            ,IUserQueryRepository user)
+            , IUserQueryRepository user, IDBContextFactory context)
         {
             _paymentCommand = paymentCommand;
             _user = user;
+            _context = context.GetDBContext();
         }
+
+        public Task<List<PaymentResponseModel>> GetDjPayments(GetDjPaymentsRequestModel request)
+        {
+            var query = _context.SongHistories.AsQueryable();
+            if (request.EventId > 0 && request.DjId > 0)
+            {
+                query = query.Where(s => s.EventId == request.EventId && s.DjId == request.DjId);
+            }
+            else if (request.DjId > 0)
+            {
+                query = query.Where(s => s.DjId == request.DjId);
+            }
+            else if (request.EventId > 0)
+            {
+                query = query.Where(s => s.EventId == request.EventId);
+            }
+
+            var paymentTransactions = query
+                .Join(
+                    _context.Payments.Where(d => d.PaymentStatus == VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString() && d.PaymentId != null),
+                    songHistory => songHistory.Id,
+                    payment => payment.SongHistoryId,
+                    (songHistory, payment) => new PaymentResponseModel
+                    {
+                        Id = payment.Id,
+                        SongHistoryId = payment.SongHistoryId,
+                        BidAmount = payment.BidAmount,
+                        Discount = payment.Discount,
+                        UserId = payment.UserId,
+                        CreatedBy = payment.CreatedBy,
+                        CreatedOn = payment.CreatedOn,
+                        ModifiedBy = payment.ModifiedBy,
+                        ModifiedOn = payment.ModifiedOn,
+                        PaymentId = payment.PaymentId,
+                        PaymentStatus = payment.PaymentStatus,
+                        OrderId = payment.OrderId,
+                        PaymentSource = payment.PaymentSource,
+                        Promocode = payment.Promocode,
+                        Signature = payment.Signature,
+                        TotalAmount = payment.TotalAmount
+                    }
+                ).OrderBy(x => x.ModifiedOn).ThenByDescending(res => res.ModifiedOn)
+                .ToList();
+
+            return Task.FromResult(paymentTransactions);
+        }
+
         ///// <summary>
         ///// GetPaymentOrderId
         ///// </summary>

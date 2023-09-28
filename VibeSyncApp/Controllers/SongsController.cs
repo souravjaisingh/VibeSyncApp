@@ -47,5 +47,11 @@ namespace VibeSyncApp.Controllers
             var result = await _mediator.Send(request);
             return Ok(result);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateSongHistory([FromBody] SongHistoryModel request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
     }
 }

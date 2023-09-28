@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MediatR;
+using System;
 
 namespace VibeSyncModels.Request_ResponseModels
 {
     /// <summary>
-    /// Song History Response Model
+    /// Song History Model
     /// </summary>
-    public class SongHistoryResponseModel
+    public class SongHistoryModel : IRequest<string>
     {
         /// <summary>
         /// Gets or sets the identifier.

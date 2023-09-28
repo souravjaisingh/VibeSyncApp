@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
-using VibeSyncModels.EntityModels;
-using VibeSyncModels;
-using VibeSyncModels.Request_ResponseModels;
 using VibeSync.DAL.Repository.QueryRepository;
-using System.Linq;
+using VibeSyncModels;
+using VibeSyncModels.EntityModels;
+using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -69,7 +69,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
             if (eventEntity != null)
             {
                 eventEntity.Longitude = request.Longitude;
-                eventEntity.Latitude = request.Latitude;  
+                eventEntity.Latitude = request.Latitude;
                 eventEntity.ModifiedOn = DateTime.Now;
                 eventEntity.ModifiedBy = request.UserId.ToString();
                 eventEntity.Venue = request.Venue;

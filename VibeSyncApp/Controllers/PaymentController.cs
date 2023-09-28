@@ -1,10 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Razorpay.Api;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -46,6 +41,12 @@ namespace VibeSyncApp.Controllers
         public async Task<bool> PersistPaymentData([FromBody] PersistSongHistoryPaymentRequest request)
         {
             return await _mediator.Send(request).ConfigureAwait(false);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDjTransactions([FromQuery] GetDjPaymentsRequestModel request)
+        {
+            return Ok(await _mediator.Send(request));
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
@@ -55,7 +53,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 await _context.SaveChangesAsync();
                 return payment.Id;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.InnerException);
             }
@@ -74,7 +72,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 paymentRecord.ModifiedBy = request.UserId.ToString();
                 paymentRecord.ModifiedOn = DateTime.Now;
                 _context.Payments.Update(paymentRecord);
-                
+
                 _context.SaveChanges();
             }
 

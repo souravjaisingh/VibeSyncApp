@@ -9,7 +9,7 @@ namespace VibeSyncModels
         public MappingProfile()
         {
             CreateMap<EntityModels.User, Request_ResponseModels.User>().ReverseMap();
-            CreateMap<SongHistory, SongHistoryResponseModel>().ReverseMap();
+            CreateMap<SongHistory, SongHistoryModel>().ReverseMap();
             CreateMap<EventsDetails, Event>().ReverseMap();
             CreateMap<UpdateDjCommandModel, Dj>().ReverseMap();
             CreateMap<Dj, DjProfileResponseModel>().ReverseMap();

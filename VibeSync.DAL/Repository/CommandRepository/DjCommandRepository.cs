@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
-using System.Linq;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -60,7 +60,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
             }
             else
             {
-                throw new CustomException("Entity not found"); 
+                throw new CustomException("Entity not found");
             }
         }
     }

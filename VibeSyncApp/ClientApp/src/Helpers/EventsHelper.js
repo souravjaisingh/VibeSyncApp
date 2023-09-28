@@ -1,4 +1,4 @@
-import { AddEventByUserId, GetLiveEvents } from "../components/services/EventsService";
+import { AddEventByUserId, GetLiveEvents, UpdateEventDetails } from "../components/services/EventsService";
 
 export default async function getLiveEventsHelper(lat, lng) {
     var eventsModel = {
@@ -9,8 +9,9 @@ export default async function getLiveEventsHelper(lat, lng) {
     return res;
 }
 
-export async function addEventByUseridHelper(userid, eventname, eventdesc, venue, starttime, endtime, lat, lng, minbid, genre='default', eventstatus = 'Not live'){
+export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, venue, starttime, endtime, lat, lng, minbid, isUpdate, eventid = 0, genre='default', eventstatus = 'Not live'){
     var model = {
+        id : eventid,
         userId : userid,
         eventName : eventname,
         eventDescription : eventdesc,
@@ -23,7 +24,10 @@ export async function addEventByUseridHelper(userid, eventname, eventdesc, venue
         eventGenre : genre,
         eventStatus : eventstatus
     }
+    if(isUpdate == true){
+        var res = await UpdateEventDetails(model);
+        return res;
+    }
     var res = await AddEventByUserId(model);
     return res;
-
 }

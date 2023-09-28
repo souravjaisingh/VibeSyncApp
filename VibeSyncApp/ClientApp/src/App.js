@@ -32,7 +32,7 @@ function App() {
                     <Route path="/songhistory" element={<SongHistory />} />
                     <Route path="/razorpayment" element={<RazorpayPayment />} />
                     <Route path="/djhome" element={<DjHome />} />
-                    <Route path="/addevent" element={<AddEvent />} />
+                    <Route path="/eventdetails" element={<AddEvent />} />
                     <Route path="/djprofile" element={<DjProfile />} />
                 </Routes>
             <Footer />

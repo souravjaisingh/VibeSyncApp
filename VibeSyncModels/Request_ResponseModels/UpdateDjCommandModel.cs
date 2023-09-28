@@ -12,6 +12,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public long UserId { get; set; }
         [Required]
         public string DjName { get; set; }
+        public string ArtistName { get; set; }
         public string DjGenre { get; set; }
         public string DjDescription { get; set; }
         public string DjPhoto { get; set; }

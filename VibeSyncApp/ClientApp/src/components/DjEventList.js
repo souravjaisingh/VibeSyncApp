@@ -25,8 +25,7 @@ export default function DjEventList(){
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
         console.log(rowData);
         // Navigate to the detail view with the serialized rowData as a parameter
-        // navigate(`/SongSearch?data=${rowDataString}`);
-        navigate(`/djlivesongs?data=${rowDataString}`);
+        navigate(`/eventdetails?data=${rowDataString}`);
         //navigate('/SongSearch');
     };
 

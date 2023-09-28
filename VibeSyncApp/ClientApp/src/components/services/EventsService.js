@@ -35,3 +35,15 @@ export async function AddEventByUserId(data){
     });
 return await response.json();
 }
+
+export async function UpdateEventDetails(data){
+    const response = await fetch(Constants.baseUri + 'Events/UpdateEvent', {
+        //mode: 'no-cors',
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+return await response.json();
+}

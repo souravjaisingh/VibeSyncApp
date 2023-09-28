@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AddEvent.css';
 import { redirect } from 'react-router-dom';
-import { addEventByUseridHelper } from '../Helpers/EventsHelper';
+import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AddressTypeahead = () => {
     const [address, setAddress] = useState('');
@@ -16,7 +18,11 @@ const AddressTypeahead = () => {
     const [eventEndTime, setEndEventTime] = useState('');
     const [minimumBid, setMinimumBid] = useState('');
     const [eventDesc, SetEventDesc] = useState('');
-
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const rowDataString = searchParams.get('data');
+    const navigate = useNavigate();
+    const rowData = JSON.parse(decodeURIComponent(rowDataString));
 
     const handleAddressChange = async (event) => {
         const enteredAddress = event.target.value;
@@ -87,7 +93,7 @@ const AddressTypeahead = () => {
         
         // Validation: Check if any input field is empty
         setAddress('12.12345,14.345678');
-        if (!address || !theme || !venueName || !eventDesc
+        if (!theme || !venueName || !eventDesc
             || !eventStartTime || !eventEndTime || !minimumBid) {
             // Display an error message or handle validation error as needed
             console.error('All fields are mandatory');
@@ -98,7 +104,7 @@ const AddressTypeahead = () => {
             }
         }
         else{
-            var res = await addEventByUseridHelper(
+            var res = await eventDetailsUpsertHelper(
                 localStorage.getItem('userId')
                 ,theme
                 ,eventDesc
@@ -108,9 +114,11 @@ const AddressTypeahead = () => {
                 ,12.123456  //modify once google maps api gets implemented
                 ,44.765432
                 ,minimumBid
-                )
+                ,rowData ? true : false,
+                rowDataString ? rowData.id : 0
+                );
+                navigate('/djhome');
         }
-        
     }
     // Fetch suggestions as the user types
     useEffect(() => {
@@ -138,13 +146,21 @@ const AddressTypeahead = () => {
         } else {
         setSuggestions([]);
         }
+        if(rowData != null){
+            setVenueName(rowData.venue);
+            setTheme(rowData.eventName)
+            setEndEventTime(rowData.eventEndDateTime)
+            setStartEventTime(rowData.eventStartDateTime)
+            SetEventDesc(rowData.eventDescription)
+            setMinimumBid(rowData.minimumBid)
+        }
     }, [address]);
 
     return (
         <div className="address-typeahead">
     <form className='event-form'>
         <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
-        <div className="input-group">
+        {/* <div className="input-group">
             <label htmlFor="searchInput">Enter the event location</label>
             <input
                 type="text"
@@ -154,7 +170,7 @@ const AddressTypeahead = () => {
                 value={address}
                 onChange={handleAddressChange}
             />
-        </div>
+        </div> */}
         {suggestions.length > 0 && (
             <ul className="suggestions-list">
                 {suggestions.map((suggestion, index) => (
@@ -237,7 +253,7 @@ const AddressTypeahead = () => {
                 onChange={handleMinimumBidChange}
             />
         </div>
-        <button onClick={() => handleSubmit()} type="submit" className="btn btn--primary btn--medium btn-pay">Add event</button>
+        <button onClick={() => handleSubmit()} type="submit" className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
     </form>
 </div>
 

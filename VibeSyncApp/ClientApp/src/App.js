@@ -15,7 +15,7 @@ import SongHistory from './components/SongHistory';
 import RazorpayPayment from './components/RazorpayPayment';
 import DjHome from './components/pages/DjHome';
 import AddEvent from './components/AddEvent';
-import DjLiveSongs from './components/DjLiveSongs';
+import DjProfile from './components/DjProfile';
 
 function App() {
     return (
@@ -32,7 +32,8 @@ function App() {
                     <Route path="/songhistory" element={<SongHistory />} />
                     <Route path="/razorpayment" element={<RazorpayPayment />} />
                     <Route path="/djhome" element={<DjHome />} />
-                    <Route path="/addevent" element={<AddEvent />} />
+                    <Route path="/eventdetails" element={<AddEvent />} />
+                    <Route path="/djprofile" element={<DjProfile />} />
                     <Route path="/djlivesongs" element={<DjLiveSongs />} />
                 </Routes>
             <Footer />

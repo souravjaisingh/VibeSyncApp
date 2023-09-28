@@ -48,11 +48,11 @@ import './SongSearch.css';
             const handleScroll = () => {
                 const table = tableRef.current;
                 if (
-                table &&
-                table.scrollTop + table.clientHeight >= table.scrollHeight &&
-                !loading
+                    table &&
+                    table.scrollTop + table.clientHeight >= table.scrollHeight &&
+                    !loading
                 ) {
-                fetchData();
+                    fetchData();
                 }
             };
         
@@ -90,9 +90,16 @@ import './SongSearch.css';
             setResults(res);
         };
         
-        const handleRowClick = (rowData) => {
+        const handleRowClick = (data) => {
             // Serialize the rowData object to a JSON string and encode it
-            const rowDataString = encodeURIComponent(JSON.stringify(rowData));
+            rowData.eventId = rowData.id;
+            delete rowData.id;
+
+            data.songId = data.id;
+            delete data.id;
+            
+            const concatenatedJson = { ...rowData, ...data };
+            const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
     
             // Navigate to the detail view with the serialized rowData as a parameter
             navigate(`/paymentIndex?data=${rowDataString}`);
@@ -180,7 +187,7 @@ import './SongSearch.css';
                     />
                 </div>
                 <br/>
-                <div style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
+                <div className='container-for-table' style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
                     <MDBTable align='middle' responsive hover>
                         {/* <MDBTableHead>
                             <tr>

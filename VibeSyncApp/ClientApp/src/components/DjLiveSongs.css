@@ -1,0 +1,66 @@
+/* CSS for SongHistoryWithActions Component */
+.song-history-container {
+background-color: #f5f5f5;
+padding: 20px;
+}
+
+.song-history-table {
+max-height: 400px;
+overflow: auto;
+background-color: #ffffff;
+border: 1px solid #e0e0e0;
+box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+border-radius: 5px;
+}
+
+.song-history-table th,
+.song-history-table td {
+text-align: left;
+padding: 10px;
+}
+
+.song-history-table th {
+background-color: #f0f0f0;
+}
+
+/* Accepted Requests Section */
+.accepted-requests {
+margin-top: 20px;
+}
+
+.accepted-requests h2 {
+color: #333;
+}
+
+/* Buttons */
+.action-button {
+padding: 5px 10px;
+margin-right: 5px;
+cursor: pointer;
+border: none;
+background-color: transparent; /* Transparent background */
+font-size: 24px; /* Adjust the size as needed */
+}
+
+/* Style tick icon as green */
+.btn-success {
+    color: #5cb85c; /* Green color */
+    transition: color 0.3s; /* Add a transition for smoother color change */
+}
+
+/* Style cross icon as red */
+.btn-danger {
+color: #d9534f; /* Red color */
+transition: color 0.3s; /* Add a transition for smoother color change */
+}
+
+/* Style for the button in the :active state */
+.btn-success:active,
+.btn-danger:active {
+background-color: transparent; /* Set the background to transparent when clicked */
+}
+.history-table{
+    width: 100%;
+    overflow-x: auto;
+    font-size: small;
+}

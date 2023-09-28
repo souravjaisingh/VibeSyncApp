@@ -16,6 +16,7 @@ import RazorpayPayment from './components/RazorpayPayment';
 import DjHome from './components/pages/DjHome';
 import AddEvent from './components/AddEvent';
 import DjProfile from './components/DjProfile';
+import DjLiveSongs from './components/DjLiveSongs';
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/djhome" element={<DjHome />} />
                     <Route path="/eventdetails" element={<AddEvent />} />
                     <Route path="/djprofile" element={<DjProfile />} />
+                    <Route path="/djlivesongs" element={<DjLiveSongs />} />
                 </Routes>
             <Footer />
         </>

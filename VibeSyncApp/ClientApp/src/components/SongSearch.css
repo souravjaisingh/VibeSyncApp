@@ -136,3 +136,7 @@
     height: 40vh;
     overflow: auto;
 }
+.container-for-table {
+    overflow: auto; /* Enable scrolling */
+    max-height: 400px; /* Adjust the max height as needed */
+}

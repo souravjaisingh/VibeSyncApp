@@ -10,5 +10,6 @@
         public const string UpdatedSuccessfully = "Updated Successfully";
         public const string PaymentOrderIdCreated = "Payment-OrderId created";
         public const string Impersonating = "User is impersonating another role which is not allowed";
+        public const string SongStatusPending = "Pending";
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -11,12 +12,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
     /// </summary>
     public interface IPaymentCommandRepository
     {
-        /// <summary>
-        /// Persists orderId in Payments table
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="orderId"></param>
-        /// <returns></returns>
         Task<long> PersistOrderId(int userId, string orderId, decimal amount);
+        Task<long> PersistPaymentData(PersistSongHistoryPaymentRequest request, long songHistoryId);
     }
 }

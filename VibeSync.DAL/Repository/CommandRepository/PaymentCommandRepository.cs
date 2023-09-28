@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
 using VibeSyncModels.EntityModels;
+using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -60,5 +61,27 @@ namespace VibeSync.DAL.Repository.CommandRepository
             }
             return 0;
         }
+
+        public async Task<long> PersistPaymentData(PersistSongHistoryPaymentRequest request, long songHistoryId)
+        {
+            var paymentRecord = _context.Payments.FirstOrDefault(x => x.OrderId == request.OrderId);
+
+            if (paymentRecord?.OrderId != null)
+            {
+                paymentRecord.PaymentId = request.PaymentId;
+                paymentRecord.TotalAmount = request.TotalAmount;
+                paymentRecord.SongHistoryId = songHistoryId;
+                paymentRecord.ModifiedBy = request.UserId.ToString();
+                paymentRecord.ModifiedOn = DateTime.Now;
+                _context.Payments.Update(paymentRecord);
+                
+                _context.SaveChanges();
+            }
+
+            // Note: We don't call SaveChanges here; we leave it to the caller of this method.
+
+            return await Task.FromResult(paymentRecord?.Id ?? 0);
+        }
+
     }
 }

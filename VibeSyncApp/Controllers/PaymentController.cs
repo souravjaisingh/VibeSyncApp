@@ -37,5 +37,15 @@ namespace VibeSyncApp.Controllers
         {
             return await _mediator.Send(request).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Gets orderID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<bool> PersistPaymentData([FromBody] PersistSongHistoryPaymentRequest request)
+        {
+            return await _mediator.Send(request).ConfigureAwait(false);
+        }
     }
 }

@@ -23,9 +23,10 @@ export default function DjEventList(){
     const handleRowClick = (rowData) => {
         // Serialize the rowData object to a JSON string and encode it
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
-
+        console.log(rowData);
         // Navigate to the detail view with the serialized rowData as a parameter
-        navigate(`/SongSearch?data=${rowDataString}`);
+        // navigate(`/SongSearch?data=${rowDataString}`);
+        navigate(`/djlivesongs?data=${rowDataString}`);
         //navigate('/SongSearch');
     };
 

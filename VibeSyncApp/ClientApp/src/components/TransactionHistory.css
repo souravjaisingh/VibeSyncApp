@@ -1,0 +1,71 @@
+/* TransactionHistory.css */
+
+/* Container styles */
+.transaction-history-container {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styles */
+.transaction-history-container h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Filter container styles */
+.filter-container {
+    margin-bottom: 20px;
+}
+
+/* Label styles */
+.filter-container label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Select styles */
+.event-filter-select {
+    font-size: 14px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+    background-color: #fff;
+    color: #333;
+    margin-top: 5px;
+}
+
+/* Table styles */
+.transaction-table {
+    width: 100%;
+}
+
+/* Table head styles */
+.transaction-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+}
+
+/* Table body styles */
+.transaction-table td {
+    background-color: #fff;
+    color: #333;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Table hover effect */
+.transaction-table tbody tr:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+}

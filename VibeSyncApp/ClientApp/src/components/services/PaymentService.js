@@ -23,3 +23,12 @@ export async function UpsertPayment(data){
     });
     return await response.json();
 }
+
+export async function GetTransactionHistory(id){
+    const res = await fetch(Constants.baseUri + `Payment/GetDjTransactions?UserId=${id}`)
+    .then((response) => response.json())
+    .catch((error) => {
+        console.error('Error fetching data:', error);
+    });
+    return res;
+}

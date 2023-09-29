@@ -17,6 +17,7 @@ import DjHome from './components/pages/DjHome';
 import AddEvent from './components/AddEvent';
 import DjProfile from './components/DjProfile';
 import DjLiveSongs from './components/DjLiveSongs';
+import TransactionHistory from './components/TransactionHistory';
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
                     <Route path="/eventdetails" element={<AddEvent />} />
                     <Route path="/djprofile" element={<DjProfile />} />
                     <Route path="/djlivesongs" element={<DjLiveSongs />} />
+                    <Route path="/showtransactions" element={<TransactionHistory />} />
                 </Routes>
             <Footer />
         </>

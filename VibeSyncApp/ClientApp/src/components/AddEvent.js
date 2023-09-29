@@ -24,40 +24,40 @@ const AddressTypeahead = () => {
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
 
-    const handleAddressChange = async (event) => {
-        const enteredAddress = event.target.value;
-        setAddress(enteredAddress);
+    // const handleAddressChange = async (event) => {
+    //     const enteredAddress = event.target.value;
+    //     setAddress(enteredAddress);
 
-        try {
-        const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            enteredAddress
-            )}&key=YOUR_API_KEY`
-        );
+    //     try {
+    //     const response = await axios.get(
+    //         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+    //         enteredAddress
+    //         )}&key=YOUR_API_KEY`
+    //     );
 
-        if (response.data.status === 'OK') {
-            const location = response.data.results[0].geometry.location;
-            setLatitude(location.lat);
-            setLongitude(location.lng);
-            setSelectedSuggestion(null); // Clear selected suggestion
-            setSuggestions([]); // Clear suggestions
-        } else {
-            // Handle error, e.g., display a message to the user
-            console.error('Geocoding error:', response.data.status);
-            setLatitude('');
-            setLongitude('');
-            setSelectedSuggestion(null); // Clear selected suggestion
-            setSuggestions([]); // Clear suggestions
-        }
-        } catch (error) {
-        // Handle network or other errors
-        console.error('Error fetching geocoding data:', error);
-        setLatitude('');
-        setLongitude('');
-        setSelectedSuggestion(null); // Clear selected suggestion
-        setSuggestions([]); // Clear suggestions
-        }
-    };
+    //     if (response.data.status === 'OK') {
+    //         const location = response.data.results[0].geometry.location;
+    //         setLatitude(location.lat);
+    //         setLongitude(location.lng);
+    //         setSelectedSuggestion(null); // Clear selected suggestion
+    //         setSuggestions([]); // Clear suggestions
+    //     } else {
+    //         // Handle error, e.g., display a message to the user
+    //         console.error('Geocoding error:', response.data.status);
+    //         setLatitude('');
+    //         setLongitude('');
+    //         setSelectedSuggestion(null); // Clear selected suggestion
+    //         setSuggestions([]); // Clear suggestions
+    //     }
+    //     } catch (error) {
+    //     // Handle network or other errors
+    //     console.error('Error fetching geocoding data:', error);
+    //     setLatitude('');
+    //     setLongitude('');
+    //     setSelectedSuggestion(null); // Clear selected suggestion
+    //     setSuggestions([]); // Clear suggestions
+    //     }
+    // };
 
     const handleSuggestionClick = (suggestion) => {
         setAddress(suggestion);
@@ -89,8 +89,8 @@ const AddressTypeahead = () => {
             setMinimumBid(input);
         }
     };
-    const handleSubmit  = async () => {
-        
+    const handleSubmit  = async (event) => {
+        event.preventDefault();
         // Validation: Check if any input field is empty
         setAddress('12.12345,14.345678');
         if (!theme || !venueName || !eventDesc
@@ -117,35 +117,38 @@ const AddressTypeahead = () => {
                 ,rowData ? true : false,
                 rowDataString ? rowData.id : 0
                 );
+            if(res != null){
+                console.log(res);
                 navigate('/djhome');
+            }
         }
     }
     // Fetch suggestions as the user types
     useEffect(() => {
-        if (address.length > 2) {
-        axios
-            .get(
-            `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
-                address
-            )}&key=YOUR_API_KEY`
-            )
-            .then((response) => {
-            if (response.data.status === 'OK') {
-                setSuggestions(response.data.predictions.map((prediction) => prediction.description));
-            } else {
-                // Handle error, e.g., display a message to the user
-                console.error('Autocomplete error:', response.data.status);
-                setSuggestions([]);
-            }
-            })
-            .catch((error) => {
-            // Handle network or other errors
-            console.error('Error fetching autocomplete data:', error);
-            setSuggestions([]);
-            });
-        } else {
-        setSuggestions([]);
-        }
+        // if (address.length > 2) {
+        // axios
+        //     .get(
+        //     `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
+        //         address
+        //     )}&key=YOUR_API_KEY`
+        //     )
+        //     .then((response) => {
+        //     if (response.data.status === 'OK') {
+        //         setSuggestions(response.data.predictions.map((prediction) => prediction.description));
+        //     } else {
+        //         // Handle error, e.g., display a message to the user
+        //         console.error('Autocomplete error:', response.data.status);
+        //         setSuggestions([]);
+        //     }
+        //     })
+        //     .catch((error) => {
+        //     // Handle network or other errors
+        //     console.error('Error fetching autocomplete data:', error);
+        //     setSuggestions([]);
+        //     });
+        // } else {
+        // setSuggestions([]);
+        // }
         if(rowData != null){
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
@@ -154,7 +157,7 @@ const AddressTypeahead = () => {
             SetEventDesc(rowData.eventDescription)
             setMinimumBid(rowData.minimumBid)
         }
-    }, [address]);
+    }, []);
 
     return (
         <div className="address-typeahead">
@@ -253,7 +256,7 @@ const AddressTypeahead = () => {
                 onChange={handleMinimumBidChange}
             />
         </div>
-        <button onClick={() => handleSubmit()} type="submit" className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
+        <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
     </form>
 </div>
 

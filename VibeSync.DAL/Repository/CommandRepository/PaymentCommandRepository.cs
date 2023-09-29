@@ -66,6 +66,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
 
             if (paymentRecord?.OrderId != null)
             {
+                paymentRecord.PaymentStatus = VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString();
                 paymentRecord.PaymentId = request.PaymentId;
                 paymentRecord.TotalAmount = request.TotalAmount;
                 paymentRecord.SongHistoryId = songHistoryId;

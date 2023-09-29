@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
@@ -42,13 +39,37 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 _context.SongHistories.Add(songHisObj);
                 _context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-            
+
             songHistoryId = songHisObj.Id;
         }
 
+        public async Task<string> UpdateSongHistory(SongHistoryModel request)
+        {
+            var songHistoryEntity = _context.SongHistories.Where(x => x.Id == request.Id).FirstOrDefault();
+            if (songHistoryEntity != null)
+            {
+                songHistoryEntity.SongStatus = request.SongStatus;
+                songHistoryEntity.ModifiedBy = request.UserId.ToString();
+                songHistoryEntity.ModifiedOn = DateTime.Now;
+                var response = await _context.SaveChangesAsync();
+
+                if (response > 0)
+                {
+                    return Constants.UpdatedSuccessfully;
+                }
+                else
+                {
+                    throw new CustomException(Constants.DbOperationFailed);
+                }
+            }
+            else
+            {
+                throw new CustomException("Entity not found");
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using VibeSync.DAL.DBContext;
@@ -20,17 +19,12 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         private readonly VibeSyncContext _context;
         /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper _mapper;
-        /// <summary>
         /// Initializes a new instance of the <see cref="UserQueryRepository"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public EventQueryRepository(IDBContextFactory context, IMapper mapper)
+        public EventQueryRepository(IDBContextFactory context)
         {
             _context = context.GetDBContext();
-            _mapper = mapper;
         }
 
         /// <summary>

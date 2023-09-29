@@ -40,7 +40,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <returns></returns>
         public List<SongHistory> GetSongHistoryByUserId(long userId)
         {
-            return _context.SongHistories.Where(x => x.UserId == userId).OrderByDescending(x=>x.CreatedOn).ToList();
+            return _context.SongHistories.Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedOn).ToList();
         }
     }
 }

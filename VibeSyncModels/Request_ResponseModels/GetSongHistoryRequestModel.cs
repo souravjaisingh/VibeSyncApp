@@ -8,7 +8,7 @@ namespace VibeSyncModels.Request_ResponseModels
     /// Get Song History Request Model
     /// </summary>
     /// <seealso cref="MediatR.IRequest&lt;VibeSyncModels.Request_ResponseModels.SongHistoryResponseModel&gt;" />
-    public class GetSongHistoryRequestModel :IRequest<List<SongHistoryResponseModel>>, IValidatableObject
+    public class GetSongHistoryRequestModel : IRequest<List<SongHistoryModel>>, IValidatableObject
     {
         /// <summary>
         /// Gets or sets the event identifier.

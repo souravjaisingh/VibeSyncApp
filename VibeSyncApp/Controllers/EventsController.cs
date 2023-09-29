@@ -76,7 +76,7 @@ namespace VibeSyncApp.Controllers
         /// <param name="djId">The dj identifier.</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetEventsByUserId([FromQuery]GetEventsByUserId request)
+        public async Task<IActionResult> GetEventsByUserId([FromQuery] GetEventsByUserId request)
         {
             return Ok(await _mediator.Send(request));
         }

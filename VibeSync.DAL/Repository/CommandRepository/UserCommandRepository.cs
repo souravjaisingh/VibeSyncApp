@@ -80,12 +80,12 @@ namespace VibeSync.DAL.Repository.CommandRepository
             }
         }
 
-    /// <summary>
-    /// Deletes the user.
-    /// </summary>
-    /// <param name="userId">The user identifier.</param>
-    /// <returns></returns>
-    public async Task<int> DeleteUser(int userId)
+        /// <summary>
+        /// Deletes the user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public async Task<int> DeleteUser(int userId)
         {
             var user = _context.Users.Where(x => x.Id == userId).FirstOrDefault();
             user.IsActive = false;

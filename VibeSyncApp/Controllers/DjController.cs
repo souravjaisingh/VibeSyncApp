@@ -40,5 +40,6 @@ namespace VibeSyncApp.Controllers
         {
             return Ok(await _mediator.Send(request));
         }
+
     }
 }

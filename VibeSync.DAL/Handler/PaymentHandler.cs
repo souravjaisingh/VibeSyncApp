@@ -1,12 +1,8 @@
 ﻿using MediatR;
-using Razorpay.Api;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncModels.Request_ResponseModels;
@@ -17,21 +13,19 @@ namespace VibeSync.DAL.Handler
     /// PaymentHandler 
     /// </summary>
     public class PaymentHandler : IRequestHandler<GetPaymentOrderId, GetPaymentInitiationDetails>
-        , IRequestHandler<PersistSongHistoryPaymentRequest, bool>
+        , IRequestHandler<PersistSongHistoryPaymentRequest, bool>,
+        IRequestHandler<GetDjPaymentsRequestModel, List<PaymentResponseModel>>
     {
-        private readonly IPaymentQueryRepository _payment;
-        private readonly IPaymentCommandRepository _paymentCommand;
-        private readonly ISongCommandRepository _songCommand;
-        private readonly VibeSyncContext _context;
+        private readonly IPaymentQueryRepository _paymentqueryRepository;
+        private readonly IPaymentCommandRepository _paymentCommandRepository;
+        private readonly ISongCommandRepository _songCommandRepository;
         public PaymentHandler(IPaymentQueryRepository paymentQueryRepository
             , IPaymentCommandRepository paymentCommand
-            , ISongCommandRepository songCommand
-            , IDBContextFactory context)
+            , ISongCommandRepository songCommand)
         {
-            _payment = paymentQueryRepository;
-            _paymentCommand = paymentCommand;
-            _songCommand = songCommand;
-            _context = context.GetDBContext();
+            _paymentqueryRepository = paymentQueryRepository;
+            _paymentCommandRepository = paymentCommand;
+            _songCommandRepository = songCommand;
         }
 
         /// <summary>
@@ -42,7 +36,7 @@ namespace VibeSync.DAL.Handler
         /// <returns></returns>
         public Task<GetPaymentInitiationDetails> Handle(GetPaymentOrderId request, CancellationToken cancellationToken)
         {
-            return _payment.GetPaymentOrderId(request);
+            return _paymentqueryRepository.GetPaymentOrderId(request);
         }
 
         public async Task<bool> Handle(PersistSongHistoryPaymentRequest request, CancellationToken cancellationToken)
@@ -50,29 +44,34 @@ namespace VibeSync.DAL.Handler
             try
             {
                 long songHistoryId;
-                _songCommand.AddSongHistoryForUser(request, out songHistoryId);
+                _songCommandRepository.AddSongHistoryForUser(request, out songHistoryId);
 
                 if (songHistoryId > 0)
                 {
                     try
                     {
-                        long paymentId = await _paymentCommand.PersistPaymentData(request, songHistoryId);
+                        long paymentId = await _paymentCommandRepository.PersistPaymentData(request, songHistoryId);
                         if (paymentId > 0)
                         {
                             return true;
                         }
                     }
-                    catch (Exception paymentException)
+                    catch (Exception)
                     {
                         return false;
                     }
                 }
                 return false;
             }
-            catch (Exception songCommandException)
+            catch (Exception)
             {
                 return false;
             }
+        }
+
+        public async Task<List<PaymentResponseModel>> Handle(GetDjPaymentsRequestModel request, CancellationToken cancellationToken)
+        {
+            return await _paymentqueryRepository.GetDjPayments(request);
         }
     }
 

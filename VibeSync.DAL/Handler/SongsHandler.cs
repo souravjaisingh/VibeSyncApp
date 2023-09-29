@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -20,7 +21,7 @@ namespace VibeSync.DAL.Handler
     /// </summary>
     /// <seealso cref="MediatR.IRequestHandler&lt;VibeSyncModels.Request_ResponseModels.GetSongRequestModel, VibeSyncModels.Request_ResponseModels.SongDetails&gt;" />
     public class SongsHandler : IRequestHandler<GetSongRequestModel, List<SongDetails>>,
-        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryResponseModel>>
+        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryModel>>, IRequestHandler<SongHistoryModel, string>
     {
         /// <summary>
         /// Gets or sets the song query repository.
@@ -29,6 +30,10 @@ namespace VibeSync.DAL.Handler
         /// The song query repository.
         /// </value>
         private readonly ISongQueryRepository _songQueryRepository;
+        /// <summary>
+        /// The song command repository
+        /// </summary>
+        private readonly ISongCommandRepository _songCommandRepository;
         /// <summary>
         /// The mapper
         /// </summary>
@@ -77,7 +82,7 @@ namespace VibeSync.DAL.Handler
         /// Initializes a new instance of the <see cref="SongsHandler"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper)
+        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository)
         {
             _httpClient = client;
 
@@ -92,6 +97,7 @@ namespace VibeSync.DAL.Handler
             QueryParameters = configuration["SpotifyApi:QueryParameters"];
             _songQueryRepository = songQueryRepository;
             _mapper = mapper;
+            _songCommandRepository = songCommandRepository;
         }
         /// <summary>
         /// Handles the specified request.
@@ -123,10 +129,15 @@ namespace VibeSync.DAL.Handler
         /// <returns>
         /// Response from the request
         /// </returns>
-        public async Task<List<SongHistoryResponseModel>> Handle(GetSongHistoryRequestModel request, CancellationToken cancellationToken)
+        public async Task<List<SongHistoryModel>> Handle(GetSongHistoryRequestModel request, CancellationToken cancellationToken)
         {
             var songHistory = request.EventId > 0 ? _songQueryRepository.GetSongHistoryByEventId(request.EventId) : _songQueryRepository.GetSongHistoryByUserId(request.UserId);
-            return await Task.Run(() => _mapper.Map<List<SongHistoryResponseModel>>(songHistory));
+            return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
+        }
+
+        public async Task<string> Handle(SongHistoryModel request, CancellationToken cancellationToken)
+        {
+            return await _songCommandRepository.UpdateSongHistory(request);
         }
 
         #region Private methods        
@@ -151,6 +162,8 @@ namespace VibeSync.DAL.Handler
             dynamic json = JsonConvert.DeserializeObject(responseContent);
             return json.access_token;
         }
+
+
         #endregion
     }
 }

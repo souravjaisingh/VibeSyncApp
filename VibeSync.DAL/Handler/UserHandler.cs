@@ -60,7 +60,7 @@ namespace VibeSync.DAL.Handler
         {
             var userDetails = _userQueryRepository.ChecksIfUserIsValid(request.Email, request.Password);
             if (userDetails != null)
-                return Task.FromResult(new LoginDetails {Id = userDetails.Id, IsUser = userDetails.UserOrDj=="dj" ? false : true });
+                return Task.FromResult(new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj == "dj" ? false : true });
             return Task.FromResult(new LoginDetails());
         }
 

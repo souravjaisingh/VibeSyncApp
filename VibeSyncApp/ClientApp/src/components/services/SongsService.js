@@ -18,3 +18,14 @@ export async function GetSongsByEventId(id){
     });
     return res;
 }
+
+export async function ModifySongRequest(data){
+    const response = await fetch(Constants.baseUri + 'Songs/UpdateSongHistory', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    return await response.text();
+}

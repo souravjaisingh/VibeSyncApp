@@ -27,48 +27,71 @@ namespace VibeSync.DAL.Repository.QueryRepository
 
         public Task<List<PaymentResponseModel>> GetDjPayments(GetDjPaymentsRequestModel request)
         {
+            var djId = _context.Djs.Where(x => x.UserId == request.UserId).FirstOrDefault().Id;
+
             var query = _context.SongHistories.AsQueryable();
-            if (request.EventId > 0 && request.DjId > 0)
+            if (request.EventId > 0 && djId > 0)
             {
-                query = query.Where(s => s.EventId == request.EventId && s.DjId == request.DjId);
+                query = query.Where(s => s.EventId == request.EventId && s.DjId == djId);
             }
-            else if (request.DjId > 0)
+            else if (djId > 0)
             {
-                query = query.Where(s => s.DjId == request.DjId);
+                query = query.Where(s => s.DjId == djId);
             }
             else if (request.EventId > 0)
             {
                 query = query.Where(s => s.EventId == request.EventId);
             }
 
-            var paymentTransactions = query
-                .Join(
-                    _context.Payments.Where(d => d.PaymentStatus == VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString() && d.PaymentId != null),
-                    songHistory => songHistory.Id,
-                    payment => payment.SongHistoryId,
-                    (songHistory, payment) => new PaymentResponseModel
-                    {
-                        Id = payment.Id,
-                        SongHistoryId = payment.SongHistoryId,
-                        BidAmount = payment.BidAmount,
-                        Discount = payment.Discount,
-                        UserId = payment.UserId,
-                        CreatedBy = payment.CreatedBy,
-                        CreatedOn = payment.CreatedOn,
-                        ModifiedBy = payment.ModifiedBy,
-                        ModifiedOn = payment.ModifiedOn,
-                        PaymentId = payment.PaymentId,
-                        PaymentStatus = payment.PaymentStatus,
-                        OrderId = payment.OrderId,
-                        PaymentSource = payment.PaymentSource,
-                        Promocode = payment.Promocode,
-                        Signature = payment.Signature,
-                        TotalAmount = payment.TotalAmount
-                    }
-                ).OrderBy(x => x.ModifiedOn).ThenByDescending(res => res.ModifiedOn)
-                .ToList();
+            var result = _context.SongHistories
+                            .Join(
+                                _context.Payments,
+                                songHistory => songHistory.Id,
+                                payment => payment.SongHistoryId,
+                                (songHistory, payment) => new
+                                {
+                                    SongHistory = songHistory,
+                                    Payment = payment
+                                }
+                            )
+                            .GroupJoin(
+                                _context.Events,
+                                join => join.SongHistory.EventId,
+                                events => events.Id,
+                                (join, eventsGroup) => new
+                                {
+                                    SongHistory = join.SongHistory,
+                                    Payment = join.Payment,
+                                    EventsGroup = eventsGroup
+                                }
+                            )
+                            .SelectMany(
+                                join => join.EventsGroup.DefaultIfEmpty(),
+                                (join, events) => new PaymentResponseModel
+                                {
+                                    EventName = (events != null) ? events.EventName : null,
+                                    SongName = join.SongHistory.SongName,
+                                    Id = join.Payment.Id,
+                                    SongHistoryId = join.Payment.SongHistoryId,
+                                    BidAmount = join.Payment.BidAmount,
+                                    Discount = join.Payment.Discount,
+                                    UserId = join.Payment.UserId,
+                                    CreatedBy = join.Payment.CreatedBy,
+                                    CreatedOn = join.Payment.CreatedOn,
+                                    ModifiedBy = join.Payment.ModifiedBy,
+                                    ModifiedOn = join.Payment.ModifiedOn,
+                                    PaymentId = join.Payment.PaymentId,
+                                    PaymentStatus = join.Payment.PaymentStatus,
+                                    OrderId = join.Payment.OrderId,
+                                    PaymentSource = join.Payment.PaymentSource,
+                                    Promocode = join.Payment.Promocode,
+                                    Signature = join.Payment.Signature,
+                                    TotalAmount = join.Payment.TotalAmount
+                                }
+                            )
+                            .ToList();
 
-            return Task.FromResult(paymentTransactions);
+            return Task.FromResult(result);
         }
 
         ///// <summary>

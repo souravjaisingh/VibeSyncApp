@@ -3,7 +3,7 @@ import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
 import { getUserRequestHistoryData } from './services/UserService';
 import { useLocation } from 'react-router-dom';
-import { GetSongsByEventId } from './services/SongsService';
+import { GetSongsByEventId, ModifySongRequest } from './services/SongsService';
 
 export default function DjLiveSongs() {
     const [userHistory, setUserHistory] = useState([]);
@@ -17,43 +17,63 @@ export default function DjLiveSongs() {
 
     useEffect(() => {
         async function fetchData() {
-        try {
-            const res = await GetSongsByEventId(rowData.id);
-            // Separate the requests into accepted and unaccepted
-            const unaccepted = res.filter((request) => !request.accepted);
-            const accepted = res.filter((request) => request.accepted);
-            setUserHistory(unaccepted);
-            setAcceptedHistory(accepted);
-            console.log(accepted);
-            console.log(unaccepted);
-        } catch (error) {
-            console.error('Error fetching user request history:', error);
-        }
+            try {
+                const res = await GetSongsByEventId(rowData.id);
+                // Separate the requests into accepted and unaccepted
+                const unaccepted = res.filter((request) => request.songStatus === 'Pending');
+                const accepted = res.filter((request) => request.songStatus === 'Accepted');
+                
+                // Combine the arrays so that Pending requests appear on top
+                const sortedRequests = [...unaccepted, ...accepted];
+    
+                setUserHistory(sortedRequests);
+                console.log(sortedRequests);
+            } catch (error) {
+                console.error('Error fetching user request history:', error);
+            }
         }
         fetchData();
     }, []);
+    
+    
 
-    const handleAcceptRequest = async (requestId) => {
+    const handleAcceptRequest = async (record) => {
         try {
-        // await acceptRequest(requestId);
-        // Move the accepted request to the acceptedHistory array
-        const acceptedRequest = userHistory.find((request) => request.id === requestId);
-        setUserHistory((prevHistory) =>
-            prevHistory.filter((request) => request.id !== requestId)
-        );
-        setAcceptedHistory((prevAccepted) => [...prevAccepted, acceptedRequest]);
+            const songHistoryModel = {
+                id: record.id,
+                EventId: record.eventId,
+                SongStatus: "Accepted",
+                userId: localStorage.getItem('userId')
+            };
+            var res = await ModifySongRequest(songHistoryModel);
+            console.log(res);
+    
+            // Move the accepted request to the bottom of the acceptedHistory array
+            const acceptedRequest = userHistory.find((request) => request.id === record.id);
+            setUserHistory((prevHistory) =>
+                prevHistory.filter((request) => request.id !== record.id)
+            );
+            setAcceptedHistory((prevAccepted) => [...prevAccepted, acceptedRequest]);
         } catch (error) {
-        console.error('Error accepting request:', error);
+            console.error('Error accepting request:', error);
         }
     };
-
-    const handleRejectRequest = async (requestId) => {
+    
+    const handleRejectRequest = async (record) => {
         try {
+            const songHistoryModel = {
+                id: record.id,
+                EventId: record.eventId,
+                SongStatus: "Rejected",
+                userId: localStorage.getItem('userId')
+            };
+            var res = await ModifySongRequest(songHistoryModel);
+            console.log(res);
         // await rejectRequest(requestId);
         // Remove the rejected request from the userHistory array
-        setUserHistory((prevHistory) =>
-            prevHistory.filter((request) => request.id !== requestId)
-        );
+            setUserHistory((prevHistory) =>
+                prevHistory.filter((request) => request.id !== record.id)
+            );
         } catch (error) {
         console.error('Error rejecting request:', error);
         }
@@ -82,14 +102,14 @@ export default function DjLiveSongs() {
                     {result && result.songStatus === 'Pending' && (
                     <><td>
                                 <button
-                                    onClick={() => handleAcceptRequest(result.id)}
+                                    onClick={() => handleAcceptRequest(result)}
                                     className='btn btn-success action-button'
                                 >
                                     ✓
                                 </button>
                             </td><td>
                                     <button
-                                        onClick={() => handleRejectRequest(result.id)}
+                                        onClick={() => handleRejectRequest(result)}
                                         className='btn btn-danger action-button'
                                     >
                                         ✗

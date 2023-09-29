@@ -19,6 +19,11 @@ export default function DjHome() {
                         Click here to add Event
                     </button>
                 </Link>
+                <Link to='/showtransactions' className='btn-mobile right-button'>
+                    <button className='btn btn--primary btn-medium'>
+                        Show Transactions
+                    </button>
+                </Link>
             </div>
 
             <DjTabs />

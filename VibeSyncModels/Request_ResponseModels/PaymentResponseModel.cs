@@ -20,5 +20,8 @@ namespace VibeSyncModels.Request_ResponseModels
         public long? UserId { get; set; }
         public string OrderId { get; set; }
         public string Signature { get; set; }
+        public long? EventId { get; set; }
+        public string EventName { get; set; }
+        public string SongName { get; set; }
     }
 }

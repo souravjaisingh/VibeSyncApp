@@ -45,5 +45,5 @@ export async function UpdateEventDetails(data){
             'Content-Type': 'application/json'
         }
     });
-return await response.json();
+return response.text();
 }

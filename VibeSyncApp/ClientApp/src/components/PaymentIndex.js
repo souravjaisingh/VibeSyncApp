@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
 import { GetPaymentInitiationDetails, UpsertPayment } from './services/PaymentService';
+import PaymentPage from './CCAvenue';
+import SampleTransactionComponent from './CCAvenue2';
 
 function PaymentIndex() {
 // State to manage the image URL and description
@@ -194,7 +196,8 @@ return (
         {/* Submit button */}
         <button className=' btnPayment btn--primaryPayment btn--mediumPayment' id="rzp-button1" onClick={loadRazorpayScript}>Pay</button>
     </form>
-
+    {/* <PaymentPage/> */}
+    <Link to={'/ccavenue2'}>CCavenue2</Link>
     {/* Render the success message if showSuccessMessage is true */}
     {showSuccessMessage && (
         <div className="success-message">

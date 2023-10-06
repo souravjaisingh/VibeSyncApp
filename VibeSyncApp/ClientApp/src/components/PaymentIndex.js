@@ -196,8 +196,9 @@ return (
         {/* Submit button */}
         <button className=' btnPayment btn--primaryPayment btn--mediumPayment' id="rzp-button1" onClick={loadRazorpayScript}>Pay</button>
     </form>
-    {/* <PaymentPage/> */}
+    <PaymentPage/>
     <Link to={'/ccavenue2'}>CCavenue2</Link>
+    <Link to={'/paymentrequest'}>CCavenue3</Link>
     {/* Render the success message if showSuccessMessage is true */}
     {showSuccessMessage && (
         <div className="success-message">

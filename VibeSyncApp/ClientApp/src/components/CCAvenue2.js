@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 const SampleTransactionComponent = () => {
     const merchant_id = "2193"; // Put your merchant id here
-    const access_code = "F94007DF1640D69A"; // Put access code here
-    const enc_key = "FABE114254BDBC7823534894FFFCCC1"; // Put encryption key here
+    const access_code = "AVHH14KI48BM55HHMB"; // Put access code here
+    const enc_key = "934B8EBA1F02D0E1F169C6B853AD1D28	"; // Put encryption key here
 
     useEffect(() => {
         // Construct the ccaRequest from the URL parameters
@@ -39,14 +39,15 @@ const SampleTransactionComponent = () => {
             { name: 'AES-CBC', iv: new ArrayBuffer(16) }, // Use an appropriate IV
             key,
             requestData
-        ).then((encryptedData) => {
+        ).then(async (encryptedData) => {
             // Convert the encrypted data to a hexadecimal string
             const encryptedHex = Array.from(new Uint8Array(encryptedData))
             .map((byte) => byte.toString(16).padStart(2, '0'))
             .join('');
 
             // Make an HTTP POST request using fetch
-            fetch('https://test.ccavenue.com/transaction/transaction.do?command=initiatePayloadTransaction', {
+            await fetch('https://test.ccavenue.com/transaction/transaction.do?command=initiatePayloadTransaction', {
+            mode: 'no-cors',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

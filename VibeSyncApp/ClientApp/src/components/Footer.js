@@ -29,28 +29,24 @@ function Footer() {
         <div className='footer-link-wrapper'>
           <div class='footer-link-items'>
             <h2>About Us</h2>
-            <Link to='/sign-up'>How it works</Link>
-            <Link to='/'>Testimonials</Link>
-            <Link to='/'>Careers</Link>
-            <Link to='/'>Investors</Link>
-            <Link to='/'>Terms of Service</Link>
-          </div>
-          <div class='footer-link-items'>
-            <h2>Contact Us</h2>
-            <Link to='/'>Contact</Link>
-            <Link to='/'>Support</Link>
-            <Link to='/'>Destinations</Link>
-            <Link to='/'>Sponsorships</Link>
+            <Link to='/aboutus'>How it works</Link>
+            {/* <Link to='/'>Testimonials</Link> */}
+            {/* <Link to='/'>Careers</Link> */}
+            {/* <Link to='/'>Investors</Link> */}
+            <Link to='/termsofservice'>Terms of Service</Link>
+            <Link to='/privacypolicy'>Privacy Policy</Link>
+            <Link to='/'>Payments & Refunds</Link>
+            <Link to='/contactus'>Contact Us</Link>
           </div>
         </div>
         <div className='footer-link-wrapper'>
-          <div class='footer-link-items'>
+          {/* <div class='footer-link-items'>
             <h2>Videos</h2>
             <Link to='/'>Submit Video</Link>
             <Link to='/'>Ambassadors</Link>
             <Link to='/'>Agency</Link>
             <Link to='/'>Influencer</Link>
-          </div>
+          </div> */}
           <div class='footer-link-items'>
             <h2>Social Media</h2>
             <Link to='/'>Instagram</Link>
@@ -62,13 +58,15 @@ function Footer() {
       </div>
       <section class='social-media'>
         <div class='social-media-wrap'>
-          <div class='footer-logo'>
+          {/* <div class='footer-logo'>
             <Link to='/' className='social-logo'>
               VibeSync
               <i class='fab fa-typo3' />
             </Link>
+          </div> */}
+          <div className="centered-text">
+            <small class='website-rights'>VibeSync © 2023</small>
           </div>
-          <small class='website-rights'>VibeSync © 2023</small>
           <div class='social-icons'>
             <Link
               class='social-icon-link facebook'

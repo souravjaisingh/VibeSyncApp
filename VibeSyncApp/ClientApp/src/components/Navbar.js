@@ -34,7 +34,9 @@ function Navbar() {
       else{
         return '/djhome';
       }
-
+    }
+    else{
+      return '/';
     }
   }
   const linkDecider = handleHomeClick();

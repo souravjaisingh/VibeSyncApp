@@ -19,6 +19,10 @@ import DjProfile from './components/DjProfile';
 import DjLiveSongs from './components/DjLiveSongs';
 import TransactionHistory from './components/TransactionHistory';
 import SampleTransactionComponent from './components/CCAvenue2';
+import AboutUs from './components/AboutUs';
+import TermsOfService from './components/TermsOfService';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import ContactUs from './components/ContactUs';
 
 function App() {
     return (
@@ -40,7 +44,10 @@ function App() {
                     <Route path="/djlivesongs" element={<DjLiveSongs />} />
                     <Route path="/showtransactions" element={<TransactionHistory />} />
                     <Route path="/ccavenue2" element={<SampleTransactionComponent />} />
-                    
+                    <Route path="/aboutus" element={<AboutUs />} />
+                    <Route path="/termsofservice" element={<TermsOfService />} />
+                    <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+                    <Route path="/contactus" element={<ContactUs />} />
                 </Routes>
             <Footer />
         </>

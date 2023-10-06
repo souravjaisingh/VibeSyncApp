@@ -215,3 +215,13 @@ h1 {
       opacity: 0;
       }
   }
+  /* styles.css */
+.google-icon {
+  background-image: url('../Resources/google.png'); /* Replace with the actual path to your Google icon image */
+  width: 24px; /* Adjust the size as needed */
+  height: 24px;
+  background-size: cover;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px; /* Add spacing between the icon and text */
+}

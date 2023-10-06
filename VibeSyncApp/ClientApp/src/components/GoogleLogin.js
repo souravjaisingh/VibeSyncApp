@@ -64,7 +64,7 @@ export default function GoogleLogin(isUser){
         <div>
             <br />
             <br />
-            <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google 🚀 </button>
+            <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google   <span className="google-icon"></span></button>
         </div>
         {showErrorMessage && (
         <div className="err-message">

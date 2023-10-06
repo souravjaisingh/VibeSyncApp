@@ -106,7 +106,7 @@
 
 .social-media-wrap {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 90%;
   max-width: 1000px;
@@ -160,4 +160,11 @@
 }
 
 @media screen and (max-width: 768px) {
+}
+.centered-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px; /* Adjust the margin as needed */
 }

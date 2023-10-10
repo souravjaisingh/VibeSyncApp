@@ -1,0 +1,67 @@
+/* DJList.css */
+
+/* Styling for the container div */
+.song--history--container {
+    max-height: 400px;
+    overflow: auto;
+    background-color: #f7f7f7;
+    /* Lighter background color */
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Add a subtle box shadow */
+}
+
+/* Styling for the table */
+.song--history--table {
+    width: 100%;
+    table-layout: fixed;
+    /* Fix the table layout */
+}
+
+/* Set specific column widths */
+.song--history--header--cell {
+    font-weight: bold;
+    text-align: center;
+    width: 33.33%;
+    /* Equal width for all columns */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    overflow: hidden;
+    /* Hide overflow text */
+    text-overflow: ellipsis;
+    /* Show ellipsis for long text */
+}
+
+/* Styling for table body rows */
+.song--history--body--row {
+    cursor: pointer;
+    /* Change cursor on hover */
+}
+
+/* Styling for album cover images */
+.album--cover--image {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    /* Make the images circular */
+}
+
+/* Styling for song name and artist */
+.song--details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Styling for song name */
+.song--name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+/* Styling for artist name */
+.artist--name {
+    color: #555;
+    /* Darker text color for artist name */
+}

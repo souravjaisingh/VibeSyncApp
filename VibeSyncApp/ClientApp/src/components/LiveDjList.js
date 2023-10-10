@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import getLiveEventsHelper from '../Helpers/EventsHelper';
 
-export default function LiveDjList(){
+export default function LiveDjList() {
     const [events, setEvents] = useState([])
     const navigate = useNavigate();
-    
+
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleSearchChange = (event) => {
@@ -15,11 +15,11 @@ export default function LiveDjList(){
     };
 
     const filteredData = events.filter((item) =>
-    Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(searchQuery.toLowerCase())
-    )
+        Object.values(item).some((value) =>
+            String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        )
     );
-    
+
     const handleRowClick = (rowData) => {
         // Serialize the rowData object to a JSON string and encode it
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
@@ -28,73 +28,74 @@ export default function LiveDjList(){
         navigate(`/SongSearch?data=${rowDataString}`);
         //navigate('/SongSearch');
     };
-    async function getEventsData(lat, lng){
+    async function getEventsData(lat, lng) {
         const res = await getLiveEventsHelper(lat, lng);
         //console.log(res);
         setEvents(res);
     }
-    useEffect(()=>{
-        navigator.geolocation.getCurrentPosition(function(position) {
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(function (position) {
             getEventsData(position.coords.latitude, position.coords.longitude);
             console.log("Latitude is :", position.coords.latitude);
             console.log("Longitude is :", position.coords.longitude);
-            });
-    },[])
-return(
-    <>
-    <MDBInput
-        type="text"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        placeholder="Search DJ/Venue"
-    />
-    <MDBTable align='middle' responsive hover>
-    <MDBTableHead>
-    <tr>
-        <th scope='col'>Name</th>
-        <th scope='col'>Event Name</th>
-        <th scope='col'>Venue</th>
-        <th scope='col'>Status</th>
-    </tr>
-    </MDBTableHead>
-    <MDBTableBody>
-    {
-        filteredData.map(item => 
-            <>
-            <tr onClick={(e) => { handleRowClick(item) }}>
-            <td>
-                <div className='d-flex align-items-center'>
-                    <img
-                        src={item.djPhoto}
-                        alt=''
-                        style={{ width: '45px', height: '45px' }}
-                        className='rounded-circle' />
-                    <div className='ms-3'>
-                        <p className='fw-bold mb-1'>{item.djName}</p>
-                        <p className='text-muted mb-0'>{item.djDescription}</p>
-                    </div>
-                </div>
-            </td>
-            <td>
-                    <p className='fw-normal mb-1'>{item.eventName}</p>
-                    {/* <p className='text-muted mb-0'>IT department</p> */}
-                </td>
-            <td>
-                    <p className='fw-normal mb-1'>{item.venue}</p>
-                    <p className='text-muted mb-0'>{Math.round((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100} miles</p>
-                    {/* <p className='text-muted mb-0'>IT department</p> */}
-                </td>
-                <td>
-                    <MDBBadge color={item.eventStatus == 'Live' ? 'danger' : 'success'} pill>
-                        {item.eventStatus}
-                    </MDBBadge>
-                </td>
-                </tr>
-                </>
-        )
-    }
-    </MDBTableBody>
-</MDBTable>
-    </>
-);
+        });
+    }, [])
+    return (
+        <>
+            <MDBInput
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search DJ/Venue"
+            />
+            <MDBTable align='middle' responsive hover>
+                <MDBTableHead>
+                    <tr>
+                        <th scope='col'>Name</th>
+                        <th scope='col'>Event Name</th>
+                        <th scope='col'>Venue</th>
+                        <th scope='col'>Status</th>
+                    </tr>
+                </MDBTableHead>
+                <MDBTableBody>
+                    {
+                        filteredData.map(item =>
+                            <>
+                                <tr onClick={(e) => { handleRowClick(item) }}>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <img
+                                                src={item.djPhoto}
+                                                alt=''
+                                                style={{ width: '45px', height: '45px' }}
+                                                className='rounded-circle' />
+                                            <div className='ms-3'>
+                                                <p className='fw-bold mb-1'>{item.djName}</p>
+                                                <p className='text-muted mb-0'>{item.djDescription}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p className='fw-normal mb-1'>{item.eventName}</p>
+                                        {/* <p className='text-muted mb-0'>IT department</p> */}
+                                    </td>
+                                    <td>
+                                        <p className='fw-normal mb-1'>{item.venue}</p>
+                                        <p className='text-muted mb-0'>{Math.round((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100} miles</p>
+                                        {/* <p className='text-muted mb-0'>IT department</p> */}
+                                    </td>
+                                    <td>
+                                        <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
+                                            {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
+                                        </MDBBadge>
+
+                                    </td>
+                                </tr>
+                            </>
+                        )
+                    }
+                </MDBTableBody>
+            </MDBTable>
+        </>
+    );
 }

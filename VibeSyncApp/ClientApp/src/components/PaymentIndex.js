@@ -155,7 +155,7 @@ const loadRazorpayScript = async () => {
         AlbumImage: rowData.album.images[0].url
     };
     var res = await UpsertPayment(obj);
-    navigate('/songhistory');
+    navigate('/userhome');
 }
 // Function to handle form submission
 const handleSubmit = async (e) => {

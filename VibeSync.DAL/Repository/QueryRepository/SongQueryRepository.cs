@@ -31,8 +31,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
         public List<SongHistory> GetSongHistoryByEventId(long eventId)
         {
             return _context.SongHistories.Where(x => x.EventId == eventId)
-                .Where(x => x.SongStatus != "Rejected")
-                .OrderByDescending(x => x.CreatedOn).ToList();
+                .Where(x => x.SongStatus != "Rejected" && x.SongStatus != "Played")
+                .OrderBy(x => x.CreatedOn).ToList();
         }
 
         /// <summary>

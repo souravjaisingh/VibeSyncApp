@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
 import { getUserRequestHistoryData } from './services/UserService';
 import { useLocation } from 'react-router-dom';
@@ -22,10 +22,20 @@ export default function DjLiveSongs() {
                 // Separate the requests into accepted and unaccepted
                 const unaccepted = res.filter((request) => request.songStatus === 'Pending');
                 const accepted = res.filter((request) => request.songStatus === 'Accepted');
-                
+
                 // Combine the arrays so that Pending requests appear on top
                 const sortedRequests = [...unaccepted, ...accepted];
-    
+
+                sortedRequests.sort((a, b) => {
+                    if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
+                        return -1; // 'Pending' requests come first
+                    } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
+                        return 1; // 'Pending' requests come first
+                    } else {
+                        return new Date(a.modifiedOn) - new Date(b.modifiedOn); // Sort by modifiedOn in descending order
+                    }
+                });
+
                 setUserHistory(sortedRequests);
                 console.log(sortedRequests);
             } catch (error) {
@@ -34,31 +44,56 @@ export default function DjLiveSongs() {
         }
         fetchData();
     }, []);
-    
-    
 
     const handleAcceptRequest = async (record) => {
         try {
             const songHistoryModel = {
                 id: record.id,
                 EventId: record.eventId,
-                SongStatus: "Accepted",
+                SongStatus: "Accepted", // Update the songStatus property
                 userId: localStorage.getItem('userId')
             };
             var res = await ModifySongRequest(songHistoryModel);
             console.log(res);
     
-            // Move the accepted request to the bottom of the acceptedHistory array
-            const acceptedRequest = userHistory.find((request) => request.id === record.id);
-            setUserHistory((prevHistory) =>
-                prevHistory.filter((request) => request.id !== record.id)
+            // Update the songStatus property of the accepted request in a new array
+            const updatedUserHistory = userHistory.map((request) =>
+                request.id === record.id ? { ...request, songStatus: 'Accepted', modifiedOn: new Date() } : request
             );
-            setAcceptedHistory((prevAccepted) => [...prevAccepted, acceptedRequest]);
+    
+            // Sort and update the userHistory state
+            const sortedUserHistory = sortUserHistory(updatedUserHistory);
+            setUserHistory(sortedUserHistory);
+    
+            // Move the accepted request to the bottom of the acceptedHistory array
+            setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         } catch (error) {
             console.error('Error accepting request:', error);
         }
     };
     
+
+    // Similar changes for handleRejectRequest
+
+    // Function to sort userHistory
+    const sortUserHistory = (history) => {
+        const sortedUserHistory = [...history];
+
+        sortedUserHistory.sort((a, b) => {
+            if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
+                return -1; // 'Pending' requests come first
+            } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
+                return 1; // 'Pending' requests come first
+            } else {
+                return new Date(a.modifiedOn) - new Date(b.modifiedOn); // Sort by modifiedOn in descending order
+            }
+        });
+
+        return sortedUserHistory;
+    };
+
+
+
     const handleRejectRequest = async (record) => {
         try {
             const songHistoryModel = {
@@ -69,75 +104,117 @@ export default function DjLiveSongs() {
             };
             var res = await ModifySongRequest(songHistoryModel);
             console.log(res);
-        // await rejectRequest(requestId);
-        // Remove the rejected request from the userHistory array
+            // await rejectRequest(requestId);
+            // Remove the rejected request from the userHistory array
             setUserHistory((prevHistory) =>
                 prevHistory.filter((request) => request.id !== record.id)
             );
         } catch (error) {
-        console.error('Error rejecting request:', error);
+            console.error('Error rejecting request:', error);
         }
     };
+    const handleMarkAsPlayed = async(record) =>{
+        try{
+            const songHistoryModel = {
+                id: record.id,
+                EventId: record.eventId,
+                SongStatus: "Played", // Update the songStatus property
+                userId: localStorage.getItem('userId')
+            };
+            var res = await ModifySongRequest(songHistoryModel);
+            console.log(res);
 
+            // Update the songStatus property of the accepted request in a new array
+            setUserHistory((prevHistory) =>
+                prevHistory.filter((request) => request.id !== record.id)
+            );
+
+            // Move the accepted request to the bottom of the acceptedHistory array
+            setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
+        }
+        catch(error){
+            console.error('Error marking as played:', error);
+        }
+    }
     return (
         <div className='song-history-container' style={{ maxHeight: '500px' }}>
-        <div className='song-history-table'>
-            <MDBTable className='history-table' align='middle' responsive hover>
-                <MDBTableBody>
-                {userHistory.map((result, index) => (
-                    <tr key={index}>
-                    <td>
-                        <img
-                        src={result.image}
-                        alt={`Album Cover for ${result.albumName}`}
-                        style={{ width: '45px', height: '45px' }}
-                        className='rounded-circle'
-                        />
-                    </td>
-                    <td>
-                        <p className='fw-bold mb-1'>{result.songName}</p>
-                        <p className='text-muted mb-0'>{result.artistName}</p>
-                    </td>
-                    <td>{result.albumName}</td>
-                    {result && result.songStatus === 'Pending' && (
-                    <><td>
-                                <button
-                                    onClick={() => handleAcceptRequest(result)}
-                                    className='btn btn-success action-button'
-                                >
-                                    ✓
-                                </button>
-                            </td><td>
-                                    <button
-                                        onClick={() => handleRejectRequest(result)}
-                                        className='btn btn-danger action-button'
-                                    >
-                                        ✗
-                                    </button>
-                                </td></>
-                    )}
-                    </tr>
-                ))}
-                {acceptedHistory.length > 0 && acceptedHistory.map((result, index) => (
+            <div className='song-history-table'>
+                <MDBTable className='history-table' align='middle' responsive hover>
+                    <MDBTableHead>
+                        <tr className="song--history--header--row">
+                            <th className="djlive-header-cell" scope="col"></th>
+                            <th className="djlive-header-cell" scope="col">Song/Artist</th>
+                            <th className="djlive-header-cell" scope="col">Album</th>
+                            <th className="djlive-header-cell" scope="col">Actions</th>
+                        </tr>
+                    </MDBTableHead>
+                    <MDBTableBody>
+                        {userHistory.map((result, index) => (
                             <tr key={index}>
-                            <td>
-                                <img
-                                src={result.image}
-                                alt={`Album Cover for ${result.albumName}`}
-                                style={{ width: '45px', height: '45px' }}
-                                className='rounded-circle'
-                                />
-                            </td>
-                            <td>
-                                <p className='fw-bold mb-1'>{result.songName}</p>
-                                <p className='text-muted mb-0'>{result.artistName}</p>
-                            </td>
-                            <td>{result.albumName}</td>
+                                <td>
+                                    <img
+                                        src={result.image}
+                                        alt={`Album Cover for ${result.albumName}`}
+                                        style={{ width: '45px', height: '45px' }}
+                                        className='rounded-circle'
+                                    />
+                                </td>
+                                <td>
+                                    <p className='fw-bold mb-1'>{result.songName}</p>
+                                    <p className='text-muted mb-0'>{result.artistName}</p>
+                                </td>
+                                <td>{result.albumName}</td>
+                                {result && result.songStatus === 'Pending' && (
+                                    <td>
+                                        <div className="button-container">
+                                            <button
+                                                onClick={() => handleAcceptRequest(result)}
+                                                className='btn btn-success action-button'
+                                            >
+                                                ✓
+                                            </button>
+                                            <button
+                                                onClick={() => handleRejectRequest(result)}
+                                                className='btn btn-danger action-button'
+                                            >
+                                                ✗
+                                            </button>
+                                        </div>
+                                    </td>
+                                )}
+
+                                {result && result.songStatus === 'Accepted' && (
+                                    <><td>
+                                        <button
+                                            onClick={() => handleMarkAsPlayed(result)}
+                                            className='btn btn-primary-mark-as-played'
+                                        >
+                                            Mark as Played
+                                        </button>
+                                    </td></>
+                                )}
                             </tr>
                         ))}
-                </MDBTableBody>
-            </MDBTable>
-        </div>
+                        {/* {acceptedHistory.length > 0 && acceptedHistory.map((result, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <img
+                                        src={result.image}
+                                        alt={`Album Cover for ${result.albumName}`}
+                                        style={{ width: '45px', height: '45px' }}
+                                        className='rounded-circle'
+                                    />
+                                </td>
+                                <td>
+                                    <p className='fw-bold mb-1'>{result.songName}</p>
+                                    <p className='text-muted mb-0'>{result.artistName}</p>
+                                </td>
+                                <td>{result.albumName}</td> 
+                            </tr>
+                        ))} */}
+                    </MDBTableBody>
+                </MDBTable>
+            </div>
         </div>
     );
 }

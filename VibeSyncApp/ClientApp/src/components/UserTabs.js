@@ -14,7 +14,7 @@ return (
         className={`tab ${checkActive(1, "active")}`}
         onClick={() => handleClick(1)}
         >
-        Upcoming Events
+        All Events
         </button>
         <button
         className={`tab ${checkActive(2, "active")}`}

@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging; // Import ILogger
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -9,44 +11,55 @@ namespace VibeSyncApp.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        /// <summary>
-        /// The mediator
-        /// </summary>
         private readonly IMediator _mediator;
+        private readonly ILogger<PaymentController> _logger; // Inject ILogger
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PaymentController"/> class.
-        /// </summary>
-        /// <param name="mediator">The mediator.</param>
-        public PaymentController(IMediator mediator)
+        public PaymentController(IMediator mediator, ILogger<PaymentController> logger)
         {
             _mediator = mediator;
+            _logger = logger; // Initialize ILogger
         }
 
-        /// <summary>
-        /// Gets orderID.
-        /// </summary>
-        /// <returns>orderId</returns>
         [HttpPost]
         public async Task<GetPaymentInitiationDetails> GetPaymentOrderIdUserDetails([FromBody] GetPaymentOrderId request)
         {
-            return await _mediator.Send(request).ConfigureAwait(false);
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(PaymentController)}, API: {typeof(PaymentController).GetMethod("GetPaymentOrderIdUserDetails")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(PaymentController).GetMethod("GetPaymentOrderIdUserDetails")}'s response: {JsonConvert.SerializeObject(result)}");
+
+            return result;
         }
 
-        /// <summary>
-        /// Gets orderID.
-        /// </summary>
-        /// <returns></returns>
         [HttpPost]
         public async Task<bool> PersistPaymentData([FromBody] PersistSongHistoryPaymentRequest request)
         {
-            return await _mediator.Send(request).ConfigureAwait(false);
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(PaymentController)}, API: {typeof(PaymentController).GetMethod("PersistPaymentData")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(PaymentController).GetMethod("PersistPaymentData")}'s response: {JsonConvert.SerializeObject(result)}");
+
+            return result;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetDjTransactions([FromQuery] GetDjPaymentsRequestModel request)
         {
-            return Ok(await _mediator.Send(request));
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(PaymentController)}, API: {typeof(PaymentController).GetMethod("GetDjTransactions")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(PaymentController).GetMethod("GetDjTransactions")}'s response: {JsonConvert.SerializeObject(result)}");
+
+            return Ok(result);
         }
     }
 }

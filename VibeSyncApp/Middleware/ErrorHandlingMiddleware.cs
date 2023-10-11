@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,19 @@ namespace VibeSyncModels.Middleware
         /// The next
         /// </summary>
         private readonly RequestDelegate _next;
+        /// <summary>
+        /// ILogger
+        /// </summary>
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ErrorHandlingMiddleware"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         /// <summary>
@@ -51,6 +57,7 @@ namespace VibeSyncModels.Middleware
         {
             if (ex == null) return;
 
+            _logger.LogCritical(JsonConvert.SerializeObject(ex));
             var response = context.Response;
             context.Response.ContentType = "application/json";
 

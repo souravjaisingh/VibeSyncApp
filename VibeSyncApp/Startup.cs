@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Sentry.Extensibility;
 using System.Net.Http;
 using System.Reflection;
 using VibeSync.DAL.DBContext;
@@ -58,6 +59,7 @@ namespace VibeSyncApp
             services.AddScoped<IDjQueryRepository, DjQueryRepository>();
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
             services.AddSingleton<HttpClient>();
+            services.AddSentryTunneling();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -98,6 +100,7 @@ namespace VibeSyncApp
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
 
+            app.UseSentryTunneling();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

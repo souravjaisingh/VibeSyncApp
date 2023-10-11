@@ -76,7 +76,7 @@ export default function DjLiveSongs() {
     // Similar changes for handleRejectRequest
 
     // Function to sort userHistory
-    const sortUserHistory = (history) => {
+    function sortUserHistory(history){
         const sortedUserHistory = [...history];
 
         sortedUserHistory.sort((a, b) => {

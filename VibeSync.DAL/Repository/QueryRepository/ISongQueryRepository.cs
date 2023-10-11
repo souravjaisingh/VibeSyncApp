@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VibeSyncModels.EntityModels;
+using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository
 {
@@ -19,6 +20,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        List<SongHistory> GetSongHistoryByUserId(long userId);
+        List<SongHistoryModel> GetSongHistoryByUserId(long userId);
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels.EntityModels;
+using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository
 {
@@ -40,9 +41,32 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public List<SongHistory> GetSongHistoryByUserId(long userId)
+        public List<SongHistoryModel> GetSongHistoryByUserId(long userId)
         {
-            return _context.SongHistories.Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedOn).ToList();
+            return _context.SongHistories.Join(
+                _context.Payments,
+                songHistory => songHistory.Id,
+                payments => payments.SongHistoryId,
+                (songHistory, payment) => new SongHistoryModel
+                {
+                    Id = songHistory.Id,
+                    DjId = songHistory.DjId,
+                    EventId = songHistory.EventId,
+                    AlbumName = songHistory.AlbumName,
+                    ArtistId = songHistory.ArtistId,
+                    ArtistName = songHistory.ArtistName,
+                    CreatedBy = songHistory.CreatedBy,
+                    CreatedOn = songHistory.CreatedOn,
+                    Image = songHistory.Image,
+                    PaymentDateTime = payment.ModifiedOn,
+                    PaymentId = payment.PaymentId,
+                    SongName = songHistory.SongName,
+                    SongId = songHistory.SongId,
+                    SongStatus = songHistory.SongStatus,
+                    TotalAmount = payment.TotalAmount,
+                    UserId = songHistory.UserId
+                }).Where(x => x.UserId == userId)
+                .ToList();
         }
     }
 }

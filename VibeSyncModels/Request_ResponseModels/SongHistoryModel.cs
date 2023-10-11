@@ -113,5 +113,26 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The name of the album.
         /// </value>
         public string AlbumName { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the album.
+        /// </summary>
+        /// <value>
+        /// The name of the album.
+        /// </value>
+        public string PaymentId { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the album.
+        /// </summary>
+        /// <value>
+        /// The name of the album.
+        /// </value>
+        public decimal? TotalAmount { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the album.
+        /// </summary>
+        /// <value>
+        /// The name of the album.
+        /// </value>
+        public DateTime? PaymentDateTime { get; set; }
     }
 }

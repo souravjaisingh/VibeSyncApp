@@ -131,8 +131,16 @@ namespace VibeSync.DAL.Handler
         /// </returns>
         public async Task<List<SongHistoryModel>> Handle(GetSongHistoryRequestModel request, CancellationToken cancellationToken)
         {
-            var songHistory = request.EventId > 0 ? _songQueryRepository.GetSongHistoryByEventId(request.EventId) : _songQueryRepository.GetSongHistoryByUserId(request.UserId);
-            return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
+            if(request.EventId > 0)
+            {
+                var songHistory = _songQueryRepository.GetSongHistoryByEventId(request.EventId);
+                return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
+            }
+            else
+            {
+                return _songQueryRepository.GetSongHistoryByUserId(request.UserId);
+            }
+            
         }
 
         public async Task<string> Handle(SongHistoryModel request, CancellationToken cancellationToken)

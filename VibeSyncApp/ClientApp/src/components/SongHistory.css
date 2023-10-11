@@ -15,7 +15,13 @@
 /* Styling for the table */
 .song--history--table {
     width: 100%;
-    table-layout: fixed;
+    font-size: small;
+    max-height: 400px;
+    overflow: auto;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
     /* Fix the table layout */
 }
 

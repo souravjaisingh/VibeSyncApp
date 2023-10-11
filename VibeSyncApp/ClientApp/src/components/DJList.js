@@ -60,7 +60,7 @@ export default function DjList() {
             <MDBTable align='middle' responsive hover>
                 <MDBTableHead>
                     <tr>
-                        <th scope='col'>Name</th>
+                        <th scope='col'>Dj Name</th>
                         <th scope='col'>Event Name</th>
                         <th scope='col'>Venue</th>
                         <th scope='col'>Status</th>

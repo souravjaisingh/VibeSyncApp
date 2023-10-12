@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,10 +26,16 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         private readonly IMapper _mapper;
 
-        public PaymentCommandRepository(IDBContextFactory context, IMapper mapper)
+        /// <summary>
+        /// ILogger
+        /// </summary>
+        private readonly ILogger<PaymentCommandRepository> _logger;
+
+        public PaymentCommandRepository(IDBContextFactory context, IMapper mapper, ILogger<PaymentCommandRepository> logger)
         {
             _context = context.GetDBContext();
             _mapper = mapper;
+            _logger = logger;
         }
         /// <summary>
         /// Persists orderid in payments table
@@ -37,6 +45,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <returns></returns>
         public async Task<long> PersistOrderId(int userId, string orderId, decimal amount)
         {
+            _logger.LogInformation("PersistOrderId - Request: UserId = " + userId + ", orderId = " + orderId + ", amount = " + amount);
             try
             {
                 var payment = new Payment()
@@ -49,19 +58,21 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     PaymentSource = userId.ToString(),
                     PaymentStatus = Constants.PaymentOrderIdCreated
                 };
+                _logger.LogInformation("PersistOrderId - payment :" + JsonConvert.SerializeObject(payment));
                 _context.Payments.Add(payment);
                 await _context.SaveChangesAsync();
                 return payment.Id;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                _logger.LogError("PersistOrderId - Exception :" + JsonConvert.SerializeObject(ex));
             }
             return 0;
         }
 
         public async Task<long> PersistPaymentData(PersistSongHistoryPaymentRequest request, long songHistoryId)
         {
+            _logger.LogInformation("PersistPaymentData - request :" + JsonConvert.SerializeObject(request));
             var paymentRecord = _context.Payments.FirstOrDefault(x => x.OrderId == request.OrderId);
 
             if (paymentRecord?.OrderId != null)
@@ -72,6 +83,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 paymentRecord.SongHistoryId = songHistoryId;
                 paymentRecord.ModifiedBy = request.UserId.ToString();
                 paymentRecord.ModifiedOn = DateTime.Now;
+
+                _logger.LogInformation("PersistPaymentData - paymentRecord :" + JsonConvert.SerializeObject(paymentRecord));
                 _context.Payments.Update(paymentRecord);
 
                 _context.SaveChanges();

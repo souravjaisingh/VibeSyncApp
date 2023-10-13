@@ -43,7 +43,14 @@ export default function DjLiveSongs() {
             }
         }
         fetchData();
-    }, []);
+
+        const interval = setInterval(() => {
+            fetchData(); // Fetch data every 15 seconds
+        }, 15000); // 15 seconds in milliseconds
+
+        // Clear the interval on component unmount to prevent memory leaks
+        return () => clearInterval(interval);
+    }, [rowData.id]); // Add rowData.id to the dependency array
 
     const handleAcceptRequest = async (record) => {
         try {
@@ -55,28 +62,28 @@ export default function DjLiveSongs() {
             };
             var res = await ModifySongRequest(songHistoryModel);
             console.log(res);
-    
+
             // Update the songStatus property of the accepted request in a new array
             const updatedUserHistory = userHistory.map((request) =>
                 request.id === record.id ? { ...request, songStatus: 'Accepted', modifiedOn: new Date() } : request
             );
-    
+
             // Sort and update the userHistory state
             const sortedUserHistory = sortUserHistory(updatedUserHistory);
             setUserHistory(sortedUserHistory);
-    
+
             // Move the accepted request to the bottom of the acceptedHistory array
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         } catch (error) {
             console.error('Error accepting request:', error);
         }
     };
-    
+
 
     // Similar changes for handleRejectRequest
 
     // Function to sort userHistory
-    function sortUserHistory(history){
+    function sortUserHistory(history) {
         const sortedUserHistory = [...history];
 
         sortedUserHistory.sort((a, b) => {
@@ -113,8 +120,8 @@ export default function DjLiveSongs() {
             console.error('Error rejecting request:', error);
         }
     };
-    const handleMarkAsPlayed = async(record) =>{
-        try{
+    const handleMarkAsPlayed = async (record) => {
+        try {
             const songHistoryModel = {
                 id: record.id,
                 EventId: record.eventId,
@@ -132,7 +139,7 @@ export default function DjLiveSongs() {
             // Move the accepted request to the bottom of the acceptedHistory array
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         }
-        catch(error){
+        catch (error) {
             console.error('Error marking as played:', error);
         }
     }

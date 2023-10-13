@@ -21,7 +21,7 @@ video {
 .hero-container > h1 {
   color: #fff;
   font-size: 100px;
-  margin-top: -100px;
+  /* margin-top: -100px; */
 }
 
 .hero-container > p {
@@ -32,31 +32,19 @@ video {
     'Lucida Sans', Arial, sans-serif;
 }
 
-.hero-btns {
-  margin-top: 32px;
-}
-
-.hero-btns .btn {
-  margin: 6px;
-}
-
-.fa-play-circle {
-  margin-left: 4px;
-}
-
 
 
 @media screen and (max-width: 960px) {
   .hero-container > h1 {
     font-size: 70px;
-    margin-top: -150px;
+    /* margin-top: -150px; */
   }
 }
 
 @media screen and (max-width: 768px) {
   .hero-container > h1 {
     font-size: 50px;
-    margin-top: -100px;
+    /* margin-top: -100px; */
   }
 
   .hero-container > p {

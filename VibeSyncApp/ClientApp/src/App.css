@@ -24,7 +24,7 @@ html,body
 }
 
 .userHome{
-  background-image: url('../src/Resources/wbg.jpg');
+  /* background-image: url('../src/Resources/wbg.jpg'); */
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

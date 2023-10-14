@@ -1,5 +1,5 @@
 .navbar {
-  background: linear-gradient(90deg, rgb(28, 27, 27) 0%, rgb(26, 23, 23) 100%);
+  background: linear-gradient(90deg, #f0f7f9 0%, #f0f7f9 100%);
   height: 80px;
   display: flex;
   justify-content: center;
@@ -8,6 +8,34 @@
   position: sticky;
   top: 0;
   z-index: 999;
+}
+.app-logo{
+  max-width: 40%;
+  /* margin-left: 20px; Adjust the left margin to push it to the extreme left */
+  display: flex;
+  align-items: center;
+}
+@media screen and (max-width: 960px) {
+  .app-logo {
+    margin-left: -20%;
+    margin-top: -5%;
+  }
+}
+
+/* Adjustments for small screens */
+@media screen and (max-width: 768px) {
+  .app-logo {
+    max-width: 35%;
+    margin-left: -20%;
+    margin-top: -3.9%;
+  }
+}
+@media screen and (max-width: 420px) {
+  .app-logo {
+    max-width: 35%;
+    margin-left: -25%;
+    margin-top: -1.9%;
+  }
 }
 .navbar-header{
   margin-left:5px;
@@ -170,9 +198,9 @@
 
 .btn--outlineNav {
   background-color: transparent;
-  color: #fff;
+  /* color: #fff; */
   padding: 8px 20px;
-  border: 1px solid var(--primary);
+  border: 1px solid ;
   transition: all 0.3s ease-out;
 }
 

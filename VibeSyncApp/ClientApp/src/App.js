@@ -30,7 +30,7 @@ function App() {
         mobileScreen: '50px',
         smallScreen: '55px',  // Adjust this value for smaller screens
         mediumScreen: '75px', // Default value
-        largeScreen: '75px', // Adjust this value for larger screens
+        largeScreen: '60px', // Adjust this value for larger screens
     };
 
     // Determine the appropriate padding value based on the screen width

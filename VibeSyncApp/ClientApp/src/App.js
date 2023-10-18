@@ -23,32 +23,56 @@ import AboutUs from './components/AboutUs';
 import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import ContactUs from './components/ContactUs';
+import NavbarComponent from './components/Navbar';
 
 function App() {
+    const paddingValues = {
+        mobileScreen: '50px',
+        smallScreen: '55px',  // Adjust this value for smaller screens
+        mediumScreen: '75px', // Default value
+        largeScreen: '60px', // Adjust this value for larger screens
+    };
+
+    // Determine the appropriate padding value based on the screen width
+    const getPaddingValue = () => {
+        if (window.innerWidth <= 480) {
+            return paddingValues.mobileScreen;
+        } else if (window.innerWidth <= 768) {
+            return paddingValues.smallScreen;
+        } else if (window.innerWidth > 1200) {
+            return paddingValues.largeScreen;
+        }
+        return paddingValues.mediumScreen;
+    };
+
+    const paddingValue = getPaddingValue();
     return (
         <>
-            <Navbar />
-                <Routes>
-                    <Route path='/' exact element={<Home />} />
-                    <Route path='/userhome' element={<UserHome/>} />
-                    <Route path='/products' element={<Products />} />
-                    <Route path='/sign-up/:isUser' element={<SignUp/>} />
-                    <Route path='/loginForm' element={<Login/>} />
-                    <Route path="/SongSearch" element={<SongSearch />} />
-                    <Route path="/paymentIndex" element={<PaymentIndex />} />
-                    <Route path="/songhistory" element={<SongHistory />} />
-                    <Route path="/razorpayment" element={<RazorpayPayment />} />
-                    <Route path="/djhome" element={<DjHome />} />
-                    <Route path="/eventdetails" element={<AddEvent />} />
-                    <Route path="/djprofile" element={<DjProfile />} />
-                    <Route path="/djlivesongs" element={<DjLiveSongs />} />
-                    <Route path="/showtransactions" element={<TransactionHistory />} />
-                    <Route path="/ccavenue2" element={<SampleTransactionComponent />} />
-                    <Route path="/aboutus" element={<AboutUs />} />
-                    <Route path="/termsofservice" element={<TermsOfService />} />
-                    <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-                    <Route path="/contactus" element={<ContactUs />} />
-                </Routes>
+            <NavbarComponent />
+            <div style={{ paddingTop: paddingValue }}>
+                {/* This padding ensures content does not overlap with the navbar */}
+            </div>
+            <Routes>
+                <Route path='/' exact element={<Home />} />
+                <Route path='/userhome' element={<UserHome />} />
+                <Route path='/products' element={<Products />} />
+                <Route path='/sign-up/:isUser' element={<SignUp />} />
+                <Route path='/loginForm' element={<Login />} />
+                <Route path="/SongSearch" element={<SongSearch />} />
+                <Route path="/paymentIndex" element={<PaymentIndex />} />
+                <Route path="/songhistory" element={<SongHistory />} />
+                <Route path="/razorpayment" element={<RazorpayPayment />} />
+                <Route path="/djhome" element={<DjHome />} />
+                <Route path="/eventdetails" element={<AddEvent />} />
+                <Route path="/djprofile" element={<DjProfile />} />
+                <Route path="/djlivesongs" element={<DjLiveSongs />} />
+                <Route path="/showtransactions" element={<TransactionHistory />} />
+                <Route path="/ccavenue2" element={<SampleTransactionComponent />} />
+                <Route path="/aboutus" element={<AboutUs />} />
+                <Route path="/termsofservice" element={<TermsOfService />} />
+                <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+                <Route path="/contactus" element={<ContactUs />} />
+            </Routes>
             <Footer />
         </>
     );

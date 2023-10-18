@@ -1,73 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from './Button';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import './Navbar.css';
-import vibeSyncLogo from '../Resources/VB_Logo_2.png'; // Import your logo image
+import vibeSyncLogo from '../Resources/VB_Logo_2.png';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function Navbar() {
+function NavbarComponent() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   const location = useLocation();
   const navigate = useNavigate();
-  const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true);
-  
-  const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
 
-  const showButton = () => {
-    if (window.innerWidth <= 960) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
-  };
-  function handleRequestsClick(){
+  function handleRequestsClick() {
     navigate('/songhistory');
   }
-  function handleLogoutClick(){
+
+  function handleLogoutClick() {
     localStorage.removeItem('userId');
     navigate('/');
   }
-  function handleHomeClick(){
-    if(localStorage.getItem('userId')!=null){
-      if(localStorage.getItem('isUser') == 'true'){
+
+  function handleHomeClick() {
+    if (localStorage.getItem('userId') != null) {
+      if (localStorage.getItem('isUser') === 'true') {
         return '/userhome';
-      }
-      else{
+      } else {
         return '/djhome';
       }
-    }
-    else{
+    } else {
       return '/';
     }
   }
-  const linkDecider = handleHomeClick();
-  useEffect(() => {
-    showButton();
-  }, []);
 
-  window.addEventListener('resize', showButton);
+  const linkDecider = handleHomeClick();
+
+  const handleLogoClick = () => {
+    navigate(linkDecider); // Navigate to the linkDecider result when logo is clicked
+  };
 
   return (
-    <>
-      <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a href={linkDecider} className='navbar-logo'>
-          <img className='app-logo' src={vibeSyncLogo} alt="VibeSync Logo" />{/* Display your logo image */}
-        </a>
-
-        <div className="ml-auto"> {/* Use ml-auto to push the buttons to the right */}
-          {(location.pathname === '/userhome' 
-            || location.pathname.startsWith('/SongSearch') 
-            || location.pathname.startsWith('/paymentIndex')) && (
-            <button className='btnNav btn--outlineNav btn-sm' onClick={(e) => handleRequestsClick()}>Your Requests</button>
-          )}
-
-          {localStorage.getItem('userId') != null && (
-            <button className='btnNav btn--outlineNav  btn-sm' style={{ marginLeft: '5px' }} onClick={(e) => handleLogoutClick()}>Logout</button>
-          )}
+    <div className="navbar">
+      <div className="logo-container">
+        <div className="logo" onClick={handleLogoClick}>
+          <img src={vibeSyncLogo} alt="App Logo" />
         </div>
-      </nav>
-    </>
+      </div>
+      {localStorage.getItem('userId') != null && (
+        <div className="menu-icon" onClick={handleMenuToggle}>
+          <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
+          <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
+          <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
+        </div>
+      )}
+      <div className={`menu ${menuOpen ? 'open' : ''}`}>
+        {(location.pathname === '/userhome' ||
+          location.pathname.startsWith('/SongSearch') ||
+          location.pathname.startsWith('/paymentIndex')) && (
+          <Button 
+          className="btn-navigation-bar"
+          onClick={(e) => handleRequestsClick()}>
+            Your Requests
+            </Button>
+        )}
+        {localStorage.getItem('userId') != null && (
+          <Button
+            className="btn-navigation-bar"
+            onClick={(e) => handleLogoutClick()}
+          >
+            Logout
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }
 
-export default Navbar;
+export default NavbarComponent;

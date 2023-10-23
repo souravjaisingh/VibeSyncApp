@@ -63,10 +63,10 @@ export default function DjList() {
                         <th scope='col'>Dj Name</th>
                         <th scope='col'>Event Name</th>
                         <th scope='col'>Venue</th>
-                        <th scope='col'>Status</th>
+                        {/* <th scope='col'>Status</th> */}
                     </tr>
                 </MDBTableHead>
-                <MDBTableBody>
+                <MDBTableBody className='table-body-fonts'>
                     {
                         filteredData.map(item =>
                             <>
@@ -80,7 +80,9 @@ export default function DjList() {
                                                 className='rounded-circle' />
                                             <div className='ms-3'>
                                                 <p className='fw-bold mb-1'>{item.djName}</p>
-                                                <p className='text-muted mb-0'>{item.djDescription}</p>
+                                                <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
+                                            {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
+                                        </MDBBadge>
                                             </div>
                                         </div>
                                     </td>
@@ -91,12 +93,13 @@ export default function DjList() {
                                     <td>
                                         <p className='fw-normal mb-1'>{item.venue}</p>
                                         {/* <p className='text-muted mb-0'>IT department</p> */}
-                                    </td><td>
+                                    </td>
+                                    {/* <td>
                                         <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
                                             {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
                                         </MDBBadge>
 
-                                    </td>
+                                    </td> */}
                                 </tr>
                             </>
                         )

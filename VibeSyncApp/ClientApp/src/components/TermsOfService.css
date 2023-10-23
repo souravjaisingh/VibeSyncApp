@@ -22,7 +22,7 @@
 }
 
 .terms-of-service-container p {
-    font-size: 18px;
+    font-size: smaller;
     line-height: 1.5;
     color: #444;
 }
@@ -33,7 +33,7 @@
 }
 
 .terms-of-service-container li {
-    font-size: 18px;
+    font-size: smaller;
     line-height: 1.5;
     color: #444;
 }

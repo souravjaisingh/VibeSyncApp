@@ -181,7 +181,9 @@ return (
     style={{ width: '300px', height: 'auto' }}
     />
     <p  className='song-name'>{rowData.name}</p>
-    <p className='text-muted artist-name'>{rowData.artists[0].name}</p>
+    <p className='text-muted artist-name'>
+    {rowData.artists.map((artist) => artist.name).join(', ')}    
+    </p>
     {/* <RazorpayPayment data={amount} /> */}
     <form onSubmit={handleSubmit}>
         <p className='label'>Tip the DJ here:</p>

@@ -140,7 +140,7 @@ import './SongSearch.css';
             {isListOpen && ( // Conditionally render the list based on the state
                 <div className="collapsible-list">
                 {/* Content of the collapsible list */}
-                    <MDBTable align='middle' responsive>
+                    <MDBTable align='middle' responsive className='collapsible-table'>
                             {/* <MDBTableHead>
                                 <tr>
                                     <th scope='col'>Song</th>
@@ -186,7 +186,7 @@ import './SongSearch.css';
                     onChange={handleSearchChange}
                     />
                 </div>
-                <br/>
+                {/* <br/> */}
                 <div className='container-for-table' style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
                     <MDBTable align='middle' responsive hover>
                         {/* <MDBTableHead>

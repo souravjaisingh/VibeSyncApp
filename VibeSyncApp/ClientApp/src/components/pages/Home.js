@@ -8,7 +8,7 @@ import DJCards from '../DJLogin';
 function Home() {
   return (
     <>
-      <HeroSection />
+      {/* <HeroSection /> */}
       <Cards />
       {/* <DJCards /> */}
     </>

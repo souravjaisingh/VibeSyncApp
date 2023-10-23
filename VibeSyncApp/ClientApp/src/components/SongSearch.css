@@ -49,6 +49,7 @@
     .search-bar {
         width: 300px;
         text-align: center; /* Align input and results to the left */
+        height: 5%;
     }
     
     .search-input {
@@ -139,4 +140,7 @@
 .container-for-table {
     overflow: auto; /* Enable scrolling */
     max-height: 400px; /* Adjust the max height as needed */
+}
+.collapsible-table{
+    background-color: #b6cdd9;
 }

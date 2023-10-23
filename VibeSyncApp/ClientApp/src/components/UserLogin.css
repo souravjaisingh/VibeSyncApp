@@ -133,3 +133,14 @@ Button{
     margin-bottom: 2rem;
   }
 }
+/* UserLogin.css */
+
+/* Default background */
+.cards {
+  background-image: url('../Resources/dj1.jpg');
+}
+
+/* Background when isUser is true */
+.cards.isUserBackground {
+  background-image: url('../Resources/vibes10.jpg');
+}

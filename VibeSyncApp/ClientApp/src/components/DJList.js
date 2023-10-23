@@ -46,7 +46,7 @@ export default function DjList() {
     function DateTimeDisplay({ datetimeString }) {
         const formattedDateTime = formatDateTime(datetimeString);
 
-        return <div className="text-muted mb-0">{formattedDateTime}</div>;
+        return <div className="text-muted mb-0 event-date">{formattedDateTime}</div>;
     }
 
     return (
@@ -66,7 +66,7 @@ export default function DjList() {
                         {/* <th scope='col'>Status</th> */}
                     </tr>
                 </MDBTableHead>
-                <MDBTableBody className='table-body-fonts'>
+                <MDBTableBody>
                     {
                         filteredData.map(item =>
                             <>
@@ -78,7 +78,7 @@ export default function DjList() {
                                                 alt=''
                                                 style={{ width: '45px', height: '45px' }}
                                                 className='rounded-circle' />
-                                            <div className='ms-3'>
+                                            <div className='p-2'>
                                                 <p className='fw-bold mb-1'>{item.djName}</p>
                                                 <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
                                             {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}

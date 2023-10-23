@@ -10,8 +10,8 @@ function Cards() {
   return (
     <div className={`cards ${isUser ? 'isUserBackground' : ''}`}>
       <div className='cards__container'>
-        <h4>Aap ka Gaana</h4>
-        <h3>Aap ki Vibe!</h3>
+        <h4 style={{fontFamily:'sans-serif'}}>Aap ka Gaana</h4>
+        <h3 style={{fontFamily:'sans-serif'}}>Aap ki Vibe!</h3>
         <br></br>
         <Switch
           isOn={!isUser}

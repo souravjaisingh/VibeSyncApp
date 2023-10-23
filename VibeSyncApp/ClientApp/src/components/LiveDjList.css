@@ -4,3 +4,6 @@
     width: fit-content;
     margin: auto;
 }
+.event-date{
+    font-size: smaller;
+}

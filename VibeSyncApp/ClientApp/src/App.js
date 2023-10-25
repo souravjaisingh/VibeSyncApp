@@ -29,7 +29,7 @@ function App() {
     const paddingValues = {
         mobileScreen: '50px',
         smallScreen: '55px',  // Adjust this value for smaller screens
-        mediumScreen: '75px', // Default value
+        mediumScreen: '60px', // Default value
         largeScreen: '60px', // Adjust this value for larger screens
     };
 

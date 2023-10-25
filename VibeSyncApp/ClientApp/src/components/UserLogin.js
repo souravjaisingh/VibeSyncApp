@@ -18,6 +18,7 @@ function Cards() {
           onColor="#f58da6"
           handleToggle={() => setIsUser(!isUser)}
         />
+        <p style={{fontFamily:'sans-serif'}}><i>Toggle if you are a DJ</i></p>
         <br></br>
         <GoogleLogin isUser={isUser} />
         <Link to='/loginForm' className='btn-mobile'>

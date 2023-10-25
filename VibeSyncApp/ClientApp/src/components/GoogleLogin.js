@@ -33,7 +33,6 @@ export default function GoogleLogin(isUser){
                     console.log(res.data);
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
                     if(!response.includes('Error')){
-                        console.log(response);
                         localStorage.setItem('userId', response);
                         localStorage.setItem('isUser', isUserRegistration);
                         if(isUserRegistration){

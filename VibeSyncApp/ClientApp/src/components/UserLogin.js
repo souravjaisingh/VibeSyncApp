@@ -5,22 +5,22 @@ import GoogleLogin from './GoogleLogin';
 import Switch from './LoginToggleButton';
 
 function Cards() {
-  const [isUser, setIsUser] = useState(true);
+  const [isUser, setIsUser] = useState(false);
 
   return (
-    <div className={`cards ${isUser ? 'isUserBackground' : ''}`}>
+    <div className={`cards ${!isUser ? 'isUserBackground' : ''}`}>
       <div className='cards__container'>
         <h4 style={{fontFamily:'sans-serif'}}>Aap ka Gaana</h4>
         <h3 style={{fontFamily:'sans-serif'}}>Aap ki Vibe!</h3>
         <br></br>
         <Switch
-          isOn={!isUser}
+          isOn={isUser}
           onColor="#f58da6"
           handleToggle={() => setIsUser(!isUser)}
         />
         <p style={{fontFamily:'sans-serif'}}><i>Toggle if you are a DJ</i></p>
         <br></br>
-        <GoogleLogin isUser={isUser} />
+        <GoogleLogin isUser={!isUser} />
         <Link to='/loginForm' className='btn-mobile'>
           <button className='btn btn--outline btn--medium'>
             Login with Email

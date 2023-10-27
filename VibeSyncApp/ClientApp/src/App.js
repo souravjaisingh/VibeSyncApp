@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useState } from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/pages/Home';
@@ -24,8 +24,14 @@ import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import ContactUs from './components/ContactUs';
 import NavbarComponent from './components/Navbar';
+import ErrorPage from './components/ErrorPage';
+
+export const MyContext = createContext();
 
 function App() {
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     const paddingValues = {
         mobileScreen: '50px',
         smallScreen: '55px',  // Adjust this value for smaller screens
@@ -52,6 +58,11 @@ function App() {
             <div style={{ paddingTop: paddingValue }}>
                 {/* This padding ensures content does not overlap with the navbar */}
             </div>
+            <MyContext.Provider value={{ error, setError, errorMessage, setErrorMessage }}>
+                {error && <ErrorPage resetErrorBoundary={() => {setError(null); setErrorMessage(null);} }/>}
+            
+            {/* <MyErrorBoundary> */}
+            {!error &&
             <Routes>
                 <Route path='/' exact element={<Home />} />
                 <Route path='/userhome' element={<UserHome />} />
@@ -72,7 +83,9 @@ function App() {
                 <Route path="/termsofservice" element={<TermsOfService />} />
                 <Route path="/privacypolicy" element={<PrivacyPolicy />} />
                 <Route path="/contactus" element={<ContactUs />} />
-            </Routes>
+                <Route path="/errorPage" element={<ErrorPage />} />
+                </Routes>}
+                </MyContext.Provider>
             <Footer />
         </>
     );

@@ -4,5 +4,7 @@
     {
         public long Id { get; set; }
         public bool IsUser { get; set; }
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

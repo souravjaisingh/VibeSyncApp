@@ -20,5 +20,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
         Task<int> DeleteUser(int userId);
+        Task<string> GenerateToken(VibeSyncModels.EntityModels.User userDetails);
+        Task<string> LogoutUser();
     }
 }

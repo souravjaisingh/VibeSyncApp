@@ -7,13 +7,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Sentry.Extensibility;
 using System.Net.Http;
 using System.Reflection;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncApp.Filters;
+using VibeSyncApp.Middleware;
 using VibeSyncModels;
 using VibeSyncModels.Middleware;
 
@@ -35,6 +35,7 @@ namespace VibeSyncApp
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<ValidateModelStateAttribute>();
+                options.Filters.Add(new BearerTokenAttribute());
             });
             services.AddCors();
             var mapperConfig = new MapperConfiguration(mc =>
@@ -58,6 +59,7 @@ namespace VibeSyncApp
             services.AddScoped<IPaymentCommandRepository, PaymentCommandRepository>();
             services.AddScoped<IDjQueryRepository, DjQueryRepository>();
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
+            //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<HttpClient>();
             services.AddSentryTunneling();
 
@@ -90,11 +92,9 @@ namespace VibeSyncApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseMiddleware<TokenValidationMiddleware>();
             app.UseHttpsRedirection();
-            app.UseCors(
-        options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-    );
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMiddleware<ErrorHandlingMiddleware>();

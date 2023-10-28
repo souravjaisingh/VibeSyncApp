@@ -29,7 +29,7 @@ namespace VibeSyncModels.EntityModels
         public string ModifiedBy { get; set; }
         public bool IsSsologin { get; set; }
         public string UserOrDj { get; set; }
-
+        public string Token { get; set; }
         public virtual ICollection<Dj> Djs { get; set; }
         public virtual ICollection<Log> Logs { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }

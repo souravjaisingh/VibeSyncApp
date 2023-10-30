@@ -37,7 +37,12 @@ namespace VibeSyncApp
                 options.Filters.Add<ValidateModelStateAttribute>();
                 options.Filters.Add(new BearerTokenAttribute());
             });
-            services.AddCors();
+            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -59,7 +64,6 @@ namespace VibeSyncApp
             services.AddScoped<IPaymentCommandRepository, PaymentCommandRepository>();
             services.AddScoped<IDjQueryRepository, DjQueryRepository>();
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
-            //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<HttpClient>();
             services.AddSentryTunneling();
 

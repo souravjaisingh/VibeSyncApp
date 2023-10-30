@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -63,7 +64,15 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(UserController).GetMethod("LoginUser")}'s response: {JsonConvert.SerializeObject(result)}");
 
             if (result.Id != 0)
+            {
+                Response.Cookies.Append("jwt", result.Token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Set to true in production with HTTPS
+                    SameSite = SameSiteMode.Strict // Adjust this as needed
+                });
                 return Ok(result);
+            }
             else
                 return Unauthorized();
         }

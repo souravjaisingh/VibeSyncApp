@@ -8,6 +8,5 @@ namespace VibeSyncModels.Request_ResponseModels
         public bool IsUser { get; set; }
         [JsonIgnore]
         public string Token { get; set; }
-        public string RefreshToken { get; set; }
     }
 }

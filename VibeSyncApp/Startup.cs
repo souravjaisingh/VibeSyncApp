@@ -37,12 +37,16 @@ namespace VibeSyncApp
                 options.Filters.Add<ValidateModelStateAttribute>();
                 options.Filters.Add(new BearerTokenAttribute());
             });
-            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            services.AddCors(options =>
             {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
+                options.AddPolicy(name: "CorsPolicyName",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins(Configuration.GetSection("CORSSetting:AllowedOrigin").Get<string[]>())
+                                       .WithMethods(Configuration.GetSection("CORSSetting:AllowedMethod").Get<string[]>())
+                                       .WithHeaders(Configuration.GetSection("CORSSetting:AllowedHeader").Get<string[]>());
+                                  });
+            });
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -98,7 +102,7 @@ namespace VibeSyncApp
             }
             app.UseMiddleware<TokenValidationMiddleware>();
             app.UseHttpsRedirection();
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("CorsPolicyName");
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMiddleware<ErrorHandlingMiddleware>();

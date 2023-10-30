@@ -12,7 +12,9 @@ namespace VibeSync.DAL.Handler
     /// GetEvents Handler
     /// </summary>
     public class EventsHandler : IRequestHandler<GetEventsRequest, IEnumerable<EventsDetails>>,
-        IRequestHandler<EventsDetails, long>, INotificationHandler<EventsDetails>, IRequestHandler<GetEventsByUserId, List<EventsDetails>>
+        IRequestHandler<EventsDetails, long>, INotificationHandler<EventsDetails>,
+        IRequestHandler<GetEventsByUserId, List<EventsDetails>>,
+        IRequestHandler<GenerateQRCodeRequestModel, byte[]>
     {
         /// <summary>
         /// IEventQueryRepository
@@ -65,6 +67,11 @@ namespace VibeSync.DAL.Handler
         public async Task<List<EventsDetails>> Handle(GetEventsByUserId request, CancellationToken cancellationToken)
         {
             return await Task.Run(() => _eventQueryRepository.GetEventsByDjId(request));
+        }
+
+        public async Task<byte[]> Handle(GenerateQRCodeRequestModel request, CancellationToken cancellationToken)
+        {
+            return await _eventCommandRepository.QRCodeForEvent(request);
         }
 
         /// <summary>

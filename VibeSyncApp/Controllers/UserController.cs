@@ -38,6 +38,7 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPost]
+        [ExcludeTokenAuthentication]
         public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
             // Log the request parameter as JSON

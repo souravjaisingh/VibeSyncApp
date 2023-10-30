@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.CommandRepository;
@@ -14,7 +15,8 @@ namespace VibeSync.DAL.Handler
     /// <seealso cref="IRequestHandler&lt;User, string&gt;" />
     public class UserHandler : IRequestHandler<User, long>,
         IRequestHandler<LoginUser, LoginDetails>,
-        IRequestHandler<GetUserId, long>
+        IRequestHandler<GetUserId, long>,
+        IRequestHandler<LogoutUser, string>
     {
         /// <summary>
         /// The user command repository
@@ -24,15 +26,17 @@ namespace VibeSync.DAL.Handler
         /// The user query repository
         /// </summary>
         private readonly IUserQueryRepository _userQueryRepository;
+        private readonly ILogger<UserHandler> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserHandler"/> class.
         /// </summary>
         /// <param name="userCommandRepository">The user command repository.</param>
-        public UserHandler(IUserCommandRepository userCommandRepository, IUserQueryRepository userQueryRepository)
+        public UserHandler(IUserCommandRepository userCommandRepository, IUserQueryRepository userQueryRepository, ILogger<UserHandler> logger)
         {
             _userQueryRepository = userQueryRepository;
             _userCommandRepository = userCommandRepository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -56,12 +60,16 @@ namespace VibeSync.DAL.Handler
         /// <returns>
         /// Response from the request
         /// </returns>
-        public Task<LoginDetails> Handle(LoginUser request, CancellationToken cancellationToken)
+        public async Task<LoginDetails> Handle(LoginUser request, CancellationToken cancellationToken)
         {
             var userDetails = _userQueryRepository.ChecksIfUserIsValid(request.Email, request.Password);
             if (userDetails != null)
-                return Task.FromResult(new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj == "dj" ? false : true });
-            return Task.FromResult(new LoginDetails());
+            {
+                var token = await _userCommandRepository.GenerateToken(userDetails);
+                _logger.LogInformation("Token successful created for user with ID: {UserId}.", userDetails.Id);
+                return new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj != "dj", Token = token };
+            }
+            return new LoginDetails();
         }
 
         /// <summary>
@@ -84,6 +92,11 @@ namespace VibeSync.DAL.Handler
                 // return Task.FromResult(-1); // Or any other appropriate default value
                 throw new CustomException("User not found.");
             }
+        }
+
+        public async Task<string> Handle(LogoutUser request, CancellationToken cancellationToken)
+        {
+            return await _userCommandRepository.LogoutUser();
         }
     }
 }

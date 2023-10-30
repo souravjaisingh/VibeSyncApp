@@ -2,6 +2,7 @@
 {
     public static class Constants
     {
+        public const string UserNotFound = "User not found";
         public const string UserCreated = "User Created Successfully";
         public const string UserAlreadyExists = "User Already Exists";
         public const string Failed = "Failed";
@@ -11,5 +12,6 @@
         public const string PaymentOrderIdCreated = "Payment-OrderId created";
         public const string Impersonating = "User is impersonating another role which is not allowed";
         public const string SongStatusPending = "Pending";
+        public const string Logout_Successfull = "Logout successfull";
     }
 }

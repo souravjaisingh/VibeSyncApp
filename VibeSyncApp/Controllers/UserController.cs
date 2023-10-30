@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
 using User = VibeSyncModels.Request_ResponseModels.User;
 
@@ -16,12 +18,12 @@ namespace VibeSyncApp.Controllers
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<UserController> _logger; 
+        private readonly ILogger<UserController> _logger;
 
         public UserController(IMediator mediator, ILogger<UserController> logger)
         {
             _mediator = mediator;
-            _logger = logger; 
+            _logger = logger;
         }
 
         [HttpGet]
@@ -50,6 +52,7 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPost]
+        [ExcludeTokenAuthentication]
         public async Task<IActionResult> LoginUser([FromBody] LoginUser user)
         {
             // Log the request parameter as JSON
@@ -61,9 +64,28 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(UserController).GetMethod("LoginUser")}'s response: {JsonConvert.SerializeObject(result)}");
 
             if (result.Id != 0)
+            {
+                Response.Cookies.Append("jwt", result.Token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Set to true in production with HTTPS
+                    SameSite = SameSiteMode.Strict // Adjust this as needed
+                });
                 return Ok(result);
+            }
             else
                 return Unauthorized();
+        }
+
+        /// <summary>
+        /// Logouts the user.
+        /// </summary>
+        /// <param name="logoutUser">The logout user.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> LogoutUser([FromBody] LogoutUser logoutUser)
+        {
+            return Ok(await _mediator.Send(logoutUser));
         }
     }
 }

@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSyncApp.Controllers
@@ -103,5 +105,18 @@ namespace VibeSyncApp.Controllers
             return Ok(res);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GenerateQRCodeForEvent([FromBody] GenerateQRCodeRequestModel request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(EventsController)}, API: {typeof(EventsController).GetMethod("GenerateQRCodeForEvent")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            byte[] res = await _mediator.Send(request).ConfigureAwait(false);
+            string base64Image = Convert.ToBase64String(res);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(EventsController).GetMethod("GenerateQRCodeForEvent")}'s response: {JsonConvert.SerializeObject(res)}");
+            return Ok(base64Image);
+        }
     }
 }

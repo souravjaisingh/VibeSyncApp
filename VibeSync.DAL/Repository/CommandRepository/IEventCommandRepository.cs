@@ -7,5 +7,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
     {
         Task<long> CreateEvent(EventsDetails request);
         Task<EventsDetails> UpdateEvent(EventsDetails request);
+        Task<byte[]> QRCodeForEvent(GenerateQRCodeRequestModel request);
     }
 }

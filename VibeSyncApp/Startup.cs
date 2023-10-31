@@ -7,13 +7,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Sentry.Extensibility;
 using System.Net.Http;
 using System.Reflection;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncApp.Filters;
+using VibeSyncApp.Middleware;
 using VibeSyncModels;
 using VibeSyncModels.Middleware;
 
@@ -35,8 +35,18 @@ namespace VibeSyncApp
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<ValidateModelStateAttribute>();
+                options.Filters.Add(new BearerTokenAttribute());
             });
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "CorsPolicyName",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins(Configuration.GetSection("CORSSetting:AllowedOrigin").Get<string[]>())
+                                       .WithMethods(Configuration.GetSection("CORSSetting:AllowedMethod").Get<string[]>())
+                                       .WithHeaders(Configuration.GetSection("CORSSetting:AllowedHeader").Get<string[]>());
+                                  });
+            });
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -90,11 +100,9 @@ namespace VibeSyncApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseMiddleware<TokenValidationMiddleware>();
             app.UseHttpsRedirection();
-            app.UseCors(
-        options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-    );
+            app.UseCors("CorsPolicyName");
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMiddleware<ErrorHandlingMiddleware>();

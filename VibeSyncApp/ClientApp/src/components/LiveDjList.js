@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import getLiveEventsHelper from '../Helpers/EventsHelper';
+import { MyContext } from '../App';
 
 export default function LiveDjList() {
+    const { error, setError } = useContext(MyContext);
+    const {errorMessage, setErrorMessage} = useContext(MyContext);
     const [events, setEvents] = useState([])
     const navigate = useNavigate();
 
@@ -29,10 +32,16 @@ export default function LiveDjList() {
         //navigate('/SongSearch');
     };
     async function getEventsData(lat, lng) {
-        const res = await getLiveEventsHelper(lat, lng);
-        //console.log(res);
-        setEvents(res);
+        try {
+            const res = await getLiveEventsHelper(lat, lng);
+            setEvents(res);
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error('Error in getEventsData:', error);
+        }
     }
+    
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
             getEventsData(position.coords.latitude, position.coords.longitude);

@@ -147,6 +147,13 @@ namespace VibeSync.DAL.Repository.CommandRepository
         public async Task<string> LogoutUser()
         {
             var userId = loggedInUserId();
+            string token = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                // Remove the JWT token cookie
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete("jwt");
+            }
             var user = _context.Users.Where(x => x.Id == userId).FirstOrDefault();
             if (user != null)
             {
@@ -161,11 +168,30 @@ namespace VibeSync.DAL.Repository.CommandRepository
         private int loggedInUserId()
         {
             int userId = 0;
-            var abc = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
-            if (int.TryParse(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value, out userId))
-                return userId;
-            else
-                throw new CustomException("Logged in User Id should not be null");
+
+            // Retrieve the JWT token from the cookie
+            string token = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new CustomException("JWT token not found in the cookie.");
+            }
+
+            // Parse the JWT token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+            if (securityToken != null)
+            {
+                // Try to parse the "UserId" claim
+                if (int.TryParse(securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value, out userId))
+                {
+                    return userId;
+                }
+            }
+
+            throw new CustomException("Logged in User Id should not be null");
         }
+
     }
 }

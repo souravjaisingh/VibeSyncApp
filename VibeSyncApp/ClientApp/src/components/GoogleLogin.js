@@ -32,7 +32,7 @@ export default function GoogleLogin(isUser){
                     setProfile(res.data);
                     console.log(res.data);
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
-                    if(!response.includes('Error')){
+                    if(!response.error){
                         localStorage.setItem('userId', response);
                         localStorage.setItem('isUser', isUserRegistration);
                         if(isUserRegistration){

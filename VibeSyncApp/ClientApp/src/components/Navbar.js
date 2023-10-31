@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VB_Logo_2.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Logout } from './services/UserService';
 
 function NavbarComponent() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,6 +20,7 @@ function NavbarComponent() {
   }
 
   function handleLogoutClick() {
+    var res = Logout();
     localStorage.removeItem('userId');
     navigate('/');
   }

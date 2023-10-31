@@ -1,56 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import * as Constants from '../Constants'
+import * as Constants from '../Constants';
 
-export default async function RegisterUser(data) {
+export async function handleAPIRequest(url, method, data) {
+    const requestOptions = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include HTTP-only cookie
+    };
+
+    if (method === 'POST' || method === 'PUT') {
+        requestOptions.body = JSON.stringify(data);
+    }
+
     try {
-        const response = await fetch(Constants.baseUri + 'User/RegisterUser', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        const response = await fetch(Constants.baseUri + url, requestOptions);
 
-        if (!response.ok) {
-            // Handle specific HTTP error status codes
-            if (response.status === 400) {
-                const errorResponse = await response.json();
-                throw new Error(errorResponse.Errors || 'Bad Request');
-            } else {
-                // Handle other error status codes as needed
-                throw new Error('Network response was not ok');
-            }
+        handleAPIError(response);
+
+        if (response.status === 204) {
+            return null; // No content
         }
 
-        return await response.text();
+        return await response.json();
     } catch (error) {
-        console.error('Error in RegisterUser:', error);
-        throw error; // Optionally rethrow the error for further handling.
+        console.error('Error in API request:', error);
+        throw error;
     }
 }
-export async function GetUserById(id){
-    await fetch(Constants.baseUri + 'User/GetUserById?id=' + id)
-    .then(result=> result.json())
-    .then(data=> console.log(data));
+
+export default async function RegisterUser(data) {
+    return handleAPIRequest('User/RegisterUser', 'POST', data);
 }
 
-export async function LoginUser(data){
-    const response = await fetch(Constants.baseUri + 'User/LoginUser', {
-        //mode: 'no-cors',
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
+export async function Logout() {
+    return handleAPIRequest('User/LogoutUser', 'POST');
+}
+
+export async function GetUserById(id) {
+    return handleAPIRequest(`User/GetUserById?id=${id}`, 'GET');
+}
+
+export async function LoginUser(data) {
+    return handleAPIRequest('User/LoginUser', 'POST', data);
+}
+
+export async function getUserRequestHistoryData(userid) {
+    return handleAPIRequest(`Songs/GetSongHistory?userId=${userid}`, 'GET');
+}
+
+export function handleAPIError(response) {
+    if (!response.ok) {
+        switch (response.status) {
+            case 400:
+                throw new Error("Houston, we have a problem. Your request is as clear as mud. Enter correct data and we shall let you pass.");
+            case 403:
+                throw new Error("Access denied. You've stumbled into the secret garden. Unfortunately, you're not on the guest list.");
+            case 404:
+                throw new Error("Oops! This page is as lost as you are on a Monday morning.");
+            case 500:
+                throw new Error("Looks like we've hit a snag. Our engineers are on it faster than you can say 'bug'.");
+            case 503:
+                throw new Error("Hold on tight! Our team of highly trained monkeys is fixing the issue.");
+            case 401:
+                throw new Error("Access denied! You need a magic wand or the secret handshake for this area.");
+            case 409:
+                throw new Error("Double trouble! That email's already taken. Please choose a unique one. If you still think it's unique, probably our server has gone crazy.");
+            default:
+                throw new Error("Our server is on a coffee break. It'll be back after it finishes its latte.");
         }
-    });
-return await response.json();
-}
-
-export async function getUserRequestHistoryData(userid){
-    const res = await fetch(Constants.baseUri + `Songs/GetSongHistory?userId=${userid}`)
-    .then((response) => response.json())
-    .catch((error) => {
-        console.error('Error fetching data:', error);
-    });
-    return res;
+    }
 }

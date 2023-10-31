@@ -27,42 +27,54 @@ namespace VibeSyncApp.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            string authorizationHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
-            if (!string.IsNullOrEmpty(authorizationHeader))
+            string jwtCookie = context.Request.Cookies["jwt"];
+
+            if (!string.IsNullOrEmpty(jwtCookie))
             {
-                var headerSplitDataArray = authorizationHeader.Split(" ");
-                if (!headerSplitDataArray.Any())
-                {
-                    _logger.LogError("Invalid authorization header: No token found.");
-                    throw new UnauthorizedAccessException("You don't have rights to access resource");
-                }
-                string token = headerSplitDataArray[1];
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var parsedToken = tokenHandler.ReadJwtToken(token);
+                var parsedToken = tokenHandler.ReadJwtToken(jwtCookie);
                 int.TryParse(parsedToken?.Claims?.FirstOrDefault(claim => claim.Type == "UserId")?.Value, out int userId);
+
                 if (userId == 0)
                 {
                     _logger.LogError("Invalid or missing UserId claim in token.");
-                    throw new UnauthorizedAccessException("You don't have rights to access resource");
+                    throw new UnauthorizedAccessException("You don't have rights to access the resource");
                 }
                 var expiryseconds = long.Parse(parsedToken?.Claims?.FirstOrDefault(claim => claim.Type == "exp")?.Value);
                 DateTime expiryTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(expiryseconds);
+                if(expiryTime <= DateTime.UtcNow)
+                {
+                    _httpContextAccessor.HttpContext.Response.Cookies.Delete("jwt");
+                    //_logger.LogError("Invalid token or token has expired for user with ID: {UserId}.", userId);
+                    //throw new UnauthorizedAccessException("You don't have rights to access the resource");
+                }
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var userQueryRepository = scope.ServiceProvider.GetRequiredService<IUserQueryRepository>();
                     var user = userQueryRepository.GetUserById(userId);
-                    if (user == null || user.Token == null || !user.Token.Equals(token) || expiryTime <= DateTime.UtcNow)
+                    if (user == null)
                     {
                         _logger.LogError("Invalid token or token has expired for user with ID: {UserId}.", userId);
-                        throw new UnauthorizedAccessException("You don't have rights to access resource");
+                        throw new UnauthorizedAccessException("You don't have rights to access the resource");
                     }
+                    if(user != null && user.Token != null && !user.Token.Equals(jwtCookie))
+                    {
+                        _logger.LogError("Invalid token or token has expired for user with ID: {UserId}.", userId);
+                        throw new UnauthorizedAccessException("You don't have rights to access the resource");
+                    }
+
                 }
+                
                 _logger.LogInformation("Token validation successful for user with ID: {UserId}.", userId);
 
                 if (_httpContextAccessor.HttpContext.User?.Identities != null && _httpContextAccessor.HttpContext.User.Identities.Any())
+                {
                     _httpContextAccessor.HttpContext.User.Identities.FirstOrDefault()?.AddClaims(parsedToken.Claims);
+                }
                 else
+                {
                     _httpContextAccessor.HttpContext.User.AddIdentity(new ClaimsIdentity(parsedToken.Claims));
+                }
             }
             await _next(context);
         }

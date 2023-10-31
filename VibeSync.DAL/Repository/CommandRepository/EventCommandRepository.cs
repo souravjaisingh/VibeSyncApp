@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
+using QRCoder;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
@@ -55,6 +59,36 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 return Convert.ToInt64(eventDetails.Id);
             else
                 throw new CustomException(Constants.DbOperationFailed);
+        }
+
+        public Task<byte[]> QRCodeForEvent(GenerateQRCodeRequestModel request)
+        {
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(request.Url, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(request.PixelSize); // Adjust size as needed
+
+            // Load your logo image
+            System.Drawing.Image logo = System.Drawing.Image.FromFile("D:\\VibeSyncApp\\VibeSyncApp\\Images\\VibeSync.jpg");
+
+            // Calculate the position to place the logo at the center of the QR code
+            int logoSize = request.LogoSize; // Adjust the size of the logo as needed
+            int xPos = (qrCodeImage.Width - logoSize) / 2;
+            int yPos = (qrCodeImage.Height - logoSize) / 2;
+
+            // Create a Graphics object from the QR code image
+            using (Graphics graphics = Graphics.FromImage(qrCodeImage))
+            {
+                // Draw the logo onto the QR code image
+                graphics.DrawImage(logo, new Rectangle(xPos, yPos, logoSize, logoSize));
+            }
+
+            // Convert QR code image to byte array
+            using (MemoryStream stream = new MemoryStream())
+            {
+                qrCodeImage.Save(stream, ImageFormat.Png);
+                return Task.FromResult(stream.ToArray());
+            }
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        Task<long> CreateUser(User user);
+        Task<LoginDetails> CreateUser(User user);
         /// <summary>
         /// Deletes the user.
         /// </summary>

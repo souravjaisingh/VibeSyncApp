@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace VibeSyncModels.Request_ResponseModels
+﻿namespace VibeSyncModels.Request_ResponseModels
 {
     public class LoginDetails
     {

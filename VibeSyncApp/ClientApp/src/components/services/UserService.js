@@ -43,8 +43,14 @@ export async function handleAPIRequest(url, method, data) {
 
 
 export default async function RegisterUser(data) {
-    return handleAPIRequest('User/RegisterUser', 'POST', data);
+    const response = await handleAPIRequest('User/RegisterUser', 'POST', data);
+    if (response && response.token) {
+        // Store the JWT token in localStorage
+        localStorage.setItem('jwt', response.token);
+    }
+    return response;
 }
+
 
 export async function Logout() {
     return handleAPIRequest('User/LogoutUser', 'POST');

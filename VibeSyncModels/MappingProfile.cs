@@ -8,6 +8,7 @@ namespace VibeSyncModels
     {
         public MappingProfile()
         {
+            CreateMap<EntityModels.User, LoginDetails>().ReverseMap();
             CreateMap<EntityModels.User, Request_ResponseModels.User>().ReverseMap();
             CreateMap<SongHistory, SongHistoryModel>().ReverseMap();
             CreateMap<EventsDetails, Event>().ReverseMap();

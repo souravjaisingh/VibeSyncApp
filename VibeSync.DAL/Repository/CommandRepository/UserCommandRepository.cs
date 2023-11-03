@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
 using VibeSyncModels.EntityModels;
+using VibeSyncModels.Request_ResponseModels;
 using User = VibeSyncModels.Request_ResponseModels.User;
 
 namespace VibeSync.DAL.Repository.CommandRepository
@@ -60,7 +61,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public async Task<long> CreateUser(User user)
+        public async Task<LoginDetails> CreateUser(User user)
         {
             var getUser = _context.Users.Where(x => x.Email == user.Email).FirstOrDefault();
             if (getUser != null && !user.IsSsologin)
@@ -68,7 +69,11 @@ namespace VibeSync.DAL.Repository.CommandRepository
             else if (user.IsSsologin && getUser != null && getUser.UserOrDj != user.UserOrDj)
                 throw new CustomException(Constants.Impersonating);
             else if (user.IsSsologin && getUser != null)
-                return getUser.Id;
+            {
+                var loginresponse = _mapper.Map<LoginDetails>(getUser);
+                loginresponse.Token = await GenerateToken(getUser);
+                return loginresponse;
+            }
             else
             {
                 user.CreatedOn = DateTime.Now;
@@ -79,7 +84,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 var userEntity = _mapper.Map<VibeSyncModels.EntityModels.User>(user);
                 _context.Users.Add(userEntity);
                 var response = await _context.SaveChangesAsync();
-
                 if (response > 0 && user.UserOrDj.Equals("dj", StringComparison.CurrentCultureIgnoreCase))
                 {
                     //create an insertion in dj table
@@ -94,7 +98,14 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     await _context.SaveChangesAsync();
                 }
                 if (response > 0)
-                    return Convert.ToInt64(userEntity.Id);
+                {
+                    var loginresponse = _mapper.Map<LoginDetails>(userEntity);
+                    if (user.IsSsologin)
+                    {
+                        loginresponse.Token = await GenerateToken(getUser);
+                    }
+                    return loginresponse;
+                }
                 else
                     throw new CustomException(Constants.DbOperationFailed);
             }

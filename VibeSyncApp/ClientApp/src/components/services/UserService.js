@@ -5,9 +5,15 @@ export async function handleAPIRequest(url, method, data) {
         method: method,
         headers: {
             'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Include HTTP-only cookie
+        }
     };
+
+    // Retrieve the JWT token from localStorage
+    const token = localStorage.getItem('jwt');
+
+    if (token) {
+        requestOptions.headers['Authorization'] = `Bearer ${token}`;
+    }
 
     if (method === 'POST' || method === 'PUT') {
         requestOptions.body = JSON.stringify(data);
@@ -22,12 +28,19 @@ export async function handleAPIRequest(url, method, data) {
             return null; // No content
         }
 
-        return await response.json();
+        // Check the content type of the response
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json(); // Parse JSON response
+        } else {
+            return await response.text(); // Return text response
+        }
     } catch (error) {
         console.error('Error in API request:', error);
         throw error;
     }
 }
+
 
 export default async function RegisterUser(data) {
     return handleAPIRequest('User/RegisterUser', 'POST', data);
@@ -37,13 +50,20 @@ export async function Logout() {
     return handleAPIRequest('User/LogoutUser', 'POST');
 }
 
+
 export async function GetUserById(id) {
     return handleAPIRequest(`User/GetUserById?id=${id}`, 'GET');
 }
 
 export async function LoginUser(data) {
-    return handleAPIRequest('User/LoginUser', 'POST', data);
+    const response = await handleAPIRequest('User/LoginUser', 'POST', data);
+    if (response && response.token) {
+        // Store the JWT token in localStorage
+        localStorage.setItem('jwt', response.token);
+    }
+    return response;
 }
+
 
 export async function getUserRequestHistoryData(userid) {
     return handleAPIRequest(`Songs/GetSongHistory?userId=${userid}`, 'GET');

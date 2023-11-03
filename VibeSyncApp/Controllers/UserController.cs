@@ -67,13 +67,6 @@ namespace VibeSyncApp.Controllers
 
             if (result.Id != 0)
             {
-                Response.Cookies.Append("jwt", result.Token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true, // Set to true in production with HTTPS
-                    SameSite = SameSiteMode.Strict, // Adjust this as needed
-                    Expires = DateTime.Now.AddHours(1),
-                });
                 return Ok(result);
             }
             else

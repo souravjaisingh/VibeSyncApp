@@ -80,6 +80,8 @@ export default function DjLiveSongs() {
             // Move the accepted request to the bottom of the acceptedHistory array
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
             console.error('Error accepting request:', error);
         }
     };
@@ -122,6 +124,8 @@ export default function DjLiveSongs() {
                 prevHistory.filter((request) => request.id !== record.id)
             );
         } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
             console.error('Error rejecting request:', error);
         }
     };
@@ -145,6 +149,8 @@ export default function DjLiveSongs() {
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         }
         catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
             console.error('Error marking as played:', error);
         }
     }

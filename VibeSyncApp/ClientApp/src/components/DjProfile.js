@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './DjProfile.css';
 import { UpdateDjDetails, GetDjProfile } from './services/DjService';
+import { MyContext } from '../App';
 
 const DjProfile = () => {
+  const { error, setError } = useContext(MyContext);
+    const {errorMessage, setErrorMessage} = useContext(MyContext);
   const [id, setId] = useState('');
   const [userid, setUserId] = useState('');
   const [djName, setDjName] = useState('');
@@ -16,20 +19,20 @@ const DjProfile = () => {
   const [ifscCode, setIfscCode] = useState('');
   const [socialLinks, setSocialLinks] = useState('');
   const [successMessage, setSuccessMessage] = useState(''); 
-  const [errorMessage, setErrorMessage] = useState(''); 
+  const [profileErrorMessage, setProfileErrorMessage] = useState(''); 
 
   const handleSubmit = async () => {
-    setErrorMessage('');
+    setProfileErrorMessage('');
     setSuccessMessage('');
     // Validation: Check if any input field is empty
     if (!djName || !userid) { // Add required fields here  
-      setErrorMessage('All required fields must be filled in.'); // Set error message
+      setProfileErrorMessage('All required fields must be filled in.'); // Set error message
       return; // Don't proceed with the API call
     }
 
     // Validation: Check the data type of bankAccountNumber
     if (bankAccountNumber && isNaN(parseInt(bankAccountNumber))) {
-      setErrorMessage('Bank Account Number must be a number.'); // Set error message
+      setProfileErrorMessage('Bank Account Number must be a number.'); // Set error message
       return; // Don't proceed with the API call
     }
 
@@ -55,16 +58,18 @@ const DjProfile = () => {
       const response = await UpdateDjDetails(djProfile);
       if(response.errors != null){
         console.error('Error saving DJ profile:', response.errors);
-        setErrorMessage('Error saving DJ profile. Please try again'); 
+        setProfileErrorMessage('Error saving DJ profile. Please try again'); 
       }
       else{
         console.log('DJ profile saved successfully:', response.data);
         setSuccessMessage('DJ profile saved successfully');
       }
     } catch (error) {
+      setError(true);
+      setErrorMessage(error.message);
       // Handle network or other errors
       console.error('Error saving DJ profile:', error);
-      setErrorMessage('Error saving DJ profile. Please try again.'); 
+      setProfileErrorMessage('Error saving DJ profile. Please try again.'); 
     }
   };
   const handleBankAccountNumberChange = (e) => {
@@ -93,6 +98,8 @@ const DjProfile = () => {
         setId(res.id);
         setUserId(res.userId)
       } catch (error) {
+        setError(true);
+        setErrorMessage(error.message);
         // Handle network or other errors
         console.error('Error fetching DJ profile:', error);
       }
@@ -105,7 +112,7 @@ const DjProfile = () => {
     <div className="dj-profile">
       <form className="profile-form">
       {successMessage && <p className="success-message">{successMessage}</p>}
-      {errorMessage && <p className="error-message">{errorMessage}</p>} 
+      {profileErrorMessage && <p className="error-message">{profileErrorMessage}</p>} 
       <p className="dj-profile-heading">DJ Profile</p>
         <div className="input-group">
           <label htmlFor="djNameInput">Name</label>

@@ -1,40 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import * as Constants from '../Constants'
+import * as Constants from '../Constants';
+
+export async function handleAPIRequest(url, method, data) {
+    const requestOptions = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    };
+
+    // Retrieve the JWT token from localStorage
+    const token = localStorage.getItem('jwt');
+
+    if (token) {
+        requestOptions.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    if (method === 'POST' || method === 'PUT') {
+        requestOptions.body = JSON.stringify(data);
+    }
+
+    try {
+        const response = await fetch(Constants.baseUri + url, requestOptions);
+
+        handleAPIError(response);
+
+        if (response.status === 204) {
+            return null; // No content
+        }
+
+        // Check the content type of the response
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json(); // Parse JSON response
+        } else {
+            return await response.text(); // Return text response
+        }
+    } catch (error) {
+        console.error('Error in API request:', error);
+        throw error;
+    }
+}
+
 
 export default async function RegisterUser(data) {
-    const response = await fetch(Constants.baseUri + 'User/RegisterUser', {
-                    //mode: 'no-cors',
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-    return await response.text();
-}
-export async function GetUserById(id){
-    await fetch(Constants.baseUri + 'User/GetUserById?id=' + id)
-    .then(result=> result.json())
-    .then(data=> console.log(data));
+    const response = await handleAPIRequest('User/RegisterUser', 'POST', data);
+    if (response && response.token) {
+        // Store the JWT token in localStorage
+        localStorage.setItem('jwt', response.token);
+    }
+    return response;
 }
 
-export async function LoginUser(data){
-    const response = await fetch(Constants.baseUri + 'User/LoginUser', {
-        //mode: 'no-cors',
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
+
+export async function Logout() {
+    return handleAPIRequest('User/LogoutUser', 'POST');
+}
+
+
+export async function GetUserById(id) {
+    return handleAPIRequest(`User/GetUserById?id=${id}`, 'GET');
+}
+
+export async function LoginUser(data) {
+    const response = await handleAPIRequest('User/LoginUser', 'POST', data);
+    if (response && response.token) {
+        // Store the JWT token in localStorage
+        localStorage.setItem('jwt', response.token);
+    }
+    return response;
+}
+
+
+export async function getUserRequestHistoryData(userid) {
+    return handleAPIRequest(`Songs/GetSongHistory?userId=${userid}`, 'GET');
+}
+
+export function handleAPIError(response) {
+    if (!response.ok) {
+        switch (response.status) {
+            case 400:
+                throw new Error("Houston, we have a problem. Your request is as clear as mud. Enter correct data and we shall let you pass.");
+            case 403:
+                throw new Error("Access denied. You've stumbled into the secret garden. Unfortunately, you're not on the guest list.");
+            case 404:
+                throw new Error("Oops! This page is as lost as you are on a Monday morning.");
+            case 500:
+                throw new Error("Looks like we've hit a snag. Our engineers are on it faster than you can say 'bug'.");
+            case 503:
+                throw new Error("Hold on tight! Our team of highly trained monkeys is fixing the issue.");
+            case 401:
+                throw new Error("Access denied! You need a magic wand or the secret handshake for this area.");
+            case 409:
+                throw new Error("Double trouble! That email's already taken. Please choose a unique one. If you still think it's unique, probably our server has gone crazy.");
+            default:
+                throw new Error("Our server is on a coffee break. It'll be back after it finishes its latte.");
         }
-    });
-return await response.json();
-}
-
-export async function getUserRequestHistoryData(userid){
-    const res = await fetch(Constants.baseUri + `Songs/GetSongHistory?userId=${userid}`)
-    .then((response) => response.json())
-    .catch((error) => {
-        console.error('Error fetching data:', error);
-    });
-    return res;
+    }
 }

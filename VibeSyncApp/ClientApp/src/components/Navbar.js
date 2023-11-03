@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VB_Logo_2.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Logout } from './services/UserService';
+import { MyContext } from '../App';
 
 function NavbarComponent() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,9 +20,14 @@ function NavbarComponent() {
     navigate('/songhistory');
   }
 
-  function handleLogoutClick() {
-    localStorage.removeItem('userId');
-    navigate('/');
+  async function handleLogoutClick() {
+
+    const res = await Logout();
+    if (res) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('jwt');
+      navigate('/');
+    }
   }
 
   function handleHomeClick() {
@@ -59,12 +66,12 @@ function NavbarComponent() {
         {(location.pathname === '/userhome' ||
           location.pathname.startsWith('/SongSearch') ||
           location.pathname.startsWith('/paymentIndex')) && (
-          <Button 
-          className="btn-navigation-bar"
-          onClick={(e) => handleRequestsClick()}>
-            Your Requests
+            <Button
+              className="btn-navigation-bar"
+              onClick={(e) => handleRequestsClick()}>
+              Your Requests
             </Button>
-        )}
+          )}
         {localStorage.getItem('userId') != null && (
           <Button
             className="btn-navigation-bar"

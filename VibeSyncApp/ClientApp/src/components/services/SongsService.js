@@ -1,31 +1,15 @@
-import * as Constants from '../Constants'
+import * as Constants from '../Constants';
+import { handleAPIRequest } from './UserService'; // Adjust the import path as needed
 
-export async function GetSongsUsingSearchTerm(query, offset, limit){
-    var qString = `SongName=${query}&offset=${offset}&limit=${limit}`;
-    const res = await fetch(Constants.baseUri + `Songs/GetSong?${qString}`)
-    .then((response) => response.json())
-    .catch((error) => {
-        console.error('Error fetching data:', error);
-    });
-    return res;
-};
-
-export async function GetSongsByEventId(id){
-    const res = await fetch(Constants.baseUri + `Songs/GetSongHistory?EventId=${id}`)
-    .then((response) => response.json())
-    .catch((error) => {
-        console.error('Error fetching data:', error);
-    });
-    return res;
+export async function GetSongsUsingSearchTerm(query, offset, limit) {
+    const qString = `SongName=${query}&offset=${offset}&limit=${limit}`;
+    return handleAPIRequest(`Songs/GetSong?${qString}`, 'GET');
 }
 
-export async function ModifySongRequest(data){
-    const response = await fetch(Constants.baseUri + 'Songs/UpdateSongHistory', {
-        method: 'PUT',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    return await response.text();
+export async function GetSongsByEventId(id) {
+    return handleAPIRequest(`Songs/GetSongHistory?EventId=${id}`, 'GET');
+}
+
+export async function ModifySongRequest(data) {
+    return handleAPIRequest('Songs/UpdateSongHistory', 'PUT', data);
 }

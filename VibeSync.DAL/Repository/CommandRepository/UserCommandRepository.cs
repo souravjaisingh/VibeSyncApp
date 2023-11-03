@@ -154,7 +154,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
             await _context.SaveChangesAsync();
             return userDetails.Token;
         }
-
         public async Task<string> LogoutUser()
         {
             var userId = loggedInUserId();

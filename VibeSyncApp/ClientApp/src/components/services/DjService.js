@@ -1,19 +1,11 @@
-import * as Constants from '../Constants'
+import * as Constants from '../Constants';
+import { handleAPIRequest } from './UserService';
 
-export async function UpdateDjDetails(data){
-    const response = await fetch(Constants.baseUri + 'Dj/UpdateDjProfile', {
-        //mode: 'no-cors',
-        method: 'PUT',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-return await response.text();
+
+export async function UpdateDjDetails(data) {
+    return handleAPIRequest('Dj/UpdateDjProfile', 'PUT', data);
 }
 
-export async function GetDjProfile(id){
-    const res = await fetch(Constants.baseUri + 'Dj/GetDjProfile?UserId=' + id)
-    .then(result=>result.json());
-    return res;
+export async function GetDjProfile(id) {
+    return handleAPIRequest(`Dj/GetDjProfile?UserId=${id}`, 'GET');
 }

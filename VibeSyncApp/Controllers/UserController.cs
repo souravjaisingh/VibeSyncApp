@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
@@ -78,7 +79,8 @@ namespace VibeSyncApp.Controllers
         /// <param name="logoutUser">The logout user.</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> LogoutUser([FromBody] LogoutUser logoutUser)
+        [ExcludeTokenAuthentication]
+        public async Task<IActionResult> LogoutUser([FromQuery] LogoutUser logoutUser)
         {
             return Ok(await _mediator.Send(logoutUser));
         }

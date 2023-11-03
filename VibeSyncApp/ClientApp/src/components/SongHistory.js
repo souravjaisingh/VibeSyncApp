@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import './SongHistory.css';
 import { getUserRequestHistoryData } from './services/UserService';
+import { MyContext } from '../App';
 
 export default function SongHistory() {
+    const { error, setError } = useContext(MyContext);
+    const {errorMessage, setErrorMessage} = useContext(MyContext);
     const [userHistory, setUserHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -17,6 +20,8 @@ export default function SongHistory() {
                 setUserHistory(sortedData);
             } catch (error) {
                 // Handle any errors here
+                setError(true);
+                setErrorMessage(error.message);
                 console.error('Error fetching user request history:', error);
             } finally {
                 setIsLoading(false);

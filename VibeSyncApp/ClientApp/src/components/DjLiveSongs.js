@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
 import { getUserRequestHistoryData } from './services/UserService';
 import { useLocation } from 'react-router-dom';
 import { GetSongsByEventId, ModifySongRequest } from './services/SongsService';
+import { MyContext } from '../App';
 
 export default function DjLiveSongs() {
+    const { error, setError } = useContext(MyContext);
+    const {errorMessage, setErrorMessage} = useContext(MyContext);
     const [userHistory, setUserHistory] = useState([]);
     const [acceptedHistory, setAcceptedHistory] = useState([]);
     const location = useLocation();
@@ -39,6 +42,8 @@ export default function DjLiveSongs() {
                 setUserHistory(sortedRequests);
                 console.log(sortedRequests);
             } catch (error) {
+                setError(true);
+                setErrorMessage(error.message);
                 console.error('Error fetching user request history:', error);
             }
         }
@@ -75,6 +80,8 @@ export default function DjLiveSongs() {
             // Move the accepted request to the bottom of the acceptedHistory array
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
             console.error('Error accepting request:', error);
         }
     };
@@ -117,6 +124,8 @@ export default function DjLiveSongs() {
                 prevHistory.filter((request) => request.id !== record.id)
             );
         } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
             console.error('Error rejecting request:', error);
         }
     };
@@ -140,6 +149,8 @@ export default function DjLiveSongs() {
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         }
         catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
             console.error('Error marking as played:', error);
         }
     }

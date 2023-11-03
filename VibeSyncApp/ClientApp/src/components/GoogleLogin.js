@@ -4,9 +4,11 @@ import './GoogleLogin.css';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { googleLoginHelper } from '../Helpers/UserHelper';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function GoogleLogin(isUser){
+    const navigate = useNavigate();
     const isUserRegistration = isUser.isUser;
     console.log(isUserRegistration);
 
@@ -32,16 +34,19 @@ export default function GoogleLogin(isUser){
                     setProfile(res.data);
                     console.log(res.data);
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
-                    if(!response.includes('Error')){
-                        localStorage.setItem('userId', response);
-                        localStorage.setItem('isUser', isUserRegistration);
-                        if(isUserRegistration){
-                            window.location.href='/userhome';
+                    if (!response.error) {
+                        console.log("Load new page after following response:")
+                        console.log(response);
+                        if (response && response.isUser == true) {
+                            localStorage.setItem('userId', response.id);
+                            localStorage.setItem('isUser', true);
+                            navigate('/userhome')
                         }
-                        else{
-                            window.location.href='/djhome';
+                        else if (response && response.isUser == false) {
+                            localStorage.setItem('userId', response.id);
+                            localStorage.setItem('isUser', false);
+                            navigate('/djhome')
                         }
-                        
                     }
                     else{
                         setShowErrorMessage(true);

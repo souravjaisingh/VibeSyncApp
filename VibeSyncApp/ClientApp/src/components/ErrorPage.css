@@ -1,0 +1,43 @@
+.error-page {
+    background: #f7f7f7;
+    /* Light gray background */
+    padding: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    /* Choose your preferred font family */
+    color: #333;
+    /* Dark gray text color */
+    border: 1px solid #ddd;
+    /* Optional: Add a border */
+    border-radius: 5px;
+    /* Optional: Add rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: Add a shadow */
+}
+
+.oops {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.message {
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+.retry-button {
+    background: #007BFF;
+    /* Blue button background color */
+    color: #fff;
+    /* White button text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.retry-button:hover {
+    background: #0056b3;
+    /* Darker blue on hover */
+}

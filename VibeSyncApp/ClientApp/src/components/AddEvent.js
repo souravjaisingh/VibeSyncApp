@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import './AddEvent.css';
 import { redirect } from 'react-router-dom';
 import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { MyContext } from '../App';
 
 const AddressTypeahead = () => {
+    const { error, setError } = useContext(MyContext);
+    const {errorMessage, setErrorMessage} = useContext(MyContext);
     const [address, setAddress] = useState('');
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
@@ -89,7 +92,7 @@ const AddressTypeahead = () => {
             setMinimumBid(input);
         }
     };
-    const handleSubmit  = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         // Validation: Check if any input field is empty
         setAddress('12.12345,14.345678');
@@ -102,27 +105,33 @@ const AddressTypeahead = () => {
                 console.error('Event end time cannot be earlier than event start time');
                 // Don't proceed with the API call
             }
-        }
-        else{
-            var res = await eventDetailsUpsertHelper(
-                localStorage.getItem('userId')
-                ,theme
-                ,eventDesc
-                ,venueName
-                ,eventStartTime
-                ,eventEndTime
-                ,12.123456  //modify once google maps api gets implemented
-                ,44.765432
-                ,minimumBid
-                ,rowData ? true : false,
-                rowDataString ? rowData.id : 0
+        } else {
+            try {
+                var res = await eventDetailsUpsertHelper(
+                    localStorage.getItem('userId')
+                    , theme
+                    , eventDesc
+                    , venueName
+                    , eventStartTime
+                    , eventEndTime
+                    , 12.123456  // Modify once Google Maps API gets implemented
+                    , 44.765432
+                    , minimumBid
+                    , rowData ? true : false,
+                    rowDataString ? rowData.id : 0
                 );
-            if(res != null){
-                console.log(res);
-                navigate('/djhome');
+                if (res != null) {
+                    console.log(res);
+                    navigate('/djhome');
+                }
+            } catch (error) {
+                setError(true);
+                setErrorMessage(error.message);
+                console.error('Error in handleSubmit:', error);
             }
         }
     }
+    
     // Fetch suggestions as the user types
     useEffect(() => {
         // if (address.length > 2) {

@@ -1,34 +1,16 @@
-import * as Constants from '../Constants'
+import * as Constants from '../Constants';
+import { handleAPIRequest } from './UserService';
 
-export async function GetPaymentInitiationDetails(data){
-    const response = await fetch(Constants.baseUri + 'Payment/GetPaymentOrderIdUserDetails', {
-        //mode: 'no-cors',
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    return await response.json();
+// Other functions you provided
+
+export async function GetPaymentInitiationDetails(data) {
+    return handleAPIRequest('Payment/GetPaymentOrderIdUserDetails', 'POST', data);
 }
 
-export async function UpsertPayment(data){
-    const response = await fetch(Constants.baseUri + 'Payment/PersistPaymentData', {
-        //mode: 'no-cors',
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    return await response.json();
+export async function UpsertPayment(data) {
+    return handleAPIRequest('Payment/PersistPaymentData', 'POST', data);
 }
 
-export async function GetTransactionHistory(id){
-    const res = await fetch(Constants.baseUri + `Payment/GetDjTransactions?UserId=${id}`)
-    .then((response) => response.json())
-    .catch((error) => {
-        console.error('Error fetching data:', error);
-    });
-    return res;
+export async function GetTransactionHistory(id) {
+    return handleAPIRequest(`Payment/GetDjTransactions?UserId=${id}`, 'GET');
 }

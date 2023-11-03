@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import { GetEventsWithDjInfo } from './services/EventsService';
 import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import photo from '../Resources/DJWhite.jpg';
 import SongSearch from './SongSearch';
+import { MyContext } from '../App';
 
 export default function DjList() {
+    const { error, setError } = useContext(MyContext);
+    const {errorMessage, setErrorMessage} = useContext(MyContext);
     const navigate = useNavigate();
     const [events, setEvents] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
@@ -30,10 +33,16 @@ export default function DjList() {
     };
 
     async function getEventsData() {
-        const res = await GetEventsWithDjInfo();
-        //console.log(res);
-        setEvents(res);
+        try {
+            const res = await GetEventsWithDjInfo();
+            setEvents(res);
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error('Error in getEventsData:', error);
+        }
     }
+    
     useEffect(() => {
         getEventsData();
     }, [])

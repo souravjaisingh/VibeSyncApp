@@ -100,10 +100,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 if (response > 0)
                 {
                     var loginresponse = _mapper.Map<LoginDetails>(userEntity);
-                    if (user.IsSsologin)
-                    {
-                        loginresponse.Token = await GenerateToken(getUser);
-                    }
+                    loginresponse.Token = await GenerateToken(getUser);
                     return loginresponse;
                 }
                 else

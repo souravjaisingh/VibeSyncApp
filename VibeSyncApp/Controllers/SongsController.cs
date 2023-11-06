@@ -38,7 +38,6 @@ namespace VibeSyncApp.Controllers
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [HttpGet]
-        [ExcludeTokenAuthentication]
         public async Task<IActionResult> GetSong([FromQuery] GetSongRequestModel request)
         {
             // Log the request parameter as JSON
@@ -58,7 +57,6 @@ namespace VibeSyncApp.Controllers
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [HttpGet]
-        [ExcludeTokenAuthentication]
         public async Task<IActionResult> GetSongHistory([FromQuery] GetSongHistoryRequestModel request)
         {
             // Log the request parameter as JSON
@@ -73,7 +71,6 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPut]
-        [ExcludeTokenAuthentication]
         public async Task<IActionResult> UpdateSongHistory([FromBody] SongHistoryModel request)
         {
             // Log the request parameter as JSON

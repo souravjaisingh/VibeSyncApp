@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './UserLogin.css';
 import './GoogleLogin.css';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { googleLoginHelper } from '../Helpers/UserHelper';
 import { useNavigate } from 'react-router-dom';
+import { MyContext } from '../App';
 
 
 export default function GoogleLogin(isUser){
+    const { error, setError } = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
     const isUserRegistration = isUser.isUser;
     console.log(isUserRegistration);
@@ -53,7 +56,10 @@ export default function GoogleLogin(isUser){
                     }
                     //await registerUser(res.data);
                 })
-                .catch((err) => console.log(err));
+                .catch((error) => {
+                    setError(true);
+                    setErrorMessage(error.message);
+                });
         }
     },
     [ user ]

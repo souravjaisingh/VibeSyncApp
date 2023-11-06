@@ -106,6 +106,7 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPost]
+        [ExcludeTokenAuthentication]
         public async Task<IActionResult> GenerateQRCodeForEvent([FromBody] GenerateQRCodeRequestModel request)
         {
             // Log the request parameter as JSON
@@ -117,6 +118,19 @@ namespace VibeSyncApp.Controllers
             // Log the response as JSON
             _logger.LogInformation($"{typeof(EventsController).GetMethod("GenerateQRCodeForEvent")}'s response: {JsonConvert.SerializeObject(res)}");
             return Ok(base64Image);
+        }
+        [HttpPost]
+        [ExcludeTokenAuthentication]
+        public async Task<IActionResult> GetEventsByEventId([FromQuery] GetEventsByEventId request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(EventsController)}, API: {typeof(EventsController).GetMethod("GetEventsByEventId")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var res = await _mediator.Send(request).ConfigureAwait(false);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(EventsController).GetMethod("GetEventsByEventId")}'s response: {JsonConvert.SerializeObject(res)}");
+            return Ok(res);
         }
     }
 }

@@ -66,8 +66,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var getUser = _context.Users.Where(x => x.Email == user.Email).FirstOrDefault();
             if (getUser != null && !user.IsSsologin)
                 throw new CustomException(Constants.UserAlreadyExists);
-            else if (user.IsSsologin && getUser != null && getUser.UserOrDj != user.UserOrDj)
-                throw new CustomException(Constants.Impersonating);
+            //else if (user.IsSsologin && getUser != null && getUser.UserOrDj != user.UserOrDj)
+            //    throw new CustomException(Constants.Impersonating);
             else if (user.IsSsologin && getUser != null)
             {
                 var loginresponse = _mapper.Map<LoginDetails>(getUser);

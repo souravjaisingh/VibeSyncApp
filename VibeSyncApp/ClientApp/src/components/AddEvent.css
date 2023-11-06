@@ -11,7 +11,7 @@
 .event-form {
     max-width: 400px;
     padding: 20px;
-    background-color: #fff; /* Light background color for the form */
+    background-color: aliceblue; /* Light background color for the form */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import { GetDjEvents, GetEventsWithDjInfo } from './services/EventsService';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './DJList.css'
 import photo from '../Resources/DJWhite.jpg';
 import SongSearch from './SongSearch';

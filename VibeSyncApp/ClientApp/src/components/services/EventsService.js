@@ -20,3 +20,18 @@ export async function AddEventByUserId(data) {
 export async function UpdateEventDetails(data) {
     return handleAPIRequest('Events/UpdateEvent', 'PUT', data);
 }
+
+export async function GenerateQRCode(){
+    const data={
+        Url:'https://your-qr-code-url-here'
+    }
+    return handleAPIRequest('Events/GenerateQRCodeForEvent', 'POST', data);
+}
+
+export async function GetEventByEventId(eventId, userId){
+    const data={
+        eventId: eventId,
+        userId: userId
+    }
+    return handleAPIRequest('Events/GetEventsByEventId', 'POST', data);
+}

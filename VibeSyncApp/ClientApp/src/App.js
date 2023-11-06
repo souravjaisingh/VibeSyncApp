@@ -25,6 +25,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import ContactUs from './components/ContactUs';
 import NavbarComponent from './components/Navbar';
 import ErrorPage from './components/ErrorPage';
+import QrCodeDirect from './components/QrCodeDirect';
 
 export const MyContext = createContext();
 
@@ -84,6 +85,7 @@ function App() {
                 <Route path="/privacypolicy" element={<PrivacyPolicy />} />
                 <Route path="/contactus" element={<ContactUs />} />
                 <Route path="/errorPage" element={<ErrorPage />} />
+                <Route path="/qropener" element={<QrCodeDirect />} />
                 </Routes>}
                 </MyContext.Provider>
             <Footer />

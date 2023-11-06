@@ -69,8 +69,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
             Bitmap qrCodeImage = qrCode.GetGraphic(request.PixelSize); // Adjust size as needed
 
             // Load your logo image
-            System.Drawing.Image logo = System.Drawing.Image.FromFile("D:\\VibeSyncApp\\VibeSyncApp\\Images\\VibeSync.jpg");
-
+            System.Drawing.Image logo = System.Drawing.Image.FromFile("Images\\VibeSync.jpg");
+        
             // Calculate the position to place the logo at the center of the QR code
             int logoSize = request.LogoSize; // Adjust the size of the logo as needed
             int xPos = (qrCodeImage.Width - logoSize) / 2;

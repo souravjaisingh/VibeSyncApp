@@ -161,5 +161,46 @@ namespace VibeSync.DAL.Repository.QueryRepository
             var h2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(h1)));
             return R * h2;
         }
+
+        /// <summary>
+        /// Gets the events by dj identifier.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        public EventsDetails GetEventsByEventId(GetEventsByEventId request)
+        {
+            var events = _context.Events
+                .Join(
+                    _context.Djs.Where(d => d.UserId == request.UserId),
+                    e => e.DjId,
+                    d => d.Id,
+                    (e, d) => new EventsDetails
+                    {
+                        Id = e.Id,
+                        DjId = e.DjId,
+                        DjDescription = d.DjDescription,
+                        DjPhoto = d.DjPhoto,
+                        DjName = d.DjName,
+                        DjGenre = d.DjGenre,
+                        EventDescription = e.EventDescription,
+                        EventEndDateTime = e.EventEndDateTime,
+                        EventStartDateTime = e.EventStartDateTime,
+                        EventGenre = e.EventGenre,
+                        EventName = e.EventName,
+                        EventStatus = e.EventStatus,
+                        Latitude = e.Latitude,
+                        Longitude = e.Longitude,
+                        MinimumBid = e.MinimumBid,
+                        Venue = e.Venue,
+                        CreatedBy = e.CreatedBy,
+                        CreatedOn = e.CreatedOn
+                    }
+                )
+                .Where(e => e.Id == request.EventId)
+                .FirstOrDefault();
+
+            return events;
+
+        }
     }
 }

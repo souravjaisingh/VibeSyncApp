@@ -1,6 +1,6 @@
 /* CSS for SongHistoryWithActions Component */
 .song-history-container {
-    background-color: #f5f5f5;
+    background-color: aliceblue;
     padding: 20px;
 }
 
@@ -71,6 +71,7 @@
     width: 100%;
     overflow-x: auto;
     font-size: small;
+    background-color: aliceblue;
 }
 
 /* Updated button style for "Mark as Played" */

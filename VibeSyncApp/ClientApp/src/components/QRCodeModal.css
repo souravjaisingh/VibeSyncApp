@@ -1,0 +1,18 @@
+/* Add CSS to style the close button */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #000;
+}
+
+.close-button span {
+    font-size: 30px;
+    line-height: 1;
+}
+
+/* You can adjust the size, color, and other styles to your preference. */

@@ -1,27 +1,31 @@
-body{
-    background: #bdc3c7;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2c3e50, #bdc3c7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+body {
+    background: #bdc3c7;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2c3e50, #bdc3c7);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-.form{
+.form {
     background-image: url("../../src/Resources/DJWhite.jpg");
     border-radius: 5px;
     width: 550px;
     margin: 20px auto;
     padding: 20px;
     margin-left: 20px;
-    background-color: gainsboro;
+    background-color: aliceblue;
     background-blend-mode: lighten;
     /* height: 600px; */
-    color:black;
+    color: black;
 }
 
-.password-warning{
+.password-warning {
     display: block;
     font-size: smaller;
     color: orangered;
 }
+
 .btn {
     padding: 8px 20px;
     border-radius: 2px;
@@ -62,28 +66,32 @@ body{
     color: #242424;
     transition: 250ms;
 }
-.form-body{
+
+.form-body {
     text-align: left;
     padding: 20px 10px;
 }
 
-.form-body > *{
+.form-body>* {
     padding: 5px;
 }
 
-.form__label{
+.form__label {
     width: 40%;
 }
 
-.form_input{
+.form_input {
     width: 60%;
 }
-.input_error{
+
+.input_error {
     border-block-color: red;
 }
-#gender{
-    width:198px;
+
+#gender {
+    width: 198px;
 }
+
 /* .phone{
     display: flex;
     width: 200px;
@@ -96,6 +104,18 @@ body{
     width: 200px !important;
 } */
 
-.footer{
+.footer {
     text-align: center;
+}
+/* Update your CSS to position the "password-container" */
+.password-container {
+    display: flex;
+    flex-direction: column; /* Vertically stack the password input and "Show Password" div */
+}
+
+
+
+.show-password {
+    align-self: center; /* Position the "Show Password" div to the right */
+    margin-top: 10px; /* Add some top margin for spacing */
 }

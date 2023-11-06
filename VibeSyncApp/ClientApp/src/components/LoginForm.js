@@ -14,11 +14,13 @@ const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\
 const phoneRegex = /^[6-9]\d{9}$/;
 export default function LoginForm() {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
+
     // useEffect( () => {
     //     console.log(firstNameError);
     // }, [firstNameError, emailError, firstName]);
@@ -77,10 +79,32 @@ export default function LoginForm() {
                     <input required type="email" id="email" className='form__input' value={email} onChange={(e) => handleInputChange(e)} placeholder="Email" />
                 </div>
 
-                <div className="password">
-                    <label className="form__label" for="password">Password* </label>
-                    <input required className='form__input' type="password" id="password" value={password} onChange={(e) => handleInputChange(e)} placeholder="Password" />
+                <div className="password-container">
+                    <div className="password">
+                        <label className="form__label" htmlFor="password">
+                            Password*
+                        </label>
+                        <input
+                            required
+                            className="form__input"
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            value={password}
+                            onChange={(e) => handleInputChange(e)}
+                            placeholder="Password"
+                        />
+                    </div>
+                    <div className="show-password">
+                        <label htmlFor="check">Show Password &nbsp;</label>
+                        <input
+                            id="check"
+                            type="checkbox"
+                            value={showPassword}
+                            onChange={() => setShowPassword((prev) => !prev)}
+                        />
+                    </div>
                 </div>
+
 
             </div>
             <div class="footer">

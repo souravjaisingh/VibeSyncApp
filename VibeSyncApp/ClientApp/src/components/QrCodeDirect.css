@@ -1,0 +1,13 @@
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.download-link {
+    cursor: pointer;
+    color: #007bff; /* You can set the link color to your preference */
+    text-decoration: underline;
+    margin-top: 10px;
+}

@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import './AddEvent.css';
-import { redirect } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../App';
+import QRCodeModal from './QRCodeModal';
 
 const AddressTypeahead = () => {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const [address, setAddress] = useState('');
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
@@ -26,7 +27,21 @@ const AddressTypeahead = () => {
     const rowDataString = searchParams.get('data');
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    console.log(rowData);
+    const [eventId, setEventId] = useState(rowData != null ? rowData.id : null);
 
+    const openModal = () => {
+        setModalIsOpen(true);
+        setEventId(eventId);
+        if (localStorage.getItem('eventId') == null)
+            localStorage.setItem('eventId', eventId);
+    };
+
+    const closeModal = () => {
+        setModalIsOpen(false);
+        setEventId(eventId);
+    };
     // const handleAddressChange = async (event) => {
     //     const enteredAddress = event.target.value;
     //     setAddress(enteredAddress);
@@ -67,7 +82,7 @@ const AddressTypeahead = () => {
         setSelectedSuggestion(suggestion);
         setSuggestions([]); // Clear suggestions
     };
-    
+
     const handleThemeChange = (event) => {
         setTheme(event.target.value);
     };
@@ -82,7 +97,7 @@ const AddressTypeahead = () => {
     const handleEndEventTimeChange = (event) => {
         setEndEventTime(event.target.value);
     };
-    const handleEventDescriptionChange = (event) =>{
+    const handleEventDescriptionChange = (event) => {
         SetEventDesc(event.target.value);
     }
     const handleMinimumBidChange = (event) => {
@@ -131,7 +146,7 @@ const AddressTypeahead = () => {
             }
         }
     }
-    
+
     // Fetch suggestions as the user types
     useEffect(() => {
         // if (address.length > 2) {
@@ -158,7 +173,7 @@ const AddressTypeahead = () => {
         // } else {
         // setSuggestions([]);
         // }
-        if(rowData != null){
+        if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
             setEndEventTime(rowData.eventEndDateTime)
@@ -170,9 +185,13 @@ const AddressTypeahead = () => {
 
     return (
         <div className="address-typeahead">
-    <form className='event-form'>
-        <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
-        {/* <div className="input-group">
+            <form className='event-form'>
+                <Link to='#' onClick={openModal}>
+                    <button className="btn btn--primary btn--medium btn-pay">Show QR Code</button>
+                </Link>
+                <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} eventId={eventId} />
+                <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
+                {/* <div className="input-group">
             <label htmlFor="searchInput">Enter the event location</label>
             <input
                 type="text"
@@ -183,91 +202,91 @@ const AddressTypeahead = () => {
                 onChange={handleAddressChange}
             />
         </div> */}
-        {suggestions.length > 0 && (
-            <ul className="suggestions-list">
-                {suggestions.map((suggestion, index) => (
-                    <li
-                        key={index}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className={suggestion === selectedSuggestion ? 'selected' : ''}
-                    >
-                        {suggestion}
-                    </li>
-                ))}
-            </ul>
-        )}
+                {suggestions.length > 0 && (
+                    <ul className="suggestions-list">
+                        {suggestions.map((suggestion, index) => (
+                            <li
+                                key={index}
+                                onClick={() => handleSuggestionClick(suggestion)}
+                                className={suggestion === selectedSuggestion ? 'selected' : ''}
+                            >
+                                {suggestion}
+                            </li>
+                        ))}
+                    </ul>
+                )}
 
-        <div className="input-group">
-            <label htmlFor="eventNameInput">Event Name</label>
-            <input
-                type="text"
-                id="eventNameInput"
-                placeholder="Event Name"
-                className='event-input-fields'
-                value={theme}
-                onChange={handleThemeChange}
-            />
+                <div className="input-group">
+                    <label htmlFor="eventNameInput">Event Name</label>
+                    <input
+                        type="text"
+                        id="eventNameInput"
+                        placeholder="Event Name"
+                        className='event-input-fields'
+                        value={theme}
+                        onChange={handleThemeChange}
+                    />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="venueNameInput">Name of the venue</label>
+                    <input
+                        type="text"
+                        id="venueNameInput"
+                        placeholder="Name of the venue"
+                        className='event-input-fields'
+                        value={venueName}
+                        onChange={handleVenueNameChange}
+                    />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="eventStartTimeInput">Event Start timings</label>
+                    <input
+                        type="datetime-local"
+                        id="eventStartTimeInput"
+                        placeholder="Event Start timings"
+                        className='event-input-fields'
+                        value={eventStartTime}
+                        onChange={handleStartEventTimeChange}
+                    />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="eventEndTimeInput">Event end timings</label>
+                    <input
+                        type="datetime-local"
+                        id="eventEndTimeInput"
+                        placeholder="Event end timings"
+                        className='event-input-fields'
+                        value={eventEndTime}
+                        onChange={handleEndEventTimeChange}
+                    />
+                    {eventEndTime && eventStartTime && eventEndTime <= eventStartTime
+                        && <span className="error-message">End date time must be greater than start date time</span>}
+                </div>
+                <div className="input-group">
+                    <label htmlFor="eventDescriptionInput">Event description</label>
+                    <input
+                        type="text"
+                        id="eventDescriptionInput"
+                        placeholder="Event description"
+                        className='event-input-fields'
+                        value={eventDesc}
+                        onChange={handleEventDescriptionChange}
+                    />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="minimumBidInput">Minimum bid</label>
+                    <input
+                        type="text"
+                        id="minimumBidInput"
+                        placeholder="Minimum bid"
+                        className='event-input-fields'
+                        value={minimumBid}
+                        onChange={handleMinimumBidChange}
+                    />
+                </div>
+                <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
+            </form>
         </div>
-        <div className="input-group">
-            <label htmlFor="venueNameInput">Name of the venue</label>
-            <input
-                type="text"
-                id="venueNameInput"
-                placeholder="Name of the venue"
-                className='event-input-fields'
-                value={venueName}
-                onChange={handleVenueNameChange}
-            />
-        </div>
-        <div className="input-group">
-            <label htmlFor="eventStartTimeInput">Event Start timings</label>
-            <input
-                type="datetime-local"
-                id="eventStartTimeInput"
-                placeholder="Event Start timings"
-                className='event-input-fields'
-                value={eventStartTime}
-                onChange={handleStartEventTimeChange}
-            />
-        </div>
-        <div className="input-group">
-            <label htmlFor="eventEndTimeInput">Event end timings</label>
-            <input
-                type="datetime-local"
-                id="eventEndTimeInput"
-                placeholder="Event end timings"
-                className='event-input-fields'
-                value={eventEndTime}
-                onChange={handleEndEventTimeChange}
-            />
-            {eventEndTime && eventStartTime && eventEndTime <= eventStartTime
-                && <span className="error-message">End date time must be greater than start date time</span>}
-        </div>
-        <div className="input-group">
-            <label htmlFor="eventDescriptionInput">Event description</label>
-            <input
-                type="text"
-                id="eventDescriptionInput"
-                placeholder="Event description"
-                className='event-input-fields'
-                value={eventDesc} 
-                onChange={handleEventDescriptionChange}
-            />
-        </div>
-        <div className="input-group">
-            <label htmlFor="minimumBidInput">Minimum bid</label>
-            <input
-                type="text"
-                id="minimumBidInput"
-                placeholder="Minimum bid"
-                className='event-input-fields'
-                value={minimumBid}
-                onChange={handleMinimumBidChange}
-            />
-        </div>
-        <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
-    </form>
-</div>
 
     );
 };

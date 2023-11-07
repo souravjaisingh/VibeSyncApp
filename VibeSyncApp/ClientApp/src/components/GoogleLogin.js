@@ -40,7 +40,17 @@ export default function GoogleLogin(isUser){
                     if (!response.error) {
                         console.log("Load new page after following response:")
                         console.log(response);
-                        if (response && response.isUser == true) {
+                        if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
+                            localStorage.setItem('userId', response.id);
+                            localStorage.setItem('isUser', true);
+                            console.log(localStorage.getItem('redirectUrl'));
+                            setTimeout(() => {
+                                const redirectUrl = localStorage.getItem('redirectUrl');
+                                console.log(redirectUrl);
+                                navigate(redirectUrl);
+                            }, 0); 
+                        }
+                        else if (response && response.isUser == true) {
                             localStorage.setItem('userId', response.id);
                             localStorage.setItem('isUser', true);
                             navigate('/userhome')

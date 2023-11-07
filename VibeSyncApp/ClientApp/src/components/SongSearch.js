@@ -6,41 +6,57 @@ import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from
 import axios from 'axios';
 import './SongSearch.css';
 import { MyContext } from '../App';
+import { GetEventByEventId } from './services/EventsService';
+
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
     const rowDataString = searchParams.get('data');
+    const qrcodeParam = searchParams.get('qrcode');
+    const urlEventId = searchParams.get('eventId');
+    const urlUserId = searchParams.get('userId');
     const [searchQuery, setSearchQuery] = useState('');
     const [results, setResults] = useState([]);
-    const [enqueuedSongs, setEnqueuedSongs] = useState([]);
+    const [enqueuedSongs, setEnqueuedSongs] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [currentPage, setCurrentPage] = useState(2);
     const [loading, setLoading] = useState(false);
     const [isListOpen, setListOpen] = useState(false);
     const tableRef = useRef(null);
+    const [eventData, setEventData] = useState(null);
 
+
+    
+    // Add a check for qrcodeParam and local storage here
     useEffect(() => {
-        const fetchEnqSongs = async () => {
-            try {
-                const response = await GetSongsByEventId(rowData.id);
-                setEnqueuedSongs(response);
-            } catch (error) {
-                setError(true);
-                setErrorMessage(error.message);
-                console.error('Error fetching data:', error);
+        if (qrcodeParam === 'true') {
+            // Check if local storage contains userId and jwt key
+            const userId = localStorage.getItem('userId');
+            const jwtKey = localStorage.getItem('jwt');
+            
+            if (userId && jwtKey) {
+                // Local storage contains userId and jwt key, proceed to load the component
+                return;
+            } else {
+                // Redirect to the Home page for login
+                localStorage.setItem('redirectUrl', location.pathname+''+location.search);
+                navigate('/'); // Adjust the route as needed
             }
         }
-        fetchEnqSongs();
+    }, [qrcodeParam, navigate]);
+
+    useEffect(() => {
+        if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
+            return; // Skip the execution of this useEffect
+        }
         const fetchData = async () => {
             setLoading(true);
             try {
-                //GetSongsUsingSearchTerm(searchterm, offset, limit)
                 const response = await GetSongsUsingSearchTerm(searchQuery, ((currentPage - 1) * 20) + 1, 20);
                 const newData = response;
-
                 setResults((prevData) => [...prevData, ...newData]);
                 setCurrentPage((prevPage) => prevPage + 1);
             } catch (error) {
@@ -48,17 +64,13 @@ function SongSearch() {
                 setErrorMessage(error.message);
                 console.error('Error fetching data:', error);
             }
-
             setLoading(false);
         };
 
+         // Fetch enqueued songs after eventData is set
         const handleScroll = () => {
             const table = tableRef.current;
-            if (
-                table &&
-                table.scrollTop + table.clientHeight >= table.scrollHeight &&
-                !loading
-            ) {
+            if (table && table.scrollTop + table.clientHeight >= table.scrollHeight && !loading) {
                 fetchData();
             }
         };
@@ -73,28 +85,27 @@ function SongSearch() {
                 table.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [currentPage, loading, searchQuery]);
+    }, [currentPage, loading, searchQuery, eventData]);
 
     // Function to handle changes in the search input
     const handleSearchChange = (event) => {
         const newQuery = event.target.value;
         setSearchQuery(newQuery);
         clearTimeout(typingTimeout);
-        // Check if the new query is not empty before setting the timeout
         if (newQuery.trim() !== '') {
             const newTypingTimeout = setTimeout(() => {
                 fetchResultsFromAPI(newQuery);
             }, 400);
             setTypingTimeout(newTypingTimeout);
         } else {
-            // If the query is empty, you may want to clear the results or handle it in another way
             setResults([]);
         }
     };
+
     // Function to fetch results from the API
     const fetchResultsFromAPI = async (query) => {
         try {
-            var res = await GetSongsUsingSearchTerm(query, 0, 20);
+            const res = await GetSongsUsingSearchTerm(query, 0, 20);
             setResults(res);
         } catch (error) {
             setError(true);
@@ -102,26 +113,60 @@ function SongSearch() {
             console.error('Error in fetchResultsFromAPI:', error);
         }
     };
+
+    useEffect(async () => {
+        if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
+            return; // Skip the execution of this useEffect
+        }
+        async function fetchEnqSongs(eventId) {
+            try {
+                const response = await GetSongsByEventId(eventId);
+                setEnqueuedSongs(response);
+            } catch (error) {
+                setError(true);
+                setErrorMessage(error.message);
+                console.error('Error fetching data:', error);
+            }
+        }
+    
+        // Fetch event data if qrcodeParam is true and eventData is not already set
+        if (qrcodeParam === 'true' && !eventData) {
+            try {
+                const response = await GetEventByEventId(urlEventId, urlUserId);
+                setEventData(response);
+                if(response != null){
+                    fetchEnqSongs(response.id);
+                }
+            } catch (error) {
+                setError(true);
+                setErrorMessage(error.message);
+                console.error('Error fetching data:', error);
+            }
+        } else if (!eventData) {
+            // If qrcodeParam is not true and eventData is not set, use rowData as is
+            setEventData(JSON.parse(decodeURIComponent(rowDataString)));
+        } else if(enqueuedSongs == null) {
+            // If eventData is already set, fetch enqueued songs
+            fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
+        }
+    }, [qrcodeParam, urlEventId, urlUserId, eventData]);
     
 
     const handleRowClick = (data) => {
-        // Serialize the rowData object to a JSON string and encode it
-        rowData.eventId = rowData.id;
-        delete rowData.id;
+        if (eventData) {
+            eventData.eventId = eventData.id;
+            delete eventData.id;
 
-        data.songId = data.id;
-        delete data.id;
+            data.songId = data.id;
+            delete data.id;
 
-        const concatenatedJson = { ...rowData, ...data };
-        const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
+            const concatenatedJson = { ...eventData, ...data };
+            const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
-        // Navigate to the detail view with the serialized rowData as a parameter
-        navigate(`/paymentIndex?data=${rowDataString}`);
-        //navigate('/SongSearch');
+            localStorage.removeItem('redirectUrl');
+            navigate(`/paymentIndex?data=${rowDataString}`);
+        }
     };
-    // Parse the rowDataString back into a JavaScript object
-    const rowData = JSON.parse(decodeURIComponent(rowDataString));
-    console.log(rowData);
 
     const toggleList = () => {
         setListOpen(!isListOpen);
@@ -130,38 +175,31 @@ function SongSearch() {
     // Render the detailed view using the data from the selected row
     return (
         <div className='song-search'>
-            {/* <h1 className="search-heading">{rowData.djName}</h1> */}
-            <div className="search-container">
-                <div className="left-content">
-                    <img
-                        src={rowData.djPhoto}
-                        alt="DJ Image"
-                        style={{ width: '300px', height: 'auto' }}
-                        className='dj-image'
-                    />
+            {eventData && (
+                <div className="search-container">
+                    <div className="left-content">
+                        <img
+                            src={eventData.djPhoto}
+                            alt="DJ Image"
+                            style={{ width: '300px', height: 'auto' }}
+                            className='dj-image'
+                        />
+                    </div>
+                    <div className="right-content">
+                        <p className='dj-name'>{eventData.djName}</p>
+                        <p className='text-muted event-name'>{eventData.eventName}</p>
+                        <p className='text-muted event-desc'>{eventData.eventDescription}</p>
+                    </div>
                 </div>
-                <div className="right-content">
-                    <p className='dj-name'>{rowData.djName}</p>
-                    <p className='text-muted event-name'>{rowData.eventName}</p>
-                    <p className='text-muted event-desc'>{rowData.eventDescription}</p>
-                </div>
-            </div>
-
+            )}
+    
             <div className="custom-toggle-bar" onClick={toggleList}>
                 <span className="toggle-label">Show enqueued songs</span>
                 <span className={`toggle-icon ${isListOpen ? 'rotate' : ''}`}></span>
             </div>
-            {isListOpen && ( // Conditionally render the list based on the state
+            {isListOpen && (
                 <div className="collapsible-list">
-                    {/* Content of the collapsible list */}
                     <MDBTable align='middle' responsive className='collapsible-table'>
-                        {/* <MDBTableHead>
-                                <tr>
-                                    <th scope='col'>Song</th>
-                                    <th scope='col'>Album</th>
-                                    <th scope='col'>Image</th>
-                                </tr>
-                            </MDBTableHead> */}
                         <MDBTableBody>
                             {enqueuedSongs && enqueuedSongs.map((result, index) => (
                                 <tr key={index}>
@@ -174,12 +212,9 @@ function SongSearch() {
                                     </td>
                                     <td>
                                         <p className='fw-bold mb-1'>{result.songName}</p>
-                                        {/* <p className='text-muted mb-0'>{result.artists[0].name}</p> */}
-
                                         <p className='text-muted mb-0'>
                                             {result.artistName}
                                         </p>
-
                                     </td>
                                     <td>{result.albumName}</td>
                                 </tr>
@@ -188,8 +223,7 @@ function SongSearch() {
                     </MDBTable>
                 </div>
             )}
-
-
+    
             <div className="search-page">
                 <div className="search-bar">
                     <input
@@ -200,16 +234,8 @@ function SongSearch() {
                         onChange={handleSearchChange}
                     />
                 </div>
-                {/* <br/> */}
                 <div className='container-for-table' style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
                     <MDBTable align='middle' responsive hover>
-                        {/* <MDBTableHead>
-                            <tr>
-                                <th scope='col'>Song</th>
-                                <th scope='col'>Album</th>
-                                <th scope='col'>Image</th>
-                            </tr>
-                        </MDBTableHead> */}
                         <MDBTableBody>
                             {results && results.map((result, index) => (
                                 <tr key={index} onClick={(e) => { handleRowClick(result) }}>
@@ -223,12 +249,9 @@ function SongSearch() {
                                     </td>
                                     <td>
                                         <p className='fw-bold mb-1'>{result.name}</p>
-                                        {/* <p className='text-muted mb-0'>{result.artists[0].name}</p> */}
-
                                         <p className='text-muted mb-0'>
                                             {result.artists.map((artist) => artist.name).join(', ')}
                                         </p>
-
                                     </td>
                                     <td>{result.album.name}</td>
                                 </tr>
@@ -240,6 +263,7 @@ function SongSearch() {
             </div>
         </div>
     );
+    
 }
 
 export default SongSearch;

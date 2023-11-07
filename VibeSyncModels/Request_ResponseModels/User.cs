@@ -10,7 +10,7 @@ namespace VibeSyncModels.Request_ResponseModels
         [Required]
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [RegularExpression(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")]
         public string Email { get; set; }
         [RegularExpression(@"^([0]|\+91)?[789]\d{9}$")]
         public string PhoneNumber { get; set; }

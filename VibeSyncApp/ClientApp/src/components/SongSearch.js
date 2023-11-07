@@ -27,7 +27,7 @@ function SongSearch() {
     const [isListOpen, setListOpen] = useState(false);
     const tableRef = useRef(null);
     const [eventData, setEventData] = useState(null);
-    const [goAhead, setGoAhead] = useState(false);
+
 
     
     // Add a check for qrcodeParam and local storage here
@@ -38,20 +38,14 @@ function SongSearch() {
             const jwtKey = localStorage.getItem('jwt');
             
             if (userId && jwtKey) {
-                setGoAhead(true);
                 // Local storage contains userId and jwt key, proceed to load the component
                 return;
             } else {
-                setGoAhead(false);
                 // Redirect to the Home page for login
                 localStorage.setItem('redirectUrl', location.pathname+''+location.search);
                 navigate('/'); // Adjust the route as needed
             }
         }
-        else{
-            setGoAhead(true);
-        }
-
     }, [qrcodeParam, navigate]);
 
     useEffect(() => {

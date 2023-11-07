@@ -120,8 +120,7 @@ namespace VibeSyncApp.Controllers
             return Ok(base64Image);
         }
         [HttpPost]
-        [ExcludeTokenAuthentication]
-        public async Task<IActionResult> GetEventsByEventId([FromQuery] GetEventsByEventId request)
+        public async Task<IActionResult> GetEventsByEventId([FromBody] GetEventsByEventId request)
         {
             // Log the request parameter as JSON
             _logger.LogInformation($"Entered: {typeof(EventsController)}, API: {typeof(EventsController).GetMethod("GetEventsByEventId")}, Request: {JsonConvert.SerializeObject(request)}");

@@ -28,6 +28,8 @@ export default function RegisterUser(isUser) {
     const [phoneError, setPhoneError] = useState(false);
     const [passwordError, setpasswordError] = useState(false);
     const [confirmPasswordError, setconfirmPasswordError] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate()
     const isUserRegistration = isUser.isUser;
     console.log(isUserRegistration);
@@ -110,6 +112,16 @@ export default function RegisterUser(isUser) {
                 if (!response.error) {
                     console.log("Load new page after following response:")
                     console.log(response);
+                    if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
+                        localStorage.setItem('userId', response.id);
+                        localStorage.setItem('isUser', true);
+                        console.log(localStorage.getItem('redirectUrl'));
+                        setTimeout(() => {
+                            const redirectUrl = localStorage.getItem('redirectUrl');
+                            console.log(redirectUrl);
+                            navigate(redirectUrl);
+                        }, 0); 
+                    }
                     if (response && response.isUser == true) {
                         localStorage.setItem('userId', response.id);
                         localStorage.setItem('isUser', true);
@@ -169,15 +181,37 @@ export default function RegisterUser(isUser) {
                         onChange={(e) => phoneNumberfun(e)}
                     /> */}
                 </div>
-                <div className="password">
-                    <label className="form__label" for="password">Password* </label>
-                    <input required className={`form__input ${passwordError ? errorCssClass : ""}`} type="password" id="password" value={password} onChange={(e) => handleInputChange(e)} placeholder="Password" />
-                    {passwordError ? <span className='password-warning'>Must be minimum 8 chracters.</span> : ''}
+                <div className='password-container'>
+                    <div className="password">
+                        <label className="form__label" for="password">Password* </label>
+                        <input required className={`form__input ${passwordError ? errorCssClass : ""}`} type={showPassword ? "text" : "password"} id="password" value={password} onChange={(e) => handleInputChange(e)} placeholder="Password" />
+                        {passwordError ? <span className='password-warning'>Must be minimum 8 chracters.</span> : ''}
+                    </div>
+                    <div className="show-password">
+                        <label htmlFor="check">Show Password &nbsp;</label>
+                        <input
+                            id="check"
+                            type="checkbox"
+                            value={showPassword}
+                            onChange={() => setShowPassword((prev) => !prev)}
+                        />
+                    </div>
                 </div>
-                <div className="confirm-password">
-                    <label className="form__label" for="confirmPassword">Confirm Password* </label>
-                    <input required className="form__input" type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => handleInputChange(e)} placeholder="Confirm Password" />
-                    {confirmPasswordError ? <span className='password-warning'>Passwords didn't match.</span> : ''}
+                <div className='password-container'>
+                    <div className="confirm-password">
+                        <label className="form__label" for="confirmPassword">Confirm Password* </label>
+                        <input required className="form__input" type={showConfirmPassword ? "text" : "password"} id="confirmPassword" value={confirmPassword} onChange={(e) => handleInputChange(e)} placeholder="Confirm Password" />
+                        {confirmPasswordError ? <span className='password-warning'>Passwords didn't match.</span> : ''}
+                    </div>
+                    <div className="show-password">
+                        <label htmlFor="check">Show Password &nbsp;</label>
+                        <input
+                            id="check"
+                            type="checkbox"
+                            value={showConfirmPassword}
+                            onChange={() => setShowConfirmPassword((prev) => !prev)}
+                        />
+                    </div>
                 </div>
             </div>
             <div class="footer">

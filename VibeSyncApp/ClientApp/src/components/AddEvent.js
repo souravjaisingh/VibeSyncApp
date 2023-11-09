@@ -27,21 +27,6 @@ const AddressTypeahead = () => {
     const rowDataString = searchParams.get('data');
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    console.log(rowData);
-    const [eventId, setEventId] = useState(rowData != null ? rowData.id : null);
-
-    const openModal = () => {
-        setModalIsOpen(true);
-        setEventId(eventId);
-        if (localStorage.getItem('eventId') == null)
-            localStorage.setItem('eventId', eventId);
-    };
-
-    const closeModal = () => {
-        setModalIsOpen(false);
-        setEventId(eventId);
-    };
     // const handleAddressChange = async (event) => {
     //     const enteredAddress = event.target.value;
     //     setAddress(enteredAddress);
@@ -186,10 +171,6 @@ const AddressTypeahead = () => {
     return (
         <div className="address-typeahead">
             <form className='event-form'>
-                <Link to='#' onClick={openModal}>
-                    <button className="btn btn--primary btn--medium btn-pay">Show QR Code</button>
-                </Link>
-                <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} eventId={eventId} />
                 <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
                 {/* <div className="input-group">
             <label htmlFor="searchInput">Enter the event location</label>

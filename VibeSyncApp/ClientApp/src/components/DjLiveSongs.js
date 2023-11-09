@@ -178,11 +178,6 @@ export default function DjLiveSongs() {
     }
     return (
         <div className='song-history-container' style={{ maxHeight: '500px' }}>
-            <Link to='#' onClick={openModal}>
-                <button className="btn btn--primary btn--medium btn-pay">Show QR Code</button> 
-            </Link>
-            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} eventId={eventId} />
-
             {userHistory.length > 0 ? ( // Check if userHistory is not empty
                 <div className='song-history-table'>
                     <MDBTable className='history-table' align='middle' responsive hover>

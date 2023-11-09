@@ -4,3 +4,6 @@
     width: fit-content;
     margin: auto;
 }
+.qr-code{
+    font-size: small;
+}

@@ -8,6 +8,7 @@ import registerUserHelper from '../Helpers/UserHelper';
 import { useNavigate } from 'react-router-dom'
 import ErrorPage from './ErrorPage';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 // import { useErrorHandler } from 'react-error-boundary';
 
 const errorCssClass = 'input_error';
@@ -30,6 +31,7 @@ export default function RegisterUser(isUser) {
     const [confirmPasswordError, setconfirmPasswordError] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const { setLoading } = useLoadingContext();
     const navigate = useNavigate()
     const isUserRegistration = isUser.isUser;
     console.log(isUserRegistration);
@@ -108,7 +110,9 @@ export default function RegisterUser(isUser) {
         validateConfirmPassword(confirmPassword);
         if (!(firstNameError || emailError || passwordError || phoneError || confirmPasswordError)) {
             try {
+                setLoading(true);
                 var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender, isUserRegistration == 'true' ? 'user' : 'dj');
+                setLoading(false);
                 if (!response.error) {
                     console.log("Load new page after following response:")
                     console.log(response);
@@ -139,6 +143,7 @@ export default function RegisterUser(isUser) {
                 // Handle or log the error
                 // navigate('/errorPage');
                 setError(true);
+                setLoading(false);
                 setErrorMessage(error.message);
                 console.error('Error in RegisterUser:', error);
                 // You can show an error message to the user if needed.
@@ -170,7 +175,7 @@ export default function RegisterUser(isUser) {
                     </select>
                 </div>
                 <div className='phone'>
-                    <label className="form__label" for="phone">PhoneNumber </label>
+                    <label className="form__label" for="phone">Phone Number </label>
                     <input className={`form__input ${phoneError ? errorCssClass : ""}`} type='text' id='phone' value={phoneNumber} onChange={(e) => handleInputChange(e)}></input>
                     {/* <PhoneInput
                         containerClass={errorCssClass}

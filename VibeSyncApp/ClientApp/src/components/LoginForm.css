@@ -88,9 +88,6 @@ body {
     border-block-color: red;
 }
 
-#gender {
-    width: 198px;
-}
 
 /* .phone{
     display: flex;
@@ -115,7 +112,7 @@ body {
 
 
 
-.show-password {
+.show--password {
     align-self: center; /* Position the "Show Password" div to the right */
     margin-top: 10px; /* Add some top margin for spacing */
 }

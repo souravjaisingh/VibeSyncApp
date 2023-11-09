@@ -103,7 +103,7 @@ export default function LiveDjList() {
                                     </td>
                                     <td>
                                         <p className='fw-normal mb-1'>{item.venue}</p>
-                                        <p className='text-muted mb-0 event-date'>{Math.round((((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100)*1.6)} Km</p>
+                                        {/* <p className='text-muted mb-0 event-date'>{Math.round((((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100)*1.6)} Km</p> */}
                                         {/* <p className='text-muted mb-0'>IT department</p> */}
                                     </td>
 

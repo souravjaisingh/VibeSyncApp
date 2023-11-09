@@ -27,7 +27,7 @@ function Cards() {
           </button>
         </Link>
         <p className='signup-label'>
-          Don't have an account yet? 
+          Don't have an account yet? &nbsp;
           <Link 
             className='signup-link' 
             to={`/sign-up/${isUser ? 'false' : 'true'}`}

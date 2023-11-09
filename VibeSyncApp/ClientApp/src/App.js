@@ -26,12 +26,15 @@ import ContactUs from './components/ContactUs';
 import NavbarComponent from './components/Navbar';
 import ErrorPage from './components/ErrorPage';
 import QrCodeDirect from './components/QrCodeDirect';
+import { useLoadingContext } from './components/LoadingProvider';
 
 export const MyContext = createContext();
 
 function App() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const { loading } = useLoadingContext();
+
 
     const paddingValues = {
         mobileScreen: '50px',
@@ -88,6 +91,11 @@ function App() {
                 <Route path="/qropener" element={<QrCodeDirect />} />
                 </Routes>}
                 </MyContext.Provider>
+                {loading && (
+                <div className="loading-overlay">
+                    <div className="loading-spinner"></div>
+                </div>
+            )}
             <Footer />
         </>
     );

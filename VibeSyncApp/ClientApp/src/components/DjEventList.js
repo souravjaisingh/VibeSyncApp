@@ -6,14 +6,33 @@ import './DJList.css'
 import photo from '../Resources/DJWhite.jpg';
 import SongSearch from './SongSearch';
 import { MyContext } from '../App';
+import QRCodeModal from './QRCodeModal';
+import './DjEventList.css';
 
 export default function DjEventList() {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
     const [events, setEvents] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRow, setSelectedRow] = useState(null);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    
+    const [eventId, setEventId] = useState(null);
+
+    const openModal = (e, rowData) => {
+        e.stopPropagation();
+        setEventId(rowData.id); // Set the selected rowData
+        setModalIsOpen(true);
+        if (localStorage.getItem('eventId') == null){
+            localStorage.setItem('eventId', eventId);
+        }
+    };
+
+    const closeModal = (e) => {
+        setModalIsOpen(false);
+    };
+
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
@@ -24,15 +43,16 @@ export default function DjEventList() {
         )
     );
     const handleRowClick = (rowData) => {
-        // Serialize the rowData object to a JSON string and encode it
-        const rowDataString = encodeURIComponent(JSON.stringify(rowData));
-        console.log(rowData);
-
-        if (rowData.eventStatus === 'Live') {
-            navigate(`/djlivesongs?data=${rowDataString}`)
-        }
-        else {
-            navigate(`/eventdetails?data=${rowDataString}`);
+        if (!modalIsOpen) { // Check if the modal is not open
+            // Serialize the rowData object to a JSON string and encode it
+            const rowDataString = encodeURIComponent(JSON.stringify(rowData));
+            console.log(rowData);
+    
+            if (rowData.eventStatus === 'Live') {
+                navigate(`/djlivesongs?data=${rowDataString}`);
+            } else {
+                navigate(`/eventdetails?data=${rowDataString}`);
+            }
         }
     };
 
@@ -46,7 +66,7 @@ export default function DjEventList() {
             console.error('Error in getEventsData:', error);
         }
     }
-    
+
     useEffect(() => {
         getEventsData();
     }, [])
@@ -59,7 +79,7 @@ export default function DjEventList() {
                 placeholder="Search DJ/Venue"
             />
             {filteredData.length === 0 ? (
-                <p style={{color:"red"}}>You don't have any upcoming events as of now.</p>
+                <p style={{ color: "red" }}>You don't have any upcoming events as of now.</p>
             ) : (
                 <MDBTable align="middle" responsive hover>
                     <MDBTableHead>
@@ -95,11 +115,26 @@ export default function DjEventList() {
                                 </td>
                                 <td>
                                     <MDBBadge
-                                        color={item.eventStatus === "Live" ? "danger" : "success"}
+                                        color={item.eventStatus === 'Live' ? 'success' : 'warning'}
                                         pill
                                     >
-                                        {item.eventStatus}
+                                        {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
                                     </MDBBadge>
+                                    <br/>
+                                    <a
+                                    className='qr-code'
+                                        href="#!"
+                                        onClick={(e) => {
+                                            e.preventDefault(); // Prevent the default anchor behavior
+                                            
+                                            e.currentTarget === e.target && openModal(e, item); // Call your openModal function
+                                        }}
+                                    >
+                                        QR Code
+                                        {/* <button className="btn btn--primary btn--medium btn-pay">Show QR Code</button> */}
+                                    </a>
+                                    <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} eventId={eventId} />
+
                                 </td>
                             </tr>
                         ))}

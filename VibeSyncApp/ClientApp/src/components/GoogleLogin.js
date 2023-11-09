@@ -6,12 +6,14 @@ import axios from 'axios';
 import { googleLoginHelper } from '../Helpers/UserHelper';
 import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 
 
 export default function GoogleLogin(isUser){
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
+    const { setLoading } = useLoadingContext();
     const isUserRegistration = isUser.isUser;
     console.log(isUserRegistration);
 
@@ -36,7 +38,9 @@ export default function GoogleLogin(isUser){
                 .then(async (res) => {
                     setProfile(res.data);
                     console.log(res.data);
+                    setLoading(true);
                     const response  = await googleLoginHelper(res.data.given_name, res.data.family_name, res.data.email, isUserRegistration ? 'user' : 'dj');
+                    setLoading(false);
                     if (!response.error) {
                         console.log("Load new page after following response:")
                         console.log(response);
@@ -67,6 +71,7 @@ export default function GoogleLogin(isUser){
                     //await registerUser(res.data);
                 })
                 .catch((error) => {
+                    setLoading(false);
                     setError(true);
                     setErrorMessage(error.message);
                 });

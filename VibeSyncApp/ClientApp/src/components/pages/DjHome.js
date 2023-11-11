@@ -10,17 +10,17 @@ export default function DjHome() {
         <div className='DjHome'>
             <div className='center-button'>
                 <Link to='/djprofile' className='btn-mobile left-button'>
-                    <button className='btn btn--primary btn-medium'>
+                    <button className='toolbar-button'>
                         Update Dj Profile
                     </button>
                 </Link>
                 <Link to='/eventdetails' className='btn-mobile'>
-                    <button className='btn btn--primary btn-medium'>
+                    <button className='toolbar-button'>
                         Click here to add Event
                     </button>
                 </Link>
                 <Link to='/showtransactions' className='btn-mobile right-button'>
-                    <button className='btn btn--primary btn-medium'>
+                    <button className='toolbar-button'>
                         Show Transactions
                     </button>
                 </Link>

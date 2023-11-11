@@ -1,6 +1,9 @@
 import * as Constants from '../Constants';
+import { useLoadingContext } from '../LoadingProvider';
+
 
 export async function handleAPIRequest(url, method, data) {
+    
     const requestOptions = {
         method: method,
         headers: {

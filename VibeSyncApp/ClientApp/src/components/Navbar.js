@@ -5,9 +5,11 @@ import vibeSyncLogo from '../Resources/VB_Logo_2.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logout } from './services/UserService';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 
 function NavbarComponent() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { setLoading } = useLoadingContext();
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -21,8 +23,9 @@ function NavbarComponent() {
   }
 
   async function handleLogoutClick() {
-
+    setLoading(true);
     const res = await Logout();
+    setLoading(false);
     if (res) {
       localStorage.removeItem('userId');
       localStorage.removeItem('jwt');

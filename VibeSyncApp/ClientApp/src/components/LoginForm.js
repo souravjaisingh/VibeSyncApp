@@ -8,6 +8,7 @@ import { LoginUser } from './services/UserService';
 import { useNavigate } from 'react-router-dom';
 import { loginUserHelper } from '../Helpers/UserHelper';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 
 const errorCssClass = 'input_error';
 const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
@@ -20,6 +21,7 @@ export default function LoginForm() {
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
+    const { setLoading } = useLoadingContext();
 
     // useEffect( () => {
     //     console.log(firstNameError);
@@ -49,7 +51,9 @@ export default function LoginForm() {
             if (password == null || password == '' || password == undefined) {
                 setLoginError(true);
             }
+            setLoading(true);
             const response = await loginUserHelper(email, password);
+            setLoading(false);
             if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
                 localStorage.setItem('userId', response.id);
                 localStorage.setItem('isUser', true);
@@ -77,6 +81,7 @@ export default function LoginForm() {
         catch (error) {
             setError(true);
             setErrorMessage(error.message);
+            setLoading(false);
         }
     }
 
@@ -104,7 +109,7 @@ export default function LoginForm() {
                             placeholder="Password"
                         />
                     </div>
-                    <div className="show-password">
+                    <div className="show--password">
                         <label htmlFor="check">Show Password &nbsp;</label>
                         <input
                             id="check"

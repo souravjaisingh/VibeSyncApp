@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
+import { useLoadingContext } from './LoadingProvider';
 
 const AddressTypeahead = () => {
     const { error, setError } = useContext(MyContext);
@@ -22,6 +23,8 @@ const AddressTypeahead = () => {
     const [eventEndTime, setEndEventTime] = useState('');
     const [minimumBid, setMinimumBid] = useState('');
     const [eventDesc, SetEventDesc] = useState('');
+    const [isLive, setIsLive] = useState(false);
+    const { setLoading } = useLoadingContext();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const rowDataString = searchParams.get('data');
@@ -61,7 +64,17 @@ const AddressTypeahead = () => {
     //     setSuggestions([]); // Clear suggestions
     //     }
     // };
+    const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
+    const twoHoursAfterCurrentTime = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
 
+    const showLiveToggle = rowDataString && (
+        new Date(eventStartTime) >= twoHoursBeforeCurrentTime &&
+        new Date(eventStartTime) <= twoHoursAfterCurrentTime
+    );
+    const handleLiveToggle = () => {
+        // Handle toggle state changes
+        setIsLive(!isLive);
+    };
     const handleSuggestionClick = (suggestion) => {
         setAddress(suggestion);
         setSelectedSuggestion(suggestion);
@@ -107,6 +120,7 @@ const AddressTypeahead = () => {
             }
         } else {
             try {
+                setLoading(true);
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
                     , theme
@@ -117,9 +131,11 @@ const AddressTypeahead = () => {
                     , 12.123456  // Modify once Google Maps API gets implemented
                     , 44.765432
                     , minimumBid
-                    , rowData ? true : false,
-                    rowDataString ? rowData.id : 0
+                    , rowData ? true : false
+                    , rowDataString ? rowData.id : 0
+                    , isLive ? 'Live' : 'Not live'
                 );
+                setLoading(false);
                 if (res != null) {
                     console.log(res);
                     navigate('/djhome');
@@ -196,7 +212,14 @@ const AddressTypeahead = () => {
                         ))}
                     </ul>
                 )}
-
+                {showLiveToggle && (
+                    <div className="toggle-container">
+                        <label htmlFor="liveToggle">LIVE</label>
+                        <div className={`toggle-slider ${isLive ? 'active' : ''}`} onClick={handleLiveToggle}>
+                            <div className={`slider-thumb ${isLive ? 'active' : ''}`} />
+                        </div>
+                    </div>
+                )}
                 <div className="input-group">
                     <label htmlFor="eventNameInput">Event Name</label>
                     <input
@@ -208,6 +231,7 @@ const AddressTypeahead = () => {
                         onChange={handleThemeChange}
                     />
                 </div>
+                
                 <div className="input-group">
                     <label htmlFor="venueNameInput">Name of the venue</label>
                     <input

@@ -4,14 +4,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 80vh; /* Ensures the form is centered vertically on the viewport */
-    background-color: #f5f5f5; /* Light background color */
+    min-height: 80vh;
+    /* Ensures the form is centered vertically on the viewport */
+    background-color: #f5f5f5;
+    /* Light background color */
 }
 
 .event-form {
     max-width: 400px;
     padding: 20px;
-    background-color: aliceblue; /* Light background color for the form */
+    background-color: aliceblue;
+    /* Light background color for the form */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -26,7 +29,7 @@
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -62,10 +65,54 @@
 .suggestions-list li:hover {
     background-color: #e0e0e0;
 }
-.btn-pay{
+
+.btn-pay {
     border: solid;
 }
-.error-message{
+
+.error-message {
     color: red;
     font-size: small;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.toggle-slider {
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.slider-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+}
+
+.toggle-slider.active {
+    background-color: #4caf50;
+}
+
+.slider-thumb.active {
+    transform: translateX(26px);
+}
+
+.toggle-container label {
+    margin-right: 10px;
+    color: #f73737;
+    font-weight: bold;
 }

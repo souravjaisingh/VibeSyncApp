@@ -38,6 +38,7 @@ function Cards() {
           >
             Sign up
           </Link>
+          <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a>
         </p>
       </div>
     </div>

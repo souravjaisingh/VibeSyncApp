@@ -1,2 +1,2 @@
-export const baseUri = 'https://localhost:44369/';
+export const baseUri = 'https://vibesyncapp.azurewebsites.net/';
 export const RazorPayAppId = 'rzp_test_De36fMcorSCmnJ';

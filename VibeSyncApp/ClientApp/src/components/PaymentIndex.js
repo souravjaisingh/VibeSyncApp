@@ -209,8 +209,14 @@ function PaymentIndex() {
                 />
                 <br></br>
                 {/* Submit button */}
+                {/**
+                 * *************************************************************************************
+                 *  HIDE THE BUTTON BASED ON EVENT STATUS - LIVE-NA(LIVE BUT NOT ACCEPTING REQUESTS) 
+                 * *************************************************************************************
+                */}
+
                 <button className=' btnPayment btn--primaryPayment btn--mediumPayment' id="rzp-button1" onClick={loadRazorpayScript}>Pay</button>
-                <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a>
+                {/* <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a> */}
 
             </form>
             {/* <PaymentPage/> */}

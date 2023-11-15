@@ -2,10 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
 import { getUserRequestHistoryData } from './services/UserService';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLoaderData, useLocation } from 'react-router-dom';
 import { GetSongsByEventId, ModifySongRequest } from './services/SongsService';
 import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
+import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
+import { Live, LiveButNotAcceptingRequests } from './Constants';
+import { useLoadingContext } from './LoadingProvider';
 
 export default function DjLiveSongs() {
     const { error, setError } = useContext(MyContext);
@@ -18,11 +21,14 @@ export default function DjLiveSongs() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const rowData = JSON.parse(decodeURIComponent(rowDataString)) || {};
     const [eventId, setEventId] = useState(rowData != null ? rowData.id : null);
+    const [stopIncomingRequests, setStopIncomingRequests] = useState(false);
+    const { setLoading } = useLoadingContext();
+
 
     const openModal = () => {
         setModalIsOpen(true);
         setEventId(eventId);
-        if(localStorage.getItem('eventId') == null)
+        if (localStorage.getItem('eventId') == null)
             localStorage.setItem('eventId', eventId);
     };
 
@@ -32,12 +38,12 @@ export default function DjLiveSongs() {
     };
 
 
-    console.log("eventId : "+eventId)
+    console.log("eventId : " + eventId)
 
     console.log(rowData);
 
     useEffect(() => {
-        if ((rowData && rowData.id) || localStorage.getItem('eventId')!=null) {
+        if ((rowData && rowData.id) || localStorage.getItem('eventId') != null) {
             async function fetchData() {
                 try {
                     const res = await GetSongsByEventId(rowData.id != null ? rowData.id : localStorage.getItem('eventId'));
@@ -176,8 +182,72 @@ export default function DjLiveSongs() {
             console.error('Error marking as played:', error);
         }
     }
+    const stopRequestsAPI = async () => {
+        try {
+            // Call your API here with the updated toggle value
+            const res = await eventDetailsUpsertHelper(
+                localStorage.getItem('userId'),
+                'default',
+                rowData.eventDescription,
+                rowData.venue,
+                rowData.eventStartDateTime,
+                rowData.eventEndDateTime,
+                12.123456, // Modify once Google Maps API gets implemented
+                44.765432,
+                rowData.minimumBid,
+                true,
+                rowData.id,
+                stopIncomingRequests ? Live : LiveButNotAcceptingRequests  // Pass the toggle value to the API
+            );
+            console.log(res);
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error('Error updating stop incoming requests:', error);
+        }
+    };
+    const handleToggleClick = () => {
+        setLoading(true);
+        setStopIncomingRequests(!stopIncomingRequests);
+        setLoading(false);
+        console.log(stopIncomingRequests);
+        stopRequestsAPI();
+    };
+
+
     return (
         <div className='song-history-container' style={{ maxHeight: '500px' }}>
+            {/* <div className="toggle-switch-container">
+                <label className="toggle-switch">
+                    <input
+                        type="checkbox"
+                        checked={stopIncomingRequests}
+                        onChange={() => setStopIncomingRequests(!stopIncomingRequests)}
+                    />
+                    <span className="toggle-slider"></span>
+                </label>
+                <span>Stop Incoming Requests</span>
+            </div> */}
+            <div className="toggle-container">
+                <label htmlFor="liveToggle">Stop Incoming Requests</label>
+                <input
+                    type="checkbox"
+                    id="liveToggle"
+                    checked={stopIncomingRequests}
+                    onChange={handleToggleClick}
+                    style={{ display: 'none' }} // hide the actual checkbox
+                />
+                <div
+                    className={`toggle-slider ${stopIncomingRequests ? 'active' : ''}`}
+                    onClick={handleToggleClick}
+                >
+                    <div className={`slider-thumb ${stopIncomingRequests ? 'active' : ''}`} />
+                </div>
+            </div>
+
+
+
+
             {userHistory.length > 0 ? ( // Check if userHistory is not empty
                 <div className='song-history-table'>
                     <MDBTable className='history-table' align='middle' responsive hover>

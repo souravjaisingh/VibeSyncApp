@@ -79,29 +79,39 @@
     padding: 5px 10px;
     margin-right: 5px;
     cursor: pointer;
-    border: 1px solid #007bff; /* Add a border */
-    background-color: transparent; /* Transparent background */
-    color: #007bff; /* Blue text color */
-    font-size: 14px; /* Adjust the size as needed */
-    transition: background-color 0.3s, color 0.3s; /* Add a transition for smooth hover effect */
+    border: 1px solid #007bff;
+    /* Add a border */
+    background-color: transparent;
+    /* Transparent background */
+    color: #007bff;
+    /* Blue text color */
+    font-size: 14px;
+    /* Adjust the size as needed */
+    transition: background-color 0.3s, color 0.3s;
+    /* Add a transition for smooth hover effect */
 }
 
 /* Style for the button in the :hover state */
 .btn-primary-mark-as-played:hover {
-    background-color: #007bff; /* Blue background on hover */
-    color: #fff; /* White text color on hover */
+    background-color: #007bff;
+    /* Blue background on hover */
+    color: #fff;
+    /* White text color on hover */
 }
 
 /* Style for the button in the :active state */
 .btn-primary-mark-as-played:active {
-    background-color: #0056b3; /* Darker blue on click */
+    background-color: #0056b3;
+    /* Darker blue on click */
 }
 
 .button-container {
     display: flex;
-    gap: 5px; /* Adjust the gap between buttons as needed */
+    gap: 5px;
+    /* Adjust the gap between buttons as needed */
 }
-.djlive-header-cell{
+
+.djlive-header-cell {
     font-weight: bold;
     text-align: center;
     /* Equal width for all columns */
@@ -111,4 +121,45 @@
     /* Hide overflow text */
     text-overflow: ellipsis;
     /* Show ellipsis for long text */
+}
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.toggle-slider {
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.slider-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+}
+
+.toggle-slider.active {
+    background-color: #4caf50;
+}
+
+.slider-thumb.active {
+    transform: translateX(26px);
+}
+
+.toggle-container label {
+    margin-right: 10px;
+    color: #f73737;
+    font-weight: bold;
 }

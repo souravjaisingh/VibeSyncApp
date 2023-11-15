@@ -217,17 +217,6 @@ export default function DjLiveSongs() {
 
     return (
         <div className='song-history-container' style={{ maxHeight: '500px' }}>
-            {/* <div className="toggle-switch-container">
-                <label className="toggle-switch">
-                    <input
-                        type="checkbox"
-                        checked={stopIncomingRequests}
-                        onChange={() => setStopIncomingRequests(!stopIncomingRequests)}
-                    />
-                    <span className="toggle-slider"></span>
-                </label>
-                <span>Stop Incoming Requests</span>
-            </div> */}
             <div className="toggle-container">
                 <label htmlFor="liveToggle">Stop Incoming Requests</label>
                 <input

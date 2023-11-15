@@ -124,3 +124,19 @@
         }
     }
     
+    .dj-checkbox {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+    
+    .dj-label {
+        margin-right: 10px;
+    }
+    
+    #djCheckbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    

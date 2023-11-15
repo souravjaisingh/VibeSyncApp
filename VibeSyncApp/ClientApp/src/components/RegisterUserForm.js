@@ -31,10 +31,10 @@ export default function RegisterUser(isUser) {
     const [confirmPasswordError, setconfirmPasswordError] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isItAUser, setIsItAUser] = useState(isUser.isUser);
     const { setLoading } = useLoadingContext();
     const navigate = useNavigate()
-    const isUserRegistration = isUser.isUser;
-    console.log(isUserRegistration);
+    // const isUserRegistration = isUser.isUser;
     // useEffect( () => {
     //     console.log(firstNameError);
     // }, [firstNameError, emailError, firstName]);
@@ -111,7 +111,7 @@ export default function RegisterUser(isUser) {
         if (!(firstNameError || emailError || passwordError || phoneError || confirmPasswordError)) {
             try {
                 setLoading(true);
-                var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender, isUserRegistration == 'true' ? 'user' : 'dj');
+                var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender, isItAUser == 'true' ? 'user' : 'dj');
                 setLoading(false);
                 if (!response.error) {
                     console.log("Load new page after following response:")
@@ -217,6 +217,16 @@ export default function RegisterUser(isUser) {
                             onChange={() => setShowConfirmPassword((prev) => !prev)}
                         />
                     </div>
+                    <div className="dj-checkbox">
+                    <label className="dj-label form__label" htmlFor="djCheckbox">Are you a DJ?</label>
+                    <input
+                        className='form__input'
+                        type="checkbox"
+                        id="djCheckbox"
+                        checked={!isItAUser}
+                        onChange={() => setIsItAUser(!isItAUser)}
+                    />
+                </div>
                 </div>
             </div>
             <div class="footer">

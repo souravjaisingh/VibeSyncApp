@@ -18,7 +18,11 @@ function Cards() {
           onColor="#f58da6"
           handleToggle={() => setIsUser(!isUser)}
         />
-        <p style={{fontFamily:'sans-serif'}}><i>Toggle if you are a DJ</i></p>
+        <p style={{fontFamily:'sans-serif'}}><i>
+        {isUser
+            ? "Toggle if you are here to request a song"
+            : "Toggle if you are a DJ"}
+          </i></p>
         <br></br>
         <GoogleLogin isUser={!isUser} />
         <Link to='/loginForm' className='btn-mobile'>
@@ -34,6 +38,7 @@ function Cards() {
           >
             Sign up
           </Link>
+          <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a>
         </p>
       </div>
     </div>

@@ -210,6 +210,8 @@ function PaymentIndex() {
                 <br></br>
                 {/* Submit button */}
                 <button className=' btnPayment btn--primaryPayment btn--mediumPayment' id="rzp-button1" onClick={loadRazorpayScript}>Pay</button>
+                <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a>
+
             </form>
             {/* <PaymentPage/> */}
             <Link to={'/ccavenue2'}>CCavenue2</Link>

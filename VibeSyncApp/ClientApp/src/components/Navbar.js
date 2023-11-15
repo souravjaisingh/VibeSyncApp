@@ -23,13 +23,19 @@ function NavbarComponent() {
   }
 
   async function handleLogoutClick() {
-    setLoading(true);
-    const res = await Logout();
-    setLoading(false);
-    if (res) {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('jwt');
-      navigate('/');
+    try{
+      setLoading(true);
+      const res = await Logout();
+      setLoading(false);
+      if (res) {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('jwt');
+        navigate('/');
+      }
+
+    }
+    catch(error){
+      setLoading(false);
     }
   }
 

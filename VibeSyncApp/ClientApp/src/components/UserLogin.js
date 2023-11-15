@@ -38,7 +38,8 @@ function Cards() {
           >
             Sign up
           </Link>
-          <a href="phonepe://pay?pa=9728868875@paytm&pn=JohnDoe&cu=INR&am=1" class="upi-pay1">Pay Now !</a>
+          <a href="phonepe://pay?pa=9728868875@paytm&pn=JohnDoe&cu=INR&am=1" class="upi-pay1">Phone pe</a>
+          <a href="tez://upi/pay?pa=souravjaisingh-1@okicici&pn=JohnDoe&cu=INR&am=1" class="upi-pay1">Google pay </a>
         </p>
       </div>
     </div>

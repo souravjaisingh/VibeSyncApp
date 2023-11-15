@@ -38,8 +38,15 @@ function Cards() {
           >
             Sign up
           </Link>
-          <a href="phonepe://pay?pa=9728868875@paytm&pn=JohnDoe&cu=INR&am=1" class="upi-pay1">Phone pe</a>
-          <a href="tez://upi/pay?pa=souravjaisingh-1@okicici&pn=JohnDoe&cu=INR&am=1&url=https://www.wikipedia.org/" class="upi-pay1">Google pay </a>
+          <a href="http://m.p-y.tm/pay?pa=9728868875@ybl&pn=SouravJaiSingh&cu=INR&am=10&url=https://www.wikipedia.org/" class="upi-pay1">Phone pe Rs10</a><br/>
+          <a href="phonepe://pay?pa=9728868875@ybl&pn=SouravJaiSingh&cu=INR&am=10&url=https://www.wikipedia.org/" class="upi-pay1">Phone pe Rs10</a><br/>
+          <a href="phonepe://pay?pa=9728868875@ybl&pn=JohnDoe&cu=INR&am=5&url=https://www.wikipedia.org/" class="upi-pay1">Phone pe Rs5</a><br/>
+          <a href="phonepe://pay?pa=9728868875@ybl&pn=JohnDoe&cu=INR&am=1&url=https://www.wikipedia.org/" class="upi-pay1">Phone pe Rs1</a><br/>
+          <a href="tez://upi/pay?pa=souravjaisingh-1@okicici&cu=INR&am=1&url=https://www.wikipedia.org/" class="upi-pay1">Google pay </a>
+
+          <a href="gpay://upi./pay?pa=souravjaisingh-1@okicici&amp;pn=SouravJaiSingh K&amp;cu=INR&amp;am=2" class="upi-pay1">GPAY 2Rs. -NEW</a>  
+          <a href="phone://upi/pay?pa=9728868875@ybl&amp;pn=SouravJaiSingh K&amp;cu=INR&amp;am=2" class="upi-pay1">PHONEPE 2Rs.- NEW</a>  
+          <a href="paytmmp://upi/pay?pa=9728868875@paytm&amp;pn=SouravJaiSingh K&amp;cu=INR&amp;am=2" class="upi-pay1">PAYTM 2rs. -NEW</a>
         </p>
       </div>
     </div>

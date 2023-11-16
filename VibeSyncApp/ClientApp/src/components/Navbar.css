@@ -25,6 +25,13 @@
 .logo img {
   max-width: 100px; /* Adjust the logo size as needed */
 }
+.home-img {
+  cursor: pointer;
+}
+
+.home-img img {
+  max-width: 27px; /* Adjust the logo size as needed */
+}
 
 .menu-icon {
   cursor: pointer;

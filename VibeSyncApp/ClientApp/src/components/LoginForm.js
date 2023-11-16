@@ -23,6 +23,9 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const { setLoading } = useLoadingContext();
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
     // useEffect( () => {
     //     console.log(firstNameError);
     // }, [firstNameError, emailError, firstName]);
@@ -54,7 +57,7 @@ export default function LoginForm() {
             setLoading(true);
             const response = await loginUserHelper(email, password);
             setLoading(false);
-            if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
+            if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
                 localStorage.setItem('userId', response.id);
                 localStorage.setItem('isUser', true);
                 console.log(localStorage.getItem('redirectUrl'));
@@ -62,7 +65,7 @@ export default function LoginForm() {
                     const redirectUrl = localStorage.getItem('redirectUrl');
                     console.log(redirectUrl);
                     navigate(redirectUrl);
-                }, 0); 
+                }, 0);
             }
             else if (response && response.isUser == true) {
                 localStorage.setItem('userId', response.id);

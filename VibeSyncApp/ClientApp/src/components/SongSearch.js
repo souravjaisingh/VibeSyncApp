@@ -29,7 +29,9 @@ function SongSearch() {
     const [eventData, setEventData] = useState(null);
 
 
-    
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
     // Add a check for qrcodeParam and local storage here
     useEffect(() => {
         if (qrcodeParam === 'true') {

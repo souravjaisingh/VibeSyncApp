@@ -38,7 +38,9 @@ export default function RegisterUser(isUser) {
     // useEffect( () => {
     //     console.log(firstNameError);
     // }, [firstNameError, emailError, firstName]);
-
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         if (id === "firstName") {
@@ -116,7 +118,7 @@ export default function RegisterUser(isUser) {
                 if (!response.error) {
                     console.log("Load new page after following response:")
                     console.log(response);
-                    if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
+                    if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
                         localStorage.setItem('userId', response.id);
                         localStorage.setItem('isUser', true);
                         console.log(localStorage.getItem('redirectUrl'));
@@ -124,7 +126,7 @@ export default function RegisterUser(isUser) {
                             const redirectUrl = localStorage.getItem('redirectUrl');
                             console.log(redirectUrl);
                             navigate(redirectUrl);
-                        }, 0); 
+                        }, 0);
                     }
                     if (response && response.isUser == true) {
                         localStorage.setItem('userId', response.id);
@@ -175,8 +177,8 @@ export default function RegisterUser(isUser) {
                     </select>
                 </div>
                 <div className='phone'>
-                    <label className="form__label" for="phone">Phone Number </label>
-                    <input className={`form__input ${phoneError ? errorCssClass : ""}`} type='text' id='phone' value={phoneNumber} onChange={(e) => handleInputChange(e)}></input>
+                    <label className="form__label" for="phone">Phone Number* </label>
+                    <input className={`form__input ${phoneError ? errorCssClass : ""}`} type='text' id='phone' value={phoneNumber} onChange={(e) => handleInputChange(e)} placeholder='Phone Number'></input>
                     {/* <PhoneInput
                         containerClass={errorCssClass}
                         inputStyle={{outerWidth:200}}
@@ -218,15 +220,15 @@ export default function RegisterUser(isUser) {
                         />
                     </div>
                     <div className="dj-checkbox">
-                    <label className="dj-label form__label" htmlFor="djCheckbox">Are you a DJ?</label>
-                    <input
-                        className='form__input'
-                        type="checkbox"
-                        id="djCheckbox"
-                        checked={!isItAUser}
-                        onChange={() => setIsItAUser(!isItAUser)}
-                    />
-                </div>
+                        <label className="dj-label form__label" htmlFor="djCheckbox">Are you a DJ?</label>
+                        <input
+                            className='form__input'
+                            type="checkbox"
+                            id="djCheckbox"
+                            checked={isItAUser == 'false' ? true : false}
+                            onChange={() => setIsItAUser(isItAUser == 'false' ? 'true' : 'false')}
+                        />
+                    </div>
                 </div>
             </div>
             <div class="footer">

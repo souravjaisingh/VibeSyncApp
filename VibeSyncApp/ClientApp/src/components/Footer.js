@@ -4,6 +4,13 @@ import { Button } from './Button';
 import { Link } from 'react-router-dom';
 
 function Footer() {
+    // Function to scroll to the top
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // for smooth scrolling
+        });
+    };
   return (
     <div className='footer-container'>
       {/* <section className='footer-subscription'>
@@ -29,14 +36,11 @@ function Footer() {
         <div className='footer-link-wrapper'>
           <div class='footer-link-items'>
             <h2>About Us</h2>
-            <Link to='/aboutus'>How it works</Link>
-            {/* <Link to='/'>Testimonials</Link> */}
-            {/* <Link to='/'>Careers</Link> */}
-            {/* <Link to='/'>Investors</Link> */}
-            <Link to='/termsofservice'>Terms of Service</Link>
-            <Link to='/privacypolicy'>Privacy Policy</Link>
-            <Link to='/'>Payments & Refunds</Link>
-            <Link to='/contactus'>Contact Us</Link>
+                      <Link to='/aboutus' onClick={scrollToTop}>How it works</Link>
+                      <Link to='/termsofservice' onClick={scrollToTop}>Terms of Service</Link>
+                      <Link to='/privacypolicy' onClick={scrollToTop}>Privacy Policy</Link>
+                      <Link to='/paymentpolicy' onClick={scrollToTop}>Payments & Refunds</Link>
+                      <Link to='/contactus' onClick={scrollToTop}>Contact Us</Link>
           </div>
         </div>
         <div className='footer-link-wrapper'>
@@ -47,13 +51,10 @@ function Footer() {
             <Link to='/'>Agency</Link>
             <Link to='/'>Influencer</Link>
           </div> */}
-          <div class='footer-link-items'>
-            <h2>Social Media</h2>
-            <Link to='/'>Instagram</Link>
-            {/* <Link to='/'>Facebook</Link> */}
-            {/* <Link to='/'>Youtube</Link>
-            <Link to='/'>Twitter</Link> */}
-          </div>
+                  <div className='footer-link-items'>
+                      <h2>Social Media</h2>
+                      <a href="https://www.instagram.com/vibesync.in/?igshid=MW0wdXN3dzdxdW5qcQ%3D%3D" target="_blank" rel="noopener noreferrer">Instagram</a>
+                  </div>
         </div>
       </div>
       <section class='social-media'>

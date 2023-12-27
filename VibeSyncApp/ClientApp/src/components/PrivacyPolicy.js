@@ -24,7 +24,7 @@ function PrivacyPolicy() {
             <p>We may update our Privacy Policy from time to time. You are advised to review this Privacy Policy periodically for any changes.</p>
 
             <h2>Contact Us</h2>
-            <p>If you have any questions or concerns about our Privacy Policy, please contact us at [contact email].</p>
+            <p>If you have any questions or concerns about our Privacy Policy, please contact us at <a href="mailto:vibesyncdj@gmail.com">vibesyncdj@gmail.com</a>.</p>
         </div>
     );
 }

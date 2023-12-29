@@ -7,7 +7,7 @@ export default function QrCodeDirect({eventId}) {
     if(eventId == null){
         eventId = localStorage.getItem('eventId') != null ? localStorage.getItem('eventId') : null
     }
-    const url = 'https://vibesyncapp.azurewebsites.net/songsearch?qrcode=true&eventId='+eventId+'&userId='+localStorage.getItem('userId');
+    const url = 'https://vibesync.azurewebsites.net/songsearch?qrcode=true&eventId='+eventId+'&userId='+localStorage.getItem('userId');
     console.log(url);
     const downloadQR = () => {
         const canvas = document.getElementById('event');

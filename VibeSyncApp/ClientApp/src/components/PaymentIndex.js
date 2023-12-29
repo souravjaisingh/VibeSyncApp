@@ -79,7 +79,7 @@ function PaymentIndex() {
             if (!isNaN(parsedAmount)) {
                 // If it's a valid decimal, proceed with the request
                 const obj = {
-                    amount: parsedAmount,
+                    amount: parsedAmount * 100,
                     userId: localStorage.getItem('userId'),
                 };
                 try {
@@ -88,7 +88,7 @@ function PaymentIndex() {
 
                     const options = {
                         key: RazorPayAppId, // Replace with your Razorpay Key ID
-                        amount: amount, // Amount is in currency subunits (e.g., 50000 for 500 INR)
+                        amount: amount * 100, // Amount is in currency subunits (e.g., 50000 for 500 INR)
                         currency: 'INR',
                         name: 'VibeSync', // Your business name
                         description: 'Test Transaction',
@@ -201,7 +201,7 @@ function PaymentIndex() {
                 <input
                     type="number"
                     placeholder='Enter amount'
-                    value={amount * 100}
+                    value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
                 />

@@ -3,8 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
 import { GetPaymentInitiationDetails, UpsertPayment } from './services/PaymentService';
-import PaymentPage from './CCAvenue';
-import SampleTransactionComponent from './CCAvenue2';
 import { MyContext } from '../App';
 
 function PaymentIndex() {
@@ -94,7 +92,7 @@ function PaymentIndex() {
                         currency: 'INR',
                         name: 'VibeSync', // Your business name
                         description: 'Test Transaction',
-                        image: 'https://example.com/your_logo',
+                        image: 'https://drive.google.com/file/d/1XkIn_3J_5tGCvl5H7Sl8u6bnNuv8gnVb/view?usp=sharing',
                         order_id: paymentInitiationData.orderId, // Sample Order ID, replace with your order ID
                         handler: function (response) {
                             setPaymentStatus({
@@ -203,7 +201,7 @@ function PaymentIndex() {
                 <input
                     type="number"
                     placeholder='Enter amount'
-                    value={amount}
+                    value={amount * 100}
                     onChange={(e) => setAmount(e.target.value)}
                     required
                 />
@@ -219,8 +217,6 @@ function PaymentIndex() {
                 {/* <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a> */}
 
             </form>
-            {/* <PaymentPage/> */}
-            <Link to={'/ccavenue2'}>CCavenue2</Link>
             {/* Render the success message if showSuccessMessage is true */}
             {showSuccessMessage && (
                 <div className="success-message">

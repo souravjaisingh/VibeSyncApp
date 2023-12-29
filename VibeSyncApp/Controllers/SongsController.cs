@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSyncApp.Controllers

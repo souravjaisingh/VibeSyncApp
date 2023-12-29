@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.IO.Compression;
 using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -9,9 +8,9 @@ namespace VibeSyncModels
     {
         public MappingProfile()
         {
-           CreateMap<EntityModels.User, LoginDetails>()
-                .ForMember(dest => dest.IsUser, opt => opt.MapFrom(src => src.UserOrDj == "user"))
-                .ReverseMap();
+            CreateMap<EntityModels.User, LoginDetails>()
+                 .ForMember(dest => dest.IsUser, opt => opt.MapFrom(src => src.UserOrDj == "user"))
+                 .ReverseMap();
             CreateMap<EntityModels.User, Request_ResponseModels.User>().ReverseMap();
             CreateMap<SongHistory, SongHistoryModel>().ReverseMap();
             CreateMap<EventsDetails, Event>().ReverseMap();

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Razorpay.Api;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace VibeSync.DAL.Handler
     public class PaymentHandler : IRequestHandler<GetPaymentOrderId, GetPaymentInitiationDetails>
         , IRequestHandler<PersistSongHistoryPaymentRequest, bool>,
         IRequestHandler<GetDjPaymentsRequestModel, List<PaymentResponseModel>>
+        ,IRequestHandler<RefundRequest, Refund>
     {
         private readonly IPaymentQueryRepository _paymentqueryRepository;
         private readonly IPaymentCommandRepository _paymentCommandRepository;
@@ -72,6 +74,11 @@ namespace VibeSync.DAL.Handler
         public async Task<List<PaymentResponseModel>> Handle(GetDjPaymentsRequestModel request, CancellationToken cancellationToken)
         {
             return await _paymentqueryRepository.GetDjPayments(request);
+        }
+
+        public async Task<Refund> Handle(RefundRequest request, CancellationToken cancellationToken)
+        {
+            return await _paymentCommandRepository.RefundPayment(request.PaymentId, request.Amount, request.UserId);
         }
     }
 

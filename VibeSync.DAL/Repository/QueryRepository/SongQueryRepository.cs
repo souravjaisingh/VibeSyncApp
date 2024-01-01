@@ -31,10 +31,43 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <returns></returns>
         public List<SongHistory> GetSongHistoryByEventId(long eventId)
         {
-            return _context.SongHistories.Where(x => x.EventId == eventId)
-                .Where(x => x.SongStatus != "Rejected" && x.SongStatus != "Played")
-                .OrderBy(x => x.CreatedOn).ToList();
+            var query = _context.SongHistories
+                .Join(
+                    _context.Payments,
+                    sh => sh.Id,
+                    p => p.SongHistoryId,
+                    (sh, p) => new { SongHistory = sh, Payment = p }
+                )
+                .Where(joined => joined.SongHistory.EventId == eventId &&
+                                 joined.SongHistory.SongStatus != "Played" &&
+                                 joined.SongHistory.SongStatus != "Rejected")
+                .OrderBy(x => x.SongHistory.CreatedOn)
+                .Select(joined => new SongHistory
+                {
+                    Id = joined.SongHistory.Id,
+                    UserId = joined.SongHistory.UserId,
+                    EventId = joined.SongHistory.EventId,
+                    DjId = joined.SongHistory.DjId,
+                    SongName = joined.SongHistory.SongName,
+                    SongId = joined.SongHistory.SongId,
+                    SongStatus = joined.SongHistory.SongStatus,
+                    CreatedOn = joined.SongHistory.CreatedOn,
+                    CreatedBy = joined.SongHistory.CreatedBy,
+                    ModifiedOn = joined.SongHistory.ModifiedOn,
+                    ModifiedBy = joined.SongHistory.ModifiedBy,
+                    Image = joined.SongHistory.Image,
+                    ArtistId = joined.SongHistory.ArtistId,
+                    ArtistName = joined.SongHistory.ArtistName,
+                    AlbumName = joined.SongHistory.AlbumName,
+                    Dj = joined.SongHistory.Dj,
+                    Event = joined.SongHistory.Event,
+                    User = joined.SongHistory.User,
+                    Payments = joined.SongHistory.Payments.ToList()
+                });
+
+            return query.ToList();
         }
+
 
         /// <summary>
         /// Gets the song history by user identifier.

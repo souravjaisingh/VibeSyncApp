@@ -14,3 +14,7 @@ export async function UpsertPayment(data) {
 export async function GetTransactionHistory(id) {
     return handleAPIRequest(`Payment/GetDjTransactions?UserId=${id}`, 'GET');
 }
+
+export async function RefundPayment(data){
+    return handleAPIRequest('Payment/InitiateRefund', 'POST', data);
+}

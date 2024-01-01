@@ -4,6 +4,7 @@ import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
 import { GetPaymentInitiationDetails, UpsertPayment } from './services/PaymentService';
 import { MyContext } from '../App';
+import VBLogo from '../Resources/VB_Logo_2.png';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -92,7 +93,7 @@ function PaymentIndex() {
                         currency: 'INR',
                         name: 'VibeSync', // Your business name
                         description: 'Test Transaction',
-                        image: 'https://drive.google.com/file/d/1XkIn_3J_5tGCvl5H7Sl8u6bnNuv8gnVb/view?usp=sharing',
+                        image: VBLogo,
                         order_id: paymentInitiationData.orderId, // Sample Order ID, replace with your order ID
                         handler: function (response) {
                             setPaymentStatus({

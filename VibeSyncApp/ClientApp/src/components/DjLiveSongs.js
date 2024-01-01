@@ -9,6 +9,7 @@ import QRCodeModal from './QRCodeModal';
 import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
 import { Live, LiveButNotAcceptingRequests } from './Constants';
 import { useLoadingContext } from './LoadingProvider';
+import { RefundPayment } from './services/PaymentService';
 
 export default function DjLiveSongs() {
     const { error, setError } = useContext(MyContext);
@@ -145,7 +146,14 @@ export default function DjLiveSongs() {
                 userId: localStorage.getItem('userId')
             };
             var res = await ModifySongRequest(songHistoryModel);
+            const refundObj = {
+                PaymentId : record.paymentId,
+                Amount : record.totalAmount,
+                UserId : record.userId
+            }
+            var refund = await RefundPayment(refundObj);
             console.log(res);
+            console.log(refund);
             // await rejectRequest(requestId);
             // Remove the rejected request from the userHistory array
             setUserHistory((prevHistory) =>
@@ -258,6 +266,7 @@ export default function DjLiveSongs() {
                                             style={{ width: '45px', height: '45px' }}
                                             className='rounded-circle'
                                         />
+                                        <p className='text-muted mb-0 money'>&#8377;{result.totalAmount}</p>
                                     </td>
                                     <td>
                                         <p className='fw-bold mb-1'>{result.songName}</p>

@@ -1,13 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Razorpay.Api;
+using Sentry;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
 using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
+using Constants = VibeSyncModels.Constants;
+using Payment = VibeSyncModels.EntityModels.Payment;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -95,5 +101,25 @@ namespace VibeSync.DAL.Repository.CommandRepository
             return await Task.FromResult(paymentRecord?.Id ?? 0);
         }
 
+        public async Task<Refund> RefundPayment(string paymentId, decimal amount, long userId)
+        {
+            _logger.LogInformation("RefundPayment - paymentId :" + paymentId + ", amount" + amount + ", userId: "+userId);
+            var AppId = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("RazorpayPayments")["AppId"];
+            var ClientSecret = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("RazorpayPayments")["SecretKey"];
+
+            //initialize the SDK client
+            RazorpayClient client = new RazorpayClient(AppId, ClientSecret);
+
+            Dictionary<string, object> refundRequest = new Dictionary<string, object>();
+            refundRequest.Add("amount", amount * 100);
+            refundRequest.Add("speed", "normal");
+            Dictionary<string, object> notes = new Dictionary<string, object>();
+            notes.Add("user", userId);
+            refundRequest.Add("notes", notes);
+
+            Refund refund = client.Payment.Fetch(paymentId).Refund(refundRequest);
+            _logger.LogInformation("RefundPayment complete - response :" + JsonConvert.SerializeObject(refund));
+            return await Task.FromResult(refund);
+        }
     }
 }

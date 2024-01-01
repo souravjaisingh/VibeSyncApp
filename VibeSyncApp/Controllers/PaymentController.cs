@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging; // Import ILogger
 using Newtonsoft.Json;
+using Razorpay.Api;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -60,6 +61,20 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(PaymentController).GetMethod("GetDjTransactions")}'s response: {JsonConvert.SerializeObject(result)}");
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<Refund> InitiateRefund([FromBody] RefundRequest request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(PaymentController)}, API: {typeof(PaymentController).GetMethod("InitiateRefund")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(PaymentController).GetMethod("InitiateRefund")}'s response: {JsonConvert.SerializeObject(result)}");
+
+            return result;
         }
     }
 }

@@ -12,6 +12,5 @@ namespace VibeSync.DAL.Repository.CommandRepository
         Task<long> PersistOrderId(int userId, string orderId, decimal amount);
         Task<long> PersistPaymentData(PersistSongHistoryPaymentRequest request, long songHistoryId);
         Task<Refund> RefundPayment(string paymentId, decimal amount, long userId);
-        Task<long> PersistRefundData(Refund request);
     }
 }

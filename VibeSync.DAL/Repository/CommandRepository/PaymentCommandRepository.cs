@@ -101,12 +101,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
             return await Task.FromResult(paymentRecord?.Id ?? 0);
         }
 
-        public Task<long> PersistRefundData(Refund request)
-        {
-            throw new NotImplementedException();    
-            
-        }
-
         public async Task<Refund> RefundPayment(string paymentId, decimal amount, long userId)
         {
             _logger.LogInformation("RefundPayment - paymentId :" + paymentId + ", amount" + amount + ", userId: "+userId);

@@ -10,6 +10,22 @@ function Home() {
     const userId = localStorage.getItem('userId');
     const jwt = localStorage.getItem('jwt');
     const isUser = localStorage.getItem('isUser');
+    const expiry = localStorage.getItem('expiry');
+
+    // Check if 'expiry' exists and if the current datetime is greater than or equal to 'expiry'
+    if (expiry) {
+      const currentDatetime = new Date();
+      const expiryDatetime = new Date(expiry);
+
+      if (currentDatetime >= expiryDatetime) {
+        // Remove everything from localStorage
+        localStorage.removeItem('userId');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('expiry');
+        navigate('/');
+        return;
+      }
+    }
 
     if (userId && jwt && isUser === 'true') {
       navigate('/userhome');

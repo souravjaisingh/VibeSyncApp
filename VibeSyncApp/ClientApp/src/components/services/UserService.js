@@ -3,7 +3,7 @@ import { useLoadingContext } from '../LoadingProvider';
 
 
 export async function handleAPIRequest(url, method, data) {
-    
+
     const requestOptions = {
         method: method,
         headers: {
@@ -50,6 +50,7 @@ export default async function RegisterUser(data) {
     if (response && response.token) {
         // Store the JWT token in localStorage
         localStorage.setItem('jwt', response.token);
+        setLocalstorageExpiry();
     }
     return response;
 }
@@ -69,10 +70,22 @@ export async function LoginUser(data) {
     if (response && response.token) {
         // Store the JWT token in localStorage
         localStorage.setItem('jwt', response.token);
+        setLocalstorageExpiry();
     }
     return response;
 }
 
+export async function setLocalstorageExpiry() {
+    const currentDatetime = new Date();
+    // Add 1 hour to the current datetime
+    const newDatetime = new Date(currentDatetime.getTime() + 60 * 60 * 1000);
+
+    // Convert the new datetime to a string (or any format you prefer)
+    //const formattedDatetime = newDatetime.toISOString();
+
+    // Set the formatted datetime in the localStorage
+    localStorage.setItem('expiry', newDatetime);
+}
 
 export async function getUserRequestHistoryData(userid) {
     return handleAPIRequest(`Songs/GetSongHistory?userId=${userid}`, 'GET');

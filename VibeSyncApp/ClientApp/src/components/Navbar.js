@@ -31,6 +31,7 @@ function NavbarComponent() {
       if (res) {
         localStorage.removeItem('userId');
         localStorage.removeItem('jwt');
+        localStorage.removeItem('expiry');
         navigate('/');
       }
 

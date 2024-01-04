@@ -113,7 +113,7 @@ export default function RegisterUser(isUser) {
         if (!(firstNameError || emailError || passwordError || phoneError || confirmPasswordError)) {
             try {
                 setLoading(true);
-                var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender, isItAUser == 'true' ? 'user' : 'dj');
+                var response = await registerUserHelper(firstName, lastName, email, password, phoneNumber, gender.toLowerCase(), isItAUser == 'true' ? 'user' : 'dj');
                 setLoading(false);
                 if (!response.error) {
                     console.log("Load new page after following response:")

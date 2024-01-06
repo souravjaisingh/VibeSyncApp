@@ -133,7 +133,7 @@ namespace VibeSync.DAL.Handler
         {
             if (request.EventId > 0)
             {
-                var songHistory = _songQueryRepository.GetSongHistoryByEventId(request.EventId);
+                var songHistory = _songQueryRepository.GetSongHistoryByEventId(request.EventId, request.IsUser);
                 return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
             }
             else

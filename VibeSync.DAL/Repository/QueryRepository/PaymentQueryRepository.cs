@@ -43,7 +43,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 query = query.Where(s => s.EventId == request.EventId);
             }
 
-            var result = _context.SongHistories
+            var result = query
                             .Join(
                                 _context.Payments,
                                 songHistory => songHistory.Id,

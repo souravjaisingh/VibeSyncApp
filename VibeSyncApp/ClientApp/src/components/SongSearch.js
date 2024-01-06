@@ -38,13 +38,13 @@ function SongSearch() {
             // Check if local storage contains userId and jwt key
             const userId = localStorage.getItem('userId');
             const jwtKey = localStorage.getItem('jwt');
-            
+
             if (userId && jwtKey) {
                 // Local storage contains userId and jwt key, proceed to load the component
                 return;
             } else {
                 // Redirect to the Home page for login
-                localStorage.setItem('redirectUrl', location.pathname+''+location.search);
+                localStorage.setItem('redirectUrl', location.pathname + '' + location.search);
                 navigate('/'); // Adjust the route as needed
             }
         }
@@ -69,7 +69,7 @@ function SongSearch() {
             setLoading(false);
         };
 
-         // Fetch enqueued songs after eventData is set
+        // Fetch enqueued songs after eventData is set
         const handleScroll = () => {
             const table = tableRef.current;
             if (table && table.scrollTop + table.clientHeight >= table.scrollHeight && !loading) {
@@ -122,7 +122,7 @@ function SongSearch() {
         }
         async function fetchEnqSongs(eventId) {
             try {
-                const response = await GetSongsByEventId(eventId);
+                const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') == 'true' ? true : false);
                 setEnqueuedSongs(response);
             } catch (error) {
                 setError(true);
@@ -130,13 +130,13 @@ function SongSearch() {
                 console.error('Error fetching data:', error);
             }
         }
-    
+
         // Fetch event data if qrcodeParam is true and eventData is not already set
         if (qrcodeParam === 'true' && !eventData) {
             try {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
                 setEventData(response);
-                if(response != null){
+                if (response != null) {
                     fetchEnqSongs(response.id);
                 }
             } catch (error) {
@@ -147,12 +147,12 @@ function SongSearch() {
         } else if (!eventData) {
             // If qrcodeParam is not true and eventData is not set, use rowData as is
             setEventData(JSON.parse(decodeURIComponent(rowDataString)));
-        } else if(enqueuedSongs == null) {
+        } else if (enqueuedSongs == null) {
             // If eventData is already set, fetch enqueued songs
             fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
         }
     }, [qrcodeParam, urlEventId, urlUserId, eventData]);
-    
+
 
     const handleRowClick = (data) => {
         if (eventData) {
@@ -194,9 +194,19 @@ function SongSearch() {
                     </div>
                 </div>
             )}
-    
+            <ul style={{ listStyleType: 'circle' }}>
+                <li>
+                    <em className="text-muted small info">~ Once the DJ approves, your song will be listed below.</em>
+                </li>
+                <li>
+                    <em className="text-muted small info">~ To view 'Your Requests,' navigate to the menu bar.</em>
+                </li>
+                <li>
+                    <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
+                </li>
+            </ul>
             <div className="custom-toggle-bar" onClick={toggleList}>
-                <span className="toggle-label">Show enqueued songs</span>
+                <span className="toggle-label">Accepted Requests</span>
                 <span className={`toggle-icon ${isListOpen ? 'rotate' : ''}`}></span>
             </div>
             {isListOpen && (
@@ -225,7 +235,7 @@ function SongSearch() {
                     </MDBTable>
                 </div>
             )}
-    
+
             <div className="search-page">
                 <div className="search-bar">
                     <input
@@ -265,7 +275,7 @@ function SongSearch() {
             </div>
         </div>
     );
-    
+
 }
 
 export default SongSearch;

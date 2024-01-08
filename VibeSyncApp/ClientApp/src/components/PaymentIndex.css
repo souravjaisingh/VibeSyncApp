@@ -12,9 +12,8 @@
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
             'Lucida Sans', Arial, sans-serif;
     }
-
-    .artist-name {
-        font-size: x-large;
+    .artist-name{
+        font-size: small;
     }
 
     .label {

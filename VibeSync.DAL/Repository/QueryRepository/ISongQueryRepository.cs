@@ -13,8 +13,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// Gets the song history by event identifier.
         /// </summary>
         /// <param name="eventId">The event identifier.</param>
+        /// <param name="isUser">if set to <c>true</c> [is user].</param>
         /// <returns></returns>
-        List<SongHistory> GetSongHistoryByEventId(long eventId);
+        List<SongHistory> GetSongHistoryByEventId(long eventId, bool isUser);
         /// <summary>
         /// Gets the song history by user identifier.
         /// </summary>

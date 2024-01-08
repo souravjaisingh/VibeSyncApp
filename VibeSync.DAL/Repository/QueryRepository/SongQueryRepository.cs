@@ -24,12 +24,14 @@ namespace VibeSync.DAL.Repository.QueryRepository
         {
             _context = context.GetDBContext();
         }
+
         /// <summary>
-        /// Gets the song history.
+        /// Gets the song history by event identifier.
         /// </summary>
         /// <param name="eventId">The event identifier.</param>
+        /// <param name="isUser">if set to <c>true</c> [is user].</param>
         /// <returns></returns>
-        public List<SongHistory> GetSongHistoryByEventId(long eventId)
+        public List<SongHistory> GetSongHistoryByEventId(long eventId, bool isUser)
         {
             var query = _context.SongHistories
                 .Join(
@@ -40,8 +42,12 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 )
                 .Where(joined => joined.SongHistory.EventId == eventId &&
                                  joined.SongHistory.SongStatus != "Played" &&
-                                 joined.SongHistory.SongStatus != "Rejected")
-                .OrderBy(x => x.SongHistory.CreatedOn)
+                                 joined.SongHistory.SongStatus != "Rejected");
+            if (isUser)
+            {
+                query = query.Where(joined => joined.SongHistory.SongStatus != "Pending");
+            }
+            var finalQuery = query.OrderBy(x => x.SongHistory.CreatedOn)
                 .Select(joined => new SongHistory
                 {
                     Id = joined.SongHistory.Id,
@@ -65,7 +71,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                     Payments = joined.SongHistory.Payments.ToList()
                 });
 
-            return query.ToList();
+            return finalQuery.ToList();
         }
 
 

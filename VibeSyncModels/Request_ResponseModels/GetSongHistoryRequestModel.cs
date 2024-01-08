@@ -11,6 +11,13 @@ namespace VibeSyncModels.Request_ResponseModels
     public class GetSongHistoryRequestModel : IRequest<List<SongHistoryModel>>, IValidatableObject
     {
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is user.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is user; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsUser { get; set; }
+        /// <summary>
         /// Gets or sets the event identifier.
         /// </summary>
         /// <value>

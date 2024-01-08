@@ -6,8 +6,8 @@ export async function GetSongsUsingSearchTerm(query, offset, limit) {
     return handleAPIRequest(`Songs/GetSong?${qString}`, 'GET');
 }
 
-export async function GetSongsByEventId(id) {
-    return handleAPIRequest(`Songs/GetSongHistory?EventId=${id}`, 'GET');
+export async function GetSongsByEventId(id, isUser = false) {
+    return handleAPIRequest(`Songs/GetSongHistory?EventId=${id}&isUser=${isUser}`, 'GET');
 }
 
 export async function ModifySongRequest(data) {

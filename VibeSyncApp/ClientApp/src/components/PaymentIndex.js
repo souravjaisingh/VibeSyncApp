@@ -197,7 +197,7 @@ function PaymentIndex() {
                 {rowData.artists.map((artist) => artist.name).join(', ')}
             </p>
             {/* <RazorpayPayment data={amount} /> */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='center-form'>
                 <p className='label'>Tip the DJ here:</p>
                 <input
                     type="number"
@@ -207,16 +207,19 @@ function PaymentIndex() {
                     required
                 />
                 <br></br>
-                {/* Submit button */}
-                {/**
-                 * *************************************************************************************
-                 *  HIDE THE BUTTON BASED ON EVENT STATUS - LIVE-NA(LIVE BUT NOT ACCEPTING REQUESTS) 
-                 * *************************************************************************************
-                */}
-
-                <button className=' btnPayment btn--primaryPayment btn--mediumPayment' id="rzp-button1" onClick={loadRazorpayScript}>Pay</button>
-                {/* <a href="phonepe://pay?pa=9728868875@okhdfcbank&pn=JohnDoe&cu=INR" class="upi-pay1">Pay Now !</a> */}
-
+                <div>
+                    <button
+                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${rowData.eventStatus !== 'Live' ? 'disabledButton' : ''}`}
+                        id="rzp-button1"
+                        onClick={loadRazorpayScript}
+                        disabled={rowData.eventStatus !== 'Live'}
+                    >
+                        Pay
+                    </button>
+                    {rowData.eventStatus !== 'Live' && (
+                        <p style={{ textAlign: 'center' }}><i>DJ is not accepting requests right now.</i></p>
+                    )}
+                </div>
             </form>
             {/* Render the success message if showSuccessMessage is true */}
             {showSuccessMessage && (

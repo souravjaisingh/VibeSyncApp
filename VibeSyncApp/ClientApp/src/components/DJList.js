@@ -9,7 +9,7 @@ import { MyContext } from '../App';
 
 export default function DjList() {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
     const [events, setEvents] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
@@ -42,7 +42,7 @@ export default function DjList() {
             console.error('Error in getEventsData:', error);
         }
     }
-    
+
     useEffect(() => {
         getEventsData();
     }, [])
@@ -89,9 +89,9 @@ export default function DjList() {
                                                 className='rounded-circle' />
                                             <div className='p-2'>
                                                 <p className='fw-bold mb-1'>{item.djName}</p>
-                                                <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
-                                            {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
-                                        </MDBBadge>
+                                                <MDBBadge color={item.eventStatus === 'Not live' ? 'warning' : 'success'} pill>
+                                                    {item.eventStatus === 'Not live' ? 'Upcoming' : 'Live'}
+                                                </MDBBadge>
                                             </div>
                                         </div>
                                     </td>

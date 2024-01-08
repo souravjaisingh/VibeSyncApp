@@ -17,14 +17,14 @@ export default function DjEventList() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    
+
     const [eventId, setEventId] = useState(null);
 
     const openModal = (e, rowData) => {
         e.stopPropagation();
         setEventId(rowData.id); // Set the selected rowData
         setModalIsOpen(true);
-        if (localStorage.getItem('eventId') == null){
+        if (localStorage.getItem('eventId') == null) {
             localStorage.setItem('eventId', eventId);
         }
     };
@@ -47,8 +47,8 @@ export default function DjEventList() {
             // Serialize the rowData object to a JSON string and encode it
             const rowDataString = encodeURIComponent(JSON.stringify(rowData));
             console.log(rowData);
-    
-            if (rowData.eventStatus === 'Live') {
+
+            if (rowData.eventStatus === 'Live' || rowData.eventStatus === 'Live-NA') {
                 navigate(`/djlivesongs?data=${rowDataString}`);
             } else {
                 navigate(`/eventdetails?data=${rowDataString}`);
@@ -114,19 +114,16 @@ export default function DjEventList() {
                                     <p className="fw-normal mb-1">{item.venue}</p>
                                 </td>
                                 <td>
-                                    <MDBBadge
-                                        color={item.eventStatus === 'Live' ? 'success' : 'warning'}
-                                        pill
-                                    >
-                                        {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
+                                    <MDBBadge color={item.eventStatus === 'Not live' ? 'warning' : 'success'} pill>
+                                        {item.eventStatus === 'Not live' ? 'Upcoming' : 'Live'}
                                     </MDBBadge>
-                                    <br/>
+                                    <br />
                                     <a
-                                    className='qr-code'
+                                        className='qr-code'
                                         href="#!"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent the default anchor behavior
-                                            
+
                                             e.currentTarget === e.target && openModal(e, item); // Call your openModal function
                                         }}
                                     >

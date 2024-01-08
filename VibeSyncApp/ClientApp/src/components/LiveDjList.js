@@ -7,7 +7,7 @@ import { MyContext } from '../App';
 
 export default function LiveDjList() {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const [events, setEvents] = useState([])
     const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ export default function LiveDjList() {
             console.error('Error in getEventsData:', error);
         }
     }
-    
+
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
             getEventsData(position.coords.latitude, position.coords.longitude);
@@ -91,8 +91,8 @@ export default function LiveDjList() {
                                                 className='rounded-circle' />
                                             <div className='p-2'>
                                                 <p className='fw-bold mb-1'>{item.djName}</p>
-                                                <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
-                                                    {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
+                                                <MDBBadge color={item.eventStatus === 'Not live' ? 'warning' : 'success'} pill>
+                                                    {item.eventStatus === 'Not live' ? 'Upcoming' : 'Live'}
                                                 </MDBBadge>
                                             </div>
                                         </div>

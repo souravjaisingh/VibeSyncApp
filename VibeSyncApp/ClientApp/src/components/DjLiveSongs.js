@@ -22,7 +22,7 @@ export default function DjLiveSongs() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const rowData = JSON.parse(decodeURIComponent(rowDataString)) || {};
     const [eventId, setEventId] = useState(rowData != null ? rowData.id : null);
-    const [stopIncomingRequests, setStopIncomingRequests] = useState(false);
+    const [stopIncomingRequests, setStopIncomingRequests] = useState(rowData.eventStatus === 'Live-NA' ? true : false);
     const { setLoading } = useLoadingContext();
 
 

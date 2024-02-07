@@ -26,10 +26,9 @@ function NavbarComponent() {
     async function handleLogoutClick() {
         try {
             setLoading(true);
-            localStorage.removeItem('userId');
-            localStorage.removeItem('jwt');
-            localStorage.removeItem('expiry');
+            
             const res = await Logout();
+
             setLoading(false);
             if (res) {
                 navigate('/');

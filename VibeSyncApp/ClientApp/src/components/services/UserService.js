@@ -21,7 +21,11 @@ export async function handleAPIRequest(url, method, data) {
     if (method === 'POST' || method === 'PUT') {
         requestOptions.body = JSON.stringify(data);
     }
-
+    if (data === 'logout') {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('expiry');
+    }
     try {
         const response = await fetch(Constants.baseUri + url, requestOptions);
 
@@ -57,7 +61,7 @@ export default async function RegisterUser(data) {
 
 
 export async function Logout() {
-    return handleAPIRequest('User/LogoutUser', 'POST');
+    return handleAPIRequest('User/LogoutUser', 'POST', 'logout');
 }
 
 

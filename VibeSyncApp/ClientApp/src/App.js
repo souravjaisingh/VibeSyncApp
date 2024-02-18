@@ -28,6 +28,7 @@ import NavbarComponent from './components/Navbar';
 import ErrorPage from './components/ErrorPage';
 import QrCodeDirect from './components/QrCodeDirect';
 import { useLoadingContext } from './components/LoadingProvider';
+import PlaylistComponent from './components/Playlists';
 
 export const MyContext = createContext();
 
@@ -91,6 +92,7 @@ function App() {
                 <Route path="/contactus" element={<ContactUs />} />
                 <Route path="/errorPage" element={<ErrorPage />} />
                 <Route path="/qropener" element={<QrCodeDirect />} />
+                <Route path="/playlists" element={<PlaylistComponent />} />
                 </Routes>}
                 </MyContext.Provider>
                 {loading && (

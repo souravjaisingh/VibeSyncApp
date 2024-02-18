@@ -22,6 +22,9 @@ function NavbarComponent() {
     function handleRequestsClick() {
         navigate('/songhistory');
     }
+    function handlePlaylistsClick(){
+        navigate('/playlists');
+    }
 
     async function handleLogoutClick() {
         try {
@@ -87,6 +90,27 @@ function NavbarComponent() {
                             className="btn-navigation-bar"
                             onClick={(e) => handleRequestsClick()}>
                             Your Requests
+                        </Button>
+                    )}
+                {localStorage.getItem('userId') != null && (
+                    <Button
+                        className="btn-navigation-bar"
+                        onClick={(e) => handleLogoutClick()}
+                    >
+                        Logout
+                    </Button>
+                )}
+            </div>
+            <div className={`menu ${menuOpen ? 'open' : ''}`}>
+                {(location.pathname === '/djhome'
+                    || location.pathname === '/djprofile'
+                    || location.pathname === '/eventdetails'
+                    || location.pathname === '/showtransactions'
+                    || location.pathname === '/djlivesongs' ) && (
+                        <Button
+                            className="btn-navigation-bar"
+                            onClick={(e) => handlePlaylistsClick()}>
+                            Playlists
                         </Button>
                     )}
                 {localStorage.getItem('userId') != null && (

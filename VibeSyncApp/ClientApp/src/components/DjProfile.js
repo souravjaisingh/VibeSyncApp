@@ -203,6 +203,7 @@ const DjProfile = () => {
             onChange={(e) => setSocialLinks(e.target.value)}
           />
         </div>
+        
         <button
           onClick={handleSubmit}
           type="button"

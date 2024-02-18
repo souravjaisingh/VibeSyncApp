@@ -1,0 +1,96 @@
+/* PlaylistComponent.css */
+
+.playlist-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: aliceblue;
+}
+
+.playlist-heading{
+    font-size: large;
+}
+.back-icon {
+    cursor: pointer;
+    font-size: small;
+    margin-bottom: 20px;
+    display: inline-block;
+    padding: 5px 10px;
+    /* border: 1px solid #333; */
+    border-radius: 5px;
+    /* background-color: #f4f4f4; */
+}
+
+.back-icon:hover {
+    background-color: #ddd;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+
+/* Playlists.css */
+
+.song-list {
+    list-style-type: none;
+    margin-top: 5px;
+    padding-left: 20px;
+    display: none; /* initially hide the song list */
+    max-height: 200px; /* set maximum height for the list */
+    overflow-y: auto; /* enable vertical scrolling */
+}
+
+.playlist-list li:hover .song-list {
+    display: block; /* show the song list on hover */
+}
+
+
+/* Playlists.css */
+
+/* Playlists.css */
+
+.playlist-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.playlist-list li {
+    /* display: flex; */
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Space items evenly */
+    padding: 10px;
+    background-color: #e0e0e0; /* Lighter background color */
+    margin-bottom: 10px;
+    border-radius: 10px; /* Rounder edges */
+    cursor: pointer;
+    position: relative; /* Add position relative to contain the icon */
+}
+
+.playlist-list li:hover {
+    background-color: #d3d3d3; /* Darker background color on hover */
+}
+
+.playlist-list li .playlist-icon {
+    font-size: 16px;
+}
+
+.playlist-list li.expanded .playlist-icon {
+    transform: rotate(180deg);
+}
+/* Playlists.css */
+
+.playlist-list li {
+    position: relative; /* Make the li relatively positioned */
+}
+
+.playlist-list li .playlist-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust this value as needed */
+    transform: translateY(-50%);
+    font-size: 12px;
+}
+
+/* Other styles... */

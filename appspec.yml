@@ -2,4 +2,10 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /var/www/html/
+    destination: /home/ec2-user/IAFBinary/
+    file_exists_behavior: OVERWRITE
+    permissions:
+      - object: /
+        pattern: "**"
+        owner: ec2-user
+        group: ec2-user

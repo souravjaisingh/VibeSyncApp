@@ -1,0 +1,39 @@
+.promocode-container {
+    display: flex;
+    align-items: center;
+}
+
+.promocode-input {
+    border: 2px solid #FF69B4; /* Pink color */
+    border-radius: 20px;
+    padding: 5px 10px; /* Adjust padding as needed */
+    width: 150px; /* Adjust width as needed */
+    margin-right: 10px; /* Adjust margin as needed */
+}
+
+.promocode-button {
+    background-color: #FF69B4; /* Pink color */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px; /* Adjust padding as needed */
+    cursor: pointer;
+    margin: auto;
+}
+
+.promocode-button:hover {
+    background-color: #FF1493; /* Darker pink color on hover */
+}
+
+.promocode-icon {
+    font-size: 20px;
+    margin-left: 5px; /* Adjust margin as needed */
+}
+
+.promocode-icon.valid {
+    color: green;
+}
+
+.promocode-icon.invalid {
+    color: red;
+}

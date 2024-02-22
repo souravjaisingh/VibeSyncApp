@@ -5,6 +5,7 @@ import './PaymentIndex.css';
 import { GetPaymentInitiationDetails, UpsertPayment } from './services/PaymentService';
 import { MyContext } from '../App';
 import VBLogo from '../Resources/VB_Logo_2.png';
+import Promocode from './Promocode';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -17,57 +18,19 @@ function PaymentIndex() {
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [fetchingData, setFetchingData] = useState();
     const [paymentInitiationData, setPaymentInitiationData] = useState('');
+    const [showPromoInput, setShowPromoInput] = useState(false);
+    const [promoCode, setPromoCode] = useState('');
+    const [isPromoValid, setIsPromoValid] = useState(false);
     const searchParams = new URLSearchParams(location.search);
     const rowDataString = searchParams.get('data');
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
+    const [isPromoApplied, setIsPromoApplied] = useState(false);
+
+    const handlePromoApply = (applied) => {
+        setIsPromoApplied(applied);
+    };
     console.log(rowData);
-    // useEffect(() => {
-    //         let isMounted = true; // Add a variable to track component unmount
-
-    //         async function fetchData() {
-    //         // Ensure that the amount is a valid decimal number
-    //         const parsedAmount = parseFloat(amount);
-    //         if (!isNaN(parsedAmount)) {
-    //             // If it's a valid decimal, proceed with the request
-    //             const obj = {
-    //             amount: parsedAmount,
-    //             userId: localStorage.getItem('userId'),
-    //             };
-    //             try {
-    //             // Indicate that data fetching is in progress
-    //             if (isMounted) {
-    //                 setFetchingData(true);
-    //             }
-
-    //             const res = await GetPaymentInitiationDetails(obj);
-
-    //             // Check if the component is still mounted before updating state
-    //             if (isMounted) {
-    //                 setPaymentInitiationData(res);
-    //                 console.log(res);
-    //                 setFetchingData(false); // Data fetching is complete
-    //             }
-    //             } catch (error) {
-    //             console.error("Error:", error);
-    //             if (isMounted) {
-    //                 setFetchingData(false); // Data fetching failed
-    //             }
-    //             }
-    //         } else {
-    //             console.error("Invalid amount:", amount);
-    //         }
-    //         }
-
-    //         fetchData(); // Call the async function immediately
-
-    //         // Clean-up: set isMounted to false when the component unmounts
-    //         return () => {
-    //         isMounted = false;
-    //         };
-    // }, [amount]);
-
-
-
+    
     // Function to load and run the Razorpay script
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
@@ -76,7 +39,7 @@ function PaymentIndex() {
         document.body.appendChild(script);
 
         script.onload = async () => {
-            const parsedAmount = parseFloat(amount);
+            const parsedAmount = parseFloat(isPromoApplied ? (amount - 50) : amount);
             if (!isNaN(parsedAmount)) {
                 // If it's a valid decimal, proceed with the request
                 const obj = {
@@ -89,7 +52,7 @@ function PaymentIndex() {
 
                     const options = {
                         key: RazorPayAppId, // Replace with your Razorpay Key ID
-                        amount: amount * 100, // Amount is in currency subunits (e.g., 50000 for 500 INR)
+                        amount: parsedAmount * 100, // Amount is in currency subunits (e.g., 50000 for 500 INR)
                         currency: 'INR',
                         name: 'VibeSync', // Your business name
                         description: 'Test Transaction',
@@ -148,7 +111,7 @@ function PaymentIndex() {
             const obj = {
                 UserId: localStorage.getItem('userId'),
                 OrderId: orderId,
-                TotalAmount: amount,
+                TotalAmount: isPromoApplied ? amount - 50 : amount,
                 PaymentId: payId,
                 EventId: rowData.eventId,
                 DjId: rowData.djId,
@@ -172,7 +135,7 @@ function PaymentIndex() {
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        rowData['payment'] = { amount: amount };
+        rowData['payment'] = { amount: isPromoApplied ? amount - 50 : amount };
         // await paymentHandler();
         // const rowDataString = encodeURIComponent(JSON.stringify(rowData));
         // // Navigate to the detail view with the serialized rowData as a parameter
@@ -183,7 +146,6 @@ function PaymentIndex() {
         // alert("Payment Success!");
         //     navigate('/userhome')
     };
-
     return (
         <div className='song-details'>
             {/* Display the medium-sized image */}
@@ -200,6 +162,7 @@ function PaymentIndex() {
             <form onSubmit={handleSubmit} className='center-form'>
                 <p className='label'>Tip the DJ here:</p>
                 <input
+                    className='amount-inputfield'
                     type="number"
                     placeholder='Enter amount'
                     value={amount}
@@ -207,6 +170,9 @@ function PaymentIndex() {
                     required
                 />
                 <br></br>
+                <Promocode onApply={handlePromoApply} />
+                <br></br>
+                
                 <div>
                     <button
                         className={`btnPayment btn--primaryPayment btn--mediumPayment ${rowData.eventStatus !== 'Live' ? 'disabledButton' : ''}`}
@@ -216,6 +182,9 @@ function PaymentIndex() {
                     >
                         Pay
                     </button>
+                    {isPromoApplied && (
+                        <span>Yayy! You will only pay {amount - 50}</span>
+                    )}
                     {rowData.eventStatus !== 'Live' && (
                         <p style={{ textAlign: 'center' }}><i>DJ is not accepting requests right now.</i></p>
                     )}

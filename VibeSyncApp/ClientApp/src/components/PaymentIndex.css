@@ -25,14 +25,22 @@
     }
 
     .btnPayment {
-        padding: 8px 20px;
-        /* margin-left: 30%; */
-        border-radius: 2px;
-        outline: none;
+        background-color: #08a4f2; /* Pink color */
+        color: white;
         border: none;
+        border-radius: 20px;
+        padding: 8px 16px; /* Adjust padding as needed */
         cursor: pointer;
+        margin: auto;
+        width: -webkit-fill-available;
     }
-
+    .amount-inputfield{
+        border: 2px solid #59b0ef; /* Pink color */
+        border-radius: 20px;
+        padding: 5px 10px; /* Adjust padding as needed */
+        width: 250px; /* Adjust width as needed */
+        margin-right: 10px; /* Adjust margin as needed */
+    }
     .btn--primaryPayment {
         background-color: var(--primary);
         color: #242424;

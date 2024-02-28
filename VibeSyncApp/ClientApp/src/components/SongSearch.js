@@ -204,6 +204,9 @@ function SongSearch() {
                 <li>
                     <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
                 </li>
+                <li>
+                    <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song, you'll be issued a full refund.</em>
+                </li>
             </ul>
             <div className="custom-toggle-bar" onClick={toggleList}>
                 <span className="toggle-label">Accepted Requests</span>

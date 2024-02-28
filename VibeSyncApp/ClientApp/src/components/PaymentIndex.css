@@ -12,7 +12,16 @@
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
             'Lucida Sans', Arial, sans-serif;
     }
+    .event-name{
+        font-size: smaller;
+        margin-bottom: auto;
+        color: grey;
+    }
     .artist-name{
+        font-size: small;
+    }
+    .subheading-payment{
+        color: grey;
         font-size: small;
     }
 

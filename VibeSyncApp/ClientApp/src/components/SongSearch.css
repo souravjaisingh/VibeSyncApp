@@ -55,9 +55,9 @@
     .search-input {
         width: 100%;
         padding: 10px;
-        margin: 30px 0;
+        margin-top: 30px;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 20px;
         font-size: 16px;
     }
     
@@ -140,6 +140,7 @@
 .container-for-table {
     overflow: auto; /* Enable scrolling */
     max-height: 400px; /* Adjust the max height as needed */
+    margin-top: -50px;;
 }
 .collapsible-table{
     background-color: #b6cdd9;

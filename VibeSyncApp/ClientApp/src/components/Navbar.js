@@ -113,7 +113,8 @@ function NavbarComponent() {
                             Playlists
                         </Button>
                     )}
-                {localStorage.getItem('userId') != null && (
+                {localStorage.getItem('userId') != null &&
+                    localStorage.getItem('isUser') == 'false' && (
                     <Button
                         className="btn-navigation-bar"
                         onClick={(e) => handleLogoutClick()}

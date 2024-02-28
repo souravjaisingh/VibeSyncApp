@@ -30,7 +30,7 @@ function PaymentIndex() {
         setIsPromoApplied(applied);
     };
     console.log(rowData);
-    
+
     // Function to load and run the Razorpay script
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
@@ -124,7 +124,7 @@ function PaymentIndex() {
             };
 
             var res = await UpsertPayment(obj);
-            navigate('/userhome');
+            navigate('/songhistory');
         } catch (error) {
             // Handle the error and set error and error message
             setError(true); // Assuming setError is a state variable to manage errors
@@ -154,17 +154,21 @@ function PaymentIndex() {
                 alt="Album Image"
                 style={{ width: '300px', height: 'auto' }}
             />
+            <p className='event-name'>{rowData.eventName}</p>
             <p className='song-name'>{rowData.name}</p>
             <p className='text-muted artist-name'>
                 {rowData.artists.map((artist) => artist.name).join(', ')}
             </p>
             {/* <RazorpayPayment data={amount} /> */}
             <form onSubmit={handleSubmit} className='center-form'>
-                <p className='label'>Tip the DJ here:</p>
+                <p className='label'>Tip the DJ(min amount: {rowData.minimumBid}):<br></br>
+                <span className='subheading-payment'><i>Minimum amount is decided by the DJ.</i></span>
+                </p>
+
                 <input
                     className='amount-inputfield'
                     type="number"
-                    placeholder='Enter amount'
+                    placeholder='Enter amount in rupees'
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
@@ -172,13 +176,13 @@ function PaymentIndex() {
                 <br></br>
                 <Promocode onApply={handlePromoApply} />
                 <br></br>
-                
+
                 <div>
                     <button
-                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${rowData.eventStatus !== 'Live' ? 'disabledButton' : ''}`}
+                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live' || amount < rowData.minimumBid ) ? 'disabledButton' : ''}`}
                         id="rzp-button1"
                         onClick={loadRazorpayScript}
-                        disabled={rowData.eventStatus !== 'Live'}
+                        disabled={rowData.eventStatus !== 'Live' || amount < rowData.minimumBid }
                     >
                         Pay
                     </button>

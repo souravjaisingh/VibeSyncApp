@@ -90,6 +90,7 @@ export default function GoogleLogin(isUser){
         <div>
             <br />
             <br />
+            {/* <p style={{fontFamily:'sans-serif'}}>Sign up to request a song</p> */}
             <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google   <span className="google-icon"></span></button>
         </div>
         {showErrorMessage && (

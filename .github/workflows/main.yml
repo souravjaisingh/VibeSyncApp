@@ -3,7 +3,7 @@ name: CI/CD for .NET Application
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:

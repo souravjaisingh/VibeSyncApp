@@ -40,7 +40,7 @@ jobs:
 
     - name: Deploy to Elastic Beanstalk
       run: |
-        aws elasticbeanstalk create-application-version --application-name your-application-name --version-label $GITHUB_SHA --source-bundle S3Bucket=$EB_BUCKET,S3Key=dotnet-app.zip
+        aws elasticbeanstalk create-application-version --application-name your-application-name --version-label $GITHUB_SHA --source-bundle S3Bucket=vibesyncs3bucket,S3Key=dotnet-app.zip
         aws elasticbeanstalk update-environment --environment-name your-environment-name --version-label $GITHUB_SHA
 
     - name: Clean up

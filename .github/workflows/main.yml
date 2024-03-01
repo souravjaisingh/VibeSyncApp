@@ -1,48 +1,40 @@
-name: CI/CD for .NET Application
+name: deploy-to-eb
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
-  build:
-    name: Build and Deploy
+  deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.0.x' 
+      - name: Create ZIP deployment package
+        run: zip -r deploy_package.zip ./
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "us-east-1"
 
-    - name: Build
-      run: dotnet build --configuration Release
+      - name: Upload package to S3 bucket
+        run: aws s3 cp deploy_package.zip s3://vibesyncs3bucket
 
-    - name: Publish Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: dotnet-app
-        path: ./bin/Release/net6.0/publish  # Adjust the path as needed
+      - name: Create new ElasticBeanstalk Application Version
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name vibesync \
+          --source-bundle S3Bucket="vibesyncs3bucket",S3Key="deploy_package.zip" \
+          --version-label "ver-${{ github.sha }}" \
+          --description "Commit SHA: ${{ github.sha }}"
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-north-1
-
-    - name: Deploy to Elastic Beanstalk
-      run: |
-        aws elasticbeanstalk create-application-version --application-name your-application-name --version-label $GITHUB_SHA --source-bundle S3Bucket=vibesyncs3bucket,S3Key=dotnet-app.zip
-        aws elasticbeanstalk update-environment --environment-name your-environment-name --version-label $GITHUB_SHA
-
-    - name: Clean up
-      run: rm -rf ./bin ./obj  # Clean up artifacts and build files
-
+      - name: Deploy new ElasticBeanstalk Application Version
+        run: |
+          aws elasticbeanstalk update-environment \
+          --environment-name vibesync-env-1 \
+          --version-label "ver-${{ github.sha }}"

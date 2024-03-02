@@ -22,6 +22,7 @@ export default function LoginForm() {
     const [loginError, setLoginError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const { setLoading } = useLoadingContext();
+    const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -87,6 +88,10 @@ export default function LoginForm() {
             setLoading(false);
         }
     }
+    const handleForgotPasswordClick = (e) => {
+        e.preventDefault(); // Prevent the default behavior of anchor tag
+        setShowInfoBox(prev => !prev); // Toggle visibility of info box
+    }
 
     return (
         <div className="form col-10">
@@ -122,12 +127,19 @@ export default function LoginForm() {
                         />
                     </div>
                 </div>
-
-
             </div>
-            <div class="footer">
-                <button onClick={() => handleSubmit()} type="submit" class="btn btn--primary btn--medium">Login</button>
+            <div className="footer">
+                <button onClick={() => handleSubmit()} type="submit" className="btn btn--primary btn--medium">Login</button>
+                {/* Add onClick event to handleForgotPasswordClick */}
+                <br></br><br></br>
+                <a href="#" onClick={handleForgotPasswordClick} >Forgot Password?</a>
+                {showInfoBox && (
+                    <div className="info-box">
+                        <p><i>Please send an email to vibesyncdj@gmail.com with your emailId/phoneNumber. <br></br>We're here at your disposal.</i></p>
+                    </div>
+                )}
             </div>
+
         </div>
     )
 }

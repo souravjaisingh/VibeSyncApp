@@ -51,7 +51,7 @@
         margin-right: 10px; /* Adjust margin as needed */
     }
     .btn--primaryPayment {
-        background-color: var(--primary);
+        background-color: #87c4ed;
         color: #242424;
         border: ridge;
     }

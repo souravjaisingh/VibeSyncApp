@@ -161,7 +161,7 @@ function PaymentIndex() {
             </p>
             {/* <RazorpayPayment data={amount} /> */}
             <form onSubmit={handleSubmit} className='center-form'>
-                <p className='label'>Tip the DJ(min amount: {rowData.minimumBid}):<br></br>
+                <p className='label'>Tip the DJ (min amount: {rowData.minimumBid}):<br></br>
                 <span className='subheading-payment'><i>Minimum amount is decided by the DJ.</i></span>
                 </p>
 

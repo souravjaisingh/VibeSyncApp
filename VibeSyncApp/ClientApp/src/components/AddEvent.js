@@ -212,14 +212,14 @@ const AddressTypeahead = () => {
                         ))}
                     </ul>
                 )}
-                {showLiveToggle && (
+                {/* {showLiveToggle && ( */}
                     <div className="toggle-container">
                         <label htmlFor="liveToggle">LIVE</label>
                         <div className={`toggle-slider ${isLive ? 'active' : ''}`} onClick={handleLiveToggle}>
                             <div className={`slider-thumb ${isLive ? 'active' : ''}`} />
                         </div>
                     </div>
-                )}
+                
                 <div className="input-group">
                     <label htmlFor="eventNameInput">Event Name</label>
                     <input

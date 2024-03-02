@@ -80,7 +80,7 @@ function TransactionHistory() {
                 <td>{transaction.eventName}</td>
                 <td>{transaction.songName}</td>
                 <td>{transaction.paymentId}</td>
-                <td>{transaction.totalAmount/100}</td>
+                <td>{transaction.totalAmount}</td>
                 </tr>
             ))}
             </MDBTableBody>

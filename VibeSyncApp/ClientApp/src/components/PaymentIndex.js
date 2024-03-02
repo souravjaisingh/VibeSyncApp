@@ -26,84 +26,103 @@ function PaymentIndex() {
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isPromoApplied, setIsPromoApplied] = useState(false);
 
+    const handleBack = () => {
+        navigate(-1); // Go back to the previous page when back button is clicked
+    };
     const handlePromoApply = (applied) => {
         setIsPromoApplied(applied);
     };
     console.log(rowData);
-
-    // Function to load and run the Razorpay script
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
         document.body.appendChild(script);
-
-        script.onload = async () => {
-            const parsedAmount = parseFloat(isPromoApplied ? (amount - 50) : amount);
-            if (!isNaN(parsedAmount)) {
-                // If it's a valid decimal, proceed with the request
-                const obj = {
-                    amount: parsedAmount * 100,
-                    userId: localStorage.getItem('userId'),
-                };
-                try {
-                    const res = await GetPaymentInitiationDetails(obj);
-                    setPaymentInitiationData(res);
-
-                    const options = {
-                        key: RazorPayAppId, // Replace with your Razorpay Key ID
-                        amount: parsedAmount * 100, // Amount is in currency subunits (e.g., 50000 for 500 INR)
-                        currency: 'INR',
-                        name: 'VibeSync', // Your business name
-                        description: 'Test Transaction',
-                        image: VBLogo,
-                        order_id: paymentInitiationData.orderId, // Sample Order ID, replace with your order ID
-                        handler: function (response) {
-                            setPaymentStatus({
-                                paymentId: response.razorpay_payment_id,
-                                orderId: response.razorpay_order_id,
-                                signature: response.razorpay_signature,
-                            });
-                            setShowSuccessMessage(true);
-                            upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
-                        },
-                        prefill: {
-                            name: paymentInitiationData.userName, // Customer's name
-                            email: paymentInitiationData.email,
-                            // contact: '9518070741', // Customer's phone number
-                        },
-                        notes: {
-                            address: 'Razorpay Corporate Office',
-                        },
-                        theme: {
-                            color: '#3399cc',
-                        },
-                    };
-
-                    const rzp = new window.Razorpay(options);
-
-                    rzp.on('payment.failed', function (response) {
-                        setPaymentStatus({
-                            error: {
-                                code: response.error.code,
-                                description: response.error.description,
-                                source: response.error.source,
-                                step: response.error.step,
-                                reason: response.error.reason,
-                                orderId: response.error.metadata.order_id,
-                                paymentId: response.error.metadata.payment_id,
-                            },
-                        });
-                    });
-
-                    rzp.open();
-                } catch (error) {
-                    setError(true);
-                    setErrorMessage(error.message);
-                    console.error(error);
-                }
-            }
+    
+        return new Promise((resolve, reject) => {
+            script.onload = resolve;
+            script.onerror = reject;
+        });
+    };
+    
+    // Function to handle Pay button click
+    const handlePayButtonClick = async () => {
+        // Load the Razorpay script
+        try {
+            await loadRazorpayScript();
+        } catch (error) {
+            setError(true);
+            setErrorMessage('Failed to load Razorpay script');
+            return;
+        }
+    
+        // Once the script is loaded, proceed with payment initiation
+        const parsedAmount = parseFloat(isPromoApplied ? (amount - 50) : amount);
+        if (isNaN(parsedAmount)) {
+            setError(true);
+            setErrorMessage('Invalid amount');
+            return;
+        }
+    
+        const obj = {
+            amount: parsedAmount * 100,
+            userId: localStorage.getItem('userId'),
         };
+    
+        try {
+            const res = await GetPaymentInitiationDetails(obj);
+            setPaymentInitiationData(res);
+    
+            const options = {
+                key: RazorPayAppId,
+                amount: parsedAmount * 100,
+                currency: 'INR',
+                name: 'VibeSync',
+                description: 'Test Transaction',
+                image: VBLogo,
+                order_id: res.orderId,
+                handler: function (response) {
+                    setPaymentStatus({
+                        paymentId: response.razorpay_payment_id,
+                        orderId: response.razorpay_order_id,
+                        signature: response.razorpay_signature,
+                    });
+                    setShowSuccessMessage(true);
+                    upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
+                },
+                prefill: {
+                    name: res.userName,
+                    email: res.email,
+                },
+                notes: {
+                    address: 'Razorpay Corporate Office',
+                },
+                theme: {
+                    color: '#3399cc',
+                },
+            };
+    
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response) {
+                setPaymentStatus({
+                    error: {
+                        code: response.error.code,
+                        description: response.error.description,
+                        source: response.error.source,
+                        step: response.error.step,
+                        reason: response.error.reason,
+                        orderId: response.error.metadata.order_id,
+                        paymentId: response.error.metadata.payment_id,
+                    },
+                });
+            });
+    
+            rzp.open();
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error(error);
+        }
     };
 
     async function upsertPaymentDetails(orderId, payId) {
@@ -149,6 +168,9 @@ function PaymentIndex() {
     return (
         <div className='song-details'>
             {/* Display the medium-sized image */}
+            <span className="back-icon" onClick={handleBack}>
+                &lt;&lt; Back &nbsp;
+            </span>
             <img
                 src={rowData.album.images[0].url}
                 alt="Album Image"
@@ -162,7 +184,7 @@ function PaymentIndex() {
             {/* <RazorpayPayment data={amount} /> */}
             <form onSubmit={handleSubmit} className='center-form'>
                 <p className='label'>Tip the DJ (min amount: {rowData.minimumBid}):<br></br>
-                <span className='subheading-payment'><i>Minimum amount is decided by the DJ.</i></span>
+                    <span className='subheading-payment'><i>Minimum amount is decided by the DJ.</i></span>
                 </p>
 
                 <input
@@ -179,10 +201,10 @@ function PaymentIndex() {
 
                 <div>
                     <button
-                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live' || amount < rowData.minimumBid ) ? 'disabledButton' : ''}`}
+                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live' || amount < rowData.minimumBid) ? 'disabledButton' : ''}`}
                         id="rzp-button1"
-                        onClick={loadRazorpayScript}
-                        disabled={rowData.eventStatus !== 'Live' || amount < rowData.minimumBid }
+                        onClick={handlePayButtonClick}
+                        disabled={rowData.eventStatus !== 'Live' || amount < rowData.minimumBid}
                     >
                         Pay
                     </button>

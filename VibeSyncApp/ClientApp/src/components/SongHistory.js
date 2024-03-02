@@ -90,7 +90,7 @@ export default function SongHistory() {
                                     </tr>
                                     <tr>
                                         <td >
-                                            <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Status: {result.songStatus}</p>
+                                            <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Status: <b>{result.songStatus}</b></p>
                                         </td>
                                         <td colSpan="5">
                                             <DateTimeDisplay datetimeString={result.paymentDateTime} />

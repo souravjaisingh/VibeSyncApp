@@ -24,8 +24,6 @@ export default function DjLiveSongs() {
     const [eventId, setEventId] = useState(rowData != null ? rowData.id : null);
     const [stopIncomingRequests, setStopIncomingRequests] = useState(rowData.eventStatus === 'Live-NA' ? true : false);
     const { setLoading } = useLoadingContext();
-
-
     const openModal = () => {
         setModalIsOpen(true);
         setEventId(eventId);
@@ -226,7 +224,7 @@ export default function DjLiveSongs() {
     return (
         <div className='song-history-container' style={{ maxHeight: '500px' }}>
             <div className="toggle-container">
-                <label htmlFor="liveToggle">Stop Incoming Requests</label>
+                <label htmlFor="liveToggle">Stop taking requests</label>
                 <input
                     type="checkbox"
                     id="liveToggle"

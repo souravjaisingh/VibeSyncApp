@@ -30,7 +30,8 @@ function SongSearch() {
 
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.documentElement.scrollTop = 0; // For modern browsers
+        document.body.scrollTop = 0; // For older browsers
     }, [])
     // Add a check for qrcodeParam and local storage here
     useEffect(() => {

@@ -135,7 +135,7 @@ export default function LoginForm() {
                 <a href="#" onClick={handleForgotPasswordClick} >Forgot Password?</a>
                 {showInfoBox && (
                     <div className="info-box">
-                        <p><i>Please send an email to vibesyncdj@gmail.com with your emailId/phoneNumber. <br></br>We're here at your disposal.</i></p>
+                        <p><i>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number. <br></br>We're here at your disposal.</i></p>
                     </div>
                 )}
             </div>

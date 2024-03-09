@@ -6,7 +6,7 @@ import { MyContext } from '../App';
 
 function TransactionHistory() {
     const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+    const { errorMessage, setErrorMessage } = useContext(MyContext);
     const [transactionHistory, setTransactionHistory] = useState([]);
     const [filteredTransactionHistory, setFilteredTransactionHistory] = useState([]);
     const [distinctEventNames, setDistinctEventNames] = useState([]);
@@ -28,11 +28,10 @@ function TransactionHistory() {
             setErrorMessage(error.message); // Assuming setErrorMessage is a state variable to set error messages
         }
     }, []);
-    
 
     useEffect(() => {
         // Filter records based on the selected event
-        if (selectedEvent !== '' && selectedEvent !== null &&  selectedEvent !== 'All') {
+        if (selectedEvent !== '' && selectedEvent !== null && selectedEvent !== 'All') {
             const filteredRecords = transactionHistory.filter((transaction) => transaction.eventName === selectedEvent);
             setFilteredTransactionHistory(filteredRecords);
         } else {
@@ -41,50 +40,56 @@ function TransactionHistory() {
         }
     }, [selectedEvent, transactionHistory]);
 
+    // Calculate sum of total amounts in the filtered transaction history
+    const totalAmountSum = filteredTransactionHistory.reduce((total, transaction) => total + transaction.totalAmount, 0);
+
     const handleEventFilterChange = (event) => {
         setSelectedEvent(event.target.value);
     };
 
     return (
         <div className="transaction-history-container">
-        <h2>Transaction History</h2>
-        <div className="filter-container">
-            <label htmlFor="eventFilter">Filter by Event:</label>
-            <select
-            id="eventFilter"
-            className="event-filter-select"
-            value={selectedEvent} 
-            onChange={handleEventFilterChange}
-            >
-            <option value="All">All Events</option>
-            {/* Populate dropdown with distinct event names */}
-            {distinctEventNames.map((eventName) => (
-                <option key={eventName} value={eventName}>
-                {eventName}
-                </option>
-            ))}
-            </select>
-        </div>
-        <MDBTable className="transaction-table" striped hover responsive>
-            <MDBTableHead>
-            <tr>
-                <th>Event Name</th>
-                <th>Song Name</th>
-                <th>Payment ID</th>
-                <th>Total Amount</th>
-            </tr>
-            </MDBTableHead>
-            <MDBTableBody>
-            {filteredTransactionHistory.map((transaction, index) => (
-                <tr key={index}>
-                <td>{transaction.eventName}</td>
-                <td>{transaction.songName}</td>
-                <td>{transaction.paymentId}</td>
-                <td>{transaction.totalAmount}</td>
-                </tr>
-            ))}
-            </MDBTableBody>
-        </MDBTable>
+            <h2>Transaction History</h2>
+            <div className="filter-container">
+                <label htmlFor="eventFilter">Filter by Event:</label>
+                <select
+                    id="eventFilter"
+                    className="event-filter-select"
+                    value={selectedEvent}
+                    onChange={handleEventFilterChange}
+                >
+                    <option value="All">All Events</option>
+                    {/* Populate dropdown with distinct event names */}
+                    {distinctEventNames.map((eventName) => (
+                        <option key={eventName} value={eventName}>
+                            {eventName}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <span style={{ color: 'green' }}>Total Amount: {totalAmountSum}</span>
+            </div>
+            <MDBTable className="transaction-table" striped hover responsive>
+                <MDBTableHead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Song Name</th>
+                        <th>Payment ID</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </MDBTableHead>
+                <MDBTableBody>
+                    {filteredTransactionHistory.map((transaction, index) => (
+                        <tr key={index}>
+                            <td>{transaction.eventName}</td>
+                            <td>{transaction.songName}</td>
+                            <td>{transaction.paymentId}</td>
+                            <td>{transaction.totalAmount}</td>
+                        </tr>
+                    ))}
+                </MDBTableBody>
+            </MDBTable>
         </div>
     );
 }

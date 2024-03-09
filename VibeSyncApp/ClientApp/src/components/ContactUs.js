@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './ContactUs.css';
 
 function ContactUs() {
+    useEffect(() => {
+        document.documentElement.scrollTop = 0; // For modern browsers
+        document.body.scrollTop = 0; // For older browsers
+    }, [])
     return (
         <div className="contact-us-container">
             <h1>Contact Us</h1>

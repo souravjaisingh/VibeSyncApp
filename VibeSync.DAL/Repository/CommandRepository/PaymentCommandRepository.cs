@@ -59,7 +59,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     BidAmount = amount,
                     UserId = userId,
                     OrderId = orderId,
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = GetISTDateTime(),
                     CreatedBy = userId.ToString(),
                     PaymentSource = userId.ToString(),
                     PaymentStatus = Constants.PaymentOrderIdCreated
@@ -86,7 +86,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     BidAmount = request.TotalAmount,
                     UserId = request.UserId,
                     OrderId = Constants.PaidZeroUsingPromocode,
-                    CreatedOn = DateTime.Now,
+                    CreatedOn = GetISTDateTime(),
                     CreatedBy = request.UserId.ToString(),
                     PaymentSource = request.UserId.ToString(),
                     PaymentStatus = VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString(),
@@ -109,7 +109,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     paymentRecord.TotalAmount = request.TotalAmount;
                     paymentRecord.SongHistoryId = songHistoryId;
                     paymentRecord.ModifiedBy = request.UserId.ToString();
-                    paymentRecord.ModifiedOn = DateTime.Now;
+                    paymentRecord.ModifiedOn = GetISTDateTime();
 
                     _logger.LogInformation("PersistPaymentData - paymentRecord :" + JsonConvert.SerializeObject(paymentRecord));
                     _context.Payments.Update(paymentRecord);
@@ -140,6 +140,16 @@ namespace VibeSync.DAL.Repository.CommandRepository
             Refund refund = client.Payment.Fetch(paymentId).Refund(refundRequest);
             _logger.LogInformation("RefundPayment complete - response :" + JsonConvert.SerializeObject(refund));
             return await Task.FromResult(refund);
+        }
+        public static DateTime GetISTDateTime()
+        {
+            // Get the time zone information for India Standard Time (IST)
+            TimeZoneInfo istTimeZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+
+            // Convert the current UTC time to IST
+            DateTime istTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, istTimeZone);
+
+            return istTime;
         }
     }
 }

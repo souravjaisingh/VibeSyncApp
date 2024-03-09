@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './AboutUs.css';
 function AboutUs() {
+    useEffect(() => {
+        document.documentElement.scrollTop = 0; // For modern browsers
+        document.body.scrollTop = 0; // For older browsers
+    }, [])
     return (
         <div className="about-us-container">
             <h1>About Us</h1>

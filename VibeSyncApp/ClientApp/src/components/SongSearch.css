@@ -140,8 +140,19 @@
 .container-for-table {
     overflow: auto; /* Enable scrolling */
     max-height: 400px; /* Adjust the max height as needed */
-    margin-top: -50px;;
+    /*  margin-top: -50px; Default margin top */
+
+    /* Adjust margin top for mobile screens */
+    @media (max-width: 576px) {
+        margin-top: -70px;
+    }
+
+    /* Adjust margin top for medium screens */
+    @media (min-width: 576px) and (max-width: 992px) {
+        margin-top: -50px;
+    }
 }
+
 .collapsible-table{
     background-color: #b6cdd9;
 }

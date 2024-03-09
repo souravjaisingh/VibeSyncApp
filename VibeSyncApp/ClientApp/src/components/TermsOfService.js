@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './TermsOfService.css';
 import { Link } from 'react-router-dom';
 
 function TermsOfService() {
+    useEffect(() => {
+        document.documentElement.scrollTop = 0; // For modern browsers
+        document.body.scrollTop = 0; // For older browsers
+    }, [])
     return (
         <div className="terms-of-service-container">
             <h1>Terms of Service</h1>

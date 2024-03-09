@@ -1,6 +1,10 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
 import './PaymentPolicy.css';
 function PaymentPolicy() {
+    useEffect(() => {
+        document.documentElement.scrollTop = 0; // For modern browsers
+        document.body.scrollTop = 0; // For older browsers
+    }, [])
     return (
         <div className="payment-policy-container">
             <h1>Payments & Refund Policy</h1>

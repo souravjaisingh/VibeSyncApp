@@ -79,26 +79,46 @@ namespace VibeSync.DAL.Repository.CommandRepository
         public async Task<long> PersistPaymentData(PersistSongHistoryPaymentRequest request, long songHistoryId)
         {
             _logger.LogInformation("PersistPaymentData - request :" + JsonConvert.SerializeObject(request));
-            var paymentRecord = _context.Payments.FirstOrDefault(x => x.OrderId == request.OrderId);
-
-            if (paymentRecord?.OrderId != null)
+            if(request.OrderId == Constants.PaidZeroUsingPromocode)
             {
-                paymentRecord.PaymentStatus = VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString();
-                paymentRecord.PaymentId = request.PaymentId;
-                paymentRecord.TotalAmount = request.TotalAmount;
-                paymentRecord.SongHistoryId = songHistoryId;
-                paymentRecord.ModifiedBy = request.UserId.ToString();
-                paymentRecord.ModifiedOn = DateTime.Now;
-
-                _logger.LogInformation("PersistPaymentData - paymentRecord :" + JsonConvert.SerializeObject(paymentRecord));
-                _context.Payments.Update(paymentRecord);
-
-                _context.SaveChanges();
+                var payment = new Payment()
+                {
+                    BidAmount = request.TotalAmount,
+                    UserId = request.UserId,
+                    OrderId = Constants.PaidZeroUsingPromocode,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = request.UserId.ToString(),
+                    PaymentSource = request.UserId.ToString(),
+                    PaymentStatus = VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString(),
+                    PaymentId = request.PaymentId,
+                    SongHistoryId = songHistoryId,
+                };
+                _logger.LogInformation("PersistPayment - "+ Constants.PaidZeroUsingPromocode +" :" + JsonConvert.SerializeObject(payment));
+                _context.Payments.Add(payment);
+                await _context.SaveChangesAsync();
+                return payment.Id;
             }
+            else
+            {
+                var paymentRecord = _context.Payments.FirstOrDefault(x => x.OrderId == request.OrderId);
 
-            // Note: We don't call SaveChanges here; we leave it to the caller of this method.
+                if (paymentRecord?.OrderId != null)
+                {
+                    paymentRecord.PaymentStatus = VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString();
+                    paymentRecord.PaymentId = request.PaymentId;
+                    paymentRecord.TotalAmount = request.TotalAmount;
+                    paymentRecord.SongHistoryId = songHistoryId;
+                    paymentRecord.ModifiedBy = request.UserId.ToString();
+                    paymentRecord.ModifiedOn = DateTime.Now;
 
-            return await Task.FromResult(paymentRecord?.Id ?? 0);
+                    _logger.LogInformation("PersistPaymentData - paymentRecord :" + JsonConvert.SerializeObject(paymentRecord));
+                    _context.Payments.Update(paymentRecord);
+
+                    _context.SaveChanges();
+                }
+                return await Task.FromResult(paymentRecord?.Id ?? 0);
+            }
+            
         }
 
         public async Task<Refund> RefundPayment(string paymentId, decimal amount, long userId)

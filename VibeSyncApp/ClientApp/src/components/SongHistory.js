@@ -55,6 +55,14 @@ export default function SongHistory() {
     return (
         <>
             <div className="song-history-container">
+            <ul style={{ listStyleType: 'circle' }}>
+                <li>
+                    <em className="text-muted small info">Should the DJ decline your request, a refund will be issued to your original payment method.</em>
+                </li>
+                <li>
+                    <em className="text-muted small info">If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</em>
+                </li>
+            </ul>
                 {isLoading ? (
                     <p>Loading...</p>
                 ) : userHistory.length === 0 ? (
@@ -86,14 +94,14 @@ export default function SongHistory() {
                                             <p className="artist--name">{result.artistName}</p>
                                         </td>
                                         <td>{result.albumName}</td>
-                                        <td>INR {result.totalAmount}</td>
+                                        <td>INR {result.totalAmount || 0}</td>
                                     </tr>
                                     <tr>
                                         <td >
                                             <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Status: <b>{result.songStatus}</b></p>
                                         </td>
                                         <td colSpan="5">
-                                            <DateTimeDisplay datetimeString={result.paymentDateTime} />
+                                        <DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} />
                                             <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Txn id: {result.paymentId}</p>
                                         </td>
                                     </tr>

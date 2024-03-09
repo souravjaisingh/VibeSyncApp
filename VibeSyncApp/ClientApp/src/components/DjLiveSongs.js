@@ -7,7 +7,7 @@ import { GetSongsByEventId, ModifySongRequest } from './services/SongsService';
 import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
 import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
-import { Live, LiveButNotAcceptingRequests } from './Constants';
+import { Live, LiveButNotAcceptingRequests, PaidZeroUsingPromocode } from './Constants';
 import { useLoadingContext } from './LoadingProvider';
 import { RefundPayment } from './services/PaymentService';
 
@@ -144,14 +144,24 @@ export default function DjLiveSongs() {
                 userId: localStorage.getItem('userId')
             };
             var res = await ModifySongRequest(songHistoryModel);
-            const refundObj = {
-                PaymentId : record.paymentId,
-                Amount : record.totalAmount,
-                UserId : record.userId
+            if(record.paymentId !== PaidZeroUsingPromocode){
+                const refundObj = {
+                    PaymentId : record.paymentId,
+                    Amount : record.totalAmount,
+                    UserId : record.userId
+                }
+                var refund = await RefundPayment(refundObj);
+                const songHistoryMdl = {
+                    id: record.id,
+                    EventId: record.eventId,
+                    SongStatus: "Refunded",
+                    userId: localStorage.getItem('userId')
+                };
+                var refRes = await ModifySongRequest(songHistoryMdl);
+                console.log(res);
+                console.log(refund);
+                console.log(refRes);
             }
-            var refund = await RefundPayment(refundObj);
-            console.log(res);
-            console.log(refund);
             // await rejectRequest(requestId);
             // Remove the rejected request from the userHistory array
             setUserHistory((prevHistory) =>
@@ -264,7 +274,7 @@ export default function DjLiveSongs() {
                                             style={{ width: '45px', height: '45px' }}
                                             className='rounded-circle'
                                         />
-                                        <p className='text-muted mb-0 money'>&#8377;{result.totalAmount}</p>
+                                        <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>
                                     </td>
                                     <td>
                                         <p className='fw-bold mb-1'>{result.songName}</p>
@@ -292,12 +302,20 @@ export default function DjLiveSongs() {
 
                                     {result && result.songStatus === 'Accepted' && (
                                         <td>
+                                            <div className='button-container'>
+                                            <button
+                                                    onClick={() => handleRejectRequest(result)}
+                                                    className='btn btn-danger action-button'
+                                                >
+                                                    ✗
+                                                </button>
                                             <button
                                                 onClick={() => handleMarkAsPlayed(result)}
                                                 className='btn btn-primary-mark-as-played'
                                             >
                                                 Mark as Played
                                             </button>
+                                            </div>
                                         </td>
                                     )}
                                 </tr>

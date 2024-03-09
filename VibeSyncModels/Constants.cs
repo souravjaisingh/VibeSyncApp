@@ -12,6 +12,8 @@
         public const string PaymentOrderIdCreated = "Payment-OrderId created";
         public const string Impersonating = "User is impersonating another role which is not allowed";
         public const string SongStatusPending = "Pending";
+        public const string SongStatusRefunded = "Refunded";
         public const string Logout_Successfull = "Logout successfull";
+        public const string PaidZeroUsingPromocode = "PaidZeroUsingPromo";
     }
 }

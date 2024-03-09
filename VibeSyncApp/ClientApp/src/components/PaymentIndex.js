@@ -6,6 +6,7 @@ import { GetPaymentInitiationDetails, UpsertPayment } from './services/PaymentSe
 import { MyContext } from '../App';
 import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
+import * as Constants from '../components/Constants';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -38,91 +39,100 @@ function PaymentIndex() {
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
         document.body.appendChild(script);
-    
+
         return new Promise((resolve, reject) => {
             script.onload = resolve;
             script.onerror = reject;
         });
     };
-    
+
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
         // Load the Razorpay script
         try {
-            await loadRazorpayScript();
+            if (isPromoApplied == true && (amount - 50) == 0) {
+                console.log('Amount after promocode: '+amount - 50);
+                upsertPaymentDetails(Constants.PaidZeroUsingPromocode, Constants.PaidZeroUsingPromocode);
+            }
+            else {
+                await loadRazorpayScript();
+            }
         } catch (error) {
             setError(true);
             setErrorMessage('Failed to load Razorpay script');
             return;
         }
-    
-        // Once the script is loaded, proceed with payment initiation
-        const parsedAmount = parseFloat(isPromoApplied ? (amount - 50) : amount);
-        if (isNaN(parsedAmount)) {
-            setError(true);
-            setErrorMessage('Invalid amount');
-            return;
-        }
-    
-        const obj = {
-            amount: parsedAmount * 100,
-            userId: localStorage.getItem('userId'),
-        };
-    
-        try {
-            const res = await GetPaymentInitiationDetails(obj);
-            setPaymentInitiationData(res);
-    
-            const options = {
-                key: RazorPayAppId,
+        if ((isPromoApplied == true && (amount - 50) > 0)
+            || (isPromoApplied == false && amount > 0)) {
+            // Once the script is loaded, proceed with payment initiation
+            const parsedAmount = parseFloat(isPromoApplied ? (amount - 50) : amount);
+            if (isNaN(parsedAmount)) {
+                setError(true);
+                setErrorMessage('Invalid amount');
+                return;
+            }
+
+            const obj = {
                 amount: parsedAmount * 100,
-                currency: 'INR',
-                name: 'VibeSync',
-                description: 'Test Transaction',
-                image: VBLogo,
-                order_id: res.orderId,
-                handler: function (response) {
-                    setPaymentStatus({
-                        paymentId: response.razorpay_payment_id,
-                        orderId: response.razorpay_order_id,
-                        signature: response.razorpay_signature,
-                    });
-                    setShowSuccessMessage(true);
-                    upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
-                },
-                prefill: {
-                    name: res.userName,
-                    email: res.email,
-                },
-                notes: {
-                    address: 'Razorpay Corporate Office',
-                },
-                theme: {
-                    color: '#3399cc',
-                },
+                userId: localStorage.getItem('userId'),
             };
-    
-            const rzp = new window.Razorpay(options);
-            rzp.on('payment.failed', function (response) {
-                setPaymentStatus({
-                    error: {
-                        code: response.error.code,
-                        description: response.error.description,
-                        source: response.error.source,
-                        step: response.error.step,
-                        reason: response.error.reason,
-                        orderId: response.error.metadata.order_id,
-                        paymentId: response.error.metadata.payment_id,
+
+            try {
+                const res = await GetPaymentInitiationDetails(obj);
+                setPaymentInitiationData(res);
+
+                const options = {
+                    key: RazorPayAppId,
+                    amount: parsedAmount * 100,
+                    currency: 'INR',
+                    name: 'VibeSync',
+                    description: 'Test Transaction',
+                    image: VBLogo,
+                    order_id: res.orderId,
+                    handler: function (response) {
+                        setPaymentStatus({
+                            paymentId: response.razorpay_payment_id,
+                            orderId: response.razorpay_order_id,
+                            signature: response.razorpay_signature,
+                        });
+                        setShowSuccessMessage(true);
+                        upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
                     },
+                    prefill: {
+                        name: res.userName,
+                        email: res.email,
+                    },
+                    notes: {
+                        address: 'Razorpay Corporate Office',
+                    },
+                    theme: {
+                        color: '#3399cc',
+                    },
+                };
+
+                const rzp = new window.Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    setPaymentStatus({
+                        error: {
+                            code: response.error.code,
+                            description: response.error.description,
+                            source: response.error.source,
+                            step: response.error.step,
+                            reason: response.error.reason,
+                            orderId: response.error.metadata.order_id,
+                            paymentId: response.error.metadata.payment_id,
+                        },
+                    });
                 });
-            });
-    
-            rzp.open();
-        } catch (error) {
-            setError(true);
-            setErrorMessage(error.message);
-            console.error(error);
+
+                rzp.open();
+            } catch (error) {
+                setError(true);
+                setErrorMessage(error.message);
+                console.error(error);
+            }
         }
+
     };
 
     async function upsertPaymentDetails(orderId, payId) {

@@ -15,5 +15,8 @@
         public const string SongStatusRefunded = "Refunded";
         public const string Logout_Successfull = "Logout successfull";
         public const string PaidZeroUsingPromocode = "PaidZeroUsingPromo";
+        public const string SongStatusAccepted = "Accepted";
+        public const string SongStatusRejected = "Rejected";
+        public const string SongStatusPlayed = "Played";
     }
 }

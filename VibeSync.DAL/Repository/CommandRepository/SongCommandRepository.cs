@@ -33,7 +33,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var songHisObj = _mapper.Map<SongHistory>(request);
             songHisObj.CreatedBy = request.UserId.ToString();
             songHisObj.SongStatus = Constants.SongStatusPending;
-            songHisObj.CreatedOn = DateTime.Now;
+            DateTime istNow = DateTime.UtcNow + TimeSpan.FromHours(5.5);
+            songHisObj.CreatedOn = istNow;
             try
             {
                 _context.SongHistories.Add(songHisObj);

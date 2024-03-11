@@ -76,5 +76,20 @@ namespace VibeSyncApp.Controllers
 
             return result;
         }
+
+
+        [HttpGet]
+        public async Task<bool> IsPromocodeApplicable([FromQuery] PromocodeApplicableForUserQueryModel request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(PaymentController)}, API: {typeof(PaymentController).GetMethod("IsPromocodeApplicable")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(PaymentController).GetMethod("IsPromocodeApplicable")}'s response: {JsonConvert.SerializeObject(result)}");
+
+            return result;
+        }
     }
 }

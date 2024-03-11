@@ -16,7 +16,8 @@ namespace VibeSync.DAL.Handler
     public class PaymentHandler : IRequestHandler<GetPaymentOrderId, GetPaymentInitiationDetails>
         , IRequestHandler<PersistSongHistoryPaymentRequest, bool>,
         IRequestHandler<GetDjPaymentsRequestModel, List<PaymentResponseModel>>
-        ,IRequestHandler<RefundRequest, Refund>
+        ,IRequestHandler<RefundRequest, Refund>,
+        IRequestHandler<PromocodeApplicableForUserQueryModel, bool>
     {
         private readonly IPaymentQueryRepository _paymentqueryRepository;
         private readonly IPaymentCommandRepository _paymentCommandRepository;
@@ -79,6 +80,11 @@ namespace VibeSync.DAL.Handler
         public async Task<Refund> Handle(RefundRequest request, CancellationToken cancellationToken)
         {
             return await _paymentCommandRepository.RefundPayment(request.PaymentId, request.Amount, request.UserId);
+        }
+
+        public async Task<bool> Handle(PromocodeApplicableForUserQueryModel request, CancellationToken cancellationToken)
+        {
+            return await _paymentqueryRepository.PromocodeApplicableForUser(request);
         }
     }
 

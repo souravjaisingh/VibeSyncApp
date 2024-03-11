@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Razorpay.Api;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Repository.CommandRepository;
+using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository
@@ -17,12 +19,18 @@ namespace VibeSync.DAL.Repository.QueryRepository
         private readonly IUserQueryRepository _user;
         private readonly IPaymentCommandRepository _paymentCommand;
         private readonly VibeSyncContext _context;
+
+        /// <summary>
+        /// The HTTP context accessor
+        /// </summary>
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public PaymentQueryRepository(IPaymentCommandRepository paymentCommand
-            , IUserQueryRepository user, IDBContextFactory context)
+            , IUserQueryRepository user, IDBContextFactory context, IHttpContextAccessor httpContextAccessor)
         {
             _paymentCommand = paymentCommand;
             _user = user;
             _context = context.GetDBContext();
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public Task<List<PaymentResponseModel>> GetDjPayments(GetDjPaymentsRequestModel request)
@@ -123,6 +131,26 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 PhoneNumber = user.PhoneNumber
             };
             return res;
+        }
+
+        public Task<bool> PromocodeApplicableForUser(PromocodeApplicableForUserQueryModel request)
+        {
+            var userId = loggedInUserId();
+            var songHistory  = _context.SongHistories.Where(x => x.UserId == userId && (x.SongStatus == Constants.SongStatusAccepted || x.SongStatus == Constants.SongStatusPlayed || x.SongStatus == Constants.SongStatusPending)).FirstOrDefault();
+            if (songHistory != null && songHistory != default)
+            {
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
+        }
+
+        private int loggedInUserId()
+        {
+            int userId = 0;
+            if (int.TryParse(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value, out userId))
+                return userId;
+            else
+                throw new CustomException("Logged in User Id should not be null");
         }
     }
 }

@@ -141,14 +141,12 @@ namespace VibeSync.DAL.Repository.CommandRepository
             _logger.LogInformation("RefundPayment complete - response :" + JsonConvert.SerializeObject(refund));
             return await Task.FromResult(refund);
         }
+
         public static DateTime GetISTDateTime()
         {
-            // Get the time zone information for India Standard Time (IST)
-            TimeZoneInfo istTimeZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-
-            // Convert the current UTC time to IST
-            DateTime istTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, istTimeZone);
-
+            DateTime utcNow = DateTime.UtcNow;
+            TimeSpan istOffset = TimeSpan.FromHours(5.5);
+            DateTime istTime = utcNow + istOffset;
             return istTime;
         }
     }

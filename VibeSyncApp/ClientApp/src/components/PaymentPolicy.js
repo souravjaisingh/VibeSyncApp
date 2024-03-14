@@ -42,7 +42,7 @@ function PaymentPolicy() {
             <h6>2.4 Refund Processing</h6>
             <ul>
                 <li>Refunds, if applicable, will be processed to the original payment method used for the transaction.</li>
-                <li>The processing time for refunds may vary and is subject to the policies of the payment processor.</li>
+                <li>The processing time for refunds may vary between 5 to 7 business days and is subject to the policies of the payment processor.</li>
             </ul>
 
             <h4>3. User Responsibilities</h4>

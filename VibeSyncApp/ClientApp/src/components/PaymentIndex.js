@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
-import { GetPaymentInitiationDetails, UpsertPayment } from './services/PaymentService';
+import { GetPaymentInitiationDetails, UpsertPayment, isPromoCodeAvailable } from './services/PaymentService';
 import { MyContext } from '../App';
 import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
@@ -26,6 +26,7 @@ function PaymentIndex() {
     const rowDataString = searchParams.get('data');
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isPromoApplied, setIsPromoApplied] = useState(false);
+    const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
 
     const handleBack = () => {
         navigate(-1); // Go back to the previous page when back button is clicked
@@ -33,6 +34,19 @@ function PaymentIndex() {
     const handlePromoApply = (applied) => {
         setIsPromoApplied(applied);
     };
+    const checkPromoCodeAvailability = async () => {
+        try {
+            var res = await isPromoCodeAvailable();
+            console.log(res);
+            setIsPromoAvailable(res); // For demonstration, assuming promo code is available
+        } catch (error) {
+            console.error('Error checking promo code availability:', error);
+        }
+    };
+    useEffect(() => {
+        // Check promo code availability when component mounts
+        checkPromoCodeAvailability();
+    }, []);
     console.log(rowData);
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
@@ -45,92 +59,101 @@ function PaymentIndex() {
             script.onerror = reject;
         });
     };
+    useEffect(() => {
+        const loadRazorpayScript = async () => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            document.body.appendChild(script);
+    
+            return new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+            });
+        };
+    
+        // Load Razorpay script when component mounts
+        loadRazorpayScript()
+            .then(() => {
+                console.log('Razorpay script loaded');
+            })
+            .catch((error) => {
+                setError(true);
+                setErrorMessage('Error loading Razorpay script');
+                console.error('Error loading Razorpay script:', error);
+            });
+    }, []);
+    
 
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
         // Load the Razorpay script
-        try {
-            if (isPromoApplied == true && (amount / 2) == 0) {
-                console.log('Amount after promocode: '+amount / 2);
-                upsertPaymentDetails(Constants.PaidZeroUsingPromocode, Constants.PaidZeroUsingPromocode);
-            }
-            else {
-                await loadRazorpayScript();
-            }
-        } catch (error) {
+        // Once the script is loaded, proceed with payment initiation
+        const parsedAmount = parseFloat(isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
+        if (isNaN(parsedAmount)) {
             setError(true);
-            setErrorMessage('Failed to load Razorpay script');
+            setErrorMessage('Invalid amount');
             return;
         }
-        if ((isPromoApplied == true && (amount / 2) > 0)
-            || (isPromoApplied == false && amount > 0)) {
-            // Once the script is loaded, proceed with payment initiation
-            const parsedAmount = parseFloat(isPromoApplied ? (amount / 2) : amount);
-            if (isNaN(parsedAmount)) {
-                setError(true);
-                setErrorMessage('Invalid amount');
-                return;
-            }
 
-            const obj = {
+        const obj = {
+            amount: parsedAmount * 100,
+            userId: localStorage.getItem('userId'),
+        };
+
+        try {
+            const res = await GetPaymentInitiationDetails(obj);
+            setPaymentInitiationData(res);
+
+            const options = {
+                key: RazorPayAppId,
                 amount: parsedAmount * 100,
-                userId: localStorage.getItem('userId'),
+                currency: 'INR',
+                name: 'VibeSync',
+                description: 'Test Transaction',
+                image: VBLogo,
+                order_id: res.orderId,
+                handler: function (response) {
+                    setPaymentStatus({
+                        paymentId: response.razorpay_payment_id,
+                        orderId: response.razorpay_order_id,
+                        signature: response.razorpay_signature,
+                    });
+                    setShowSuccessMessage(true);
+                    upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
+                },
+                prefill: {
+                    name: res.userName,
+                    email: res.email,
+                },
+                notes: {
+                    address: 'Razorpay Corporate Office',
+                },
+                theme: {
+                    color: '#3399cc',
+                },
             };
 
-            try {
-                const res = await GetPaymentInitiationDetails(obj);
-                setPaymentInitiationData(res);
-
-                const options = {
-                    key: RazorPayAppId,
-                    amount: parsedAmount * 100,
-                    currency: 'INR',
-                    name: 'VibeSync',
-                    description: 'Test Transaction',
-                    image: VBLogo,
-                    order_id: res.orderId,
-                    handler: function (response) {
-                        setPaymentStatus({
-                            paymentId: response.razorpay_payment_id,
-                            orderId: response.razorpay_order_id,
-                            signature: response.razorpay_signature,
-                        });
-                        setShowSuccessMessage(true);
-                        upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response) {
+                setPaymentStatus({
+                    error: {
+                        code: response.error.code,
+                        description: response.error.description,
+                        source: response.error.source,
+                        step: response.error.step,
+                        reason: response.error.reason,
+                        orderId: response.error.metadata.order_id,
+                        paymentId: response.error.metadata.payment_id,
                     },
-                    prefill: {
-                        name: res.userName,
-                        email: res.email,
-                    },
-                    notes: {
-                        address: 'Razorpay Corporate Office',
-                    },
-                    theme: {
-                        color: '#3399cc',
-                    },
-                };
-
-                const rzp = new window.Razorpay(options);
-                rzp.on('payment.failed', function (response) {
-                    setPaymentStatus({
-                        error: {
-                            code: response.error.code,
-                            description: response.error.description,
-                            source: response.error.source,
-                            step: response.error.step,
-                            reason: response.error.reason,
-                            orderId: response.error.metadata.order_id,
-                            paymentId: response.error.metadata.payment_id,
-                        },
-                    });
                 });
+            });
 
-                rzp.open();
-            } catch (error) {
-                setError(true);
-                setErrorMessage(error.message);
-                console.error(error);
-            }
+            rzp.open();
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error(error);
         }
 
     };
@@ -140,7 +163,7 @@ function PaymentIndex() {
             const obj = {
                 UserId: localStorage.getItem('userId'),
                 OrderId: orderId,
-                TotalAmount: isPromoApplied ? amount / 2 : amount,
+                TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
                 PaymentId: payId,
                 EventId: rowData.eventId,
                 DjId: rowData.djId,
@@ -164,7 +187,7 @@ function PaymentIndex() {
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        rowData['payment'] = { amount: isPromoApplied ? amount / 2 : amount };
+        rowData['payment'] = { amount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount };
         // await paymentHandler();
         // const rowDataString = encodeURIComponent(JSON.stringify(rowData));
         // // Navigate to the detail view with the serialized rowData as a parameter
@@ -208,18 +231,27 @@ function PaymentIndex() {
                 <br></br>
                 <Promocode onApply={handlePromoApply} />
                 <br></br>
-
+                {/* Conditionally render promo code message and disable Apply button */}
+                {(!isPromoAvailable && isPromoApplied) && (
+                    <div className="promo-code-message" style={{color: 'red'}}>
+                        Promocode is applicable once per user.
+                    </div>
+                )}
                 <div>
                     <button
-                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live' || amount < rowData.minimumBid) ? 'disabledButton' : ''}`}
+                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live' 
+                        || amount < rowData.minimumBid
+                        || (!isPromoAvailable && isPromoApplied)) ? 'disabledButton' : ''}`}
                         id="rzp-button1"
                         onClick={handlePayButtonClick}
-                        disabled={rowData.eventStatus !== 'Live' || amount < rowData.minimumBid}
+                        disabled={rowData.eventStatus !== 'Live' 
+                            || amount < rowData.minimumBid
+                            || (!isPromoAvailable && isPromoApplied)}
                     >
                         Pay
                     </button>
-                    {isPromoApplied && (
-                        <span>Yayy! You will only pay {amount / 2}</span>
+                    {isPromoApplied && isPromoAvailable && (
+                        <span>Yayy! You will only pay {Math.max(amount / 2, amount - 250)}</span>
                     )}
                     {rowData.eventStatus !== 'Live' && (
                         <p style={{ textAlign: 'center' }}><i>DJ is not accepting requests right now.</i></p>

@@ -18,3 +18,7 @@ export async function GetTransactionHistory(id) {
 export async function RefundPayment(data){
     return handleAPIRequest('Payment/InitiateRefund', 'POST', data);
 }
+
+export async function isPromoCodeAvailable(){
+    return handleAPIRequest('Payment/IsPromocodeApplicable', 'GET');
+}

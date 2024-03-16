@@ -11,7 +11,7 @@ function Promocode({ onApply }) {
     };
 
     const handleApply = () => {
-        if (promoCode.toLowerCase() === 'freekagaana') {
+        if (promoCode.toLowerCase() === 'vibe50') {
             setIsPromoValid(true);
             setIsApplied(true);
             onApply(true);

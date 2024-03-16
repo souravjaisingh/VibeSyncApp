@@ -237,7 +237,7 @@ export default function DjLiveSongs() {
     return (
         <div className='song-history-container' style={{ maxHeight: '500px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <a className="edit-profile-link" onClick={handleEditProfileClick}>Edit Profile</a>
+                <a className="edit-profile-link" onClick={handleEditProfileClick}>Edit Event</a>
                 <div className="toggle-container">
                     <label htmlFor="liveToggle">Stop taking requests</label>
                     <input

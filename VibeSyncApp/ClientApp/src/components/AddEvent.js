@@ -23,47 +23,15 @@ const AddressTypeahead = () => {
     const [eventEndTime, setEndEventTime] = useState('');
     const [minimumBid, setMinimumBid] = useState('');
     const [eventDesc, SetEventDesc] = useState('');
-    const [isLive, setIsLive] = useState(false);
     const { setLoading } = useLoadingContext();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const rowDataString = searchParams.get('data');
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
-    // const handleAddressChange = async (event) => {
-    //     const enteredAddress = event.target.value;
-    //     setAddress(enteredAddress);
-
-    //     try {
-    //     const response = await axios.get(
-    //         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-    //         enteredAddress
-    //         )}&key=YOUR_API_KEY`
-    //     );
-
-    //     if (response.data.status === 'OK') {
-    //         const location = response.data.results[0].geometry.location;
-    //         setLatitude(location.lat);
-    //         setLongitude(location.lng);
-    //         setSelectedSuggestion(null); // Clear selected suggestion
-    //         setSuggestions([]); // Clear suggestions
-    //     } else {
-    //         // Handle error, e.g., display a message to the user
-    //         console.error('Geocoding error:', response.data.status);
-    //         setLatitude('');
-    //         setLongitude('');
-    //         setSelectedSuggestion(null); // Clear selected suggestion
-    //         setSuggestions([]); // Clear suggestions
-    //     }
-    //     } catch (error) {
-    //     // Handle network or other errors
-    //     console.error('Error fetching geocoding data:', error);
-    //     setLatitude('');
-    //     setLongitude('');
-    //     setSelectedSuggestion(null); // Clear selected suggestion
-    //     setSuggestions([]); // Clear suggestions
-    //     }
-    // };
+    const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA'))? true:false);
+    console.log(rowData);
+    
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
     const twoHoursAfterCurrentTime = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
 
@@ -148,32 +116,7 @@ const AddressTypeahead = () => {
         }
     }
 
-    // Fetch suggestions as the user types
     useEffect(() => {
-        // if (address.length > 2) {
-        // axios
-        //     .get(
-        //     `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
-        //         address
-        //     )}&key=YOUR_API_KEY`
-        //     )
-        //     .then((response) => {
-        //     if (response.data.status === 'OK') {
-        //         setSuggestions(response.data.predictions.map((prediction) => prediction.description));
-        //     } else {
-        //         // Handle error, e.g., display a message to the user
-        //         console.error('Autocomplete error:', response.data.status);
-        //         setSuggestions([]);
-        //     }
-        //     })
-        //     .catch((error) => {
-        //     // Handle network or other errors
-        //     console.error('Error fetching autocomplete data:', error);
-        //     setSuggestions([]);
-        //     });
-        // } else {
-        // setSuggestions([]);
-        // }
         if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
@@ -181,24 +124,23 @@ const AddressTypeahead = () => {
             setStartEventTime(rowData.eventStartDateTime)
             SetEventDesc(rowData.eventDescription)
             setMinimumBid(rowData.minimumBid)
+        } else {
+            // Reset input fields when rowData becomes null
+            setVenueName('');
+            setTheme('');
+            setEndEventTime('');
+            setStartEventTime('');
+            SetEventDesc('');
+            setMinimumBid('');
         }
     }, []);
+    
+    
 
     return (
         <div className="address-typeahead">
             <form className='event-form'>
                 <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
-                {/* <div className="input-group">
-            <label htmlFor="searchInput">Enter the event location</label>
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Event location"
-                className='event-input-fields'
-                value={address}
-                onChange={handleAddressChange}
-            />
-        </div> */}
                 {suggestions.length > 0 && (
                     <ul className="suggestions-list">
                         {suggestions.map((suggestion, index) => (
@@ -212,7 +154,6 @@ const AddressTypeahead = () => {
                         ))}
                     </ul>
                 )}
-                {/* {showLiveToggle && ( */}
                     <div className="toggle-container">
                         <label htmlFor="liveToggle">LIVE</label>
                         <div className={`toggle-slider ${isLive ? 'active' : ''}`} onClick={handleLiveToggle}>

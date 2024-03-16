@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
 import { getUserRequestHistoryData } from './services/UserService';
-import { Link, useLoaderData, useLocation } from 'react-router-dom';
+import { Link, useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 import { GetSongsByEventId, ModifySongRequest } from './services/SongsService';
 import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
@@ -17,6 +17,7 @@ export default function DjLiveSongs() {
     const [userHistory, setUserHistory] = useState([]);
     const [acceptedHistory, setAcceptedHistory] = useState([]);
     const location = useLocation();
+    const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
     const rowDataString = searchParams.get('data');
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -229,30 +230,32 @@ export default function DjLiveSongs() {
         console.log(stopIncomingRequests);
         stopRequestsAPI();
     };
-
+    function handleEditProfileClick() {
+        navigate(`/eventdetails?data=${rowDataString}`); // Navigate to the specified URL
+    }
 
     return (
-        <div className='song-history-container' style={{ maxHeight: '500px' }}>
-            <div className="toggle-container">
-                <label htmlFor="liveToggle">Stop taking requests</label>
-                <input
-                    type="checkbox"
-                    id="liveToggle"
-                    checked={stopIncomingRequests}
-                    onChange={handleToggleClick}
-                    style={{ display: 'none' }} // hide the actual checkbox
-                />
-                <div
-                    className={`toggle-slider ${stopIncomingRequests ? 'active' : ''}`}
-                    onClick={handleToggleClick}
-                >
-                    <div className={`slider-thumb ${stopIncomingRequests ? 'active' : ''}`} />
+        <div className='song-history-container' style={{ maxHeight: '500px', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <a className="edit-profile-link" onClick={handleEditProfileClick}>Edit Profile</a>
+                <div className="toggle-container">
+                    <label htmlFor="liveToggle">Stop taking requests</label>
+                    <input
+                        type="checkbox"
+                        id="liveToggle"
+                        checked={stopIncomingRequests}
+                        onChange={handleToggleClick}
+                        style={{ display: 'none' }} // hide the actual checkbox
+                    />
+                    <div
+                        className={`toggle-slider ${stopIncomingRequests ? 'active' : ''}`}
+                        onClick={handleToggleClick}
+                    >
+                        <div className={`slider-thumb ${stopIncomingRequests ? 'active' : ''}`} />
+                    </div>
                 </div>
             </div>
-
-
-
-
+    
             {userHistory.length > 0 ? ( // Check if userHistory is not empty
                 <div className='song-history-table'>
                     <MDBTable className='history-table' align='middle' responsive hover>
@@ -299,22 +302,22 @@ export default function DjLiveSongs() {
                                             </div>
                                         </td>
                                     )}
-
+    
                                     {result && result.songStatus === 'Accepted' && (
                                         <td>
                                             <div className='button-container'>
-                                            <button
+                                                <button
                                                     onClick={() => handleRejectRequest(result)}
                                                     className='btn btn-danger action-button'
                                                 >
                                                     ✗
                                                 </button>
-                                            <button
-                                                onClick={() => handleMarkAsPlayed(result)}
-                                                className='btn btn-primary-mark-as-played'
-                                            >
-                                                Mark as Played
-                                            </button>
+                                                <button
+                                                    onClick={() => handleMarkAsPlayed(result)}
+                                                    className='btn btn-primary-mark-as-played'
+                                                >
+                                                    Mark as Played
+                                                </button>
                                             </div>
                                         </td>
                                     )}
@@ -328,5 +331,8 @@ export default function DjLiveSongs() {
             )}
         </div>
     );
+    
+    
+
 
 }

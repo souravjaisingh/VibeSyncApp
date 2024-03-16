@@ -50,8 +50,8 @@ function PaymentIndex() {
     const handlePayButtonClick = async () => {
         // Load the Razorpay script
         try {
-            if (isPromoApplied == true && (amount - 50) == 0) {
-                console.log('Amount after promocode: '+amount - 50);
+            if (isPromoApplied == true && (amount / 2) == 0) {
+                console.log('Amount after promocode: '+amount / 2);
                 upsertPaymentDetails(Constants.PaidZeroUsingPromocode, Constants.PaidZeroUsingPromocode);
             }
             else {
@@ -62,10 +62,10 @@ function PaymentIndex() {
             setErrorMessage('Failed to load Razorpay script');
             return;
         }
-        if ((isPromoApplied == true && (amount - 50) > 0)
+        if ((isPromoApplied == true && (amount / 2) > 0)
             || (isPromoApplied == false && amount > 0)) {
             // Once the script is loaded, proceed with payment initiation
-            const parsedAmount = parseFloat(isPromoApplied ? (amount - 50) : amount);
+            const parsedAmount = parseFloat(isPromoApplied ? (amount / 2) : amount);
             if (isNaN(parsedAmount)) {
                 setError(true);
                 setErrorMessage('Invalid amount');
@@ -140,7 +140,7 @@ function PaymentIndex() {
             const obj = {
                 UserId: localStorage.getItem('userId'),
                 OrderId: orderId,
-                TotalAmount: isPromoApplied ? amount - 50 : amount,
+                TotalAmount: isPromoApplied ? amount / 2 : amount,
                 PaymentId: payId,
                 EventId: rowData.eventId,
                 DjId: rowData.djId,
@@ -164,7 +164,7 @@ function PaymentIndex() {
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        rowData['payment'] = { amount: isPromoApplied ? amount - 50 : amount };
+        rowData['payment'] = { amount: isPromoApplied ? amount / 2 : amount };
         // await paymentHandler();
         // const rowDataString = encodeURIComponent(JSON.stringify(rowData));
         // // Navigate to the detail view with the serialized rowData as a parameter
@@ -219,7 +219,7 @@ function PaymentIndex() {
                         Pay
                     </button>
                     {isPromoApplied && (
-                        <span>Yayy! You will only pay {amount - 50}</span>
+                        <span>Yayy! You will only pay {amount / 2}</span>
                     )}
                     {rowData.eventStatus !== 'Live' && (
                         <p style={{ textAlign: 'center' }}><i>DJ is not accepting requests right now.</i></p>

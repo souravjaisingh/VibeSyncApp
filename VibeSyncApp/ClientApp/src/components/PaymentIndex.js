@@ -231,6 +231,10 @@ function PaymentIndex() {
                 <br></br>
                 <Promocode onApply={handlePromoApply} />
                 <br></br>
+                {/* Display the text below the Apply button */}
+            <div className="promo-instruction">
+                Use <b>Vibe50</b> to get 50% off upto Rs. 250
+            </div>
                 {/* Conditionally render promo code message and disable Apply button */}
                 {(!isPromoAvailable && isPromoApplied) && (
                     <div className="promo-code-message" style={{color: 'red'}}>

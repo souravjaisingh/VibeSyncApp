@@ -32,7 +32,9 @@
             'Lucida Sans', Arial, sans-serif;
         text-align: center;
     }
-
+    .promo-instruction{
+        font-size: small;
+    }
     .btnPayment {
         background-color: #08a4f2; /* Pink color */
         color: white;

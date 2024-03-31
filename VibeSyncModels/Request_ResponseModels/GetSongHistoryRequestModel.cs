@@ -8,7 +8,7 @@ namespace VibeSyncModels.Request_ResponseModels
     /// Get Song History Request Model
     /// </summary>
     /// <seealso cref="MediatR.IRequest&lt;VibeSyncModels.Request_ResponseModels.SongHistoryResponseModel&gt;" />
-    public class GetSongHistoryRequestModel : IRequest<List<SongHistoryModel>>, IValidatableObject
+    public class GetSongHistoryRequestModel : IRequest<List<SongHistoryModel>>
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is user.
@@ -38,15 +38,15 @@ namespace VibeSyncModels.Request_ResponseModels
         /// <returns>
         /// A collection that holds failed-validation information.
         /// </returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if ((EventId == 0 && UserId == 0) || (EventId != 0 && UserId != 0))
-            {
-                yield return new ValidationResult(
-                    "Either EventId or UserId must be zero, but not both.",
-                    new[] { nameof(EventId), nameof(UserId) });
-            }
-        }
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+            //if ((EventId == 0 && UserId == 0) || (EventId != 0 && UserId != 0))
+            //{
+            //    yield return new ValidationResult(
+            //        "Either EventId or UserId must be zero, but not both.",
+            //        new[] { nameof(EventId), nameof(UserId) });
+            //}
+        //}
 
     }
 }

@@ -16,13 +16,13 @@ namespace VibeSyncApp.Filters
         public void OnActionExecuting(ActionExecutingContext context)
         {
             // Executed before the action method is invoked
-            var hasExcludeAttribute = context.ActionDescriptor.EndpointMetadata.Any(em => em.GetType() == typeof(ExcludeTokenAuthenticationAttribute));
+            //var hasExcludeAttribute = context.ActionDescriptor.EndpointMetadata.Any(em => em.GetType() == typeof(ExcludeTokenAuthenticationAttribute));
 
-            if (!hasExcludeAttribute && (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out StringValues authorization) ||
-                    !authorization.ToString().StartsWith("Bearer ")))
-            {
-                context.Result = new UnauthorizedResult();
-            }
+            //if (!hasExcludeAttribute && (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out StringValues authorization) ||
+            //        !authorization.ToString().StartsWith("Bearer ")))
+            //{
+            //    context.Result = new UnauthorizedResult();
+            //}
         }
     }
 }

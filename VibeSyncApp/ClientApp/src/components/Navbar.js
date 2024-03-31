@@ -22,21 +22,25 @@ function NavbarComponent() {
     function handleRequestsClick() {
         navigate('/songhistory');
     }
-    function handlePlaylistsClick(){
+    function handlePlaylistsClick() {
         navigate('/playlists');
     }
 
     async function handleLogoutClick() {
         try {
             setLoading(true);
-            
-            const res = await Logout();
-
-            setLoading(false);
-            if (res) {
+            if (localStorage.getItem('userId') != 0) {
+                const res = await Logout();
+                setLoading(false);
+                if (res) {
+                    navigate('/');
+                }
+            }
+            else{
+                localStorage.clear();
+                setLoading(false);
                 navigate('/');
             }
-
         }
         catch (error) {
             setLoading(false);
@@ -89,7 +93,7 @@ function NavbarComponent() {
                         <Button
                             className="btn-navigation-bar"
                             onClick={(e) => handleRequestsClick()}>
-                            Your Requests
+                            {localStorage.getItem('userId') === '0' ? 'All Requests' : 'Your Requests'}
                         </Button>
                     )}
                 {localStorage.getItem('userId') != null && (
@@ -106,7 +110,7 @@ function NavbarComponent() {
                     || location.pathname === '/djprofile'
                     || location.pathname === '/eventdetails'
                     || location.pathname === '/showtransactions'
-                    || location.pathname === '/djlivesongs' ) && (
+                    || location.pathname === '/djlivesongs') && (
                         <Button
                             className="btn-navigation-bar"
                             onClick={(e) => handlePlaylistsClick()}>
@@ -115,13 +119,13 @@ function NavbarComponent() {
                     )}
                 {localStorage.getItem('userId') != null &&
                     localStorage.getItem('isUser') == 'false' && (
-                    <Button
-                        className="btn-navigation-bar"
-                        onClick={(e) => handleLogoutClick()}
-                    >
-                        Logout
-                    </Button>
-                )}
+                        <Button
+                            className="btn-navigation-bar"
+                            onClick={(e) => handleLogoutClick()}
+                        >
+                            Logout
+                        </Button>
+                    )}
             </div>
         </div>
     );

@@ -43,10 +43,10 @@ function PaymentIndex() {
             console.error('Error checking promo code availability:', error);
         }
     };
-    useEffect(() => {
-        // Check promo code availability when component mounts
-        checkPromoCodeAvailability();
-    }, []);
+    // useEffect(() => {
+    //     // Check promo code availability when component mounts
+    //     checkPromoCodeAvailability();
+    // }, []);
     console.log(rowData);
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
@@ -229,12 +229,12 @@ function PaymentIndex() {
                     required
                 />
                 <br></br>
-                <Promocode onApply={handlePromoApply} />
+                {/* <Promocode onApply={handlePromoApply} /> */}
                 <br></br>
                 {/* Display the text below the Apply button */}
-            <div className="promo-instruction">
+            {/* <div className="promo-instruction">
                 Use <b>Vibe50</b> to get 50% off upto Rs. 250
-            </div>
+            </div> */}
                 {/* Conditionally render promo code message and disable Apply button */}
                 {(!isPromoAvailable && isPromoApplied) && (
                     <div className="promo-code-message" style={{color: 'red'}}>

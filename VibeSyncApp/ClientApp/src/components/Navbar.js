@@ -89,6 +89,7 @@ function NavbarComponent() {
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
                 {(location.pathname === '/userhome' ||
                     location.pathname.startsWith('/SongSearch') ||
+                    location.pathname.startsWith('/songsearch') ||
                     location.pathname.startsWith('/paymentIndex')) && (
                         <Button
                             className="btn-navigation-bar"

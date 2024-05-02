@@ -27,7 +27,20 @@ function SongSearch() {
     const [isListOpen, setListOpen] = useState(false);
     const tableRef = useRef(null);
     const [eventData, setEventData] = useState(null);
+    const [shouldRefresh, setShouldRefresh] = useState(false);
 
+
+    useEffect(() => {
+        if (shouldRefresh) {
+            // Reset the state to prevent repeated refresh
+            setShouldRefresh(false);
+
+            // Perform the page refresh after a short delay to allow state update
+            // setTimeout(() => {
+            window.location.reload();
+            // }, 100);
+        }
+    }, [shouldRefresh]);
 
     useEffect(() => {
         document.documentElement.scrollTop = 0; // For modern browsers
@@ -36,25 +49,31 @@ function SongSearch() {
     // Add a check for qrcodeParam and local storage here
     useEffect(() => {
         if (qrcodeParam === 'true') {
-            // Check if local storage contains userId and jwt key
-            const userId = localStorage.getItem('userId');
-            const jwtKey = localStorage.getItem('jwt');
-
-            if (userId && jwtKey) {
-                // Local storage contains userId and jwt key, proceed to load the component
-                return;
-            } else {
-                // Redirect to the Home page for login
-                localStorage.setItem('redirectUrl', location.pathname + '' + location.search);
-                navigate('/'); // Adjust the route as needed
+            if(localStorage.getItem('userId') == null && localStorage.getItem('isUser') == null){
+                localStorage.setItem('userId', 0); //0 id means it's Anonymous.
+                localStorage.setItem('isUser', true);
+                setShouldRefresh(true);
             }
+            return;
+            // Check if local storage contains userId and jwt key
+            // const userId = localStorage.getItem('userId');
+            // const jwtKey = localStorage.getItem('jwt');
+
+            // if (userId && jwtKey) {
+            //     // Local storage contains userId and jwt key, proceed to load the component
+            //     return;
+            // } else {
+            //     // Redirect to the Home page for login
+            //     localStorage.setItem('redirectUrl', location.pathname + '' + location.search);
+            //     navigate('/'); // Adjust the route as needed
+            // }
         }
-    }, [qrcodeParam, navigate]);
+    }, [qrcodeParam]);
 
     useEffect(() => {
-        if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
-            return; // Skip the execution of this useEffect
-        }
+        // if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
+        //     return; // Skip the execution of this useEffect
+        // }
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -118,9 +137,9 @@ function SongSearch() {
     };
 
     useEffect(async () => {
-        if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
-            return; // Skip the execution of this useEffect
-        }
+        // if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
+        //     return; // Skip the execution of this useEffect
+        // }
         async function fetchEnqSongs(eventId) {
             try {
                 const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') == 'true' ? true : false);

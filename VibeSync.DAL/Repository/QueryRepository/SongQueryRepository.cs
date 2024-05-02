@@ -43,12 +43,11 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 .Where(joined => joined.SongHistory.EventId == eventId &&
                                  joined.SongHistory.SongStatus != "Played" &&
                                  joined.SongHistory.SongStatus != "Rejected" &&
-                                 joined.SongHistory.SongStatus != "Refunded" &&
-                                 joined.SongHistory.SongStatus != "Pending");
-            //if (isUser)
-            //{
-            //    query = query.Where(joined => joined.SongHistory.SongStatus != "Pending");
-            //}
+                                 joined.SongHistory.SongStatus != "Refunded");
+            if (isUser)
+            {
+                query = query.Where(joined => joined.SongHistory.SongStatus != "Pending");
+            }
             var finalQuery = query.OrderBy(x => x.SongHistory.CreatedOn)
                 .Select(joined => new SongHistory
                 {

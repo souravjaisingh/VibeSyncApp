@@ -132,7 +132,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
 
             Dictionary<string, object> refundRequest = new Dictionary<string, object>();
             refundRequest.Add("amount", amount * 100);
-            refundRequest.Add("speed", "normal");
+            refundRequest.Add("speed", "optimum");
             Dictionary<string, object> notes = new Dictionary<string, object>();
             notes.Add("user", userId);
             refundRequest.Add("notes", notes);

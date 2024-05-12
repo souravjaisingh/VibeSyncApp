@@ -128,6 +128,7 @@ function PaymentIndex() {
                         signature: response.razorpay_signature,
                     });
                     setShowSuccessMessage(true);
+                    navigate('/songhistory');
                     //upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
                 },
                 prefill: {

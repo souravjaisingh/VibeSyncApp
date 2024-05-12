@@ -20,6 +20,7 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPost]
+        [Route("HandleWebhook")]
         public async Task<IActionResult> HandleWebhook([FromBody] RazorpayWebhookPayload payload)
         {
             // Ensure payload is not null and contains the expected payment details

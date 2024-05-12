@@ -32,15 +32,15 @@ namespace VibeSync.DAL.Handler
         {
             try
             {
-                var songHistoryId = _songCommandRepository.UpdateSongHistoryFromWebHook(request.Payload.Payment.Entity.Order_Id);
+                var songHistoryId = _songCommandRepository.UpdateSongHistoryFromWebHook(request.payload.payment.entity.order_id);
 
-                var paymentEntity = request.Payload.Payment.Entity;
+                var paymentEntity = request.payload.payment.entity;
 
                 if (songHistoryId > 0)
                 {
                     try
                     {
-                        long paymentId = await _paymentCommandRepository.UpdatePaymentDetailsFromWebHook(request.Payload.Payment.Entity.Order_Id, songHistoryId, request.Payload.Payment.Entity.Id, (request.Payload.Payment.Entity.Amount / 100));
+                        long paymentId = await _paymentCommandRepository.UpdatePaymentDetailsFromWebHook(request.payload.payment.entity.order_id, songHistoryId, request.payload.payment.entity.id, (request.payload.payment.entity.amount / 100));
                         if (paymentId > 0)
                         {
                             return true;

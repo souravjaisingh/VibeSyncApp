@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Sentry;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 
@@ -23,17 +25,18 @@ namespace VibeSyncApp.Controllers
         [Route("HandleWebhook")]
         public async Task<IActionResult> HandleWebhook([FromBody] RazorpayWebhookPayload payload)
         {
+            _logger.LogInformation($"Entered: {typeof(WebHooksController)}, API: {typeof(WebHooksController).GetMethod("HandleWebhook")}, Request: {JsonConvert.SerializeObject(payload)}");
             // Ensure payload is not null and contains the expected payment details
-            if (payload?.Payload?.Payment == null)
+            if (payload?.payload?.payment == null)
             {
                 return BadRequest("Invalid webhook payload");
             }
 
             // Extract payment entity from payload
-            var paymentEntity = payload.Payload.Payment.Entity;
+            var paymentEntity = payload.payload.payment.entity;
 
             // Check if the payment status is 'captured'
-            if (paymentEntity?.Status == "captured")
+            if (paymentEntity?.status == "captured")
             {
                 var response = await _mediator.Send(payload);
 

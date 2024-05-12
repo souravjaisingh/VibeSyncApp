@@ -215,18 +215,18 @@ function SongSearch() {
                 </div>
             )}
             <ul style={{ listStyleType: 'circle' }}>
-                <li>
+                {/* <li>
                     <em className="text-muted small info">~ Once the DJ approves, your song will be listed below.</em>
                 </li>
                 <li>
                     <em className="text-muted small info">~ To view 'Your Requests,' navigate to the menu bar.</em>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                     <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
                 </li>
                 <li>
                     <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</em>
-                </li>
+                </li> */}
             </ul>
             <div className="custom-toggle-bar" onClick={toggleList}>
                 <span className="toggle-label">Accepted Requests</span>
@@ -264,7 +264,7 @@ function SongSearch() {
                     <input
                         type="text"
                         className="search-input"
-                        placeholder="Type your search here..."
+                        placeholder="Search your song here..."
                         value={searchQuery}
                         onChange={handleSearchChange}
                     />

@@ -11,14 +11,7 @@
         text-align: center;
         background-color: #f0f7f9;
     }
-    .search-page{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        height: 100vh; /* Center vertically in viewport */
-        text-align: center;
-        background-color: #f0f7f9;
-    }
+    
     .dj-image {
         max-width: 100%; /* Ensure the image doesn't exceed its container width */
         height: auto; /* Maintain aspect ratio */
@@ -46,11 +39,6 @@
         margin-bottom: 20px;
     }
     
-    .search-bar {
-        width: 300px;
-        text-align: center; /* Align input and results to the left */
-        height: 5%;
-    }
     
     .search-input {
         width: 100%;
@@ -80,8 +68,8 @@
         background-color: #e0e0e0;
     }
     .dj-name {
-        margin-top: 8px;
-        font-size: 32px;
+        margin-top: revert;
+        font-size: larger;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
         'Lucida Sans', Arial, sans-serif;
         }
@@ -137,22 +125,41 @@
     height: 40vh;
     overflow: auto;
 }
-.container-for-table {
+/* .container-for-table {
     overflow: auto; /* Enable scrolling */
-    max-height: 400px; /* Adjust the max height as needed */
+    /* max-height: 400px; Adjust the max height as needed */
     /*  margin-top: -50px; Default margin top */
 
     /* Adjust margin top for mobile screens */
-    @media (max-width: 576px) {
+    /* @media (max-width: 576px) {
         margin-top: -70px;
-    }
+    } */
 
     /* Adjust margin top for medium screens */
-    @media (min-width: 576px) and (max-width: 992px) {
+    /* @media (min-width: 576px) and (max-width: 992px) {
         margin-top: -50px;
-    }
-}
+    } */
+/* } */ 
 
 .collapsible-table{
     background-color: #b6cdd9;
+}
+
+
+.search-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+}
+
+.search-bar {
+    margin-bottom: 0px; /* Adjust margin bottom as needed */
+}
+
+.container-for-table {
+    max-height: 400px;
+    overflow: auto;
+    width: 100%; /* Ensure table container occupies full width */
+    padding: 10px; /* Add padding for spacing */
+    box-sizing: border-box; /* Include padding in width calculation */
 }

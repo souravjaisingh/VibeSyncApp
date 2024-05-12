@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -49,7 +50,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <param name="userId"></param>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        public async Task<long> PersistOrderId(int userId, string orderId, decimal amount)
+        public async Task<long> PersistOrderId(long userId, string orderId, decimal amount)
         {
             _logger.LogInformation("PersistOrderId - Request: UserId = " + userId + ", orderId = " + orderId + ", amount = " + amount);
             try
@@ -140,6 +141,27 @@ namespace VibeSync.DAL.Repository.CommandRepository
             Refund refund = client.Payment.Fetch(paymentId).Refund(refundRequest);
             _logger.LogInformation("RefundPayment complete - response :" + JsonConvert.SerializeObject(refund));
             return await Task.FromResult(refund);
+        }
+
+        public async Task<long> UpdatePaymentDetailsFromWebHook(string orderId, long songHistoryId, string paymentId, decimal totalAmount)
+        {
+            var paymentRecord = _context.Payments.FirstOrDefault(x => x.OrderId == orderId);
+
+            if (paymentRecord?.OrderId != null)
+            {
+                paymentRecord.PaymentStatus = VibeSyncModels.Enums.PaymentStatus.PaymentSucceeded.ToString();
+                paymentRecord.PaymentId = paymentId;
+                paymentRecord.TotalAmount = totalAmount;
+                paymentRecord.SongHistoryId = songHistoryId;
+                paymentRecord.ModifiedBy = "webhook";
+                paymentRecord.ModifiedOn = GetISTDateTime();
+
+                _logger.LogInformation("UpdatePaymentDetailsFromWebHook - paymentRecord :" + JsonConvert.SerializeObject(paymentRecord));
+                _context.Payments.Update(paymentRecord);
+
+                _context.SaveChanges();
+            }
+            return await Task.FromResult(paymentRecord?.Id ?? 0);
         }
 
         public static DateTime GetISTDateTime()

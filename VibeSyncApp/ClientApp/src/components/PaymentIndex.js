@@ -65,13 +65,13 @@ function PaymentIndex() {
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
             script.async = true;
             document.body.appendChild(script);
-    
+
             return new Promise((resolve, reject) => {
                 script.onload = resolve;
                 script.onerror = reject;
             });
         };
-    
+
         // Load Razorpay script when component mounts
         loadRazorpayScript()
             .then(() => {
@@ -83,7 +83,7 @@ function PaymentIndex() {
                 console.error('Error loading Razorpay script:', error);
             });
     }, []);
-    
+
 
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
@@ -99,8 +99,16 @@ function PaymentIndex() {
         const obj = {
             amount: parsedAmount * 100,
             userId: localStorage.getItem('userId'),
+            TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
+            EventId: rowData.eventId,
+            DjId: rowData.djId,
+            SongId: rowData.songId,
+            SongName: rowData.name,
+            ArtistId: rowData.artists[0].id,
+            ArtistName: rowData.artists[0].name,
+            AlbumName: rowData.album.name,
+            AlbumImage: rowData.album.images[0].url
         };
-
         try {
             const res = await GetPaymentInitiationDetails(obj);
             setPaymentInitiationData(res);
@@ -120,7 +128,7 @@ function PaymentIndex() {
                         signature: response.razorpay_signature,
                     });
                     setShowSuccessMessage(true);
-                    upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
+                    //upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
                 },
                 prefill: {
                     name: res.userName,
@@ -232,23 +240,23 @@ function PaymentIndex() {
                 {/* <Promocode onApply={handlePromoApply} /> */}
                 <br></br>
                 {/* Display the text below the Apply button */}
-            {/* <div className="promo-instruction">
+                {/* <div className="promo-instruction">
                 Use <b>Vibe50</b> to get 50% off upto Rs. 250
             </div> */}
                 {/* Conditionally render promo code message and disable Apply button */}
                 {(!isPromoAvailable && isPromoApplied) && (
-                    <div className="promo-code-message" style={{color: 'red'}}>
+                    <div className="promo-code-message" style={{ color: 'red' }}>
                         Promocode is applicable once per user.
                     </div>
                 )}
                 <div>
                     <button
-                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live' 
-                        || amount < rowData.minimumBid
-                        || (!isPromoAvailable && isPromoApplied)) ? 'disabledButton' : ''}`}
+                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live'
+                            || amount < rowData.minimumBid
+                            || (!isPromoAvailable && isPromoApplied)) ? 'disabledButton' : ''}`}
                         id="rzp-button1"
                         onClick={handlePayButtonClick}
-                        disabled={rowData.eventStatus !== 'Live' 
+                        disabled={rowData.eventStatus !== 'Live'
                             || amount < rowData.minimumBid
                             || (!isPromoAvailable && isPromoApplied)}
                     >
@@ -262,6 +270,11 @@ function PaymentIndex() {
                     )}
                 </div>
             </form>
+
+            <br></br>
+            <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
+            <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</em>
+
             {/* Render the success message if showSuccessMessage is true */}
             {showSuccessMessage && (
                 <div className="success-message">

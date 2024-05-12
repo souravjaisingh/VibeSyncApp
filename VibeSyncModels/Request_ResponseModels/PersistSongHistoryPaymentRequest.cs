@@ -12,6 +12,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public long DjId { get; set; }
         public string SongId { get; set; }
         public string SongName { get; set; }
+        public string SongStatus { get; set; }
         public string ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string AlbumName { get; set; }

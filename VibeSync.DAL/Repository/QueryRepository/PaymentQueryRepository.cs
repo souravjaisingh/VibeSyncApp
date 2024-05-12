@@ -19,18 +19,23 @@ namespace VibeSync.DAL.Repository.QueryRepository
         private readonly IUserQueryRepository _user;
         private readonly IPaymentCommandRepository _paymentCommand;
         private readonly VibeSyncContext _context;
+        private readonly ISongCommandRepository _songCommand;
 
         /// <summary>
         /// The HTTP context accessor
         /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public PaymentQueryRepository(IPaymentCommandRepository paymentCommand
-            , IUserQueryRepository user, IDBContextFactory context, IHttpContextAccessor httpContextAccessor)
+        public PaymentQueryRepository(IPaymentCommandRepository paymentCommand,
+            ISongCommandRepository songCommandRepository,
+            IUserQueryRepository user, 
+            IDBContextFactory context, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _paymentCommand = paymentCommand;
             _user = user;
             _context = context.GetDBContext();
             _httpContextAccessor = httpContextAccessor;
+            _songCommand = songCommandRepository;
         }
 
         public Task<List<PaymentResponseModel>> GetDjPayments(GetDjPaymentsRequestModel request)
@@ -121,6 +126,27 @@ namespace VibeSync.DAL.Repository.QueryRepository
             // payIdentity is the primary key of payments table(identity column)
             var payIdentity = await _paymentCommand.PersistOrderId(request.UserId, order["id"].ToString(), request.Amount);
             var user = _user.GetUserById(request.UserId);
+
+            long songHistoryId;
+
+            PersistSongHistoryPaymentRequest target = new()
+            {
+                UserId = request.UserId,
+                TotalAmount = request.TotalAmount,
+                EventId = request.EventId,
+                DjId = request.DjId,
+                SongId = request.SongId,
+                SongName = request.SongName,
+                ArtistId = request.ArtistId,
+                ArtistName = request.ArtistName,
+                AlbumName = request.AlbumName,
+                AlbumImage = request.AlbumImage,
+                OrderId = order["id"].ToString(),
+                SongStatus = Constants.SongStatusPaymentInProgress
+            };
+
+            _songCommand.AddSongHistoryForUser(target, out songHistoryId);
+
             var res = new GetPaymentInitiationDetails()
             {
                 OrderId = order["id"].ToString(),

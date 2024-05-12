@@ -32,7 +32,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         {
             var songHisObj = _mapper.Map<SongHistory>(request);
             songHisObj.CreatedBy = request.UserId.ToString();
-            songHisObj.SongStatus = Constants.SongStatusPending;
+            songHisObj.SongStatus = request.SongStatus ?? Constants.SongStatusPending;
             DateTime istNow = DateTime.UtcNow + TimeSpan.FromHours(5.5);
             songHisObj.CreatedOn = istNow;
             try
@@ -61,6 +61,31 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 if (response > 0)
                 {
                     return Constants.UpdatedSuccessfully;
+                }
+                else
+                {
+                    throw new CustomException(Constants.DbOperationFailed);
+                }
+            }
+            else
+            {
+                throw new CustomException("Entity not found");
+            }
+        }
+
+        public long UpdateSongHistoryFromWebHook(string orderId)
+        {
+            var songHistoryEntity = _context.SongHistories.Where(x => x.OrderId == orderId).FirstOrDefault();
+            if (songHistoryEntity != null)
+            {
+                songHistoryEntity.SongStatus = Constants.SongStatusPending;
+                songHistoryEntity.ModifiedBy = "webhook";
+                songHistoryEntity.ModifiedOn = DateTime.Now;
+                var response = _context.SaveChanges();
+
+                if (response > 0)
+                {
+                    return songHistoryEntity.Id;
                 }
                 else
                 {

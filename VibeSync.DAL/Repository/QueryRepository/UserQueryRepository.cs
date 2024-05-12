@@ -39,7 +39,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public User GetUserById(int userId)
+        public User GetUserById(long userId)
         {
             return _context.Users.Where(x => x.Id == userId).FirstOrDefault();
         }

@@ -115,5 +115,14 @@ namespace VibeSync.DAL.Repository.QueryRepository
             return query.ToList();
 
         }
+        /// <summary>
+        /// Return the SongHistoryRecord based on orderId
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public SongHistory GetSongHistoryByOrderId(string orderId)
+        {
+            return _context.SongHistories.Where(x=> x.OrderId == orderId).FirstOrDefault();
+        }
     }
 }

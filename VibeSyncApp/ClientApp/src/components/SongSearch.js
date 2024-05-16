@@ -29,6 +29,7 @@ function SongSearch() {
     const [eventData, setEventData] = useState(null);
     const [shouldRefresh, setShouldRefresh] = useState(false);
 
+    
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -203,35 +204,23 @@ function SongSearch() {
                         <img
                             src={eventData.djPhoto}
                             alt="DJ Image"
-                            style={{ width: '300px', height: 'auto' }}
+                            style={{ width: '200px', height: 'auto' }}
                             className='dj-image'
                         />
                     </div>
                     <div className="right-content">
                         <p className='dj-name'>{eventData.djName}</p>
                         <p className='text-muted event-name'>{eventData.eventName}</p>
-                        <p className='text-muted event-desc'>{eventData.eventDescription}</p>
+                        <p className='text-muted event-desc'><b>{eventData.eventDescription}</b></p>
                     </div>
                 </div>
             )}
-            <ul style={{ listStyleType: 'circle' }}>
-                {/* <li>
-                    <em className="text-muted small info">~ Once the DJ approves, your song will be listed below.</em>
-                </li>
-                <li>
-                    <em className="text-muted small info">~ To view 'Your Requests,' navigate to the menu bar.</em>
-                </li> */}
-                {/* <li>
-                    <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
-                </li>
-                <li>
-                    <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</em>
-                </li> */}
-            </ul>
+            
             <div className="custom-toggle-bar" onClick={toggleList}>
                 <span className="toggle-label">Accepted Requests</span>
                 <span className={`toggle-icon ${isListOpen ? 'rotate' : ''}`}></span>
             </div>
+            
             {isListOpen && (
                 <div className="collapsible-list">
                     <MDBTable align='middle' responsive className='collapsible-table'>

@@ -22,6 +22,9 @@ function NavbarComponent() {
     function handleRequestsClick() {
         navigate('/songhistory');
     }
+    function handleAcceptedRequestsClick() {
+        navigate('/acceptedRequests');
+    }
     function handlePlaylistsClick() {
         navigate('/playlists');
     }
@@ -90,11 +93,22 @@ function NavbarComponent() {
                 {(location.pathname === '/userhome' ||
                     location.pathname.startsWith('/SongSearch') ||
                     location.pathname.startsWith('/songsearch') ||
+                    location.pathname.startsWith('/acceptedRequests') ||
                     location.pathname.startsWith('/paymentIndex')) && (
                         <Button
                             className="btn-navigation-bar"
                             onClick={(e) => handleRequestsClick()}>
                             {localStorage.getItem('userId') === '0' ? 'All Requests' : 'Your Requests'}
+                        </Button>
+                    )}
+                {(location.pathname.startsWith('/SongSearch') ||
+                    location.pathname.startsWith('/songsearch') ||
+                    location.pathname.startsWith('/songhistory') ||
+                    location.pathname.startsWith('/paymentIndex')) && (
+                        <Button
+                            className="btn-navigation-bar"
+                            onClick={(e) => handleAcceptedRequestsClick()}>
+                            Accepted Requests
                         </Button>
                     )}
                 {localStorage.getItem('userId') != null && (

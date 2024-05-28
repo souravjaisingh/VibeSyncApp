@@ -49,10 +49,18 @@ function SongSearch() {
     }, [])
     // Add a check for qrcodeParam and local storage here
     useEffect(() => {
+        var uri = JSON.parse(decodeURIComponent(rowDataString));
+        if(uri && uri.id){
+            console.log(uri);
+            localStorage.setItem('qrEventId', uri.id);
+            localStorage.setItem('venue', uri.venue);
+        }
+
         if (qrcodeParam === 'true') {
             if(localStorage.getItem('userId') == null && localStorage.getItem('isUser') == null){
                 localStorage.setItem('userId', 0); //0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
+                localStorage.setItem('qrEventId', urlEventId);
                 setShouldRefresh(true);
             }
             return;
@@ -158,6 +166,7 @@ function SongSearch() {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
                 setEventData(response);
                 if (response != null) {
+                    localStorage.setItem('venue', response.venue);
                     fetchEnqSongs(response.id);
                 }
             } catch (error) {
@@ -216,37 +225,12 @@ function SongSearch() {
                 </div>
             )}
             
-            <div className="custom-toggle-bar" onClick={toggleList}>
+            {/* <div className="custom-toggle-bar" onClick={toggleList}>
                 <span className="toggle-label">Accepted Requests</span>
                 <span className={`toggle-icon ${isListOpen ? 'rotate' : ''}`}></span>
-            </div>
+            </div> */}
             
-            {isListOpen && (
-                <div className="collapsible-list">
-                    <MDBTable align='middle' responsive className='collapsible-table'>
-                        <MDBTableBody>
-                            {enqueuedSongs && enqueuedSongs.map((result, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        <img
-                                            src={result.image}
-                                            style={{ width: '45px', height: '45px' }}
-                                            className='rounded-circle'
-                                        />
-                                    </td>
-                                    <td>
-                                        <p className='fw-bold mb-1'>{result.songName}</p>
-                                        <p className='text-muted mb-0'>
-                                            {result.artistName}
-                                        </p>
-                                    </td>
-                                    <td>{result.albumName}</td>
-                                </tr>
-                            ))}
-                        </MDBTableBody>
-                    </MDBTable>
-                </div>
-            )}
+            
 
             <div className="search-page">
                 <div className="search-bar">
@@ -267,17 +251,22 @@ function SongSearch() {
                                         <img
                                             src={result.album.images[result.album.images.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
-                                            style={{ width: '45px', height: '45px' }}
+                                            style={{ width: '50px', height: '50px' }}
                                             className='rounded-circle'
                                         />
                                     </td>
                                     <td>
                                         <p className='fw-bold mb-1'>{result.name}</p>
+                                        {/* <p className='text-muted mb-0'>
+                                            {result.artists.map((artist) => artist.name).join(', ')}
+                                        </p> */}
+                                    </td>
+                                    <td>
+                                        {/* {result.album.name} */}
                                         <p className='text-muted mb-0'>
                                             {result.artists.map((artist) => artist.name).join(', ')}
                                         </p>
                                     </td>
-                                    <td>{result.album.name}</td>
                                 </tr>
                             ))}
                         </MDBTableBody>

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -21,7 +22,7 @@ namespace VibeSync.DAL.Handler
     /// </summary>
     /// <seealso cref="MediatR.IRequestHandler&lt;VibeSyncModels.Request_ResponseModels.GetSongRequestModel, VibeSyncModels.Request_ResponseModels.SongDetails&gt;" />
     public class SongsHandler : IRequestHandler<GetSongRequestModel, List<SongDetails>>,
-        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryModel>>, IRequestHandler<SongHistoryModel, string>
+        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryModel>>, IRequestHandler<SongHistoryModel, string>, IRequestHandler<GetPlaylistList, List<GetPlaylistList>>, IRequestHandler<GetPlaylistTracks, List<SongDetails>>
     {
         /// <summary>
         /// Gets or sets the song query repository.
@@ -56,6 +57,9 @@ namespace VibeSync.DAL.Handler
         /// The query parameters.
         /// </value>
         private string QueryParameters { get; set; }
+        private string GetPlaylists { get; set; }
+        private string GetPlaylistTracks { get; set; }
+
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
@@ -94,7 +98,9 @@ namespace VibeSync.DAL.Handler
             ClientSecret = configuration["SpotifyApi:ClientSecret"];
             ClientId = configuration["SpotifyApi:ClientId"];
             BaseUrl = configuration["SpotifyApi:BaseUrl"];
-            QueryParameters = configuration["SpotifyApi:QueryParameters"];
+            QueryParameters = configuration["SpotifyApi:TrackSearch"];
+            GetPlaylists = configuration["SpotifyApi:GetPlaylists"];
+            GetPlaylistTracks = configuration["SpotifyApi:GetPlaylistTracks"];
             _songQueryRepository = songQueryRepository;
             _mapper = mapper;
             _songCommandRepository = songCommandRepository;
@@ -111,7 +117,7 @@ namespace VibeSync.DAL.Handler
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             string queryParameters = string.Format(QueryParameters, request.SongName, request.Offset, request.limit);
-
+            
             var response = await _httpClient.GetAsync($"{BaseUrl}{queryParameters}");
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -170,8 +176,39 @@ namespace VibeSync.DAL.Handler
             dynamic json = JsonConvert.DeserializeObject(responseContent);
             return json.access_token;
         }
-
-
         #endregion
+
+        public async Task<List<GetPlaylistList>> Handle(GetPlaylistList request, CancellationToken cancellationToken)
+        {
+            var accessToken = await GetSpotifyAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await _httpClient.GetAsync($"{BaseUrl}{GetPlaylists}");
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var jsonObject = JObject.Parse(responseContent);
+            var items = jsonObject["items"].ToString();
+            var songDetails = JsonConvert.DeserializeObject<List<GetPlaylistList>>(items);
+            return songDetails;
+        }
+
+        public async Task<List<SongDetails>> Handle(GetPlaylistTracks request, CancellationToken cancellationToken)
+        {
+            var accessToken = await GetSpotifyAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            string url = string.Format(GetPlaylistTracks, request.Id, request.Offset, request.Limit);
+
+            var response = await _httpClient.GetAsync($"{BaseUrl}{url}");
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var jsonObject = JObject.Parse(responseContent);
+            var items = jsonObject["items"].ToString();
+            var playlistTracks = JsonConvert.DeserializeObject<List<SpotifyPlaylistTrackModel>>(items).Select(x=> x.Track);
+            var songDetails = _mapper.Map<List<SongDetails>>(playlistTracks);
+            return songDetails;
+        }
+
+
     }
 }

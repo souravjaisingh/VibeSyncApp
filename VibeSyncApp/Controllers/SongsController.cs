@@ -82,5 +82,18 @@ namespace VibeSyncApp.Controllers
 
             return Ok(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetPlaylistList()
+        {
+            var result = await _mediator.Send(new GetPlaylistList());
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPlaylistTracks([FromQuery] GetPlaylistTracks request)
+        {
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
     }
 }

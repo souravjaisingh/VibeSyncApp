@@ -60,6 +60,7 @@ function PaymentIndex() {
         });
     };
     useEffect(() => {
+        setAmount(rowData.minimumBid);
         const loadRazorpayScript = async () => {
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -226,7 +227,7 @@ function PaymentIndex() {
             {/* <RazorpayPayment data={amount} /> */}
             <form onSubmit={handleSubmit} className='center-form'>
                 <p className='label'>Tip the DJ (min amount: {rowData.minimumBid}):<br></br>
-                    <span className='subheading-payment'><i>Minimum amount is decided by the DJ.</i></span>
+                    <span className='subheading-payment'><i>Played within 30 mins or refund.</i></span>
                 </p>
 
                 <input

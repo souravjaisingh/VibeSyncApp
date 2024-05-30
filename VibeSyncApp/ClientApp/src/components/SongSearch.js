@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { GetSongsByEventId, GetSongsUsingSearchTerm } from './services/SongsService';
+import { GetPlaylistList, GetSongsByEventId, GetSongsList, GetSongsUsingSearchTerm } from './services/SongsService';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import './SongSearch.css';
@@ -28,8 +28,9 @@ function SongSearch() {
     const tableRef = useRef(null);
     const [eventData, setEventData] = useState(null);
     const [shouldRefresh, setShouldRefresh] = useState(false);
+    const [listOfPlaylists, setListOfPlaylists] = useState(null);
+    const [activePlaylistId, setActivePlaylistId] = useState(null);
 
-    
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -47,17 +48,47 @@ function SongSearch() {
         document.documentElement.scrollTop = 0; // For modern browsers
         document.body.scrollTop = 0; // For older browsers
     }, [])
+
+    useEffect(() => {
+        const fetchPlaylistsAndSongs = async () => {
+            try {
+                const playlists = await GetPlaylistList();
+                if (playlists && playlists.length > 0) {
+                    setListOfPlaylists(playlists);
+                    const firstPlaylistId = playlists[0].id;
+                    setActivePlaylistId(firstPlaylistId);
+                    const songs = await GetSongsList(firstPlaylistId, 0, 50);
+                    setResults(songs);
+                }
+            } catch (error) {
+                console.error('Error fetching playlists or songs:', error);
+            }
+        };
+
+        fetchPlaylistsAndSongs();
+    }, []);
+
+    const handlePlaylistClick = async (playlistId) => {
+        try {
+            setActivePlaylistId(playlistId);
+            const songs = await GetSongsList(playlistId, 0, 50);
+            setResults(songs);
+        } catch (error) {
+            console.error('Error fetching songs:', error);
+        }
+    };
+
     // Add a check for qrcodeParam and local storage here
     useEffect(() => {
         var uri = JSON.parse(decodeURIComponent(rowDataString));
-        if(uri && uri.id){
+        if (uri && uri.id) {
             console.log(uri);
             localStorage.setItem('qrEventId', uri.id);
             localStorage.setItem('venue', uri.venue);
         }
 
         if (qrcodeParam === 'true') {
-            if(localStorage.getItem('userId') == null && localStorage.getItem('isUser') == null){
+            if (localStorage.getItem('userId') == null && localStorage.getItem('isUser') == null) {
                 localStorage.setItem('userId', 0); //0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
@@ -120,6 +151,7 @@ function SongSearch() {
 
     // Function to handle changes in the search input
     const handleSearchChange = (event) => {
+        setActivePlaylistId(null);
         const newQuery = event.target.value;
         setSearchQuery(newQuery);
         clearTimeout(typingTimeout);
@@ -224,13 +256,6 @@ function SongSearch() {
                     </div>
                 </div>
             )}
-            
-            {/* <div className="custom-toggle-bar" onClick={toggleList}>
-                <span className="toggle-label">Accepted Requests</span>
-                <span className={`toggle-icon ${isListOpen ? 'rotate' : ''}`}></span>
-            </div> */}
-            
-            
 
             <div className="search-page">
                 <div className="search-bar">
@@ -242,12 +267,25 @@ function SongSearch() {
                         onChange={handleSearchChange}
                     />
                 </div>
+
+                <div className="playlist-buttons">
+                    {listOfPlaylists && listOfPlaylists.map((playlist) => (
+                        <button
+                            key={playlist.id}
+                            className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                            onClick={() => handlePlaylistClick(playlist.id)}
+                        >
+                            {playlist.name}
+                        </button>
+                    ))}
+                </div>
+
                 <div className='container-for-table' style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
                     <MDBTable align='middle' responsive hover>
                         <MDBTableBody>
                             {results && results.map((result, index) => (
-                                <tr key={index} onClick={(e) => { handleRowClick(result) }}>
-                                    <td>
+                                <tr key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
+                                    <td className='custom-td'>
                                         <img
                                             src={result.album.images[result.album.images.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
@@ -255,14 +293,10 @@ function SongSearch() {
                                             className='rounded-circle'
                                         />
                                     </td>
-                                    <td>
+                                    <td className='custom-td'>
                                         <p className='fw-bold mb-1'>{result.name}</p>
-                                        {/* <p className='text-muted mb-0'>
-                                            {result.artists.map((artist) => artist.name).join(', ')}
-                                        </p> */}
                                     </td>
-                                    <td>
-                                        {/* {result.album.name} */}
+                                    <td className='custom-td'>
                                         <p className='text-muted mb-0'>
                                             {result.artists.map((artist) => artist.name).join(', ')}
                                         </p>
@@ -271,12 +305,14 @@ function SongSearch() {
                             ))}
                         </MDBTableBody>
                     </MDBTable>
+
                     {loading && <p>Loading...</p>}
                 </div>
             </div>
         </div>
     );
+};
 
-}
+
 
 export default SongSearch;

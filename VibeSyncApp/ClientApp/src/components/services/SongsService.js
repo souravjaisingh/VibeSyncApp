@@ -13,3 +13,11 @@ export async function GetSongsByEventId(id, isUser = false) {
 export async function ModifySongRequest(data) {
     return handleAPIRequest('Songs/UpdateSongHistory', 'PUT', data);
 }
+
+export async function GetPlaylistList(){
+    return handleAPIRequest('Songs/GetPlaylistList', 'GET');
+}
+
+export async function GetSongsList(id, offset, limit){
+    return handleAPIRequest(`Songs/GetPlaylistTracks?Id=${id}&Offset=${offset}&Limit=${limit}`, 'GET');
+}

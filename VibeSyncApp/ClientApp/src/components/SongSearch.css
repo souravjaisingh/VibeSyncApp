@@ -69,7 +69,7 @@
     }
     .dj-name {
         margin-top: revert;
-        font-size: large;
+        font-size: smaller;
         margin-bottom: auto;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
         'Lucida Sans', Arial, sans-serif;
@@ -78,7 +78,7 @@
             font-size: large;
     }
     .event-desc{
-        font-size: small;
+        font-size: x-small;
 }
 /* Style for the custom toggle bar */
 .custom-toggle-bar {
@@ -128,6 +128,14 @@
     height: 30vh;
     overflow-y: auto;
 }
+.songs-row{
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.custom-td {
+    padding: 0.3rem !important;
+}
+
 /* .collapsible-list.open {
     display: block;
   } */
@@ -169,6 +177,34 @@
     overflow: auto;
     font-size: small;
     width: 100%; /* Ensure table container occupies full width */
-    padding: 10px; /* Add padding for spacing */
+    padding: 5px; /* Add padding for spacing */
     box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.playlist-buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.playlist-button {
+    background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent */
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 11px;
+    margin-top: 0px !important;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.playlist-button:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Darker on hover */
+}
+
+.playlist-button.active {
+    background-color: rgba(0, 0, 0, 0.3); /* Highlight active button */
+    color: #fff; /* Change text color for better visibility */
 }

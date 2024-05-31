@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GetPlaylistList, GetSongsByEventId, GetSongsList, GetSongsUsingSearchTerm } from './services/SongsService';
-import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
-import axios from 'axios';
+import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
@@ -22,7 +20,7 @@ function SongSearch() {
     const [results, setResults] = useState([]);
     const [enqueuedSongs, setEnqueuedSongs] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
-    const [currentPage, setCurrentPage] = useState(2);
+    const [currentPage, setCurrentPage] = useState(1); // Set initial page to 1
     const [loading, setLoading] = useState(false);
     const [isListOpen, setListOpen] = useState(false);
     const tableRef = useRef(null);
@@ -31,23 +29,17 @@ function SongSearch() {
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
 
-
     useEffect(() => {
         if (shouldRefresh) {
-            // Reset the state to prevent repeated refresh
             setShouldRefresh(false);
-
-            // Perform the page refresh after a short delay to allow state update
-            // setTimeout(() => {
             window.location.reload();
-            // }, 100);
         }
     }, [shouldRefresh]);
 
     useEffect(() => {
         document.documentElement.scrollTop = 0; // For modern browsers
         document.body.scrollTop = 0; // For older browsers
-    }, [])
+    }, []);
 
     useEffect(() => {
         const fetchPlaylistsAndSongs = async () => {
@@ -59,6 +51,7 @@ function SongSearch() {
                     setActivePlaylistId(firstPlaylistId);
                     const songs = await GetSongsList(firstPlaylistId, 0, 50);
                     setResults(songs);
+                    setCurrentPage(2); // Reset the current page
                 }
             } catch (error) {
                 console.error('Error fetching playlists or songs:', error);
@@ -71,68 +64,119 @@ function SongSearch() {
     const handlePlaylistClick = async (playlistId) => {
         try {
             setActivePlaylistId(playlistId);
+            setResults([]);
+            setCurrentPage(1); // Reset current page when changing playlist
             const songs = await GetSongsList(playlistId, 0, 50);
             setResults(songs);
+            setCurrentPage(2); // Set the next page to fetch
+            
+            const selectedPlaylist = listOfPlaylists.find(playlist => playlist.id === playlistId);
+            if (selectedPlaylist) {
+                const playlistName = selectedPlaylist.name.toLowerCase();
+                if (playlistName.includes('love')) {
+                    showHearts(); // Show hearts animation
+                } else if (playlistName.includes('singles')) {
+                    showCheers(); // Show cheers animation
+                }
+            }
+
         } catch (error) {
             console.error('Error fetching songs:', error);
         }
     };
 
-    // Add a check for qrcodeParam and local storage here
+    const showHearts = () => {
+        const numHearts = 20; // Number of hearts to show
+        for (let i = 0; i < numHearts; i++) {
+            createHeart();
+        }
+    
+        // Set a timeout to remove the hearts after 2-3 seconds
+        setTimeout(() => {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach((heart) => {
+                heart.style.opacity = 0; // Set opacity to 0 for a fade-out effect
+                setTimeout(() => {
+                    heart.remove(); // Remove the heart after it fades out
+                }, 1000); // Wait for 1 second before removing the heart
+            });
+        }, 3000); // Wait for 3 seconds before removing the hearts
+    };
+    
+
+    const createHeart = () => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDuration = `${2 + Math.random() * 3}s`;
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 5000); // Remove the heart after the animation is complete
+    };
+
+    const showCheers = () => {
+        const numCheers = 20; // Number of cheers to show
+        for (let i = 0; i < numCheers; i++) {
+            createCheer();
+        }
+    };
+
+    const createCheer = () => {
+        const cheer = document.createElement('div');
+        cheer.classList.add('cheer');
+        cheer.style.left = `${Math.random() * 100}%`;
+        cheer.style.animationDuration = `${2 + Math.random() * 3}s`;
+        document.body.appendChild(cheer);
+
+        setTimeout(() => {
+            cheer.remove();
+        }, 5000); // Remove the cheer after the animation is complete
+    };
+    
     useEffect(() => {
         var uri = JSON.parse(decodeURIComponent(rowDataString));
         if (uri && uri.id) {
-            console.log(uri);
             localStorage.setItem('qrEventId', uri.id);
             localStorage.setItem('venue', uri.venue);
         }
 
         if (qrcodeParam === 'true') {
             if (localStorage.getItem('userId') == null && localStorage.getItem('isUser') == null) {
-                localStorage.setItem('userId', 0); //0 id means it's Anonymous.
+                localStorage.setItem('userId', 0); // 0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
                 setShouldRefresh(true);
             }
             return;
-            // Check if local storage contains userId and jwt key
-            // const userId = localStorage.getItem('userId');
-            // const jwtKey = localStorage.getItem('jwt');
-
-            // if (userId && jwtKey) {
-            //     // Local storage contains userId and jwt key, proceed to load the component
-            //     return;
-            // } else {
-            //     // Redirect to the Home page for login
-            //     localStorage.setItem('redirectUrl', location.pathname + '' + location.search);
-            //     navigate('/'); // Adjust the route as needed
-            // }
         }
     }, [qrcodeParam]);
 
-    useEffect(() => {
-        // if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
-        //     return; // Skip the execution of this useEffect
-        // }
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await GetSongsUsingSearchTerm(searchQuery, ((currentPage - 1) * 20) + 1, 20);
-                const newData = response;
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            let newData;
+            if (activePlaylistId) {
+                //newData = await GetSongsList(activePlaylistId, (currentPage - 1) * 20, 20);
+                setLoading(false);
+            } else {
+                newData = await GetSongsUsingSearchTerm(searchQuery, (currentPage - 1) * 20 + 1, 20);
                 setResults((prevData) => [...prevData, ...newData]);
                 setCurrentPage((prevPage) => prevPage + 1);
-            } catch (error) {
-                setError(true);
-                setErrorMessage(error.message);
-                console.error('Error fetching data:', error);
             }
-            setLoading(false);
-        };
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error('Error fetching data:', error);
+        }
+        setLoading(false);
+    };
 
-        // Fetch enqueued songs after eventData is set
+    useEffect(() => {
         const handleScroll = () => {
             const table = tableRef.current;
-            if (table && table.scrollTop + table.clientHeight >= table.scrollHeight && !loading) {
+            if (table && table.scrollTop + table.clientHeight >= table.scrollHeight - 50 && !loading) { // Added a small buffer to trigger fetch
                 fetchData();
             }
         };
@@ -147,9 +191,8 @@ function SongSearch() {
                 table.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [currentPage, loading, searchQuery, eventData]);
+    }, [currentPage, loading, searchQuery, activePlaylistId]);
 
-    // Function to handle changes in the search input
     const handleSearchChange = (event) => {
         setActivePlaylistId(null);
         const newQuery = event.target.value;
@@ -165,11 +208,13 @@ function SongSearch() {
         }
     };
 
-    // Function to fetch results from the API
     const fetchResultsFromAPI = async (query) => {
         try {
+            setResults([]); // Clear previous results
+            setCurrentPage(1); // Reset current page
             const res = await GetSongsUsingSearchTerm(query, 0, 20);
             setResults(res);
+            setCurrentPage(2); // Set the next page to fetch
         } catch (error) {
             setError(true);
             setErrorMessage(error.message);
@@ -178,12 +223,9 @@ function SongSearch() {
     };
 
     useEffect(async () => {
-        // if (qrcodeParam === 'true' && localStorage.getItem('jwt') == null) {
-        //     return; // Skip the execution of this useEffect
-        // }
         async function fetchEnqSongs(eventId) {
             try {
-                const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') == 'true' ? true : false);
+                const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') === 'true');
                 setEnqueuedSongs(response);
             } catch (error) {
                 setError(true);
@@ -192,7 +234,6 @@ function SongSearch() {
             }
         }
 
-        // Fetch event data if qrcodeParam is true and eventData is not already set
         if (qrcodeParam === 'true' && !eventData) {
             try {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
@@ -207,14 +248,11 @@ function SongSearch() {
                 console.error('Error fetching data:', error);
             }
         } else if (!eventData) {
-            // If qrcodeParam is not true and eventData is not set, use rowData as is
             setEventData(JSON.parse(decodeURIComponent(rowDataString)));
         } else if (enqueuedSongs == null) {
-            // If eventData is already set, fetch enqueued songs
             fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
         }
     }, [qrcodeParam, urlEventId, urlUserId, eventData]);
-
 
     const handleRowClick = (data) => {
         if (eventData) {
@@ -236,7 +274,6 @@ function SongSearch() {
         setListOpen(!isListOpen);
     };
 
-    // Render the detailed view using the data from the selected row
     return (
         <div className='song-search'>
             {eventData && (
@@ -311,8 +348,6 @@ function SongSearch() {
             </div>
         </div>
     );
-};
-
-
+}
 
 export default SongSearch;

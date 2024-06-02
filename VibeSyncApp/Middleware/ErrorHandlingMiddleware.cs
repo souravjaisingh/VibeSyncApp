@@ -4,8 +4,9 @@ using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using VibeSyncModels;
 
-namespace VibeSyncModels.Middleware
+namespace VibeSyncApp.Middleware
 {
     /// <summary>
     /// Error Handling Middleware

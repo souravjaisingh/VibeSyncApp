@@ -17,5 +17,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         Task<List<PaymentResponseModel>> GetDjPayments(GetDjPaymentsRequestModel request);
         Task<bool> PromocodeApplicableForUser(
         PromocodeApplicableForUserQueryModel request);
+        Task<PaymentResponseModel> GetInvoiceDetails(string paymentId);
+
     }
 }

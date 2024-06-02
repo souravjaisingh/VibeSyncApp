@@ -23,5 +23,8 @@ namespace VibeSyncModels.Request_ResponseModels
         public long? EventId { get; set; }
         public string EventName { get; set; }
         public string SongName { get; set; }
+        public string UserName { get; set; }
+        public decimal? TaxAmount { get; set; }
+        public decimal? Cgst { get; set; }
     }
 }

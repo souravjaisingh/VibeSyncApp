@@ -33,40 +33,33 @@ namespace VibeSyncApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<ValidateModelStateAttribute>();
                 options.Filters.Add(new BearerTokenAttribute());
             });
-
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "CorsPolicyName",
                                   builder =>
                                   {
                                       builder.WithOrigins(Configuration.GetSection("CORSSetting:AllowedOrigin").Get<string[]>())
-                                             .WithMethods(Configuration.GetSection("CORSSetting:AllowedMethod").Get<string[]>())
-                                             .WithHeaders(Configuration.GetSection("CORSSetting:AllowedHeader").Get<string[]>());
+                                       .WithMethods(Configuration.GetSection("CORSSetting:AllowedMethod").Get<string[]>())
+                                       .WithHeaders(Configuration.GetSection("CORSSetting:AllowedHeader").Get<string[]>());
                                   });
             });
-
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
             });
-
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddMediatR(typeof(UserCommandRepository).GetTypeInfo().Assembly);
-
-            // Register IHttpContextAccessor
-            services.AddHttpContextAccessor();
-
-            // Register DBContext
+            //string connection = Configuration.GetConnectionString("VibeSyncDB");
+            //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
             services.AddScoped<IDBContextFactory, DBContextFactory>();
-
-            // Register Repositories
             services.AddScoped<IUserCommandRepository, UserCommandRepository>();
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();
             services.AddScoped<IEventQueryRepository, EventQueryRepository>();
@@ -77,9 +70,8 @@ namespace VibeSyncApp
             services.AddScoped<IPaymentCommandRepository, PaymentCommandRepository>();
             services.AddScoped<IDjQueryRepository, DjQueryRepository>();
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
-
             services.AddSingleton<HttpClient>();
-
+            services.AddSentryTunneling();
             var context = new CustomAssemblyLoadContext();
             context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
@@ -89,7 +81,6 @@ namespace VibeSyncApp
             {
                 configuration.RootPath = "ClientApp/build";
             });
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vibe Sync", Version = "v1" });
@@ -114,7 +105,6 @@ namespace VibeSyncApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseMiddleware<TokenValidationMiddleware>();
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicyName");
@@ -123,6 +113,7 @@ namespace VibeSyncApp
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
 
+            app.UseSentryTunneling();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

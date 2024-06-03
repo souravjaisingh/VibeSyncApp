@@ -122,7 +122,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <returns></returns>
         public SongHistory GetSongHistoryByOrderId(string orderId)
         {
-            return _context.SongHistories.Where(x => x.OrderId == orderId).FirstOrDefault();
+            return _context.SongHistories.Where(x=> x.OrderId == orderId).FirstOrDefault();
         }
     }
 }

@@ -31,8 +31,15 @@ namespace VibeSync.DAL.DBContext
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
                 .Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("VibeSyncDB"));
-                //VibeSyncDBBhavikLocal -- replace VibeSyncDB with this
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("VibeSyncDB"), 
+                    sqlServerOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5, // The maximum number of retry attempts
+                        maxRetryDelay: TimeSpan.FromSeconds(30), // The maximum delay between retries
+                        errorNumbersToAdd: null // Additional error numbers to consider as transient
+                    );
+                });
             }
         }
 

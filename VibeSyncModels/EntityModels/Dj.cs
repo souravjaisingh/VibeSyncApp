@@ -10,14 +10,12 @@ namespace VibeSyncModels.EntityModels
         public Dj()
         {
             Events = new HashSet<Event>();
-            Logs = new HashSet<Log>();
             SongHistories = new HashSet<SongHistory>();
         }
 
         public long Id { get; set; }
         public long UserId { get; set; }
         public string DjName { get; set; }
-        public string ArtistName { get; set; }
         public string DjGenre { get; set; }
         public string DjDescription { get; set; }
         public string DjPhoto { get; set; }
@@ -30,10 +28,10 @@ namespace VibeSyncModels.EntityModels
         public string CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }
+        public string ArtistName { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<Event> Events { get; set; }
-        public virtual ICollection<Log> Logs { get; set; }
         public virtual ICollection<SongHistory> SongHistories { get; set; }
     }
 }

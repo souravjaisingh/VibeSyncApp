@@ -27,12 +27,8 @@ namespace VibeSync.DAL.DBContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("VibeSyncDB"));
-                //VibeSyncDBBhavikLocal -- replace VibeSyncDB with this
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=tcp:vibesyncserver.database.windows.net,1433;Initial Catalog=VibeSync;Persist Security Info=False;User ID=vibesyncadmin;Password=Vibe@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=120;");
             }
         }
 
@@ -43,6 +39,10 @@ namespace VibeSync.DAL.DBContext
             modelBuilder.Entity<Dj>(entity =>
             {
                 entity.ToTable("Dj");
+
+                entity.HasIndex(e => e.UserId, "dj_userid");
+
+                entity.Property(e => e.ArtistName).HasMaxLength(50);
 
                 entity.Property(e => e.BankName).HasMaxLength(50);
 
@@ -84,6 +84,8 @@ namespace VibeSync.DAL.DBContext
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.ToTable("Event");
+
+                entity.HasIndex(e => e.DjId, "event_djid");
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -128,39 +130,16 @@ namespace VibeSync.DAL.DBContext
 
             modelBuilder.Entity<Log>(entity =>
             {
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.LogDescription).HasMaxLength(500);
-
-                entity.Property(e => e.LogName).HasMaxLength(500);
-
-                entity.Property(e => e.ModifiedBy).HasMaxLength(50);
-
-                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Dj)
-                    .WithMany(p => p.Logs)
-                    .HasForeignKey(d => d.DjId)
-                    .HasConstraintName("FK_Dj_Logs");
-
-                entity.HasOne(d => d.Event)
-                    .WithMany(p => p.Logs)
-                    .HasForeignKey(d => d.EventId)
-                    .HasConstraintName("FK_Event_Logs");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Logs)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_User_Logs");
+                entity.Property(e => e.Logger).HasMaxLength(256);
             });
 
             modelBuilder.Entity<Payment>(entity =>
             {
                 entity.ToTable("Payment");
+
+                entity.HasIndex(e => e.OrderId, "dj_orderid");
+
+                entity.HasIndex(e => e.SongHistoryId, "payment_songHistoryId");
 
                 entity.Property(e => e.BidAmount).HasColumnType("decimal(18, 0)");
 
@@ -202,12 +181,16 @@ namespace VibeSync.DAL.DBContext
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Payment__UserId__5AEE82B9");
+                    .HasConstraintName("FK__Payment__UserId__6C190EBB");
             });
 
             modelBuilder.Entity<SongHistory>(entity =>
             {
                 entity.ToTable("SongHistory");
+
+                entity.HasIndex(e => e.EventId, "songHistory_eventId");
+
+                entity.HasIndex(e => e.OrderId, "songhistory_orderid");
 
                 entity.Property(e => e.AlbumName)
                     .HasMaxLength(80)
@@ -234,6 +217,10 @@ namespace VibeSync.DAL.DBContext
                 entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderId)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SongId)
                     .IsRequired()
@@ -302,6 +289,11 @@ namespace VibeSync.DAL.DBContext
                     .HasMaxLength(50);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(10);
+
+                entity.Property(e => e.Token)
+                    .HasMaxLength(500)
+                    .IsUnicode(false)
+                    .HasColumnName("token");
 
                 entity.Property(e => e.UserOrDj)
                     .IsRequired()

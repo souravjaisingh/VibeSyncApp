@@ -4,15 +4,19 @@ using DinkToPdf.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using VibeSync.DAL.DBContext;
+using VibeSync.DAL.Handler;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncApp.Filters;
@@ -59,6 +63,8 @@ namespace VibeSyncApp
             services.AddMediatR(typeof(UserCommandRepository).GetTypeInfo().Assembly);
             //string connection = Configuration.GetConnectionString("VibeSyncDB");
             //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
+
+            services.AddHttpContextAccessor();
             services.AddScoped<IDBContextFactory, DBContextFactory>();
             services.AddScoped<IUserCommandRepository, UserCommandRepository>();
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();
@@ -70,8 +76,11 @@ namespace VibeSyncApp
             services.AddScoped<IPaymentCommandRepository, PaymentCommandRepository>();
             services.AddScoped<IDjQueryRepository, DjQueryRepository>();
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
+            //services.AddScoped<IWeSocketQueryRepository, WebSocketQueryRepository>();
+            //services.AddScoped<WebSocketHandler>();
+
             services.AddSingleton<HttpClient>();
-            services.AddSentryTunneling();
+            //services.AddSentryTunneling();
             var context = new CustomAssemblyLoadContext();
             context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
@@ -81,6 +90,23 @@ namespace VibeSyncApp
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddDbContext<VibeSyncContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("VibeSyncDB"), sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure();
+                });
+            });
+            // Configure logging
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddProvider(new DatabaseLoggerProvider(
+                    logLevel => logLevel >= LogLevel.Information,
+                    services.BuildServiceProvider().GetService<IServiceScopeFactory>(),
+                    services.BuildServiceProvider().GetService<IHttpContextAccessor>()));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vibe Sync", Version = "v1" });
@@ -110,10 +136,12 @@ namespace VibeSyncApp
             app.UseCors("CorsPolicyName");
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            //app.UseWebSockets();
+            //app.UseMiddleware<WebSocketMiddleware>();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
 
-            app.UseSentryTunneling();
+            //app.UseSentryTunneling();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

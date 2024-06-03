@@ -10,7 +10,6 @@ namespace VibeSyncModels.EntityModels
         public User()
         {
             Djs = new HashSet<Dj>();
-            Logs = new HashSet<Log>();
             Payments = new HashSet<Payment>();
             SongHistories = new HashSet<SongHistory>();
         }
@@ -30,8 +29,8 @@ namespace VibeSyncModels.EntityModels
         public bool IsSsologin { get; set; }
         public string UserOrDj { get; set; }
         public string Token { get; set; }
+
         public virtual ICollection<Dj> Djs { get; set; }
-        public virtual ICollection<Log> Logs { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<SongHistory> SongHistories { get; set; }
     }

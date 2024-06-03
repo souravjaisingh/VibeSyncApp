@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Razorpay.Api;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,8 +28,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
         private readonly IHttpContextAccessor _httpContextAccessor;
         public PaymentQueryRepository(IPaymentCommandRepository paymentCommand,
             ISongCommandRepository songCommandRepository,
-            IUserQueryRepository user, 
-            IDBContextFactory context, 
+            IUserQueryRepository user,
+            IDBContextFactory context,
             IHttpContextAccessor httpContextAccessor)
         {
             _paymentCommand = paymentCommand;
@@ -162,14 +163,34 @@ namespace VibeSync.DAL.Repository.QueryRepository
         public Task<bool> PromocodeApplicableForUser(PromocodeApplicableForUserQueryModel request)
         {
             var userId = loggedInUserId();
-            var songHistory  = _context.SongHistories.Where(x => x.UserId == userId && (x.SongStatus == Constants.SongStatusAccepted || x.SongStatus == Constants.SongStatusPlayed || x.SongStatus == Constants.SongStatusPending)).FirstOrDefault();
+            var songHistory = _context.SongHistories.Where(x => x.UserId == userId && (x.SongStatus == Constants.SongStatusAccepted || x.SongStatus == Constants.SongStatusPlayed || x.SongStatus == Constants.SongStatusPending)).FirstOrDefault();
             if (songHistory != null && songHistory != default)
             {
                 return Task.FromResult(false);
             }
             return Task.FromResult(true);
         }
-
+        public async Task<PaymentResponseModel> GetInvoiceDetails(string paymentId)
+        {
+            return
+            (from p in _context.Payments
+             join sh in _context.SongHistories on p.SongHistoryId equals sh.Id
+             join u in _context.Users on p.UserId equals u.Id into users
+             from user in users.DefaultIfEmpty()
+             where p.PaymentId == paymentId && (sh.SongStatus == "Played" || sh.SongStatus == "Accepted") && p.PaymentStatus == "PaymentSucceeded"
+             select new PaymentResponseModel
+             {
+                 Id = p.Id,
+                 PaymentId = p.PaymentId,
+                 TotalAmount = p.TotalAmount,
+                 OrderId = p.OrderId,
+                 CreatedOn = p.CreatedOn,
+                 SongName = sh.SongName,
+                 UserName = user != null ? user.FirstName + " " + user.LastName : null,
+                 TaxAmount = Math.Round(p.TotalAmount.GetValueOrDefault() / 1.18M, 2),
+                 Cgst = Math.Round((p.TotalAmount.GetValueOrDefault() - Math.Round(p.TotalAmount.GetValueOrDefault() / 1.18M, 2)) / 2, 2)
+             }).FirstOrDefault();
+        }
         private int loggedInUserId()
         {
             int userId = 0;

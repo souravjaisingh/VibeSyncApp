@@ -117,7 +117,7 @@ namespace VibeSync.DAL.Handler
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             string queryParameters = string.Format(QueryParameters, request.SongName, request.Offset, request.limit);
-            
+
             var response = await _httpClient.GetAsync($"{BaseUrl}{queryParameters}");
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -204,7 +204,7 @@ namespace VibeSync.DAL.Handler
             var responseContent = await response.Content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(responseContent);
             var items = jsonObject["items"].ToString();
-            var playlistTracks = JsonConvert.DeserializeObject<List<SpotifyPlaylistTrackModel>>(items).Select(x=> x.Track);
+            var playlistTracks = JsonConvert.DeserializeObject<List<SpotifyPlaylistTrackModel>>(items).Select(x => x.Track);
             var songDetails = _mapper.Map<List<SongDetails>>(playlistTracks);
             return songDetails;
         }

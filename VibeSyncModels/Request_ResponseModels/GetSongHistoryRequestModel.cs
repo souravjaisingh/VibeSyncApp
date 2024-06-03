@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace VibeSyncModels.Request_ResponseModels
 {
@@ -40,12 +39,12 @@ namespace VibeSyncModels.Request_ResponseModels
         /// </returns>
         //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         //{
-            //if ((EventId == 0 && UserId == 0) || (EventId != 0 && UserId != 0))
-            //{
-            //    yield return new ValidationResult(
-            //        "Either EventId or UserId must be zero, but not both.",
-            //        new[] { nameof(EventId), nameof(UserId) });
-            //}
+        //if ((EventId == 0 && UserId == 0) || (EventId != 0 && UserId != 0))
+        //{
+        //    yield return new ValidationResult(
+        //        "Either EventId or UserId must be zero, but not both.",
+        //        new[] { nameof(EventId), nameof(UserId) });
+        //}
         //}
 
     }

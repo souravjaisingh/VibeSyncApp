@@ -16,7 +16,7 @@ namespace VibeSync.DAL.Handler
     public class PaymentHandler : IRequestHandler<GetPaymentOrderId, GetPaymentInitiationDetails>
         , IRequestHandler<PersistSongHistoryPaymentRequest, bool>,
         IRequestHandler<GetDjPaymentsRequestModel, List<PaymentResponseModel>>
-        , IRequestHandler<RefundRequest, Refund>,
+        ,IRequestHandler<RefundRequest, Refund>,
         IRequestHandler<PromocodeApplicableForUserQueryModel, bool>
     {
         private readonly IPaymentQueryRepository _paymentqueryRepository;

@@ -28,6 +28,7 @@ namespace VibeSyncModels.EntityModels
         public string ArtistName { get; set; }
         public string AlbumName { get; set; }
         public string OrderId { get; set; }
+
         public virtual Dj Dj { get; set; }
         public virtual Event Event { get; set; }
         public virtual User User { get; set; }

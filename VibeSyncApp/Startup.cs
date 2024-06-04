@@ -80,8 +80,8 @@ namespace VibeSyncApp
             //services.AddScoped<WebSocketHandler>();
 
             services.AddSingleton<HttpClient>();
-            var context = new CustomAssemblyLoadContext();
-            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            /*var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox"));*/
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             // In production, the React files will be served from this directory

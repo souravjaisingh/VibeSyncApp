@@ -1,6 +1,4 @@
 using AutoMapper;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,6 +20,7 @@ using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncApp.Filters;
 using VibeSyncApp.Middleware;
 using VibeSyncModels;
+using VibeSyncModels.Middleware;
 
 namespace VibeSyncApp
 {
@@ -81,9 +80,9 @@ namespace VibeSyncApp
 
             services.AddSingleton<HttpClient>();
             //services.AddSentryTunneling();
-            var context = new CustomAssemblyLoadContext();
-            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
-            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            //var context = new CustomAssemblyLoadContext();
+            //context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            //services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

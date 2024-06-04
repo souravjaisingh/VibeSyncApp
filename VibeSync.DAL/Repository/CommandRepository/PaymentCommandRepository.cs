@@ -1,12 +1,17 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Razorpay.Api;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
+using VibeSyncModels;
+using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
 using Constants = VibeSyncModels.Constants;
 using Payment = VibeSyncModels.EntityModels.Payment;
@@ -24,13 +29,19 @@ namespace VibeSync.DAL.Repository.CommandRepository
         private readonly VibeSyncContext _context;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// ILogger
         /// </summary>
         private readonly ILogger<PaymentCommandRepository> _logger;
 
-        public PaymentCommandRepository(IDBContextFactory context, ILogger<PaymentCommandRepository> logger)
+        public PaymentCommandRepository(IDBContextFactory context, IMapper mapper, ILogger<PaymentCommandRepository> logger)
         {
             _context = context.GetDBContext();
+            _mapper = mapper;
             _logger = logger;
         }
         /// <summary>
@@ -69,7 +80,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         public async Task<long> PersistPaymentData(PersistSongHistoryPaymentRequest request, long songHistoryId)
         {
             _logger.LogInformation("PersistPaymentData - request :" + JsonConvert.SerializeObject(request));
-            if (request.OrderId == Constants.PaidZeroUsingPromocode)
+            if(request.OrderId == Constants.PaidZeroUsingPromocode)
             {
                 var payment = new Payment()
                 {
@@ -83,7 +94,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     PaymentId = request.PaymentId,
                     SongHistoryId = songHistoryId,
                 };
-                _logger.LogInformation("PersistPayment - " + Constants.PaidZeroUsingPromocode + " :" + JsonConvert.SerializeObject(payment));
+                _logger.LogInformation("PersistPayment - "+ Constants.PaidZeroUsingPromocode +" :" + JsonConvert.SerializeObject(payment));
                 _context.Payments.Add(payment);
                 await _context.SaveChangesAsync();
                 return payment.Id;
@@ -108,12 +119,12 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 }
                 return await Task.FromResult(paymentRecord?.Id ?? 0);
             }
-
+            
         }
 
         public async Task<Refund> RefundPayment(string paymentId, decimal amount, long userId)
         {
-            _logger.LogInformation("RefundPayment - paymentId :" + paymentId + ", amount" + amount + ", userId: " + userId);
+            _logger.LogInformation("RefundPayment - paymentId :" + paymentId + ", amount" + amount + ", userId: "+userId);
             var AppId = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("RazorpayPayments")["AppId"];
             var ClientSecret = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("RazorpayPayments")["SecretKey"];
 

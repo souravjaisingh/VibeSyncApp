@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Sentry;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 

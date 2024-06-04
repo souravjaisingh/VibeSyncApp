@@ -1,11 +1,14 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
+using Razorpay.Api;
 
 namespace VibeSync.DAL.Handler
 {
@@ -63,7 +66,13 @@ namespace VibeSync.DAL.Handler
         public async Task<LoginDetails> Handle(LoginUser request, CancellationToken cancellationToken)
         {
             var userDetails = _userQueryRepository.ChecksIfUserIsValid(request.Email, request.Password);
-            if (userDetails != null)
+            if (!string.IsNullOrWhiteSpace(userDetails.Token))
+            {
+                var isTokenActive = !IsTokenExpired(userDetails.Token);
+                if(isTokenActive)
+                    return new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj != "dj", Token = userDetails.Token };
+            }
+            if (userDetails != null && userDetails.Id > 0)
             {
                 var token = await _userCommandRepository.GenerateToken(userDetails);
                 _logger.LogInformation("Token successful created for user with ID: {UserId}.", userDetails.Id);
@@ -71,7 +80,13 @@ namespace VibeSync.DAL.Handler
             }
             return new LoginDetails();
         }
-
+        private bool IsTokenExpired(string token)
+        {
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+            var expiration = jwtToken.ValidTo;
+            return expiration < DateTime.Now;
+        }
         /// <summary>
         /// Handles the specified request.
         /// </summary>

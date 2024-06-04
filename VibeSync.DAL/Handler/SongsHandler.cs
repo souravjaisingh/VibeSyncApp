@@ -144,7 +144,7 @@ namespace VibeSync.DAL.Handler
             }
             else
             {
-                return _songQueryRepository.GetSongHistoryByUserId(request.UserId);
+                return _songQueryRepository.GetSongHistoryByUserId(request.UserId, request.SongStatus);
             }
 
         }

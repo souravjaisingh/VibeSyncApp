@@ -30,6 +30,7 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The user identifier.
         /// </value>
         public long UserId { get; set; }
+        public string SongStatus { get; set; }
         /// <summary>
         /// Determines whether the specified object is valid.
         /// </summary>

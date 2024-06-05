@@ -26,5 +26,6 @@ namespace VibeSyncModels.Request_ResponseModels
         public string UserName { get; set; }
         public decimal? TaxAmount { get; set; }
         public decimal? Cgst { get; set; }
+        public string SongStatus { get; set; }
     }
 }

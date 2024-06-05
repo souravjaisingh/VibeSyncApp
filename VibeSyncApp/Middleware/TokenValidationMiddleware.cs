@@ -51,7 +51,7 @@ namespace VibeSyncApp.Middleware
                 {
                     var userQueryRepository = scope.ServiceProvider.GetRequiredService<IUserQueryRepository>();
                     var user = userQueryRepository.GetUserById(userId);
-                    if (user == null || user.Token == null || !user.Token.Equals(token) || expiryTime <= DateTime.UtcNow)
+                    if (user == null || user.Token == null || !user.Token.Equals(token) || expiryTime <= DateTime.Now)
                     {
                         _logger.LogError("Invalid token or token has expired for user with ID: {UserId}.", userId);
                         throw new UnauthorizedAccessException("You don't have rights to access resource");

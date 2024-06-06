@@ -103,7 +103,7 @@ function NavbarComponent() {
                     )}
                 {(location.pathname.startsWith('/SongSearch') ||
                     location.pathname.startsWith('/songsearch') ||
-                    location.pathname.startsWith('/songhistory') ||
+                    //location.pathname.startsWith('/songhistory') ||
                     location.pathname.startsWith('/paymentIndex')) && (
                         <Button
                             className="btn-navigation-bar"

@@ -2,72 +2,99 @@
 
 /* Styling for the container div */
 .song--history--container {
-    max-height: 400px;
-    overflow: auto;
-    background-color: #f7f7f7;
-    /* Lighter background color */
+    background-color: #f7f7f7; /* Lighter background color */
     border-radius: 5px;
     padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Add a subtle box shadow */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
 }
 
 /* Styling for the table */
 .song--history--table {
     width: 100%;
     font-size: small;
-    max-height: 400px;
-    overflow: auto;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse; /* Collapse table borders */
     border-radius: 5px;
-    /* Fix the table layout */
+    overflow: hidden; /* Hide overflowing content */
 }
 
-/* Set specific column widths */
+/* Styling for table header cells */
 .song--history--header--cell {
     font-weight: bold;
     text-align: center;
-    width: 33.33%;
-    /* Equal width for all columns */
-    white-space: nowrap;
-    /* Prevent text wrapping */
-    overflow: hidden;
-    /* Hide overflow text */
-    text-overflow: ellipsis;
-    /* Show ellipsis for long text */
+    padding: 10px; /* Add padding for better spacing */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Show ellipsis for long text */
+    border-bottom: 1px solid #e0e0e0; /* Add bottom border for separation */
 }
 
 /* Styling for table body rows */
 .song--history--body--row {
-    cursor: pointer;
-    /* Change cursor on hover */
+    cursor: pointer; /* Change cursor on hover */
+}
+
+/* Styling for even rows */
+.song--history--body--row:nth-child(odd) {
+    background-color: #f2f2f2; /* Alternate background color */
 }
 
 /* Styling for album cover images */
 .album--cover--image {
     width: 45px;
     height: 45px;
-    border-radius: 50%;
-    /* Make the images circular */
+    border-radius: 50%; /* Make the images circular */
 }
 
-/* Styling for song name and artist */
+/* Styling for song details */
 .song--details {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 10px; /* Add gap between elements */
+    padding: 10px; /* Add padding for better spacing */
 }
 
 /* Styling for song name */
 .song--name {
     font-weight: bold;
-    margin-bottom: 4px;
 }
 
 /* Styling for artist name */
 .artist--name {
-    color: #555;
-    /* Darker text color for artist name */
+    color: #555; /* Darker text color for artist name */
 }
+
+
+/* Add this CSS code to your stylesheet */
+
+/* Add this CSS code to your stylesheet */
+
+.filter-container {
+    margin-bottom: 20px;
+  }
+  
+  .filter-label {
+    font-weight: bold;
+  }
+  
+  .filter-select {
+    padding: 5px; 
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: smaller; 
+  }
+  
+  .filter-select:hover {
+    background-color: #e9e9e9;
+  }
+  
+  .filter-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+  }
+  
+  

@@ -16,6 +16,8 @@ function TransactionHistory() {
         try {
             // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to fetch transaction history
             var res = await GetTransactionHistory(localStorage.getItem('userId'));
+            res.sort((a, b) => b.id - a.id);
+
             setTransactionHistory(res);
             setFilteredTransactionHistory(res); // Initialize with all records
             console.log(res);
@@ -33,6 +35,7 @@ function TransactionHistory() {
         // Filter records based on the selected event
         if (selectedEvent !== '' && selectedEvent !== null && selectedEvent !== 'All') {
             const filteredRecords = transactionHistory.filter((transaction) => transaction.eventName === selectedEvent);
+            filteredRecords.sort((a, b) => b.id - a.id);
             setFilteredTransactionHistory(filteredRecords);
         } else {
             // If no event is selected, show all records
@@ -41,12 +44,31 @@ function TransactionHistory() {
     }, [selectedEvent, transactionHistory]);
 
     // Calculate sum of total amounts in the filtered transaction history
-    const totalAmountSum = filteredTransactionHistory.reduce((total, transaction) => total + transaction.totalAmount, 0);
+    const totalAmountSum = filteredTransactionHistory.reduce((total, transaction) => {
+        // Check if the songStatus is "Played"
+        if (transaction.songStatus === "Played") {
+            // If it is, add the totalAmount to the running total
+            return total + parseFloat(transaction.totalAmount);
+        }
+        // If it's not "Played", just return the running total unchanged
+        return total;
+    }, 0);
 
     const handleEventFilterChange = (event) => {
         setSelectedEvent(event.target.value);
     };
-
+    function formatDateTime(datetime) {
+        const date = new Date(datetime);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+    }
     return (
         <div className="transaction-history-container">
             <h2>Transaction History</h2>
@@ -68,7 +90,7 @@ function TransactionHistory() {
                 </select>
             </div>
             <div>
-                <span style={{ color: 'green' }}>Total Amount: {totalAmountSum}</span>
+                <span style={{ color: 'green' }}>Total Amount: INR {totalAmountSum}</span>
             </div>
             <MDBTable className="transaction-table" striped hover responsive>
                 <MDBTableHead>
@@ -84,8 +106,8 @@ function TransactionHistory() {
                         <tr key={index}>
                             <td>{transaction.eventName}</td>
                             <td>{transaction.songName}</td>
-                            <td>{transaction.paymentId}</td>
-                            <td>{transaction.totalAmount}</td>
+                            <td>{transaction.paymentId}<br></br><span className='text-muted'>{formatDateTime(transaction.modifiedOn)}</span></td>
+                            <td>INR {transaction.totalAmount}</td>
                         </tr>
                     ))}
                 </MDBTableBody>

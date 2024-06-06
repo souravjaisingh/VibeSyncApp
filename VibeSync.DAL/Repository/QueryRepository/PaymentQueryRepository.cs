@@ -100,7 +100,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                     PaymentSource = join.Payment.PaymentSource,
                                     Promocode = join.Payment.Promocode,
                                     Signature = join.Payment.Signature,
-                                    TotalAmount = join.Payment.TotalAmount
+                                    TotalAmount = join.Payment.TotalAmount,
+                                    SongStatus = join.SongHistory.SongStatus
                                 }
                             )
                             .ToList();

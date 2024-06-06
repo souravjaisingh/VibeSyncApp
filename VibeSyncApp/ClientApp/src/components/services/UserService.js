@@ -91,8 +91,12 @@ export async function setLocalstorageExpiry() {
     localStorage.setItem('expiry', newDatetime);
 }
 
-export async function getUserRequestHistoryData(userid) {
-    return handleAPIRequest(`Songs/GetSongHistory?userId=${userid}`, 'GET');
+export async function getUserRequestHistoryData(userid, selectedFilter = null) {
+    let url = `Songs/GetSongHistory?userId=${userid}`;
+    if (selectedFilter !== null) {
+        url += `&songStatus=${selectedFilter}`;
+    }
+    return handleAPIRequest(url, 'GET');
 }
 
 export function handleAPIError(response) {

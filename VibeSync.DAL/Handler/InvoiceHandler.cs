@@ -1,7 +1,9 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.QueryRepository;
@@ -14,10 +16,13 @@ namespace VibeSync.DAL.Handler
     {
         private readonly IConverter _converter;
         private readonly IPaymentQueryRepository _paymentQueryRepository;
-        public InvoiceHandler(IConverter converter, IPaymentQueryRepository paymentQueryRepository)
+        private readonly IWebHostEnvironment _env;
+
+        public InvoiceHandler(IConverter converter, IPaymentQueryRepository paymentQueryRepository, IWebHostEnvironment env)
         {
             _converter = converter;
             _paymentQueryRepository = paymentQueryRepository;
+            _env = env;
         }
         public async Task<byte[]> Handle(GetInvoiceModel request, CancellationToken cancellationToken)
         {
@@ -46,6 +51,7 @@ namespace VibeSync.DAL.Handler
         }
         private string GenerateInvoiceHtml(PaymentResponseModel invoice)
         {
+            var imagePath = Path.Combine(_env.ContentRootPath, "images", "VibeSyncInvoice.jpg");
             return $@"
     <!DOCTYPE html>
     <html lang='en'>
@@ -140,7 +146,7 @@ namespace VibeSync.DAL.Handler
     <body>
         <div class='container'>
             <div class='header'>
-                <img src='file:///D:/VibeSyncApp/VibeSyncApp/Images/VibeSyncInvoice.jpg' alt='VibeSync Logo' /> <!-- Reference to the local logo -->
+                <img src='file:///{imagePath}' alt='VibeSync Logo' /> <!-- Reference to the local logo -->
                 <h2>Tax Invoice</h2>
                 <h4>GSTIN <span class='sub-header'>06BJPPJ0294Q1ZI</span></h4>
             </div>

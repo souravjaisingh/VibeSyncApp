@@ -27,6 +27,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="libwkhtmltox.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="libwkhtmltox.dll">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\VibeSync.DAL\VibeSync.DAL.csproj" />
 		<ProjectReference Include="..\VibeSyncModels\VibeSyncModels.csproj" />
 	</ItemGroup>

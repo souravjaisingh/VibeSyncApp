@@ -137,17 +137,17 @@ export default function SongHistory() {
                                     <tr>
                                         <td>
                                             <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Status: <b>{result.songStatus}</b></p>
-                                            {/*{result.songStatus === 'Played' && (*/}
-                                            {/*    <a*/}
-                                            {/*        href={`Invoice/GetInvoiceByPaymentId?paymentId=${result.paymentId}`}*/}
-                                            {/*        className="text-decoration-none"*/}
-                                            {/*        style={{ fontSize: 'small', color: 'blue' }}*/}
-                                            {/*        download={`invoice_${result.paymentId}.pdf`}*/}
-                                            {/*        onClick={(e) => e.stopPropagation()}*/}
-                                            {/*    >*/}
-                                            {/*        Download Invoice*/}
-                                            {/*    </a>*/}
-                                            {/*)}*/}
+                                            {result.songStatus === 'Played' && (
+                                                <a
+                                                    href={`Invoice/GetInvoiceByPaymentId?paymentId=${result.paymentId}`}
+                                                    className="text-decoration-none"
+                                                    style={{ fontSize: 'small', color: 'blue' }}
+                                                    download={`invoice_${result.paymentId}.pdf`}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    Download Invoice
+                                                </a>
+                                            )}
                                         </td>
                                         <td colSpan="5">
                                             <DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} />

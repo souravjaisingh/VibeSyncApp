@@ -27,12 +27,11 @@ namespace VibeSyncApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _env = env;
         }
-        private readonly IWebHostEnvironment _env;
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -81,8 +80,8 @@ namespace VibeSyncApp
             //services.AddScoped<WebSocketHandler>();
 
             services.AddSingleton<HttpClient>();
-            var context = new CustomAssemblyLoadContext();
-            context.LoadUnmanagedLibrary(Path.Combine(_env.ContentRootPath, "libwkhtmltox"));
+            /*var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox"));*/
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             // In production, the React files will be served from this directory

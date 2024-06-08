@@ -27,13 +27,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="libwkhtmltox.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Include="libwkhtmltox.dll">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="libwkhtmltox.dylib">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="libwkhtmltox.so">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>

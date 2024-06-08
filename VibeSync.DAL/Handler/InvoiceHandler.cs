@@ -37,12 +37,14 @@ namespace VibeSync.DAL.Handler
                 ColorMode = ColorMode.Color,
                 Orientation = Orientation.Portrait,
                 PaperSize = PaperKind.A4,
-            },
+                Margins = new MarginSettings() { Top = 5, Right = 5, Bottom = 10, Left = 5 },
+                DocumentTitle = "Tax Invoice"
+        },
                 Objects = {
                 new ObjectSettings() {
                     PagesCount = true,
                     HtmlContent = htmlContent,
-                    WebSettings = { DefaultEncoding = "utf-8" }
+                    WebSettings = { DefaultEncoding = "utf-8", LoadImages = true, EnableIntelligentShrinking = true }
                 }
                 }
             };

@@ -175,22 +175,22 @@ namespace VibeSync.DAL.Handler
                 <tr>
                     <th>#</th>
                     <th>Item</th>
-                    <th>Rate </th>
+                    <th>Rate (INR) </th>
                     <th>Qty</th>
-                    <th>Taxable Value</th>
-                    <th>Tax Amount</th>
-                    <th>Amount</th>
+                    <th>Taxable Value (INR) </th>
+                    <th>Tax Amount (INR) </th>
+                    <th>Amount (INR) </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
                     <td>Instant Song Request</td>
-                    <td>&#8377;{Math.Round(invoice.TaxAmount.Value, 2)}</td>
+                    <td>{Math.Round(invoice.TaxAmount.Value, 2)}</td>
                     <td>1</td>
-                    <td>&#8377;{Math.Round(invoice.TaxAmount.Value, 2)}</td>
-                    <td>&#8377;{Math.Round(invoice.TotalAmount.Value - invoice.TaxAmount.Value, 2)} (18%)</td>
-                    <td>&#8377;{Math.Round(invoice.TotalAmount.Value, 2)}</td>
+                    <td>{Math.Round(invoice.TaxAmount.Value, 2)}</td>
+                    <td>{Math.Round(invoice.TotalAmount.Value - invoice.TaxAmount.Value, 2)} (18%)</td>
+                    <td>{Math.Round(invoice.TotalAmount.Value, 2)}</td>
                 </tr>
                 <tr>
                     <td colspan='2'>Song title: '{invoice.SongName}'</td>
@@ -201,25 +201,25 @@ namespace VibeSync.DAL.Handler
                 <tr>
                     <td colspan='4'></td>
                     <td>Taxable Amount</td>
-                    <td>&#8377;{Math.Round(invoice.TaxAmount.Value, 2)}</td>
-                    <td>&#8377;{Math.Round(invoice.TotalAmount.Value, 2)}</td>
+                    <td>{Math.Round(invoice.TaxAmount.Value, 2)}</td>
+                    <td>{Math.Round(invoice.TotalAmount.Value, 2)}</td>
                 </tr>
                 <tr>
                     <td colspan='4'></td>
                     <td>SGST 9%</<td>
-                    <td>&#8377;{Math.Round(invoice.Cgst.Value, 2)}</td>
+                    <td>{Math.Round(invoice.Cgst.Value, 2)}</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan='4'></td>
                     <td>SGST 9%</<td>
-                    <td>&#8377;{Math.Round(invoice.Cgst.Value, 2)}</td>
+                    <td>{Math.Round(invoice.Cgst.Value, 2)}</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan='4'></td>
                     <td>Total</td>
-                    <td colspan='2'>&#8377;{Math.Round(invoice.TotalAmount.Value, 2)}</td>
+                    <td colspan='2'>{Math.Round(invoice.TotalAmount.Value, 2)}</td>
                 </tr>
             </tfoot>
         </table>

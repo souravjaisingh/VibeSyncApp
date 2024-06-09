@@ -54,14 +54,19 @@ namespace VibeSync.DAL.Handler
         private string GenerateInvoiceHtml(PaymentResponseModel invoice)
         {
             var imagePath = Path.Combine(_env.ContentRootPath, "images", "VibeSyncInvoice.jpg");
+            var fontBase64 = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(_env.ContentRootPath, "fonts", "Roboto-Regular.ttf")));
+
             return $@"
     <!DOCTYPE html>
     <html lang='en'>
     <head>
         <meta charset='UTF-8'>
         <title>Tax Invoice - VibeSync</title>
-        <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>
         <style>
+        @font-face {{
+            font-family: 'Roboto';
+            src: url(data:font/ttf;base64,{fontBase64}) format('truetype');
+        }}
             body {{
                 font-family: 'Roboto', sans-serif;
                 margin: 0;

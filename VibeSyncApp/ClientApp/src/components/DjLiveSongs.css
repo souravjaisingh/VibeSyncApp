@@ -72,7 +72,7 @@
 .history-table {
     width: 100%;
     overflow-x: auto;
-    font-size: small;
+    font-size: x-small;
     background-color: aliceblue;
 }
 
@@ -109,6 +109,8 @@
 
 .button-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 5px;
     width: max-content;
     /* Adjust the gap between buttons as needed */

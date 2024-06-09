@@ -44,6 +44,7 @@
 /* Table styles */
 .transaction-table {
     width: 100%;
+    font-size: x-small;
 }
 
 /* Table head styles */

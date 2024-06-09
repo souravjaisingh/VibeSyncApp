@@ -32,7 +32,7 @@ namespace VibeSync.DAL.Handler
 
             var logEntry = new VibeSyncModels.EntityModels.Log
             {
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 LogLevel = (int)logLevel,
                 Message = formatter(state, exception),
                 Exception = exception?.ToString(),

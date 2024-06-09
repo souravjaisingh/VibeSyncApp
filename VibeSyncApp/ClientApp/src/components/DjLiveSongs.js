@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
 import { getUserRequestHistoryData } from './services/UserService';
@@ -10,6 +10,7 @@ import { eventDetailsUpsertHelper } from '../Helpers/EventsHelper';
 import { Live, LiveButNotAcceptingRequests, PaidZeroUsingPromocode } from './Constants';
 import { useLoadingContext } from './LoadingProvider';
 import { RefundPayment } from './services/PaymentService';
+import addNotification from 'react-push-notification';
 
 export default function DjLiveSongs() {
     const { error, setError } = useContext(MyContext);
@@ -25,6 +26,12 @@ export default function DjLiveSongs() {
     const [eventId, setEventId] = useState(rowData != null ? rowData.id : null);
     const [stopIncomingRequests, setStopIncomingRequests] = useState(rowData.eventStatus === 'Live-NA' ? true : false);
     const { setLoading } = useLoadingContext();
+    const [remainingTimes, setRemainingTimes] = useState({});
+    const [rejectedRecords, setRejectedRecords] = useState([]);
+    const [isNewRequest, setIsNewRequest] = useState(false); // State to track new requests
+    const lastHighestRecordIdRef = useRef(0);
+
+
     const openModal = () => {
         setModalIsOpen(true);
         setEventId(eventId);
@@ -37,13 +44,48 @@ export default function DjLiveSongs() {
         setEventId(eventId);
     };
 
+    useEffect(() => {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
+    }, []);
 
+    function newNotification(){
+        addNotification({
+            title: 'New Request',
+            subtitle: 'Wohoo!',
+            message: 'Hey, a new request popped up!',
+            theme: 'darkblue',
+            duration: 6000
+            //native: true // when using native, your OS will handle theming.
+        });
+    }
+    function enableNotifs(){
+        notifyUser();
+    }
     console.log("eventId : " + eventId)
 
     console.log(rowData);
 
+    function notifyUser(notificationText = "Hey, New song request just popped up!"){
+        console.log("yep");
+        if(!("Notification" in window)){
+            alert("Browser doesn't support notifications.")
+        }else if(Notification.permission === "granted"){
+            new Notification(notificationText);
+        }else if(Notification.permission !== "denied"){
+            Notification.requestPermission().then((permission) => {
+                if(permission === "granted"){
+                    new Notification(notificationText);
+                }
+            })
+        }
+    }
+
     useEffect(() => {
         if ((rowData && rowData.id) || localStorage.getItem('eventId') != null) {
+            let lastHighestRecordId = Math.max(...userHistory.map(request => request.id), 0);
+            
             async function fetchData() {
                 try {
                     const res = await GetSongsByEventId(rowData.id != null ? rowData.id : localStorage.getItem('eventId'));
@@ -64,6 +106,15 @@ export default function DjLiveSongs() {
                         }
                     });
 
+                    const highestIdInResponse = Math.max(...sortedRequests.map(request => request.id), 0);
+                    const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
+                    console.log(isNewRequest);
+                    if (isNewRequest === true && Notification.permission === 'granted') {
+                        notifyUser();
+                    }
+                    lastHighestRecordIdRef.current = highestIdInResponse;
+
+
                     setUserHistory(sortedRequests);
                     console.log(sortedRequests);
                 } catch (error) {
@@ -73,8 +124,9 @@ export default function DjLiveSongs() {
                 }
 
             }
+            
             fetchData();
-
+            
 
             const interval = setInterval(() => {
                 fetchData(); // Fetch data every 15 seconds
@@ -85,6 +137,27 @@ export default function DjLiveSongs() {
         }
     }, [rowData.id]); // Add rowData.id to the dependency array
 
+    // useEffect(() => {
+    //     const updatedTimes = {};
+    //     userHistory.forEach(result => {
+    //         const remainingTime = calculateRemainingTime(result.paymentDateTime);
+    //         if (remainingTime !== null) {
+    //             updatedTimes[result.paymentId] = remainingTime;
+    //             if (remainingTime === 0 && !rejectedRecords.includes(result.paymentId)) {
+    //                 handleRejectRequest(result);
+    //                 setRejectedRecords(prev => [...prev, result.paymentId]); // Mark the record as rejected
+    //             }
+    //         } else {
+    //             // If remaining time is null and the record has not been rejected yet, call handleRejectRequest for the record
+    //             if (!rejectedRecords.includes(result.paymentId)) {
+    //                 handleRejectRequest(result);
+    //                 setRejectedRecords(prev => [...prev, result.paymentId]); // Mark the record as rejected
+    //             }
+    //         }
+    //     });
+    //     setRemainingTimes(updatedTimes);
+    // }, [userHistory, rejectedRecords]); // Add rejectedRecords to the dependency array
+
     const handleAcceptRequest = async (record) => {
         try {
             const songHistoryModel = {
@@ -93,6 +166,7 @@ export default function DjLiveSongs() {
                 SongStatus: "Accepted", // Update the songStatus property
                 userId: localStorage.getItem('userId')
             };
+            setLoading(true);
             var res = await ModifySongRequest(songHistoryModel);
             console.log(res);
 
@@ -104,18 +178,16 @@ export default function DjLiveSongs() {
             // Sort and update the userHistory state
             const sortedUserHistory = sortUserHistory(updatedUserHistory);
             setUserHistory(sortedUserHistory);
-
+            setLoading(false);
             // Move the accepted request to the bottom of the acceptedHistory array
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
         } catch (error) {
             setError(true);
+            setLoading(false);
             setErrorMessage(error.message);
             console.error('Error accepting request:', error);
         }
     };
-
-
-    // Similar changes for handleRejectRequest
 
     // Function to sort userHistory
     function sortUserHistory(history) {
@@ -134,8 +206,6 @@ export default function DjLiveSongs() {
         return sortedUserHistory;
     };
 
-
-
     const handleRejectRequest = async (record) => {
         try {
             const songHistoryModel = {
@@ -144,12 +214,13 @@ export default function DjLiveSongs() {
                 SongStatus: "Rejected",
                 userId: localStorage.getItem('userId')
             };
+            setLoading(true);
             var res = await ModifySongRequest(songHistoryModel);
-            if(record.paymentId !== PaidZeroUsingPromocode){
+            if (record.paymentId !== PaidZeroUsingPromocode) {
                 const refundObj = {
-                    PaymentId : record.paymentId,
-                    Amount : record.totalAmount,
-                    UserId : record.userId
+                    PaymentId: record.paymentId,
+                    Amount: record.totalAmount,
+                    UserId: record.userId
                 }
                 var refund = await RefundPayment(refundObj);
                 const songHistoryMdl = {
@@ -168,8 +239,10 @@ export default function DjLiveSongs() {
             setUserHistory((prevHistory) =>
                 prevHistory.filter((request) => request.id !== record.id)
             );
+            setLoading(false);
         } catch (error) {
             setError(true);
+            setLoading(false);
             setErrorMessage(error.message);
             console.error('Error rejecting request:', error);
         }
@@ -182,6 +255,7 @@ export default function DjLiveSongs() {
                 SongStatus: "Played", // Update the songStatus property
                 userId: localStorage.getItem('userId')
             };
+            setLoading(true);
             var res = await ModifySongRequest(songHistoryModel);
             console.log(res);
 
@@ -192,9 +266,11 @@ export default function DjLiveSongs() {
 
             // Move the accepted request to the bottom of the acceptedHistory array
             setAcceptedHistory((prevAccepted) => [...prevAccepted, record]);
+            setLoading(false);
         }
         catch (error) {
             setError(true);
+            setLoading(false);
             setErrorMessage(error.message);
             console.error('Error marking as played:', error);
         }
@@ -233,7 +309,13 @@ export default function DjLiveSongs() {
     function handleEditProfileClick() {
         navigate(`/eventdetails?data=${rowDataString}`); // Navigate to the specified URL
     }
-
+    const calculateRemainingTime = (paymentDateTime) => {
+        const currentTime = new Date();
+        const paymentTime = new Date(paymentDateTime);
+        const endTime = new Date(paymentTime.getTime() + 20 * 60 * 1000); // Add 20 minutes
+        const remainingTime = Math.max(0, (endTime - currentTime) / 1000 / 60); // Convert to minutes
+        return remainingTime > 0 ? remainingTime.toFixed(0) : null; // Return null when remaining time is 0 or less
+    };
     return (
         <div className='song-history-container' style={{ maxHeight: '500px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -255,7 +337,7 @@ export default function DjLiveSongs() {
                     </div>
                 </div>
             </div>
-    
+
             {userHistory.length > 0 ? ( // Check if userHistory is not empty
                 <div className='song-history-table'>
                     <MDBTable className='history-table' align='middle' responsive hover>
@@ -287,39 +369,53 @@ export default function DjLiveSongs() {
                                     {result && result.songStatus === 'Pending' && (
                                         <td>
                                             <div className='button-container'>
-                                                <button
-                                                    onClick={() => handleAcceptRequest(result)}
-                                                    className='btn btn-success action-button'
-                                                >
-                                                    ✓
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='btn btn-danger action-button'
-                                                >
-                                                    ✗
-                                                </button>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <button
+                                                        onClick={() => handleAcceptRequest(result)}
+                                                        className='btn btn-success action-button'
+                                                    >
+                                                        ✓
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRejectRequest(result)}
+                                                        className='btn btn-danger action-button'
+                                                    >
+                                                        ✗
+                                                    </button>
+                                                </div>
+                                                <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                    <div style={{ fontSize: '12px' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} min left</div>
+                                                </div>
                                             </div>
                                         </td>
                                     )}
-    
+
                                     {result && result.songStatus === 'Accepted' && (
                                         <td>
                                             <div className='button-container'>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='btn btn-danger action-button'
-                                                >
-                                                    ✗
-                                                </button>
-                                                <button
-                                                    onClick={() => handleMarkAsPlayed(result)}
-                                                    className='btn btn-primary-mark-as-played'
-                                                >
-                                                    Mark as Played
-                                                </button>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <button
+                                                        onClick={() => handleRejectRequest(result)}
+                                                        className='btn btn-danger action-button'
+                                                    >
+                                                        ✗
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleMarkAsPlayed(result)}
+                                                        className='btn btn-primary-mark-as-played'
+                                                    >
+                                                        Mark as Played
+                                                    </button>
+                                                </div>
+                                                <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                    <div style={{ fontSize: '12px' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} minutes remaining</div>
+                                                </div>
                                             </div>
                                         </td>
+                                    )}
+                                    {/* Call handleRejectRequest if remaining time is null */}
+                                    {result && calculateRemainingTime(result.paymentDateTime) === null && (
+                                        handleRejectRequest(result)
                                     )}
                                 </tr>
                             ))}
@@ -331,8 +427,7 @@ export default function DjLiveSongs() {
             )}
         </div>
     );
-    
-    
+
 
 
 }

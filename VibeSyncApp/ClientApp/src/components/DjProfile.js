@@ -151,6 +151,7 @@ const DjProfile = () => {
             placeholder="Description"
             value={djDescription}
             onChange={(e) => setDjDescription(e.target.value)}
+            maxLength={200}
           />
         </div>
         <div className="input-group">

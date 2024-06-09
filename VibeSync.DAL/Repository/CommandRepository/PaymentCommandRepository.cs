@@ -132,7 +132,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
             return await Task.FromResult(refund);
         }
 
-        public async Task<long> UpdatePaymentDetailsFromWebHook(string orderId, long songHistoryId, string paymentId, decimal totalAmount)
+        public async Task<long> UpdatePaymentDetailsFromWebHook(string orderId, long songHistoryId, string paymentId, decimal totalAmount, string contact = null)
         {
             var paymentRecord = _context.Payments.FirstOrDefault(x => x.OrderId == orderId);
 
@@ -144,7 +144,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 paymentRecord.SongHistoryId = songHistoryId;
                 paymentRecord.ModifiedBy = "webhook";
                 paymentRecord.ModifiedOn = GetISTDateTime();
-
+                paymentRecord.Contact = contact;
                 _logger.LogInformation("UpdatePaymentDetailsFromWebHook - paymentRecord :" + JsonConvert.SerializeObject(paymentRecord));
                 _context.Payments.Update(paymentRecord);
 

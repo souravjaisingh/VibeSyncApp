@@ -37,7 +37,7 @@ namespace VibeSync.DAL.Handler
                 {
                     try
                     {
-                        long paymentId = await _paymentCommandRepository.UpdatePaymentDetailsFromWebHook(request.payload.payment.entity.order_id, songHistoryId, request.payload.payment.entity.id, (request.payload.payment.entity.amount / 100));
+                        long paymentId = await _paymentCommandRepository.UpdatePaymentDetailsFromWebHook(request.payload.payment.entity.order_id, songHistoryId, request.payload.payment.entity.id, (request.payload.payment.entity.amount / 100), paymentEntity.contact);
                         if (paymentId > 0)
                         {
                             return true;

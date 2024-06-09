@@ -30,6 +30,7 @@ import QrCodeDirect from './components/QrCodeDirect';
 import { useLoadingContext } from './components/LoadingProvider';
 import PlaylistComponent from './components/Playlists';
 import SongsTable from './components/SongsTable';
+import { Notifications } from 'react-push-notification';
 
 export const MyContext = createContext();
 
@@ -61,7 +62,9 @@ function App() {
     const paddingValue = getPaddingValue();
     return (
         <>
+            <Notifications />
             <NavbarComponent />
+            
             <div style={{ paddingTop: paddingValue }}>
                 {/* This padding ensures content does not overlap with the navbar */}
             </div>

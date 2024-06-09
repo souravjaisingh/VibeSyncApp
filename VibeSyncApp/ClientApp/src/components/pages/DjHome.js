@@ -11,12 +11,12 @@ export default function DjHome() {
             <div className='center-button'>
                 <Link to='/djprofile' className='btn-mobile left-button'>
                     <button className='toolbar-button'>
-                        Update Dj Profile
+                        Update Profile
                     </button>
                 </Link>
                 <Link to='/eventdetails' className='btn-mobile'>
                     <button className='toolbar-button'>
-                        Click here to add Event
+                        Add Event
                     </button>
                 </Link>
                 <Link to='/showtransactions' className='btn-mobile right-button'>

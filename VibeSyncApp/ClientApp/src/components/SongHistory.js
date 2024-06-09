@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import './SongHistory.css';
 import { getUserRequestHistoryData } from './services/UserService';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 
 export default function SongHistory() {
     const { error, setError } = useContext(MyContext);
@@ -9,10 +10,12 @@ export default function SongHistory() {
     const [userHistory, setUserHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState('All');
+    const { setLoading } = useLoadingContext();
 
     async function fetchData(selectedFilter) {
         if (localStorage.getItem('userId') !== null) {
             try {
+                setLoading(true);
                 let res;
                 if (selectedFilter === 'All') {
                     res = await getUserRequestHistoryData(localStorage.getItem('userId'));
@@ -22,12 +25,14 @@ export default function SongHistory() {
                 setUserHistory(res);
                 const sortedData = sortUserHistory(res);
                 setUserHistory(sortedData);
+                setLoading(false);
             } catch (error) {
                 setError(true);
                 setErrorMessage(error.message);
                 console.error('Error fetching user request history:', error);
             } finally {
                 setIsLoading(false);
+                setLoading(false);
             }
         }
     }
@@ -106,6 +111,8 @@ export default function SongHistory() {
                     >
                         <option value="All">All</option>
                         <option value="Played">Played</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Accepted">Accepted</option>
                         <option value="Refunded">Refunded</option>
                     </select>
                 </div>

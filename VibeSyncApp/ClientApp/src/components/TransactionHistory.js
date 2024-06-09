@@ -66,7 +66,7 @@ function TransactionHistory() {
         const minutes = date.getMinutes().toString().padStart(2, '0');
         const seconds = date.getSeconds().toString().padStart(2, '0');
         const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
-        
+
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
     }
     return (
@@ -97,7 +97,7 @@ function TransactionHistory() {
                     <tr>
                         <th>Event Name</th>
                         <th>Song Name</th>
-                        <th>Payment ID</th>
+                        <th>Payment</th>
                         <th>Total Amount</th>
                     </tr>
                 </MDBTableHead>
@@ -107,7 +107,9 @@ function TransactionHistory() {
                             <td>{transaction.eventName}</td>
                             <td>{transaction.songName}</td>
                             <td>{transaction.paymentId}<br></br><span className='text-muted'>{formatDateTime(transaction.modifiedOn)}</span></td>
-                            <td>INR {transaction.totalAmount}</td>
+                            <td>INR {transaction.totalAmount}<br></br><span style={{ color: transaction.songStatus === "Played" ? 'green' : 'red' }}>
+                                {transaction.songStatus}
+                            </span></td>
                         </tr>
                     ))}
                 </MDBTableBody>

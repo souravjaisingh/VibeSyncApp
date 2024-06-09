@@ -46,7 +46,7 @@ namespace VibeSyncApp.Middleware
                     throw new UnauthorizedAccessException("You don't have rights to access resource");
                 }
                 var expiryseconds = long.Parse(parsedToken?.Claims?.FirstOrDefault(claim => claim.Type == "exp")?.Value);
-                DateTime expiryTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(expiryseconds);
+                DateTime expiryTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local).AddSeconds(expiryseconds);
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var userQueryRepository = scope.ServiceProvider.GetRequiredService<IUserQueryRepository>();

@@ -189,7 +189,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                  SongName = sh.SongName,
                  UserName = user != null ? user.FirstName + " " + user.LastName : null,
                  TaxAmount = Math.Round(p.TotalAmount.GetValueOrDefault() / 1.18M, 2),
-                 Cgst = Math.Round((p.TotalAmount.GetValueOrDefault() - Math.Round(p.TotalAmount.GetValueOrDefault() / 1.18M, 2)) / 2, 2)
+                 Cgst = Math.Round((p.TotalAmount.GetValueOrDefault() - Math.Round(p.TotalAmount.GetValueOrDefault() / 1.18M, 2)) / 2, 2),
+                 Contact = p.Contact
              }).FirstOrDefault();
         }
         private int loggedInUserId()

@@ -21,9 +21,6 @@ jobs:
         with:
           dotnet-version: '6.0.x'
           include-prerelease: true
-          
-      - name: Install npm dependencies with --force
-        run: npm install --force
         
       - name: Build with dotnet
         run: dotnet build --configuration Release

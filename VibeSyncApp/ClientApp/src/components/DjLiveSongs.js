@@ -11,6 +11,8 @@ import { Live, LiveButNotAcceptingRequests, PaidZeroUsingPromocode } from './Con
 import { useLoadingContext } from './LoadingProvider';
 import { RefundPayment } from './services/PaymentService';
 import addNotification from 'react-push-notification';
+import {isMobile} from 'react-device-detect';
+
 
 export default function DjLiveSongs() {
     const { error, setError } = useContext(MyContext);
@@ -110,7 +112,11 @@ export default function DjLiveSongs() {
                     const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
                     console.log(isNewRequest);
                     if (isNewRequest === true && Notification.permission === 'granted') {
-                        notifyUser();
+                        if(!isMobile){
+                            console.log('inside !isMobile if clause');
+                            notifyUser(); //desktop notification
+                        }
+                        newNotification();  //in-page notification
                     }
                     lastHighestRecordIdRef.current = highestIdInResponse;
 
@@ -312,7 +318,7 @@ export default function DjLiveSongs() {
     const calculateRemainingTime = (paymentDateTime) => {
         const currentTime = new Date();
         const paymentTime = new Date(paymentDateTime);
-        const endTime = new Date(paymentTime.getTime() + 20 * 60 * 1000); // Add 20 minutes
+        const endTime = new Date(paymentTime.getTime() + 30 * 60 * 1000); // Add 30 minutes
         const remainingTime = Math.max(0, (endTime - currentTime) / 1000 / 60); // Convert to minutes
         return remainingTime > 0 ? remainingTime.toFixed(0) : null; // Return null when remaining time is 0 or less
     };

@@ -81,7 +81,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public List<SongHistoryModel> GetSongHistoryByUserId(long userId, string songStatus)
+        public List<SongHistoryModel> GetSongHistoryByUserId(long eventId, long userId, string songStatus, bool isAllRequest)
         {
             var query = _context.SongHistories.Join(
             _context.Payments,
@@ -114,6 +114,10 @@ namespace VibeSync.DAL.Repository.QueryRepository
             if (!string.IsNullOrWhiteSpace(songStatus))
             {
                 query = query.Where(x => x.SongStatus.ToLower() == songStatus.ToLower());
+            }
+            if (isAllRequest)
+            {
+                query = query.Where(x => x.EventId == eventId);
             }
 
             return query.ToList();

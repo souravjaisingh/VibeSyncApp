@@ -131,5 +131,18 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(EventsController).GetMethod("GetEventsByEventId")}'s response: {JsonConvert.SerializeObject(res)}");
             return Ok(res);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEvent([FromQuery] DeleteEvent request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(EventsController)}, API: {typeof(EventsController).GetMethod("DeleteEvent")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var res = await _mediator.Send(request).ConfigureAwait(false);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(EventsController).GetMethod("CreateEvent")}'s response: {JsonConvert.SerializeObject(res)}");
+            return Ok(res);
+        }
     }
 }

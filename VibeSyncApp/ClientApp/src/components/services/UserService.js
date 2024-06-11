@@ -92,7 +92,7 @@ export async function setLocalstorageExpiry() {
 }
 
 export async function getUserRequestHistoryData(userid, selectedFilter = null) {
-    let url = `Songs/GetSongHistory?userId=${userid}`;
+    let url = `Songs/GetSongHistory?userId=${userid}&eventId=${localStorage.getItem('qrEventId')}&isAllRequest=${true}`;
     if (selectedFilter !== null) {
         url += `&songStatus=${selectedFilter}`;
     }

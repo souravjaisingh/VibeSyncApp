@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import './DjLiveSongs.css';
-import { getUserRequestHistoryData } from './services/UserService';
 import { Link, useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 import { GetSongsByEventId, ModifySongRequest } from './services/SongsService';
 import { MyContext } from '../App';

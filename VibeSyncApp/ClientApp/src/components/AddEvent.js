@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
 import { useLoadingContext } from './LoadingProvider';
+import { DeleteEventByEventId } from './services/EventsService';
 
 const AddressTypeahead = () => {
     const { error, setError } = useContext(MyContext);
@@ -115,6 +116,22 @@ const AddressTypeahead = () => {
             }
         }
     }
+
+    const handleDelete = async () => {
+        if (window.confirm('Are you sure you want to delete this event?')) {
+            try {
+                setLoading(true);
+                //await axios.delete(`/api/events/${rowData.id}`);
+                await DeleteEventByEventId(rowData.id);
+                setLoading(false);
+                navigate('/djhome');
+            } catch (error) {
+                setError(true);
+                setErrorMessage(error.message);
+                console.error('Error in handleDelete:', error);
+            }
+        }
+    };
 
     useEffect(() => {
         if (rowData != null) {
@@ -231,6 +248,11 @@ const AddressTypeahead = () => {
                     />
                 </div>
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
+                {rowDataString && (
+                <button type='button' onClick={handleDelete} className="btn btn--danger btn--medium " style={{color: "red"}}>
+                    Delete event
+                </button>
+            )}
             </form>
         </div>
 

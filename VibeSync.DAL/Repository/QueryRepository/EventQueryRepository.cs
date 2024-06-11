@@ -59,7 +59,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                     CreatedBy = events.CreatedBy,
                     CreatedOn = events.CreatedOn
                 }
-                ).OrderBy(x => x.EventStatus).ThenByDescending(res => res.CreatedOn).ToList();
+                ).Where(x=> x.EventStatus != Constants.EventDeleted)
+                .OrderBy(x => x.EventStatus).ThenByDescending(res => res.CreatedOn).ToList();
             return events;
         }
 
@@ -94,7 +95,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 ModifiedOn = e.ModifiedOn,
                                 Latitude = e.Latitude,
                                 Longitude = e.Longitude
-                            }).ToList().AsEnumerable();
+                            }).Where(x=> x.EventStatus != Constants.EventDeleted)
+                            .ToList().AsEnumerable();
             return response;
         }
 
@@ -131,7 +133,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 ModifiedOn = e.ModifiedOn,
                                 Latitude = e.Latitude,
                                 Longitude = e.Longitude
-                            }).Where(x => x.EventStatus == Constants.Live).ToList();
+                            }).Where(x => x.EventStatus == Constants.Live && x.EventStatus != Constants.EventDeleted).ToList();
             for (int i = 0; i < response.Count; i++)
             {
                 response[i].DistanceFromCurrLoc = (decimal?)HaversineDistance(
@@ -201,6 +203,14 @@ namespace VibeSync.DAL.Repository.QueryRepository
 
             return events;
 
+        }
+
+        public bool DeleteEvent(DeleteEvent request)
+        {
+            var res = _context.Events.FirstOrDefault(x => x.Id == request.EventId);
+            res.EventStatus = Constants.EventDeleted;
+            return _context.SaveChanges() > 0 ? true : false;
+            
         }
     }
 }

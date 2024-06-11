@@ -19,5 +19,6 @@
         public const string SongStatusRejected = "Rejected";
         public const string SongStatusPlayed = "Played";
         public const string SongStatusPaymentInProgress = "Unpaid";
+        public const string EventDeleted = "Deleted";
     }
 }

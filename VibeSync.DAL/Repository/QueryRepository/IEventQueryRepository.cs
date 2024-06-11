@@ -30,5 +30,10 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <returns></returns>
         EventsDetails GetEventsByEventId(GetEventsByEventId request);
+        /// <summary>
+        /// Gets the events by event identifier.
+        /// </summary>
+        /// <returns></returns>
+        bool DeleteEvent(DeleteEvent request);
     }
 }

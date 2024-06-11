@@ -17,6 +17,10 @@ export async function AddEventByUserId(data) {
     return handleAPIRequest('Events/CreateEvent', 'POST', data);
 }
 
+export async function DeleteEventByEventId(data) {
+    return handleAPIRequest(`Events/DeleteEvent?eventId=${data}`, 'POST', data);
+}
+
 export async function UpdateEventDetails(data) {
     return handleAPIRequest('Events/UpdateEvent', 'PUT', data);
 }

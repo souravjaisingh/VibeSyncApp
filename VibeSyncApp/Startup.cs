@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using VibeSync.DAL.BackgroundServices;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Handler;
 using VibeSync.DAL.Repository.CommandRepository;
@@ -96,6 +97,7 @@ namespace VibeSyncApp
                     sqlOptions.EnableRetryOnFailure();
                 });
             });
+            services.AddHostedService<DatabaseKeepAliveService>();
             // Configure logging
             services.AddLogging(builder =>
             {

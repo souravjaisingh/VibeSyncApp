@@ -171,7 +171,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <returns></returns>
         public EventsDetails GetEventsByEventId(GetEventsByEventId request)
         {
-            var events = _context.Events
+            if(request.UserId > 0)
+            {
+                return _context.Events
                 .Join(
                     _context.Djs.Where(d => d.UserId == request.UserId),
                     e => e.DjId,
@@ -200,9 +202,48 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 )
                 .Where(e => e.Id == request.EventId)
                 .FirstOrDefault();
+            }
+            else
+            {
+                // Step 1: Retrieve the DjId from the Events table
+                var djId = _context.Events
+                    .Where(e => e.Id == request.EventId)
+                    .Select(e => e.DjId)
+                    .FirstOrDefault();
 
-            return events;
+                // Step 2: Use the retrieved DjId to join with the Djs table
+                var eventsDetails = _context.Events
+                    .Where(e => e.Id == request.EventId)
+                    .Join(
+                        _context.Djs,
+                        e => e.DjId,
+                        d => d.Id,
+                        (e, d) => new EventsDetails
+                        {
+                            Id = e.Id,
+                            DjId = e.DjId,
+                            DjDescription = d.DjDescription,
+                            DjPhoto = d.DjPhoto,
+                            DjName = d.DjName,
+                            DjGenre = d.DjGenre,
+                            EventDescription = e.EventDescription,
+                            EventEndDateTime = e.EventEndDateTime,
+                            EventStartDateTime = e.EventStartDateTime,
+                            EventGenre = e.EventGenre,
+                            EventName = e.EventName,
+                            EventStatus = e.EventStatus,
+                            Latitude = e.Latitude,
+                            Longitude = e.Longitude,
+                            MinimumBid = e.MinimumBid,
+                            Venue = e.Venue,
+                            CreatedBy = e.CreatedBy,
+                            CreatedOn = e.CreatedOn
+                        }
+                    )
+                    .FirstOrDefault();
 
+                return eventsDetails;
+            }
         }
 
         public bool DeleteEvent(DeleteEvent request)

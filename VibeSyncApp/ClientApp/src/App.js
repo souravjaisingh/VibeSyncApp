@@ -31,6 +31,7 @@ import { useLoadingContext } from './components/LoadingProvider';
 import PlaylistComponent from './components/Playlists';
 import SongsTable from './components/SongsTable';
 import { Notifications } from 'react-push-notification';
+import Settlements from './components/Settlements';
 
 export const MyContext = createContext();
 
@@ -98,6 +99,7 @@ function App() {
                 <Route path="/qropener" element={<QrCodeDirect />} />
                 <Route path="/playlists" element={<PlaylistComponent />} />
                 <Route path="/acceptedRequests" element={<SongsTable />} />
+                <Route path="/settlements" element={<Settlements />} />
                 </Routes>}
                 </MyContext.Provider>
                 {loading && (

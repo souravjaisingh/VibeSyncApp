@@ -7,6 +7,7 @@ import { MyContext } from '../App';
 import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
+import addNotification from 'react-push-notification';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -59,6 +60,42 @@ function PaymentIndex() {
             script.onerror = reject;
         });
     };
+
+    useEffect(() => {
+        if(rowData.eventStatus !== 'Live'
+            || amount < rowData.minimumBid
+            || (!isPromoAvailable && isPromoApplied)){
+                requestNotificationPermission();
+            }
+    },[]);
+
+    function requestNotificationPermission() {
+        if (!("Notification" in window)) {
+            console.log("This browser does not support notifications.");
+            return;
+        }
+    
+        if (Notification.permission === "granted") {
+            // Permission already granted
+            newNotification();
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    newNotification();
+                }
+            });
+        }
+    }
+    function newNotification(){
+        addNotification({
+            title: 'Oh no!',
+            subtitle: 'Please come back later.',
+            message: 'DJ is not accepting requests right now.',
+            theme: 'darkblue',
+            duration: 4000
+            //native: true // when using native, your OS will handle theming.
+        });
+    }
     useEffect(() => {
         setAmount(rowData.minimumBid);
         const loadRazorpayScript = async () => {

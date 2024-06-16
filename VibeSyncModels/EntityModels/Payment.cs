@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 #nullable disable
 
@@ -22,7 +23,8 @@ namespace VibeSyncModels.EntityModels
         public long? UserId { get; set; }
         public string OrderId { get; set; }
         public string Signature { get; set; }
-        public string? Contact { get; set; }
+        public string Contact { get; set; }
+
         public virtual SongHistory SongHistory { get; set; }
         public virtual User User { get; set; }
     }

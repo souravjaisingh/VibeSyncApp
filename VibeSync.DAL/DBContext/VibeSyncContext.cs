@@ -20,6 +20,7 @@ namespace VibeSync.DAL.DBContext
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<Settlement> Settlements { get; set; }
         public virtual DbSet<SongHistory> SongHistories { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
@@ -65,7 +66,7 @@ namespace VibeSync.DAL.DBContext
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.DjDescription).HasMaxLength(50);
+                entity.Property(e => e.DjDescription).HasMaxLength(1000);
 
                 entity.Property(e => e.DjGenre).HasMaxLength(10);
 
@@ -142,6 +143,8 @@ namespace VibeSync.DAL.DBContext
             modelBuilder.Entity<Log>(entity =>
             {
                 entity.Property(e => e.Logger).HasMaxLength(256);
+
+                entity.Property(e => e.RemoteIpAddress).HasMaxLength(45);
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -153,6 +156,11 @@ namespace VibeSync.DAL.DBContext
                 entity.HasIndex(e => e.SongHistoryId, "payment_songHistoryId");
 
                 entity.Property(e => e.BidAmount).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Contact)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("contact");
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -193,6 +201,33 @@ namespace VibeSync.DAL.DBContext
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Payment__UserId__6C190EBB");
+            });
+
+            modelBuilder.Entity<Settlement>(entity =>
+            {
+                entity.HasIndex(e => e.EventId, "IX_Settlements_EventId");
+
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DateModified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy).HasMaxLength(50);
+
+                entity.Property(e => e.RemainingAmount).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.Settlements)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Settlemen__Event__40F9A68C");
             });
 
             modelBuilder.Entity<SongHistory>(entity =>

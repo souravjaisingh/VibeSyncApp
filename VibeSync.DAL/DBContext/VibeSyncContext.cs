@@ -32,7 +32,7 @@ namespace VibeSync.DAL.DBContext
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
                 .Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("VibeSync_Dev"), 
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("VibeSyncDB"), 
                     sqlServerOptionsAction: sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(

@@ -7,6 +7,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
@@ -71,7 +72,9 @@ namespace VibeSync.DAL.Repository.CommandRepository
             else if (user.IsSsologin && getUser != null)
             {
                 var loginresponse = _mapper.Map<LoginDetails>(getUser);
-                loginresponse.Token = await GenerateToken(getUser);
+                var token = await GenerateToken(getUser);
+                loginresponse.Token = token.Token;
+                loginresponse.RefreshToken = token.RefreshToken;
                 return loginresponse;
             }
             else
@@ -100,7 +103,9 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 if (response > 0)
                 {
                     var loginresponse = _mapper.Map<LoginDetails>(userEntity);
-                    loginresponse.Token = await GenerateToken(userEntity);
+                    var token = await GenerateToken(userEntity);
+                    loginresponse.Token = token.Token;
+                    loginresponse.RefreshToken = token.RefreshToken;
                     return loginresponse;
                 }
                 else
@@ -120,7 +125,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<string> GenerateToken(VibeSyncModels.EntityModels.User userDetails)
+        public async Task<(string Token, string RefreshToken)> GenerateToken(VibeSyncModels.EntityModels.User userDetails)
         {
             var claims = new[]
             {
@@ -147,9 +152,24 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             userDetails.Token = tokenHandler.WriteToken(token);
+
+            // Generate Refresh Token
+            var refreshToken = GenerateRefreshToken();
+            userDetails.RefreshToken = refreshToken;
+            userDetails.RefreshTokenExpiryDate = DateTime.Now.AddHours(16);
+
             _context.Users.Update(userDetails);
             await _context.SaveChangesAsync();
-            return userDetails.Token;
+            return (userDetails.Token, userDetails.RefreshToken);
+        }
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
         public async Task<string> LogoutUser()
         {
@@ -173,6 +193,31 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 return userId;
             else
                 throw new CustomException("Logged in User Id should not be null");
+        }
+
+        public async Task<(string Token, string RefreshToken, string UserOrDj)> GenerateTokenByRefreshToken(LoginDetails request)
+        {
+            if (request == null || request.Id == 0 || !ValidateRefreshToken(request.RefreshToken, request.Id))
+            {
+                _logger.LogError("Invalid refresh token for user with ID: {UserId}.", request.Id);
+                throw new CustomException($"Invalid refresh token: {request.RefreshToken}");
+            }
+
+            var userDetails = await _context.Users.FindAsync(request.Id);
+            var tokens = await GenerateToken(userDetails);
+
+            return (tokens.Token, tokens.RefreshToken, userDetails.UserOrDj);
+        }
+
+        public bool ValidateRefreshToken(string refreshToken, long userId)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryDate < DateTime.Now)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

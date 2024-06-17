@@ -67,7 +67,7 @@ namespace VibeSync.DAL.Handler
         public async Task<LoginDetails> Handle(LoginUser request, CancellationToken cancellationToken)
         {
             var userDetails = _userQueryRepository.ChecksIfUserIsValid(request.Email, request.Password);
-            if (!string.IsNullOrWhiteSpace(userDetails.Token))
+            if (userDetails!= null && !string.IsNullOrWhiteSpace(userDetails.Token))
             {
                 var isTokenActive = !IsTokenExpired(userDetails.Token);
                 if(isTokenActive)

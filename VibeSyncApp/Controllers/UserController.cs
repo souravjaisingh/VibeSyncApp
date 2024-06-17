@@ -68,7 +68,7 @@ namespace VibeSyncApp.Controllers
                 return Ok(result);
             }
             else
-                return Unauthorized();
+                return Unauthorized("Username or password is incorrect");
         }
 
         /// <summary>

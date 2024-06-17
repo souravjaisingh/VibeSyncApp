@@ -8,7 +8,7 @@ using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
-using Razorpay.Api;
+using System.Linq;
 
 namespace VibeSync.DAL.Handler
 {
@@ -19,7 +19,8 @@ namespace VibeSync.DAL.Handler
     public class UserHandler : IRequestHandler<User, LoginDetails>,
         IRequestHandler<LoginUser, LoginDetails>,
         IRequestHandler<GetUserId, long>,
-        IRequestHandler<LogoutUser, string>
+        IRequestHandler<LogoutUser, string>,
+        IRequestHandler<LoginDetails, LoginDetails>
     {
         /// <summary>
         /// The user command repository
@@ -76,7 +77,7 @@ namespace VibeSync.DAL.Handler
             {
                 var token = await _userCommandRepository.GenerateToken(userDetails);
                 _logger.LogInformation("Token successful created for user with ID: {UserId}.", userDetails.Id);
-                return new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj != "dj", Token = token };
+                return new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj != "dj", Token = token.Token, RefreshToken = token.RefreshToken };
             }
             return new LoginDetails();
         }
@@ -112,6 +113,22 @@ namespace VibeSync.DAL.Handler
         public async Task<string> Handle(LogoutUser request, CancellationToken cancellationToken)
         {
             return await _userCommandRepository.LogoutUser();
+        }
+
+        public async Task<LoginDetails> Handle(LoginDetails request, CancellationToken cancellationToken)
+        {
+            var userId = GetUserIdFromExpiredToken(request.Token);
+            request.Id = Convert.ToInt64(userId);
+            var token = await _userCommandRepository.GenerateTokenByRefreshToken(request);
+            
+            return new LoginDetails { Id = request.Id, IsUser = token.UserOrDj != "dj", Token = token.Token, RefreshToken = token.RefreshToken };
+        }
+        private string GetUserIdFromExpiredToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId");
+            return userIdClaim?.Value;
         }
     }
 }

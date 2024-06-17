@@ -82,5 +82,22 @@ namespace VibeSyncApp.Controllers
         {
             return Ok(await _mediator.Send(logoutUser));
         }
+        [HttpPost]
+        public async Task<IActionResult> Refresh([FromBody] LoginDetails request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(UserController)}, API: {typeof(UserController).GetMethod("Refresh")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(UserController).GetMethod("Refresh")}'s response: {JsonConvert.SerializeObject(result)}");
+            if (result.Id != 0)
+            {
+                return Ok(result);
+            }
+            else
+                return Unauthorized();
+        }
     }
 }

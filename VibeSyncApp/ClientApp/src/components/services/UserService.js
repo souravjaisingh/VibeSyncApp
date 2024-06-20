@@ -1,8 +1,9 @@
 import * as Constants from '../Constants';
 import { useLoadingContext } from '../LoadingProvider';
 
-
 export async function handleAPIRequest(url, method, data) {
+    const currentUrl = window.location.href;
+    const baseUri = currentUrl.includes('azurewebsites') ? Constants.baseUriAzure : Constants.baseUriVibeSync;
 
     const requestOptions = {
         method: method,
@@ -21,13 +22,15 @@ export async function handleAPIRequest(url, method, data) {
     if (method === 'POST' || method === 'PUT') {
         requestOptions.body = JSON.stringify(data);
     }
+
     if (data === 'logout') {
         localStorage.removeItem('userId');
         localStorage.removeItem('jwt');
         localStorage.removeItem('expiry');
     }
+
     try {
-        const response = await fetch(Constants.baseUri + url, requestOptions);
+        const response = await fetch(baseUri + url, requestOptions);
 
         handleAPIError(response);
 
@@ -47,6 +50,7 @@ export async function handleAPIRequest(url, method, data) {
         throw error;
     }
 }
+
 
 
 export default async function RegisterUser(data) {

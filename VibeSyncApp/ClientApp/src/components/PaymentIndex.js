@@ -156,7 +156,7 @@ function PaymentIndex() {
                 amount: parsedAmount * 100,
                 currency: 'INR',
                 name: 'VibeSync',
-                description: 'Test Transaction',
+                description: 'Song request',
                 image: VBLogo,
                 order_id: res.orderId,
                 handler: function (response) {

@@ -62,9 +62,7 @@ function PaymentIndex() {
     };
 
     useEffect(() => {
-        if(rowData.eventStatus !== 'Live'
-            || amount < rowData.minimumBid
-            || (!isPromoAvailable && isPromoApplied)){
+        if(rowData.eventStatus !== 'Live'){
                 requestNotificationPermission();
             }
     },[]);

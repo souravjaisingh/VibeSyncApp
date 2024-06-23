@@ -59,7 +59,7 @@ namespace VibeSyncApp.Controllers
         public async Task<bool> SettleEventPayment([FromBody] SettleEventPayment request)
         {
             // Log the request parameter as JSON
-            _logger.LogInformation($"Entered: {typeof(SettlementsController)}, API: {typeof(EventsController).GetMethod("SettleEventPayment")}, Request: {JsonConvert.SerializeObject(new GetSettlementsDataByEventId())}");
+            _logger.LogInformation($"Entered: {typeof(SettlementsController)}, API: {typeof(EventsController).GetMethod("SettleEventPayment")}, Request: {JsonConvert.SerializeObject(request)}");
 
             var res = await _mediator.Send(request).ConfigureAwait(false);
 
@@ -67,6 +67,25 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(SettlementsController).GetMethod("SettleEventPayment")}'s response: {JsonConvert.SerializeObject(res)}");
             return res;
         }
+        /// <summary>
+        /// GetSettlementsByUser
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("GetSettlementsByUser")]
+        public async Task<SettlementResponseModel> GetSettlementsByUser([FromBody] SettlementRequestModel request)
+        {
+            // Log the request parameter as JSON
+            _logger.LogInformation($"Entered: {typeof(SettlementsController)}, API: {typeof(EventsController).GetMethod("GetSettlementsByUser")}, Request: {JsonConvert.SerializeObject(request)}");
 
+            var res = await _mediator.Send(request).ConfigureAwait(false);
+
+            // Log the response as JSON
+            _logger.LogInformation($"{typeof(SettlementsController).GetMethod("GetSettlementsByUser")}'s response: {JsonConvert.SerializeObject(res)}");
+            return res;
+        }
     }
 }

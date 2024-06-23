@@ -31,6 +31,9 @@ function NavbarComponent() {
     function handleSettlementsClick(){
         navigate('/settlements');
     }
+    function handleSetlementsHistoryClick(){
+        navigate('/settlementshistory');
+    }
 
     async function handleLogoutClick() {
         try {
@@ -144,6 +147,18 @@ function NavbarComponent() {
                             Playlists
                         </Button>
                     )} */}
+                {(location.pathname.startsWith('/djhome') ||
+                    location.pathname.startsWith('/djlivesongs') ||
+                    location.pathname.startsWith('/showtransactions') ||
+                    location.pathname.startsWith('/paymentIndex')  ||
+                    location.pathname.startsWith('/djprofile') ||
+                    location.pathname.startsWith('/eventdetails')) && (
+                        <Button
+                            className="btn-navigation-bar"
+                            onClick={(e) => handleSetlementsHistoryClick()}>
+                            Settlements
+                        </Button>
+                    )}
                 {localStorage.getItem('userId') != null &&
                     localStorage.getItem('isUser') == 'false' && (
                         <Button

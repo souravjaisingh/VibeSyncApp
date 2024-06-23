@@ -12,7 +12,8 @@ using VibeSyncModels.Request_ResponseModels;
 namespace VibeSync.DAL.Handler
 {
     public class SettlementsHandler : IRequestHandler<GetSettlementsDataByEventId, SettlementResponse>,
-        IRequestHandler<SettleEventPayment, bool>
+        IRequestHandler<SettleEventPayment, bool>,
+        IRequestHandler<SettlementRequestModel, SettlementResponseModel>
     {
         private readonly ISettlementsQueryRepository _settlementsQueryRepository;
         private readonly ISettlementsCommandRepository _settlementsCommandyRepository;
@@ -29,6 +30,11 @@ namespace VibeSync.DAL.Handler
         public Task<bool> Handle(SettleEventPayment request, CancellationToken cancellationToken)
         {
             return _settlementsCommandyRepository.SettleEventPayment(request);
+        }
+
+        public Task<SettlementResponseModel> Handle(SettlementRequestModel request, CancellationToken cancellationToken)
+        {
+            return _settlementsQueryRepository.GetSettlementByUserId(request);
         }
     }
 }

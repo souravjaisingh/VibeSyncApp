@@ -10,5 +10,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
     public interface ISettlementsQueryRepository
     {
         Task<SettlementResponse> GetSettlementDataByEventId(GetSettlementsDataByEventId request);
+        Task<SettlementResponseModel> GetSettlementByUserId(SettlementRequestModel request);
     }
 }

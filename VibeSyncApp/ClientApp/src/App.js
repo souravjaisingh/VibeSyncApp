@@ -32,6 +32,7 @@ import PlaylistComponent from './components/Playlists';
 import SongsTable from './components/SongsTable';
 import { Notifications } from 'react-push-notification';
 import Settlements from './components/Settlements';
+import SettlementComponent from './components/SettlementHistory';
 
 export const MyContext = createContext();
 
@@ -100,6 +101,7 @@ function App() {
                 <Route path="/playlists" element={<PlaylistComponent />} />
                 <Route path="/acceptedRequests" element={<SongsTable />} />
                 <Route path="/settlements" element={<Settlements />} />
+                <Route path="/settlementshistory" element={<SettlementComponent />} />
                 </Routes>}
                 </MyContext.Provider>
                 {loading && (

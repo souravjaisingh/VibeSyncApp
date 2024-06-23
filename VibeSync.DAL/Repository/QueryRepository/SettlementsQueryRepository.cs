@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,47 @@ namespace VibeSync.DAL.Repository.QueryRepository
             _mapper = mapper;
           
         }
+
+        public async Task<SettlementResponseModel> GetSettlementByUserId(SettlementRequestModel request)
+        {
+            var query = from s in _context.Settlements
+                        join e in _context.Events on s.EventId equals e.Id
+                        join dj in _context.Djs on e.DjId equals dj.Id
+                        join u in _context.Users on dj.UserId equals u.Id
+                        where u.Id == request.UserId
+                        select new SettlementEventResponseModel
+                        {
+                            EventId = s.EventId,
+                            EventName = e.EventName,
+                            EventDescription = e.EventDescription,
+                            EventStartDatetime = e.EventStartDateTime,
+                            EventEndDatetime = e.EventEndDateTime,
+                            MinimumBid = e.MinimumBid,
+                            Amount = s.Amount,
+                            RemainingAmount = s.RemainingAmount,
+                            DateCreated = s.DateCreated
+                        };
+
+            if (!string.IsNullOrEmpty(request.EventName))
+            {
+                query = query.Where(q => q.EventName.Contains(request.EventName));
+            }
+
+            var totalRows = await query.CountAsync();
+
+            var result = await query
+                                .Skip((request.PageNumber - 1) * request.PageSize)
+                                .Take(request.PageSize)
+                                .ToListAsync();
+
+            var response = new SettlementResponseModel
+            {
+                Data = result,
+                TotalRows = totalRows
+            };
+            return response;
+        }
+
         public Task<SettlementResponse> GetSettlementDataByEventId(GetSettlementsDataByEventId request)
         {
             var songStatus = "Played";

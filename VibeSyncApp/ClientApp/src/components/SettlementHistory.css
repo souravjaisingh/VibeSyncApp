@@ -1,0 +1,47 @@
+.settlement-container {
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 1000px; /* Limit width for better readability */
+    margin: 0 auto; /* Center align on the page */
+}
+
+.settlement-header {
+    color: #16283b; /* Blue header color */
+}
+
+.settlement-table {
+    margin-top: 20px;
+}
+
+.error-message {
+    color: red; /* Red error message color */
+}
+.custom-dropdown .dropdown-toggle {
+    background-color: #71879f; /* Blue background for dropdown toggle */
+    color: #ffffff; /* White text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 8px 16px; /* Padding */
+    font-size: 16px; /* Font size */
+}
+
+.custom-dropdown .dropdown-toggle:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.custom-dropdown .dropdown-menu {
+    background-color: #ffffff; /* White background for dropdown menu */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Light border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.custom-dropdown .dropdown-item {
+    color: #495057; /* Dark gray text color */
+    padding: 8px 16px; /* Padding */
+}
+
+.custom-dropdown .dropdown-item:hover {
+    background-color: #f8f9fa; /* Light gray background on hover */
+}

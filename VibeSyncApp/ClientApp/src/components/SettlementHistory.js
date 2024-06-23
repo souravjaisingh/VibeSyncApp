@@ -85,52 +85,52 @@ const SettlementComponent = () => {
             {loading && <p className="text-center">Loading...</p>}
             {error && <p className="text-center error-message">{error}</p>}
 
-            <Table striped bordered hover responsive className="settlement-table">
-                <thead>
-                    <tr>
-                        {/* <th>Event ID</th> */}
-                        <th>Event Name</th>
-                        {/* <th>Event Description</th> */}
-                        <th>Settled Amount</th>
-                        <th>Remaining Amount</th>
-                        <th>Settled date</th>
-                        <th>Minimum Bid</th>
-                        {/* <th>Event Start Datetime</th>
-                        <th>Event End Datetime</th> */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item, index) => (
-                        <tr key={index}>
-                            {/* <td>{item.eventId}</td> */}
-                            <td>{item.eventName}</td>
-                            {/* <td>{item.eventDescription}</td> */}
-                            <td>INR {item.amount}</td>
-                            <td>INR {item.remainingAmount}</td>
-                            <td>{new Date(item.dateCreated).toLocaleString()}</td>
-                            <td>{item.minimumBid}</td>
-                            {/* <td>{new Date(item.eventStartDatetime).toLocaleString()}</td>
-                            <td>{new Date(item.eventEndDatetime).toLocaleString()}</td> */}
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            {data.length === 0 && !loading && (
+                <p className="text-center no-settlements-message">No settlements to show.</p>
+            )}
 
-            <Pagination className="justify-content-center mt-4">
-                <Pagination.First onClick={() => handlePageChange(1)} disabled={pageNumber === 1} />
-                <Pagination.Prev onClick={() => handlePageChange(pageNumber - 1)} disabled={pageNumber === 1} />
-                {[...Array(Math.ceil(totalRows / pageSize)).keys()].map(number => (
-                    <Pagination.Item
-                        key={number + 1}
-                        active={number + 1 === pageNumber}
-                        onClick={() => handlePageChange(number + 1)}
-                    >
-                        {number + 1}
-                    </Pagination.Item>
-                ))}
-                <Pagination.Next onClick={() => handlePageChange(pageNumber + 1)} disabled={pageNumber === Math.ceil(totalRows / pageSize)} />
-                <Pagination.Last onClick={() => handlePageChange(Math.ceil(totalRows / pageSize))} disabled={pageNumber === Math.ceil(totalRows / pageSize)} />
-            </Pagination>
+            {data.length > 0 && (
+                <Table striped bordered hover responsive className="settlement-table">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Settled Amount</th>
+                            <th>Remaining Amount</th>
+                            <th>Settled Date</th>
+                            <th>Minimum Bid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.eventName}</td>
+                                <td>INR {item.amount}</td>
+                                <td>INR {item.remainingAmount}</td>
+                                <td>{new Date(item.dateCreated).toLocaleString()}</td>
+                                <td>{item.minimumBid}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            )}
+
+            {data.length > 0 && (
+                <Pagination className="justify-content-center mt-4">
+                    <Pagination.First onClick={() => handlePageChange(1)} disabled={pageNumber === 1} />
+                    <Pagination.Prev onClick={() => handlePageChange(pageNumber - 1)} disabled={pageNumber === 1} />
+                    {[...Array(Math.ceil(totalRows / pageSize)).keys()].map(number => (
+                        <Pagination.Item
+                            key={number + 1}
+                            active={number + 1 === pageNumber}
+                            onClick={() => handlePageChange(number + 1)}
+                        >
+                            {number + 1}
+                        </Pagination.Item>
+                    ))}
+                    <Pagination.Next onClick={() => handlePageChange(pageNumber + 1)} disabled={pageNumber === Math.ceil(totalRows / pageSize)} />
+                    <Pagination.Last onClick={() => handlePageChange(Math.ceil(totalRows / pageSize))} disabled={pageNumber === Math.ceil(totalRows / pageSize)} />
+                </Pagination>
+            )}
         </Container>
     );
 };

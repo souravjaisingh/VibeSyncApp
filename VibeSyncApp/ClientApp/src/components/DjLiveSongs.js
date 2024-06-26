@@ -418,10 +418,6 @@ export default function DjLiveSongs() {
                                             </div>
                                         </td>
                                     )}
-                                    {/* Call handleRejectRequest if remaining time is null */}
-                                    {result && calculateRemainingTime(result.paymentDateTime) === null && (
-                                        handleRejectRequest(result)
-                                    )}
                                 </tr>
                             ))}
                         </MDBTableBody>

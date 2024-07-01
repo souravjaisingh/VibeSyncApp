@@ -114,7 +114,6 @@ export default function SongHistory() {
                         <option value="Pending">Pending</option>
                         <option value="Accepted">Accepted</option>
                         <option value="Refunded">Refunded</option>
-                        
                     </select>
                 </div>
 

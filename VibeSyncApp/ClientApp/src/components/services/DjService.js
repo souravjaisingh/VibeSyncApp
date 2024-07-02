@@ -3,7 +3,7 @@ import { handleAPIRequest } from './UserService';
 
 
 export async function UpdateDjDetails(data) {
-    return handleAPIRequest('Dj/UpdateDjProfile', 'PUT', data);
+    return handleAPIRequest('Dj/UpdateDjProfile', 'PUT', data , true); //added true
 }
 
 export async function GetDjProfile(id) {

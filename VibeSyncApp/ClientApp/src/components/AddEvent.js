@@ -187,6 +187,7 @@ const AddressTypeahead = () => {
                         className='event-input-fields'
                         value={theme}
                         onChange={handleThemeChange}
+                        required
                     />
                 </div>
                 
@@ -199,6 +200,7 @@ const AddressTypeahead = () => {
                         className='event-input-fields'
                         value={venueName}
                         onChange={handleVenueNameChange}
+                        required 
                     />
                 </div>
                 <div className="input-group">
@@ -210,6 +212,7 @@ const AddressTypeahead = () => {
                         className='event-input-fields'
                         value={eventStartTime}
                         onChange={handleStartEventTimeChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
@@ -221,6 +224,7 @@ const AddressTypeahead = () => {
                         className='event-input-fields'
                         value={eventEndTime}
                         onChange={handleEndEventTimeChange}
+                        required
                     />
                     {eventEndTime && eventStartTime && eventEndTime <= eventStartTime
                         && <span className="error-message">End date time must be greater than start date time</span>}
@@ -234,6 +238,7 @@ const AddressTypeahead = () => {
                         className='event-input-fields'
                         value={eventDesc}
                         onChange={handleEventDescriptionChange}
+                        required
                     />
                 </div>
                 <div className="input-group">
@@ -245,6 +250,7 @@ const AddressTypeahead = () => {
                         className='event-input-fields'
                         value={minimumBid}
                         onChange={handleMinimumBidChange}
+                        required
                     />
                 </div>
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>

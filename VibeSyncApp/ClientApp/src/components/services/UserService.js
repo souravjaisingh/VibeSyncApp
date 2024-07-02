@@ -1,14 +1,14 @@
 import * as Constants from '../Constants';
 import { useLoadingContext } from '../LoadingProvider';
 
-export async function handleAPIRequest(url, method, data) {
+export async function handleAPIRequest(url, method, data, isFormData = false) {
     const currentUrl = window.location.href;
     const baseUri = currentUrl.includes('azurewebsites') ? Constants.baseUriAzure : Constants.baseUriVibeSync;
 
     const requestOptions = {
         method: method,
         headers: {
-            'Content-Type': 'application/json',
+            //'Content-Type': 'application/json',
         }
     };
 
@@ -20,7 +20,13 @@ export async function handleAPIRequest(url, method, data) {
     }
 
     if (method === 'POST' || method === 'PUT') {
-        requestOptions.body = JSON.stringify(data);
+        //requestOptions.body = JSON.stringify(data);
+        if (isFormData) {
+            requestOptions.body = data;
+        } else {
+            requestOptions.headers['Content-Type'] = 'application/json';
+            requestOptions.body = JSON.stringify(data);
+        }
     }
 
     if (data === 'logout') {

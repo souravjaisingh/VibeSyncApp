@@ -12,7 +12,7 @@ const DjProfile = () => {
   const [artistName, setArtistName] = useState(''); 
   const [djGenre, setDjGenre] = useState('');
   const [djDescription, setDjDescription] = useState('');
-  const [djPhoto, setDjPhoto] = useState('');
+  const [djPhoto, setDjPhoto] = useState(null);  
   const [bankName, setBankName] = useState('');
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [branchName, setBranchName] = useState('');
@@ -24,6 +24,7 @@ const DjProfile = () => {
   const handleSubmit = async () => {
     setProfileErrorMessage('');
     setSuccessMessage('');
+      console.log(djPhoto);
     // Validation: Check if any input field is empty
     if (!djName || !userid) { // Add required fields here  
       setProfileErrorMessage('All required fields must be filled in.'); // Set error message
@@ -36,26 +37,29 @@ const DjProfile = () => {
       return; // Don't proceed with the API call
     }
 
-    // Create a DJ profile object with the form data
-    const djProfile = {
-      DjName: djName,
-      ArtistName: artistName, 
-      DjGenre: djGenre,
-      DjDescription: djDescription,
-      DjPhoto: djPhoto,
-      BankName: bankName,
-      BankAccountNumber: bankAccountNumber,
-      BranchName: branchName,
-      IFSCCode: ifscCode,
-      SocialLinks: socialLinks,
-      Id: id,
-      UserId: userid,
-      ModifiedBy: localStorage.getItem('userId')
-    };
+
+      // Create a FormData object
+      const formData = new FormData();
+      formData.append('DjName', djName);
+      formData.append('ArtistName', artistName);
+      formData.append('DjGenre', djGenre);
+      formData.append('DjDescription', djDescription);
+      if (djPhoto) {
+          formData.append('DjPhoto', djPhoto); // Append the file
+      }
+      formData.append('BankName', bankName);
+      formData.append('BankAccountNumber', bankAccountNumber);
+      formData.append('BranchName', branchName);
+      formData.append('IFSCCode', ifscCode);
+      formData.append('SocialLinks', socialLinks);
+      formData.append('Id', id);
+      formData.append('UserId', userid);
+      formData.append('ModifiedBy', localStorage.getItem('userId'));
+
 
     // Call the UpdateDjDetails function to save the DJ profile
     try {
-      const response = await UpdateDjDetails(djProfile);
+      const response = await UpdateDjDetails(formData);
       if(response.errors != null){
         console.error('Error saving DJ profile:', response.errors);
         setProfileErrorMessage('Error saving DJ profile. Please try again'); 
@@ -89,7 +93,7 @@ const DjProfile = () => {
         setArtistName(res.artistName);
         setDjGenre(res.djGenre);
         setDjDescription(res.djDescription);
-        setDjPhoto(res.djPhoto);
+        setDjPhoto(null); 
         setBankName(res.bankName);
         setBankAccountNumber(res.bankAccountNumber);
         setBranchName(res.branchName);
@@ -157,11 +161,11 @@ const DjProfile = () => {
         <div className="input-group">
           <label htmlFor="djPhotoInput">Photo</label>
           <input
-            type="text"
+            type="file" 
             id="djPhotoInput"
             placeholder="Photo URL"
-            value={djPhoto}
-            onChange={(e) => setDjPhoto(e.target.value)}
+            onChange={(e) => setDjPhoto(e.target.files[0])} 
+            accept="image/*"
           />
         </div>
         <div className="input-group">

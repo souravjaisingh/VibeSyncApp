@@ -5,6 +5,7 @@ import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
+import defaultPhoto from '../Resources/defaultDj.jpg';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
@@ -280,7 +281,7 @@ function SongSearch() {
                 <div className="search-container">
                     <div className="left-content">
                         <img
-                            src={eventData.djPhoto}
+                            src={eventData.djPhoto || defaultPhoto} // Use default photo if djPhoto is null
                             alt="DJ Image"
                             style={{ width: '200px', height: 'auto' }}
                             className='dj-image'

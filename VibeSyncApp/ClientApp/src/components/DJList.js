@@ -3,7 +3,7 @@ import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from
 import { GetEventsWithDjInfo } from './services/EventsService';
 import { useNavigate } from 'react-router-dom';
 import './DJList.css'
-import photo from '../Resources/DJWhite.jpg';
+import defaultPhoto from '../Resources/defaultDj.jpg';
 import SongSearch from './SongSearch';
 import { MyContext } from '../App';
 
@@ -83,7 +83,7 @@ export default function DjList() {
                                     <td>
                                         <div className='d-flex align-items-center'>
                                             <img
-                                                src={item.djPhoto}
+                                                src={item.djPhoto ? item.djPhoto : defaultPhoto} //use default photo if dj photo is null
                                                 alt=''
                                                 style={{ width: '45px', height: '45px' }}
                                                 className='rounded-circle' />

@@ -9,6 +9,7 @@ namespace VibeSyncModels.EntityModels
     {
         public Event()
         {
+            Reviews = new HashSet<Review>();
             Settlements = new HashSet<Settlement>();
             SongHistories = new HashSet<SongHistory>();
         }
@@ -31,6 +32,7 @@ namespace VibeSyncModels.EntityModels
         public decimal? Longitude { get; set; }
 
         public virtual Dj Dj { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Settlement> Settlements { get; set; }
         public virtual ICollection<SongHistory> SongHistories { get; set; }
     }

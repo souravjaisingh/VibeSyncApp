@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using VibeSync.DAL.DBContext;
+using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.QueryRepository
@@ -34,6 +37,20 @@ namespace VibeSync.DAL.Repository.QueryRepository
         {
             var djEntity = _context.Djs.Where(x => x.UserId == request.UserId).FirstOrDefault();
             return _mapper.Map<DjProfileResponseModel>(djEntity);
+        }
+        public async Task<IEnumerable<GetReviewResponseModel>> GetReviews(GetReviewRequestModel request)
+        {
+            return await _context.Reviews.Select(review => new GetReviewResponseModel
+            {
+                Id = review.Id,
+                DjId = review.DjId,
+                EventId = review.EventId,
+                Review1 = review.Review1,
+                Star = review.Star,
+                CreatedBy = review.CreatedBy
+            })
+        .ToArrayAsync();
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -45,6 +46,16 @@ namespace VibeSyncApp.Controllers
             // Log the response as JSON
             _logger.LogInformation($"{typeof(DjController).GetMethod("GetDjProfile")}'s response: {JsonConvert.SerializeObject(result)}");
 
+            return Ok(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetReviews([FromQuery] GetReviewRequestModel request)
+        {
+            _logger.LogInformation($"Entered: {typeof(DjController)}, API: {typeof(DjController).GetMethod("GetReviews")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            _logger.LogInformation($"{typeof(DjController).GetMethod("GetReviews")}'s response: {JsonConvert.SerializeObject(result)}");
             return Ok(result);
         }
     }

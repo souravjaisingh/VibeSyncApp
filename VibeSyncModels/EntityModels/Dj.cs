@@ -10,6 +10,7 @@ namespace VibeSyncModels.EntityModels
         public Dj()
         {
             Events = new HashSet<Event>();
+            Reviews = new HashSet<Review>();
             SongHistories = new HashSet<SongHistory>();
         }
 
@@ -32,6 +33,7 @@ namespace VibeSyncModels.EntityModels
 
         public virtual User User { get; set; }
         public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<SongHistory> SongHistories { get; set; }
     }
 }

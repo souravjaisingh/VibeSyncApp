@@ -6,7 +6,8 @@ import './DJList.css'
 import photo from '../Resources/DJWhite.jpg';
 import SongSearch from './SongSearch';
 import { MyContext } from '../App';
-import Review from '../components/Review'
+import StickyBar from './StickyBar';
+import { reviews} from './Constants';
 
 export default function DjList() {
     const { error, setError } = useContext(MyContext);
@@ -117,7 +118,7 @@ export default function DjList() {
                 </MDBTableBody>
             </MDBTable>
 
-            <Review />
+            <StickyBar type="review" data={reviews} />
         </>
     );
 }

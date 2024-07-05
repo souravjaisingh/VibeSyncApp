@@ -5,7 +5,8 @@ import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
-import BiddingComponent from './BiddingComponent';
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
@@ -29,6 +30,15 @@ function SongSearch() {
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
+    const [minAmount, setMinAmount] = useState(0);
+
+    useEffect(() => {
+        const uri = JSON.parse(decodeURIComponent(rowDataString));
+        const Amount = parseFloat(uri["minimumBid"]);
+       /* console.log(Amount)*/
+        setMinAmount(Amount)
+
+    }, [location.search]);
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -350,7 +360,10 @@ function SongSearch() {
                 </div>
             </div>
             </div>
-            <BiddingComponent />
+            <div>
+                {/* Other content */}
+                <StickyBar type="bid" data={messages} minAmount={minAmount} />
+            </div>
         </>
     );
 }

@@ -7,6 +7,7 @@ import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
 import StickyBar from './StickyBar';
 import { messages } from './Constants';
+import defaultPhoto from '../Resources/defaultDj.jpg';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
@@ -80,7 +81,7 @@ function SongSearch() {
             const songs = await GetSongsList(playlistId, 0, 50);
             setResults(songs);
             setCurrentPage(2); // Set the next page to fetch
-            
+
             const selectedPlaylist = listOfPlaylists.find(playlist => playlist.id === playlistId);
             if (selectedPlaylist) {
                 const playlistName = selectedPlaylist.name.toLowerCase();
@@ -101,7 +102,7 @@ function SongSearch() {
         for (let i = 0; i < numHearts; i++) {
             createHeart();
         }
-    
+
         // Set a timeout to remove the hearts after 2-3 seconds
         setTimeout(() => {
             const hearts = document.querySelectorAll('.heart');
@@ -113,7 +114,7 @@ function SongSearch() {
             });
         }, 3000); // Wait for 3 seconds before removing the hearts
     };
-    
+
 
     const createHeart = () => {
         const heart = document.createElement('div');
@@ -145,7 +146,7 @@ function SongSearch() {
             cheer.remove();
         }, 5000); // Remove the cheer after the animation is complete
     };
-    
+
     useEffect(() => {
         var uri = JSON.parse(decodeURIComponent(rowDataString));
         if (uri && uri.id) {
@@ -293,7 +294,7 @@ function SongSearch() {
                 <div className="search-container">
                     <div className="left-content">
                         <img
-                            src={eventData.djPhoto}
+                            src={eventData.djPhoto || defaultPhoto} // Use default photo if djPhoto is null
                             alt="DJ Image"
                             style={{ width: '200px', height: 'auto' }}
                             className='dj-image'

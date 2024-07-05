@@ -155,6 +155,9 @@ export default function SongHistory() {
                                                     Download Invoice
                                                 </a>
                                             )}
+                                            {result.songStatus === 'Refunded' && (
+                                            <p className="reject-message">Sorry,not the vibe!</p>  
+                                            )}
                                         </td>
                                         <td colSpan="5">
                                             <DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} />

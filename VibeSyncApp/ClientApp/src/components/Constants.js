@@ -1,11 +1,11 @@
 export const baseUriAzure = 'https://vibesyncdj.azurewebsites.net/';
-export const baseUriVibeSync = 'https://localhost:44369/';
+export const baseUriVibeSync = 'https://vibesync.in/';
 export const RazorPayAppId = 'rzp_live_GSCG7iEzR5BhtT';
 export const Live = 'Live';
 export const LiveButNotAcceptingRequests = 'Live-NA';
 export const PaidZeroUsingPromocode = 'PaidZeroUsingPromo';
 
-const reviews = [
+export const reviews = [
     { id: 1, text: "DJ Fire lit up the night!", author: "DJ Fire", image: 'https://images.pexels.com/photos/417458/pexels-photo-417458.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
     { id: 2, text: "Best DJ set I've ever heard!", author: "MusicLover", image: 'https://images.pexels.com/photos/358129/pexels-photo-358129.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
     { id: 3, text: "DJ Mayank knows how to get the crowd moving.", author: "DJ Mayank", image: 'https://images.pexels.com/photos/3379257/pexels-photo-3379257.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
@@ -23,7 +23,7 @@ const reviews = [
     { id: 15, text: "DJ Flash had everyone dancing.", author: "DJ Flash", image: 'https://images.pexels.com/photos/358129/pexels-photo-358129.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
     // ... more reviews
 ];
-const messages = [
+export const messages = [
     { id: 1, text: "Bhavik on your left has paid the final payment of " },
     { id: 2, text: "Rohit on your right has paid the final payment of " },
     { id: 3, text: "Rahul has successfully completed the payment of " },
@@ -37,5 +37,3 @@ const messages = [
     { id: 11, text: "Ava has paid the final payment of " }
 ];
 
-
-export { reviews, messages };

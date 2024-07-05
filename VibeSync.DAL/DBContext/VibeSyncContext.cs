@@ -20,6 +20,7 @@ namespace VibeSync.DAL.DBContext
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<Settlement> Settlements { get; set; }
         public virtual DbSet<SongHistory> SongHistories { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -203,6 +204,37 @@ namespace VibeSync.DAL.DBContext
                     .HasConstraintName("FK__Payment__UserId__6C190EBB");
             });
 
+            modelBuilder.Entity<Review>(entity =>
+            {
+                entity.ToTable("Review");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy).HasMaxLength(50);
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Review1)
+                    .HasMaxLength(500)
+                    .HasColumnName("Review");
+
+                entity.HasOne(d => d.Dj)
+                    .WithMany(p => p.Reviews)
+                    .HasForeignKey(d => d.DjId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Review_Dj");
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.Reviews)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Review_Event");
+            });
+
             modelBuilder.Entity<Settlement>(entity =>
             {
                 entity.HasIndex(e => e.EventId, "IX_Settlements_EventId");
@@ -335,6 +367,10 @@ namespace VibeSync.DAL.DBContext
                     .HasMaxLength(50);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(10);
+
+                entity.Property(e => e.RefreshToken).HasMaxLength(500);
+
+                entity.Property(e => e.RefreshTokenExpiryDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Token)
                     .HasMaxLength(500)

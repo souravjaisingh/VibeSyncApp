@@ -5,6 +5,8 @@ import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
 import defaultPhoto from '../Resources/defaultDj.jpg';
 
 function SongSearch() {
@@ -29,6 +31,15 @@ function SongSearch() {
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
+    const [minAmount, setMinAmount] = useState(0);
+
+    useEffect(() => {
+        const uri = JSON.parse(decodeURIComponent(rowDataString));
+        const Amount = parseFloat(uri["minimumBid"]);
+       /* console.log(Amount)*/
+        setMinAmount(Amount)
+
+    }, [location.search]);
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -224,6 +235,7 @@ function SongSearch() {
     };
 
     useEffect(async () => {
+
         async function fetchEnqSongs(eventId) {
             try {
                 const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') === 'true');
@@ -276,6 +288,7 @@ function SongSearch() {
     };
 
     return (
+        <>
         <div className='song-search'>
             {eventData && (
                 <div className="search-container">
@@ -347,7 +360,12 @@ function SongSearch() {
                     {loading && <p>Loading...</p>}
                 </div>
             </div>
-        </div>
+            </div>
+            <div>
+                {/* Other content */}
+                <StickyBar type="bid" data={messages} minAmount={minAmount} />
+            </div>
+        </>
     );
 }
 

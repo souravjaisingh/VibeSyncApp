@@ -6,6 +6,7 @@ import './DJList.css'
 import photo from '../Resources/DJWhite.jpg';
 import SongSearch from './SongSearch';
 import { MyContext } from '../App';
+import Review from '../components/Review'
 
 export default function DjList() {
     const { error, setError } = useContext(MyContext);
@@ -115,6 +116,8 @@ export default function DjList() {
                     }
                 </MDBTableBody>
             </MDBTable>
+
+            <Review />
         </>
     );
 }

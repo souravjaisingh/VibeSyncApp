@@ -5,6 +5,7 @@ import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
+import BiddingComponent from './BiddingComponent';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
@@ -223,6 +224,7 @@ function SongSearch() {
     };
 
     useEffect(async () => {
+
         async function fetchEnqSongs(eventId) {
             try {
                 const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') === 'true');
@@ -275,6 +277,7 @@ function SongSearch() {
     };
 
     return (
+        <>
         <div className='song-search'>
             {eventData && (
                 <div className="search-container">
@@ -346,7 +349,9 @@ function SongSearch() {
                     {loading && <p>Loading...</p>}
                 </div>
             </div>
-        </div>
+            </div>
+            <BiddingComponent />
+        </>
     );
 }
 

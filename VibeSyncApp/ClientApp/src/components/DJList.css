@@ -7,3 +7,128 @@
 .event-date{
     font-size: smaller;
 }
+
+
+
+
+.event-list{
+    max-width: 100%;
+    gap: 1rem; 
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(1, minmax(0, 1fr)); 
+    margin:1rem;
+}
+.events-search{
+    min-width:100%;
+    display: flex; 
+    justify-content: center; 
+}
+.search-bar-dj-list{
+    min-width:14rem;
+    border-radius: 0.375rem; 
+    padding: 0.2rem;  
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border: 0px none;
+    background-image: url('/images/SearchButton.png');
+    background-size: 25px 60px;
+    background-position: calc(100% - 10px) -10px; 
+    background-repeat: no-repeat;
+}
+.search-bar-dj-list:hover{
+    cursor:pointer;
+}
+.search-bar-dj-list:focus {
+    border-color: #600bb0;
+    box-shadow: 0 0 8px rgba(96, 11, 176, 0.6);
+    outline: none; 
+}
+
+
+
+.event-card-outer{
+    color: #600bb0;
+    overflow: hidden; 
+    background: linear-gradient(120deg, #4d1086 0%, #fcf8fe 50%);
+    /* grid-template-columns: repeat(3, minmax(0, 1fr)); */
+    min-height: 6rem;
+    height: 6rem;
+    width: 20rem;
+    display: flex ;
+    gap: 0.5rem; 
+    border-radius: 1.5rem;
+    align-content: center;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms; 
+    transition-duration: 300ms; 
+    
+
+}
+.event-card-outer:hover {
+    cursor: pointer; 
+    transform: scale(1.05, 1.05);
+    }
+.event-card-image{
+    min-height: 100%;
+    min-width: 45%;
+    width: 45%; 
+    height: 40%;
+    border-radius: 1.75rem;  
+    padding: 0.5rem;
+      
+}
+.event-card-title{
+    font-size: 1.125rem;
+    line-height: 1.75rem; 
+    font-weight: 700; 
+}
+.event-card-text-rating{
+    display:flex;
+}
+
+.event-card-text{
+    display: grid;
+    width:80%;
+    min-width:80%;
+    grid-template-columns: repeat(1, minmax(0, 1fr)); 
+}
+
+.event-card-text-block{
+    min-height:100%;
+    min-width:55%;
+    width:55%;
+}
+.event-card-dj{
+    font-size: 0.6rem;
+    line-height: 0.5rem; 
+
+    font-weight: 700; 
+}
+.event-card-venue{
+    margin-top: 0.5rem; 
+    font-size: 0.75rem;
+    line-height: 0.75rem;  
+}
+.rating{
+    font-size: 1.5rem;
+    line-height: 2rem; 
+    color: #FFD700; 
+    display: flex; 
+    align-items: center; 
+    min-width:95%;
+    width:95%;
+    justify-content: space-between; 
+}
+.event-card-rating{
+    min-width: 10%;
+    width:10%;
+}
+.rating-image{
+    width:150%;
+}
+.live-image{
+    width:30%;
+    height: 5%;
+}

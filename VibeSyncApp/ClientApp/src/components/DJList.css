@@ -54,7 +54,8 @@
     /* grid-template-columns: repeat(3, minmax(0, 1fr)); */
     min-height: 6rem;
     height: 6rem;
-    width: 20rem;
+    min-width: 100%;
+    max-width:24rem;
     display: flex ;
     gap: 0.5rem; 
     border-radius: 1.5rem;
@@ -83,6 +84,10 @@
     font-size: 1.125rem;
     line-height: 1.75rem; 
     font-weight: 700; 
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
 }
 .event-card-text-rating{
     display:flex;

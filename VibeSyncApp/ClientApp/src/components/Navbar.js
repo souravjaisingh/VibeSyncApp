@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VB_Logo_2.png';
 import home from '../Resources/home.png';
+import homeIcon from '../Resources/homeIcon.png'
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logout } from './services/UserService';
 import { MyContext } from '../App';
@@ -79,13 +81,14 @@ function NavbarComponent() {
             {localStorage.getItem('userId') != null && (
                 <div className="home-container">
                     <div className="home-img" onClick={handleLogoClick}>
-                        <img src={home} alt="App Logo" />
+                        <img src={homeIcon} alt="App Logo" />
                     </div>
                 </div>
             )}
             <div className="logo-container">
                 <div className="logo" onClick={handleLogoClick}>
                     <img src={vibeSyncLogo} alt="App Logo" />
+                    {/* <div>Apka Gaana, Apki Vibe</div> */}
                 </div>
             </div>
             {localStorage.getItem('userId') != null && (

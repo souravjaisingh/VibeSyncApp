@@ -73,6 +73,44 @@
     }
 }
 
+.filter-dropdown {
+    padding: 12px; /* Adjust padding to suit your design */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size */
+    max-width: 150px; /* Add a max-width to the dropdown */
+    background-color: #39125C;
+    color: white;
+    font-weight :bold
+}
+
+.filter-dropdown option {
+        background-color: #39125C; 
+        color: white; 
+        font-size: 16px; 
+}
+
+@media (max-width: 768px) {
+    .search-filter-bar {
+        flex-direction: row; /* Ensure flex direction is row */
+        align-items: center; /* Align items in the center */
+        justify-content: space-between; /* Space between items */
+    }
+
+    .search-bar-container input {
+        width: calc(100% - 70px); /* Adjust width to fit both input and dropdown */
+    }
+
+    .filter-dropdown {
+        width: auto; /* Adjust width to auto for better fit */
+        max-width: 100px; /* Ensure it fits in the line */
+    }
+}
+
 .event-list{
     max-width: 100%;
     gap: 1rem; 

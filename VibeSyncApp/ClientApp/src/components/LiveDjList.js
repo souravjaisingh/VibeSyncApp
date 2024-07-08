@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import getLiveEventsHelper from '../Helpers/EventsHelper';
 import { MyContext } from '../App';
+import defaultPhoto from '../Resources/defaultDj.jpg';
 
 export default function LiveDjList() {
     const { error, setError } = useContext(MyContext);
@@ -22,6 +23,10 @@ export default function LiveDjList() {
             String(value).toLowerCase().includes(searchQuery.toLowerCase())
         )
     );
+
+    const handleRatingClick = (rowData) => {
+        //TODO: add logic to add rating to a particular event
+    };
 
     const handleRowClick = (rowData) => {
         // Serialize the rowData object to a JSON string and encode it
@@ -63,8 +68,51 @@ export default function LiveDjList() {
 
     return (
         <>
-            
-            <MDBTable align='middle' responsive hover>
+            <div className='event-list'>
+                {/* <div className='events-search'>
+                    <input type="text"
+                        className='search-bar-dj-list'
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search your vibe" />
+                </div> */}
+                {
+                    filteredData.map(item =>
+                        <>
+                            <div onClick={(e) => { handleRowClick(item) }}>
+                                <div className='event-card-outer'>
+                                    <img
+                                        src={item.djPhoto ? item.djPhoto : defaultPhoto} //use default photo if dj photo is null
+                                        alt=''
+                                        className='event-card-image' />
+                                    <div className='event-card-text-block'>
+                                        <div className='event-card-text-rating'><div className='event-card-text'><span className='event-card-title'>{item.eventName}</span>
+                                            <span className='event-card-dj'>{item.djName}</span>
+                                            <span className='event-card-venue'>{item.venue}</span></div>
+
+
+                                            <div className='event-card-rating'>
+                                                <img onClick={(e) => { handleRatingClick(item) }} className='rating-image' src='/images/Ratingbutton.png' />
+                                            </div></div>
+                                        <div className='rating'>
+                                            <div>{Array.from({ length: item.rating?item.rating:4 }, (_, index) => (
+                                                <span>&#9733;</span>
+                                            ))}
+                                            {Array.from({ length: 5-(item.rating?item.rating:4) }, (_, index) => (
+                                                <span>&#9734;</span>
+                                            ))}</div>
+                                            {item.eventStatus === 'Not live' ? '' : <img  className='live-image' src='/images/live.png' />
+                                            }</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+
+                    )}
+            </div>
+        
+            {/* <MDBTable align='middle' responsive hover>
                 <MDBTableHead>
                     <tr>
                         <th scope='col'>Dj Name</th>
@@ -98,8 +146,8 @@ export default function LiveDjList() {
                                     </td>
                                     <td>
                                         <p className='fw-normal mb-1'>{item.venue}</p>
-                                        {/* <p className='text-muted mb-0 event-date'>{Math.round((((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100)*1.6)} Km</p> */}
-                                        {/* <p className='text-muted mb-0'>IT department</p> */}
+                                        <p className='text-muted mb-0 event-date'>{Math.round((((item.distanceFromCurrLoc + Number.EPSILON) * 100) / 100)*1.6)} Km</p>
+                                        <p className='text-muted mb-0'>IT department</p>
                                     </td>
 
                                 </tr>
@@ -107,7 +155,7 @@ export default function LiveDjList() {
                         )
                     }
                 </MDBTableBody>
-            </MDBTable>
+            </MDBTable> */}
         </>
     );
 }

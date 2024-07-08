@@ -74,7 +74,7 @@ export default function DjList() {
     }
 
     return (
-        <>
+        <div className='dj-lists-wrapper'>
             <div className="search-filter-bar">
                 <div className="search-bar-container">
                     <input
@@ -87,8 +87,9 @@ export default function DjList() {
                 </div>
                 <select className="filter-dropdown" onChange={handleFilterChange} value={showLiveEvents}>
                     <option value="all">All</option>
-                    <option value="live">Live</option>
+                    <option value="live">Live</option> 
                 </select>
+                <div className='down-arrow'>&#11167;</div>
             </div>
 
 
@@ -125,6 +126,9 @@ export default function DjList() {
                                         <div className='rating'>
                                             <div>{Array.from({ length: item.rating?item.rating:4 }, (_, index) => (
                                                 <span>&#9733;</span>
+                                            ))}
+                                            {Array.from({ length: 5-(item.rating?item.rating:4) }, (_, index) => (
+                                                <span>&#9734;</span>
                                             ))}</div>
                                             {item.eventStatus === 'Not live' ? '' : <img  className='live-image' src='/images/live.png' />
                                             }</div>
@@ -189,6 +193,6 @@ export default function DjList() {
             </MDBTable> */}
 
             <StickyBar type="review" data={reviews} />
-        </>
+        </div>
     );
 }

@@ -12,10 +12,11 @@
 .search-filter-bar {
     display: flex;
     align-items: center;
+    flex-direction: row;
     justify-content: space-between;
     padding: 10px;
     width: 100%;
-    max-width: 600px;
+    max-width: 420px;
     margin: 0 auto; /* Centering the search filter bar */
 }
 
@@ -26,17 +27,17 @@
     flex: 1;
 }
 
-    .search-bar-container input {
-        padding: 12px; /* Increased padding for better touch targets */
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        width: calc(100% - 60px); /* Adjust width to leave space for the larger icon */
-        max-width: 100%; /* Ensure it fills the container */
-    }
+.search-bar-container input {
+    padding: 12px; /* Increased padding for better touch targets */
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    max-width: 100%; /* Ensure it fills the container */
+    width: calc(100%-20px); /* Adjust width to leave space for the larger icon */
+}
 
 .search-icon {
     position: absolute;
-    right: 72px; /* Adjust distance from right */
+    right: 24px; /* Adjust distance from right */
     width: 39px; /* Increase size as needed */
     height: 39px;
     cursor: pointer;
@@ -44,38 +45,13 @@
     transform: translateY(-50%); /* Adjust for vertical centering */
 }
 
-.filter-dropdown {
-    padding: 12px; /* Adjust padding to suit your design */
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-    font-size: 14px; /* Adjust font size */
-    max-width: 150px; /* Add a max-width to the dropdown */
-}
 
-@media (max-width: 768px) {
-    .search-filter-bar {
-        flex-direction: row; /* Ensure flex direction is row */
-        align-items: center; /* Align items in the center */
-        justify-content: space-between; /* Space between items */
-    }
 
-    .search-bar-container input {
-        width: calc(100% - 70px); /* Adjust width to fit both input and dropdown */
-    }
 
-    .filter-dropdown {
-        width: auto; /* Adjust width to auto for better fit */
-        max-width: 100px; /* Ensure it fits in the line */
-    }
-}
 
 .filter-dropdown {
     padding: 12px; /* Adjust padding to suit your design */
-    border-radius: 5px;
+    border-radius: 15px;
     border: 1px solid #ddd;
     appearance: none;
     -webkit-appearance: none;
@@ -85,7 +61,9 @@
     max-width: 150px; /* Add a max-width to the dropdown */
     background-color: #39125C;
     color: white;
-    font-weight :bold
+    font-weight :bold;
+    width: auto;
+
 }
 
 .filter-dropdown option {
@@ -94,22 +72,14 @@
         font-size: 16px; 
 }
 
-@media (max-width: 768px) {
-    .search-filter-bar {
-        flex-direction: row; /* Ensure flex direction is row */
-        align-items: center; /* Align items in the center */
-        justify-content: space-between; /* Space between items */
-    }
 
-    .search-bar-container input {
-        width: calc(100% - 70px); /* Adjust width to fit both input and dropdown */
-    }
 
-    .filter-dropdown {
-        width: auto; /* Adjust width to auto for better fit */
-        max-width: 100px; /* Ensure it fits in the line */
-    }
+.search-bar-container input {
+    width: calc(100% - 20px); /*Adjust width to fit both input and dropdown*/
 }
+
+    
+
 
 .event-list{
     max-width: 100%;
@@ -151,7 +121,7 @@
 .event-card-outer{
     color: #600bb0;
     overflow: hidden; 
-    background: linear-gradient(120deg, #4d1086 0%, #fcf8fe 50%);
+    background: linear-gradient(120deg,#39125c,#f2eef5 50%);
     /* grid-template-columns: repeat(3, minmax(0, 1fr)); */
     min-height: 6rem;
     height: 6rem;
@@ -226,6 +196,7 @@
     min-width:95%;
     width:95%;
     justify-content: space-between; 
+    padding-bottom: 0.3rem;
 }
 .event-card-rating{
     min-width: 10%;
@@ -237,4 +208,20 @@
 .live-image{
     width:20%;
     height: 5%;
+    padding-right: 0.5rem; 
+    
+}
+
+.dj-lists-wrapper{
+    padding-top:1rem;
+    background: linear-gradient(160deg, #d7defe 70%, #39125C);
+    background-attachment: fixed;
+    padding-bottom: 1rem;
+}
+
+.down-arrow{
+    position: relative;
+    left: -14px;
+    font-size: 0.85rem;
+    line-height: 1.25rem; 
 }

@@ -9,7 +9,69 @@
 }
 
 
+.search-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto; /* Centering the search filter bar */
+}
 
+.search-bar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+    .search-bar-container input {
+        padding: 12px; /* Increased padding for better touch targets */
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        width: calc(100% - 60px); /* Adjust width to leave space for the larger icon */
+        max-width: 100%; /* Ensure it fills the container */
+    }
+
+.search-icon {
+    position: absolute;
+    right: 72px; /* Adjust distance from right */
+    width: 39px; /* Increase size as needed */
+    height: 39px;
+    cursor: pointer;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+}
+
+.filter-dropdown {
+    padding: 12px; /* Adjust padding to suit your design */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    font-size: 14px; /* Adjust font size */
+    max-width: 150px; /* Add a max-width to the dropdown */
+}
+
+@media (max-width: 768px) {
+    .search-filter-bar {
+        flex-direction: row; /* Ensure flex direction is row */
+        align-items: center; /* Align items in the center */
+        justify-content: space-between; /* Space between items */
+    }
+
+    .search-bar-container input {
+        width: calc(100% - 70px); /* Adjust width to fit both input and dropdown */
+    }
+
+    .filter-dropdown {
+        width: auto; /* Adjust width to auto for better fit */
+        max-width: 100px; /* Ensure it fits in the line */
+    }
+}
 
 .event-list{
     max-width: 100%;
@@ -24,7 +86,8 @@
     display: flex; 
     justify-content: center; 
 }
-.search-bar-dj-list{
+
+/*.search-bar-dj-list{
     min-width:14rem;
     border-radius: 0.375rem; 
     padding: 0.2rem;  
@@ -43,7 +106,7 @@
     border-color: #600bb0;
     box-shadow: 0 0 8px rgba(96, 11, 176, 0.6);
     outline: none; 
-}
+}*/
 
 
 

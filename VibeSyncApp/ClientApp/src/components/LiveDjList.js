@@ -63,12 +63,7 @@ export default function LiveDjList() {
 
     return (
         <>
-            <MDBInput
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder="Search DJ/Venue"
-            />
+            
             <MDBTable align='middle' responsive hover>
                 <MDBTableHead>
                     <tr>

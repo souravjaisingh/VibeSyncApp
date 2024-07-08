@@ -7,8 +7,8 @@ import { Tabs } from '../UserTabs';
 
 export default function UserHome() {
   return (
-    <div className='userHome'>
-      <Tabs />
+      <div className='userHome'>
+          <DjList />
     </div>
   );
 }

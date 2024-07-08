@@ -23,10 +23,12 @@
     .subheading-payment{
         color: grey;
         font-size: small;
+        margin-bottom: 0px;
     }
 
     .label {
         margin-top: 8px;
+        margin-bottom: 0px;
         font-size: 18px;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
             'Lucida Sans', Arial, sans-serif;
@@ -77,6 +79,38 @@
         border: 1px solid var(--primary);
         transition: all 0.3s ease-out;
     }
+
+.bid-buttons {
+    display: flex;
+    justify-content: space-between; /* Distribute buttons evenly */
+    margin-bottom: 20px;
+}
+
+.bid-button-container {
+    display: flex;
+    flex-direction: column; /* Align button and text vertically */
+    align-items: center; /* Center the button and text */
+}
+
+.btn-bid {
+    background-color: #3399cc;
+    color: white;
+    border: none;
+    padding: 5px 10px; /* Adjust padding for a consistent look */
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    .btn-bid:hover {
+        background-color: #287b9b;
+    }
+
+.bid-text {
+    margin-top: 5px; /* Space between the button and the text */
+    font-size: 0.8rem; /* Smaller text size */
+    color: #666; /* Text color */
+}
+
 
     .btn--mediumPayment {
         padding: 8px 20px;

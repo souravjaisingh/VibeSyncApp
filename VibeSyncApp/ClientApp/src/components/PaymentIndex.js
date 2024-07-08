@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+﻿import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
@@ -243,6 +243,15 @@ function PaymentIndex() {
         // alert("Payment Success!");
         //     navigate('/userhome')
     };
+
+
+    const bidAmounts = [
+        { amount: rowData.minimumBid + 200, text: '5 Min' },
+        { amount: rowData.minimumBid + 150, text: '5-10 Min' },
+        { amount: rowData.minimumBid + 100, text: '5-30 Min' },
+        { amount: rowData.minimumBid +50, text: '5-40 Min' }
+    ];
+
     return (
         <div className='song-details'>
             {/* Display the medium-sized image */}
@@ -262,8 +271,25 @@ function PaymentIndex() {
             {/* <RazorpayPayment data={amount} /> */}
             <form onSubmit={handleSubmit} className='center-form'>
                 <p className='label'>Tip the DJ (Min amount- INR {rowData.minimumBid}):<br></br>
-                    <span className='subheading-payment'><i>Played within 30 mins or refund.</i></span>
+                    <span className='subheading-payment'><i>Played within 40 mins or refund.</i></span>
                 </p>
+
+
+                <div className='bid-buttons'>
+                    {bidAmounts.map((bid, index) => (
+                        <div key={index} className='bid-button-container'>
+                            <button
+                                type="button"
+                                onClick={() => setAmount(bid.amount)}
+                                className='btn-bid'
+                            >
+                                ₹{bid.amount}
+                            </button>
+                            <div className='bid-text'>{bid.text}</div>
+                        </div>
+                    ))}
+                </div>
+
 
                 <input
                     className='amount-inputfield'
@@ -273,6 +299,7 @@ function PaymentIndex() {
                     onChange={(e) => setAmount(e.target.value)}
                     required
                 />
+
                 <br></br>
                 {/* <Promocode onApply={handlePromoApply} /> */}
                 <br></br>
@@ -310,7 +337,7 @@ function PaymentIndex() {
 
             <br></br>
             <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
-            <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</em>
+            <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song within 40 mins, you'll be issued a full refund.</em>
 
             {/* Render the success message if showSuccessMessage is true */}
             {showSuccessMessage && (

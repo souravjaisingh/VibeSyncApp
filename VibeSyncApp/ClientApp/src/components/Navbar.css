@@ -1,5 +1,5 @@
 .navbar {
-  background-color: white;
+  background-color: #D7DEFE;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,12 +25,18 @@
 .logo img {
   max-width: 100px; /* Adjust the logo size as needed */
 }
+
+.logo div{
+  font-size: x-small;
+  font-weight: 660;
+}
+
 .home-img {
   cursor: pointer;
 }
 
 .home-img img {
-  max-width: 27px; /* Adjust the logo size as needed */
+  max-width: 30px; /* Adjust the logo size as needed */
 }
 
 .menu-icon {

@@ -39,8 +39,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         public async Task<string> UpdateDj(UpdateDjCommandModel request)
         {
 
-            //call google drive's upload method
-            //use that res(url) to set djphoto
+            
             var djEntity = _context.Djs.Where(x => x.Id == request.Id).FirstOrDefault();
             if (djEntity != null)
             {
@@ -49,7 +48,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 djEntity.ArtistName = request.ArtistName;
                 djEntity.DjGenre = request.DjGenre;
                 djEntity.DjDescription = request.DjDescription;
-                //djEntity.DjPhoto = request.DjPhoto;
+                djEntity.DjPhoto = request.DjPhoto;
                 djEntity.BankName = request.BankName;
                 djEntity.BankAccountNumber = request.BankAccountNumber;
                 djEntity.BranchName = request.BranchName;

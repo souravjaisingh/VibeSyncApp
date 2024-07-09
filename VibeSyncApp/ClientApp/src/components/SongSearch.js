@@ -35,10 +35,10 @@ function SongSearch() {
 
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
-        const Amount = parseFloat(uri["minimumBid"]);
-        /* console.log(Amount)*/
-        setMinAmount(Amount)
-
+        if(qrcodeParam == null){
+            const Amount = parseFloat(uri["minimumBid"]);
+            setMinAmount(Amount)
+        }
     }, [location.search]);
 
     useEffect(() => {
@@ -160,6 +160,8 @@ function SongSearch() {
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
                 setShouldRefresh(true);
+                const Amount = parseFloat(uri["minimumBid"]);
+                setMinAmount(Amount)
             }
             return;
         }

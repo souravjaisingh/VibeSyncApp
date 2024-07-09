@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './Navbar.css';
-import vibeSyncLogo from '../Resources/VB_Logo_2.png';
+import vibeSyncLogo from '../Resources/VSlogo3.png';
 import home from '../Resources/home.png';
 import homeIcon from '../Resources/homeIcon.png'
 

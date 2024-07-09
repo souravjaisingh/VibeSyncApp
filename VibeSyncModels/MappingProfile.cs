@@ -22,6 +22,7 @@ namespace VibeSyncModels
             CreateMap<Dj, DjProfileResponseModel>().ReverseMap();
             CreateMap<SongDetails, Track>().ReverseMap();
             CreateMap<Settlement, SettlementResponse>().ReverseMap();
+            CreateMap<ReviewDetails, Review>().ReverseMap();
             CreateMap<PersistSongHistoryPaymentRequest, SongHistory>()
                 .ForMember(dest => dest.Image, src => src.MapFrom(prop => prop.AlbumImage));
         }

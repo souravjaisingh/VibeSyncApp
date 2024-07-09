@@ -183,7 +183,6 @@
     color: #39125C;
     max-height: 3.5rem;
 
-
 }
 
 .songs-row img{
@@ -263,16 +262,13 @@
     position: relative;
 }
 
-.bg-music{
-    position: absolute;
-    opacity: 0.1;
-
+.container-for-table{
+    background: url('/images/BGMusic.png');
+    background-repeat: no-repeat;
 }
 
-.song-rows{
-    position: absolute;
-    top:0;
-}
+
+
 
 .playlist-buttons {
     margin-top: 10px;

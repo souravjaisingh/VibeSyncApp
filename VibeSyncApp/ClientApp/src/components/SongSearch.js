@@ -293,6 +293,7 @@ function SongSearch() {
 
     return (
         <>
+            
             <div className='song-search'>
                 {eventData && (
                     <div className="search-container">
@@ -358,7 +359,7 @@ function SongSearch() {
                         ))}
                     </div>
                     <div className='container-for-table' style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
-                        <img className='bg-music' src='images/BGMusic.png' />
+                        
                         {results && results.map((result, index) => (
                             <div key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
                                 <div >
@@ -376,7 +377,6 @@ function SongSearch() {
                                 </div>
                             </div>
                         ))}
-
                         {loading && <p>Loading...</p>}
 
                     </div>

@@ -7,7 +7,8 @@ import defaultPhoto from '../Resources/defaultDj.jpg';
 import SongSearch from './SongSearch';
 import { MyContext } from '../App';
 import StickyBar from './StickyBar';
-import { reviews} from './Constants';
+import { reviews } from './Constants';
+import LiveDjList from './LiveDjList'
 
 export default function DjList() {
     const { error, setError } = useContext(MyContext);
@@ -16,9 +17,16 @@ export default function DjList() {
     const [events, setEvents] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRow, setSelectedRow] = useState(null);
+    const [showLiveEvents, setShowLiveEvents] = useState('all'); // Set default filter to "all"
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
+
+
+    const handleFilterChange = (event) => {
+        setShowLiveEvents(event.target.value);
+    };
+
 
     const filteredData = events.filter((item) =>
         Object.values(item).some((value) =>
@@ -66,15 +74,29 @@ export default function DjList() {
     }
 
     return (
-        <>
-            <MDBInput
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder="Search DJ/Venue"
-            />
+        <div className='dj-lists-wrapper'>
+            <div className="search-filter-bar">
+                <div className="search-bar-container">
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search DJ/Venue"
+                    />
+                    <img src="/images/SearchButton1.png" alt="Search" className="search-icon" />
+                </div>
+                <select className="filter-dropdown" onChange={handleFilterChange} value={showLiveEvents}>
+                    <option value="all">All</option>
+                    <option value="live">Live</option> 
+                </select>
+                <div className='down-arrow'>&#11167;</div>
+            </div>
 
 
+
+            {showLiveEvents === 'live' ? (
+                <LiveDjList />
+            ) : (
             <div className='event-list'>
                 {/* <div className='events-search'>
                     <input type="text"
@@ -104,6 +126,9 @@ export default function DjList() {
                                         <div className='rating'>
                                             <div>{Array.from({ length: item.rating?item.rating:4 }, (_, index) => (
                                                 <span>&#9733;</span>
+                                            ))}
+                                            {Array.from({ length: 5-(item.rating?item.rating:4) }, (_, index) => (
+                                                <span>&#9734;</span>
                                             ))}</div>
                                             {item.eventStatus === 'Not live' ? '' : <img  className='live-image' src='/images/live.png' />
                                             }</div>
@@ -115,7 +140,7 @@ export default function DjList() {
 
                     )}
             </div>
-
+            )}
 
             {/* <MDBTable align='middle' responsive hover>
                 <MDBTableHead>
@@ -168,6 +193,6 @@ export default function DjList() {
             </MDBTable> */}
 
             <StickyBar type="review" data={reviews} />
-        </>
+        </div>
     );
 }

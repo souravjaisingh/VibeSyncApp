@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
+using Google.Apis.Drive.v3;
+using VibeSync.DAL.GoogleDriveServices;
 
 namespace VibeSyncApp.Controllers
 {
@@ -14,16 +16,20 @@ namespace VibeSyncApp.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<DjController> _logger;
+        private readonly IGoogleDriveServices _driveService;
 
-        public DjController(IMediator mediator, ILogger<DjController> logger)
+        public DjController(IMediator mediator, ILogger<DjController> logger, IGoogleDriveServices googleDriveService)
         {
             _mediator = mediator;
             _logger = logger; // Initialize ILogger
+            _driveService = googleDriveService;
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateDjProfile([FromBody] UpdateDjCommandModel request)
+        public async Task<IActionResult> UpdateDjProfile([FromForm] UpdateDjCommandModel request)
         {
+ 
+            
             // Log the request parameter as JSON
             _logger.LogInformation($"Entered: {typeof(DjController)}, API: {typeof(DjController).GetMethod("UpdateDjProfile")}, Request: {JsonConvert.SerializeObject(request)}");
 

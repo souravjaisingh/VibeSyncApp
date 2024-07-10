@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,7 +16,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public string ArtistName { get; set; }
         public string DjGenre { get; set; }
         public string DjDescription { get; set; }
-        public string DjPhoto { get; set; }
+        public IFormFile DjPhoto { get; set; }
         public string BankName { get; set; }
         public int? BankAccountNumber { get; set; }
         public string BranchName { get; set; }

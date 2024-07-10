@@ -17,6 +17,7 @@ using System.Net.Http;
 using System.Reflection;
 using VibeSync.DAL.BackgroundServices;
 using VibeSync.DAL.DBContext;
+using VibeSync.DAL.GoogleDriveServices;
 using VibeSync.DAL.Handler;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
@@ -62,6 +63,7 @@ namespace VibeSyncApp
             services.AddSingleton(mapper);
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddMediatR(typeof(UserCommandRepository).GetTypeInfo().Assembly);
+            services.AddSingleton<GoogleDriveServices>();
             //string connection = Configuration.GetConnectionString("VibeSyncDB");
             //services.AddDbContext<VibeSyncContext>(options => options.UseSqlServer(connection));
 
@@ -79,6 +81,7 @@ namespace VibeSyncApp
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
             services.AddScoped<ISettlementsQueryRepository, SettlementsQueryRepository>();
             services.AddScoped<ISettlementsCommandRepository, SettlementsCommandRepository>();
+            services.AddScoped<IGoogleDriveServices, GoogleDriveServices>(); 
             //services.AddScoped<IWeSocketQueryRepository, WebSocketQueryRepository>();
             //services.AddScoped<WebSocketHandler>();
 

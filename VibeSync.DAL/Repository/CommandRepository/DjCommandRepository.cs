@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using Google.Apis.Drive.v3;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
+using VibeSync.DAL.GoogleDriveServices;
 using VibeSyncModels;
 using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
@@ -17,6 +21,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         private readonly VibeSyncContext _context;
         private readonly IMapper _mapper;
+        private readonly GoogleDriveServices.GoogleDriveServices _driveService;
 
 
 
@@ -25,10 +30,12 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="mapper">The mapper.</param>
-        public DjCommandRepository(IDBContextFactory context, IMapper mapper)
+        public DjCommandRepository(IDBContextFactory context, IMapper mapper, GoogleDriveServices.GoogleDriveServices googledriveService)
         {
             _context = context.GetDBContext();
             _mapper = mapper;
+            _driveService = googledriveService;
+
         }
         /// <summary>
         /// Updates the dj.
@@ -38,8 +45,17 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <exception cref="VibeSyncModels.CustomException"></exception>
         public async Task<string> UpdateDj(UpdateDjCommandModel request)
         {
+            var photoUrl = string.Empty;
+            var modify = _mapper.Map<Dj>(request);
+            if (modify.DjPhoto != null && modify.DjPhoto.Length > 0)
+            {
+                // Upload DjPhoto to Google Drive
+                photoUrl = await _driveService.UploadFileAndGetUrlAsync(request.DjPhoto);
+                
+                modify.DjPhoto = null;
+            }
 
-            
+
             var djEntity = _context.Djs.Where(x => x.Id == request.Id).FirstOrDefault();
             if (djEntity != null)
             {
@@ -48,7 +64,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 djEntity.ArtistName = request.ArtistName;
                 djEntity.DjGenre = request.DjGenre;
                 djEntity.DjDescription = request.DjDescription;
-                djEntity.DjPhoto = request.DjPhoto;
+                djEntity.DjPhoto = photoUrl;
                 djEntity.BankName = request.BankName;
                 djEntity.BankAccountNumber = request.BankAccountNumber;
                 djEntity.BranchName = request.BranchName;

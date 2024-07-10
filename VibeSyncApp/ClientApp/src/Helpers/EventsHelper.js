@@ -9,7 +9,7 @@ export default async function getLiveEventsHelper(lat, lng) {
     return res;
 }
 
-export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, venue, starttime, endtime, lat, lng, minbid, isUpdate, eventid = 0, eventstatus = 'Not live', genre='default'){
+export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, venue, starttime, endtime, lat, lng, minbid, isUpdate, acceptingRequests = false, displayRequests = false, eventid = 0, eventstatus = 'Not live', genre = 'default' ){
     var model = {
         id : eventid,
         userId : userid,
@@ -22,8 +22,11 @@ export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, ven
         latitude : lat,
         longitude : lng,
         eventGenre : genre,
-        eventStatus : eventstatus
+        eventStatus: eventstatus,
+        acceptingRequests: acceptingRequests, //for requests
+        displayRequests: displayRequests 
     }
+
     if(isUpdate == true){
         var res = await UpdateEventDetails(model);
         return res;

@@ -15,6 +15,8 @@ namespace VibeSyncModels.Request_ResponseModels
         public string ArtistName { get; set; }
         public string AlbumName { get; set; }
         public string AlbumImage { get; set; }
+        public string MicAnnouncement { get; set; }
+        public string ScreenAnnouncement { get; set; }
 
     }
 }

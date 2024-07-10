@@ -27,8 +27,6 @@ namespace VibeSyncModels.Request_ResponseModels
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? DistanceFromCurrLoc { get; set; }
-
-        // New checkbox properties
         public bool AcceptingRequests { get; set; }
         public bool DisplayRequests { get; set; }
     }

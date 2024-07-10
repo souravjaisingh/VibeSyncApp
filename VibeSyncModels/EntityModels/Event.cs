@@ -32,7 +32,6 @@ namespace VibeSyncModels.EntityModels
         public decimal? Longitude { get; set; }
         public bool AcceptingRequests { get; set; }
         public bool DisplayRequests { get; set; }
-
         public virtual Dj Dj { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Settlement> Settlements { get; set; }

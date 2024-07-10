@@ -53,8 +53,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var eventDetails = _mapper.Map<Event>(request);
             eventDetails.CreatedBy = request.UserId.ToString();
             eventDetails.CreatedOn = DateTime.Now;
-            eventDetails.AcceptingRequests = request.AcceptingRequests; // Include AcceptingRequests
-            eventDetails.DisplayRequests = request.DisplayRequests;     // Include DisplayRequests
 
             _context.Events.Add(eventDetails);
             var response = await _context.SaveChangesAsync();
@@ -105,8 +103,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var eventEntity = _context.Events.Where(x => x.Id == request.Id).FirstOrDefault();
             if (eventEntity != null)
             {
-                // Map properties from EventsDetails to Event entity
-                _mapper.Map(request, eventEntity);
 
                 eventEntity.Longitude = request.Longitude;
                 eventEntity.Latitude = request.Latitude;
@@ -120,8 +116,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 eventEntity.EventGenre = request.EventGenre;
                 eventEntity.EventStatus = request.EventStatus;
                 eventEntity.MinimumBid = request.MinimumBid;
-                eventEntity.AcceptingRequests = request.AcceptingRequests; // Update AcceptingRequests
-                eventEntity.DisplayRequests = request.DisplayRequests;     // Update DisplayRequests
+                eventEntity.AcceptingRequests = request.AcceptingRequests; 
+                eventEntity.DisplayRequests = request.DisplayRequests;     
                 _context.Events.Update(eventEntity);
                 // Save changes to the database
                 var response = await _context.SaveChangesAsync();

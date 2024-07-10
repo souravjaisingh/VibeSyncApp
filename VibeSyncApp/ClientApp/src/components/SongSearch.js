@@ -32,6 +32,7 @@ function SongSearch() {
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
     const [minAmount, setMinAmount] = useState(0);
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
@@ -386,7 +387,11 @@ function SongSearch() {
             </div>
             <div>
                 {/* Other content */}
-                <StickyBar type="bid" data={messages} minAmount={minAmount} />
+                <StickyBar type="bid" data={messages}
+                    minAmount={minAmount}
+                    onClose={() => { setIsStickyBarVisible(false); }}
+                    isVisible={isStickyBarVisible}
+                />
             </div>
         </>
     );

@@ -9,7 +9,7 @@ const getRandomAmount = (minAmount) => {
     return minAmount + Math.floor(Math.random() * 31) + 30;
 };
 
-const StickyBar = ({ type, data, minAmount }) => {
+const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {
     const [currentItem, setCurrentItem] = useState(data[getRandomIndex(data)]);
 
     useEffect(() => {
@@ -40,11 +40,14 @@ const StickyBar = ({ type, data, minAmount }) => {
         }
     };
 
+    if (!isVisible) return null;
+
     return (
         <div className="sticky-bar">
             <div className="content">
                 {renderContent()}
             </div>
+            <button className="close-button" onClick={onClose} style={{ color: "white" } } > × </button>
         </div>
     );
 };

@@ -1,6 +1,8 @@
     /* CSS Styles */
     .song-search{
-        background-color: #f0f7f9;
+        background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+        background-attachment: fixed;
+        
     }
     .search-container {
         display: flex;
@@ -9,7 +11,10 @@
         justify-content: center;
         /* height: 100vh; Center vertically in viewport */
         text-align: center;
-        background-color: #f0f7f9;
+        /* background-color: #f0f7f9; */
+        padding:10px;
+        padding-bottom: 0px;
+        
     }
     
     .dj-image {
@@ -19,21 +24,46 @@
     
     .left-content {
         flex: 0 0 auto;
-        margin-right: 20px; /* Add spacing between the image and text */
-        max-width: 300px; /* Set a maximum width for the image */
+       
+        border-radius: 15px;
+        background-color: #39125C;
+        display: flex;
+        color: #ffffff; 
+        height:4rem;
+        place-items: center; 
+        width:40%;
+        min-width:8rem;
+        margin:20px;
+        margin-right: 0px;
+        
+    }
+
+    .left-content img{
+        width: 3.75rem;
+        height: 3.75rem;
+        border-radius: 100%;
+        position: relative;
+        left:-15px;
     }
     
+    .left-content-text{
+        position: relative;
+        left: -10px;
+        text-align:left;
+        padding-bottom: 10px;
+    }
+
     .right-content {
-        flex: 1;
+        width:40%;
+        border-radius:15px;
+        background-color: #39125C;
+        color:#fff;
+        font-size:0.75rem;
+        height:4rem;
+        min-width:8rem;
     }
     
-    @media (max-width: 768px) {
-        /* Apply these styles for screens with a maximum width of 768px (adjust as needed) */
-        .left-content {
-            max-width: 30%; /* Allow the image to take full width on smaller screens */
-            margin-right: 0; /* Remove right margin on smaller screens */
-        }
-    }
+    
     .search-heading {
         font-size: 24px;
         margin-bottom: 20px;
@@ -42,11 +72,13 @@
     
     .search-input {
         width: 100%;
-        padding: 3px;
+        padding: 5px 20px;
         margin-top: 15px;
         border: 1px solid #ccc;
-        border-radius: 20px;
+        border-radius: 10px;
         font-size: 16px;
+        font-weight: 700;
+        
     }
     
     .search-results {
@@ -68,18 +100,31 @@
         background-color: #e0e0e0;
     }
     .dj-name {
-        margin-top: revert;
+        /* margin-top: revert;
         font-size: smaller;
         margin-bottom: auto;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-        'Lucida Sans', Arial, sans-serif;
-        }
-    .event-name{
-            font-size: large;
+        'Lucida Sans', Arial, sans-serif; */
+        font-size: 0.75rem;
+        line-height: 1rem; 
+
     }
-    .event-desc{
-        font-size: x-small;
-}
+
+    .left-content-text p{
+        margin:0;
+        
+    }
+
+    .song-search-event-name{
+        font-size: 1rem;
+        line-height: 1.5rem; 
+        font-weight: 700;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+    
 /* Style for the custom toggle bar */
 .custom-toggle-bar {
     display: flex;
@@ -129,11 +174,40 @@
     overflow-y: auto;
 }
 .songs-row{
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+   
+    display: flex;
+    background: linear-gradient(to right,#39125C,#f8f9ff 50%);
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top:0.5rem;
+    color: #39125C;
+    max-height: 3.5rem;
+
 }
-.custom-td {
-    padding: 0.3rem !important;
+
+.songs-row img{
+    border-radius: 15px;
+}
+
+.song-card-text{
+    padding:8px;
+    
+    
+}
+
+.song-name{
+    font-size: 1.5rem; 
+    line-height: 0.2rem;
+    font-weight:700;
+}
+
+.song-artists{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    font-size: 0.8rem;
+    font-weight:600;
 }
 
 /* .collapsible-list.open {
@@ -166,10 +240,14 @@
     flex-direction: column;
     margin-top: -11px;
     align-items: center; /* Center content horizontally */
+    width:100%;
 }
 
 .search-bar {
     margin-bottom: 0px; /* Adjust margin bottom as needed */
+    width:100%;
+    display:flex;
+    padding-left: 30px;
 }
 
 .container-for-table {
@@ -179,25 +257,39 @@
     width: 100%; /* Ensure table container occupies full width */
     padding: 5px; /* Add padding for spacing */
     box-sizing: border-box; /* Include padding in width calculation */
+    margin:10px;
+    opacity: 1 !important;
+    position: relative;
 }
+
+.container-for-table{
+    background: url('/images/BGMusic.png');
+    background-repeat: no-repeat;
+}
+
+
+
 
 .playlist-buttons {
     margin-top: 10px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    font-weight:600;
+
 }
 
 .playlist-button {
-    background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent */
+    background-color: #39125C; /* Slightly transparent */
     border: none;
-    border-radius: 20px;
-    padding: 5px 15px;
-    font-size: 11px;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
     margin-top: 0px !important;
-    color: #000;
+    color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-weight:600;
 }
 
 .playlist-button:hover {
@@ -205,8 +297,8 @@
 }
 
 .playlist-button.active {
-    background-color: rgba(0, 0, 0, 0.3); /* Highlight active button */
-    color: #fff; /* Change text color for better visibility */
+    background-color: #fff; /* Highlight active button */
+    color: #39125C; /* Change text color for better visibility */
 }
 @keyframes fall {
     0% {
@@ -251,5 +343,85 @@
 }
 
 
+.choose-from-collections-text{
+    align-items: center;
+    line-height: 1rem; 
+    font-size: 0.9rem;
+    font-weight:700;
+    color:#39125C;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.choose-from-collections-text p{
+    text-align: center; 
+    margin:0px;
+}
 
 
+
+.search-icon-song-search {
+    position: relative;
+    right: 35px; 
+    width: 30px; /* Increase size as needed */
+    height: 30px;
+    cursor: pointer;
+    transform: translateY(18px);
+}
+
+
+.event-desc{
+    background-color: #ef9a9a;
+    border-radius:10px;
+    margin:10px;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    width:90%;
+    text-align:left;
+}
+
+.right-content:hover{
+    cursor: pointer;
+}
+
+.right-content img{
+    width:30px;
+}
+
+.music-icon-image{
+    position: relative;
+    width: 25px !important;
+    height: 25px !important;
+    right:27px !important;
+    top:18px;
+}
+
+
+
+
+.right-content-button-container {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    padding: 3px 3px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+}
+
+.right-content-button-text p{
+    margin: 0;
+    line-height: 1.2;
+}
+
+.right-content-button-text p strong {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 16px;
+    font-weight:400;
+}
+
+
+.right-content-button-icon img {
+    width: 40px;
+    height: auto;
+}

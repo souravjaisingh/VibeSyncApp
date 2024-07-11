@@ -44,7 +44,6 @@ namespace VibeSync.DAL.DBContext
                 });
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -292,12 +291,20 @@ namespace VibeSync.DAL.DBContext
                     .HasMaxLength(150)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MicAnnouncement)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.OrderId)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ScreenAnnouncement)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SongId)
@@ -384,6 +391,7 @@ namespace VibeSync.DAL.DBContext
 
             OnModelCreatingPartial(modelBuilder);
         }
+
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

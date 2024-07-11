@@ -18,6 +18,9 @@ export default function DjList() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRow, setSelectedRow] = useState(null);
     const [showLiveEvents, setShowLiveEvents] = useState('all'); // Set default filter to "all"
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
+
+
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
@@ -142,57 +145,15 @@ export default function DjList() {
             </div>
             )}
 
-            {/* <MDBTable align='middle' responsive hover>
-                <MDBTableHead>
-                    <tr>
-                        <th scope='col'>Dj Name</th>
-                        <th scope='col'>Event Name</th>
-                        <th scope='col'>Venue</th>
-                        <th scope='col'>Status</th>
-                    </tr>
-                </MDBTableHead>
-                <MDBTableBody>
-                    {
-                        filteredData.map(item =>
-                            <>
-                                <tr onClick={(e) => { handleRowClick(item) }}>
-                                    <td>
-                                        <div className='d-flex align-items-center'>
-                                            <img
-                                                src={item.djPhoto ? item.djPhoto : defaultPhoto} //use default photo if dj photo is null
-                                                alt=''
-                                                style={{ width: '45px', height: '45px' }}
-                                                className='rounded-circle' />
-                                            <div className='p-2'>
-                                                <p className='fw-bold mb-1'>{item.djName}</p>
-                                                <MDBBadge color={item.eventStatus === 'Not live' ? 'warning' : 'success'} pill>
-                                                    {item.eventStatus === 'Not live' ? 'Upcoming' : 'Live'}
-                                                </MDBBadge>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p className='fw-normal mb-1'>{item.eventName}</p>
-                                        <DateTimeDisplay datetimeString={item.eventStartDateTime} />
-                                    </td>
-                                    <td>
-                                        <p className='fw-normal mb-1'>{item.venue}</p>
-                                        <p className='text-muted mb-0'>IT department</p>
-                                    </td>
-                                    <td>
-                                        <MDBBadge color={item.eventStatus === 'Live' ? 'success' : 'warning'} pill>
-                                            {item.eventStatus == 'Live' ? 'Live' : 'Upcoming'}
-                                        </MDBBadge>
+            
 
-                                    </td>
-                                </tr>
-                            </>
-                        )
-                    }
-                </MDBTableBody>
-            </MDBTable> */}
+            <StickyBar
+                type="review"
+                data={reviews}
+                onClose={() => { setIsStickyBarVisible(false); }}
+                isVisible={isStickyBarVisible}
+            />
 
-            <StickyBar type="review" data={reviews} />
         </div>
     );
 }

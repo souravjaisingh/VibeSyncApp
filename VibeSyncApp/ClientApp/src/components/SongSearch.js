@@ -32,13 +32,14 @@ function SongSearch() {
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
     const [minAmount, setMinAmount] = useState(0);
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
-        const Amount = parseFloat(uri["minimumBid"]);
-       /* console.log(Amount)*/
-        setMinAmount(Amount)
-
+        if(qrcodeParam == null){
+            const Amount = parseFloat(uri["minimumBid"]);
+            setMinAmount(Amount)
+        }
     }, [location.search]);
 
     useEffect(() => {
@@ -160,6 +161,8 @@ function SongSearch() {
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
                 setShouldRefresh(true);
+                const Amount = parseFloat(uri["minimumBid"]);
+                setMinAmount(Amount)
             }
             return;
         }
@@ -275,6 +278,7 @@ function SongSearch() {
             data.songId = data.id;
             delete data.id;
 
+            data.IsSpecialAnnouncement = false;
             const concatenatedJson = { ...eventData, ...data };
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
@@ -287,83 +291,121 @@ function SongSearch() {
         setListOpen(!isListOpen);
     };
 
+    const MakeSpecialAnnouncementHandler = () => {
+        if (eventData) {
+            const eventDataCopy = { ...eventData };
+            eventDataCopy.eventId = eventData.id;
+            delete eventDataCopy.id;
+
+            // Set the IsSpecialAnnouncement flag
+            eventDataCopy.IsSpecialAnnouncement = true;
+
+            const concatenatedJson = { ...eventDataCopy };
+            const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
+
+            console.log("Event data copy : ",eventDataCopy);
+            navigate(`/paymentIndex?data=${rowDataString}`);
+        }
+    };
+
     return (
         <>
-        <div className='song-search'>
-            {eventData && (
-                <div className="search-container">
-                    <div className="left-content">
-                        <img
-                            src={eventData.djPhoto || defaultPhoto} // Use default photo if djPhoto is null
-                            alt="DJ Image"
-                            style={{ width: '200px', height: 'auto' }}
-                            className='dj-image'
+            
+            <div className='song-search'>
+                {eventData && (
+                    <div className="search-container">
+                        <div className="left-content">
+                            <img
+                                src={eventData.djPhoto || defaultPhoto} // Use default photo if djPhoto is null
+                                alt="DJ Image"
+                                className='dj-image'
+                            />
+                            <div className='left-content-text'><p className='song-search-event-name'>{eventData.eventName}</p>
+                                <p className='dj-name'>{eventData.djName}</p></div>
+                        </div>
+                        <img className='music-icon-image' src="/images/Music icon.png" />
+                        <div className="right-content">
+                            <div className='special-announcements right-content-button-container' onClick={MakeSpecialAnnouncementHandler}>
+                                <div class="right-content-button-text">
+                                    <p>Make <strong>Special</strong></p>
+                                    <p>Announcements for Special Occasions!</p>
+                                </div>
+                                <div class="right-content-button-icon">
+                                    <img src="images/mic.png" alt="Microphone Icon" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <span className='event-desc'><b>
+                            <img style={{ width: '15px' }} src="/images/disclaimerIcon.png" />
+                            {eventData.eventDescription}</b></span>
+                    </div>
+
+                )}
+
+
+
+                <div className="search-page">
+                    <div className="search-bar">
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Search your song"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
                         />
+                        <img src="/images/SearchButton1.png" className='search-icon-song-search' />
                     </div>
-                    <div className="right-content">
-                        <p className='dj-name'>{eventData.djName}</p>
-                        <p className='text-muted event-name'>{eventData.eventName}</p>
-                        <p className='text-muted event-desc'><b>{eventData.eventDescription}</b></p>
+
+
+                    <div className='choose-from-collections-text'>
+                        <p>OR</p>
+                        <p>CHOOSE FROM OUR COLLECTIONS</p>
+
+                    </div>
+
+                    <div className="playlist-buttons">
+                        {listOfPlaylists && listOfPlaylists.map((playlist) => (
+                            <button
+                                key={playlist.id}
+                                className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                onClick={() => handlePlaylistClick(playlist.id)}
+                            >
+                                {playlist.name}
+                            </button>
+                        ))}
+                    </div>
+                    <div className='container-for-table' style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
+                        
+                        {results && results.map((result, index) => (
+                            <div key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
+                                <div >
+                                    <img
+                                        src={result.album.images[result.album.images.length - 1].url}
+                                        alt={`Album Cover for ${result.album.name}`}
+                                    />
+                                </div>
+                                <div className='song-card-text'>
+                                    <span className='song-name'>{result.name}</span>
+
+                                    <span className='song-artists'>
+                                        {result.artists.map((artist) => artist.name).join(', ')}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                        {loading && <p>Loading...</p>}
+
                     </div>
                 </div>
-            )}
-
-            <div className="search-page">
-                <div className="search-bar">
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="Search your song here..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                    />
-                </div>
-
-                <div className="playlist-buttons">
-                    {listOfPlaylists && listOfPlaylists.map((playlist) => (
-                        <button
-                            key={playlist.id}
-                            className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
-                            onClick={() => handlePlaylistClick(playlist.id)}
-                        >
-                            {playlist.name}
-                        </button>
-                    ))}
-                </div>
-
-                <div className='container-for-table' style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
-                    <MDBTable align='middle' responsive hover>
-                        <MDBTableBody>
-                            {results && results.map((result, index) => (
-                                <tr key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
-                                    <td className='custom-td'>
-                                        <img
-                                            src={result.album.images[result.album.images.length - 1].url}
-                                            alt={`Album Cover for ${result.album.name}`}
-                                            style={{ width: '50px', height: '50px' }}
-                                            className='rounded-circle'
-                                        />
-                                    </td>
-                                    <td className='custom-td'>
-                                        <p className='fw-bold mb-1'>{result.name}</p>
-                                    </td>
-                                    <td className='custom-td'>
-                                        <p className='text-muted mb-0'>
-                                            {result.artists.map((artist) => artist.name).join(', ')}
-                                        </p>
-                                    </td>
-                                </tr>
-                            ))}
-                        </MDBTableBody>
-                    </MDBTable>
-
-                    {loading && <p>Loading...</p>}
-                </div>
-            </div>
             </div>
             <div>
                 {/* Other content */}
-                <StickyBar type="bid" data={messages} minAmount={minAmount} />
+                <StickyBar type="bid" data={messages}
+                    minAmount={minAmount}
+                    onClose={() => { setIsStickyBarVisible(false); }}
+                    isVisible={isStickyBarVisible}
+                />
             </div>
         </>
     );

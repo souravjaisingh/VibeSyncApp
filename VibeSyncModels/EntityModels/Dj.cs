@@ -10,8 +10,8 @@ namespace VibeSyncModels.EntityModels
         public Dj()
         {
             Events = new HashSet<Event>();
-            SongHistories = new HashSet<SongHistory>();
             Reviews = new HashSet<Review>();
+            SongHistories = new HashSet<SongHistory>();
         }
 
         public long Id { get; set; }

@@ -41,7 +41,7 @@ function SongSearch() {
             const Amount = parseFloat(uri["minimumBid"]);
             setMinAmount(Amount)
         }
-    }, [location.search]);
+    });
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -161,9 +161,9 @@ function SongSearch() {
                 localStorage.setItem('userId', 0); // 0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
-                setShouldRefresh(true);
                 const Amount = parseFloat(uri["minimumBid"]);
-                setMinAmount(Amount)
+                setMinAmount(Amount);
+                setShouldRefresh(true);
             }
             return;
         }
@@ -296,7 +296,6 @@ function SongSearch() {
     };
 
     const MakeSpecialAnnouncementHandler = () => {
-       
         if (eventData.acceptingRequests == false && eventData.displayRequests == false) {
             setShowAnnouncementModal(true);
         }

@@ -87,10 +87,39 @@
 
 .filter-container {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .filter-label {
-    font-weight: bold;
+    font-size: 1.5rem !important;
+    color: #39125C !important;
+    margin-bottom: 0;
+}
+
+.filter-select-song-history {
+    padding:5px 12px; /* Adjust padding to suit your design */
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size */
+    max-width: 150px; /* Add a max-width to the dropdown */
+    background-color: #39125C;
+    color: white;
+    font-weight :bold;
+    width: auto;
+    text-align: center;
+
+}
+
+.filter-select-song-history option {
+        background-color: #39125C; 
+        color: white; 
+        font-size: 16px; 
 }
 
 .filter-select {
@@ -115,4 +144,105 @@
 .reject-message{
     color: gray;
     font-weight: bold;
+}
+
+.song-history-container{
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background-attachment: fixed;
+    background-size: screen;
+    padding: 0px !important;
+}
+
+.song-inner-container{
+    padding: 20px;
+}
+
+.song-row-history-page{
+    border-radius: 15px;
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+    color: #39125C;
+    background: linear-gradient(to right, white 30%, #D7DEFE, white 70%);
+}
+
+.bg-music-song-history{
+    
+    background-image: url("/images/BGMusic.png");
+}
+
+.history-page-left-content{
+    width:35%;
+    font-weight: 700;
+    padding: 8px;
+}
+.history-page-middle-content{
+    display: flex;
+    width:40%;
+    gap:5px;
+    border-radius: 15px;
+    color: white;
+    background-color: #39125C;
+    padding: 10px 15px;
+    align-items: center;
+    margin: 5px 0px;
+}
+.history-page-right-content{
+    width:25%;
+    font-size: 0.75rem;
+    justify-content: center;
+}
+.time-paymentid-block{
+    font-size:0.4rem;
+    
+}
+.btn-right-content{
+    padding: 5px 10px;
+    border-radius: 15px;
+    color:#39125C;
+    margin: auto;
+    width:90%;
+    text-align: center;
+    font-weight: 700;
+}
+.date-time-payment{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+.song-row-song-name{
+    font-size: 1rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 0.9rem;
+}
+.song-row-artist-name{
+    font-size: 0.75rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    padding-top: 2px;
+}
+.song-row-amount-paid{
+    font-weight: 700;
+    padding-right:5px;
+}
+.bg-music-song-history{
+    background: url("/images/BGMusic.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+.btn-payment-red{
+    background-color: red;
+}
+.btn-payment-green{
+    background-color: green;
+}
+.btn-payment-yellow{
+    background-color: yellow;
 }

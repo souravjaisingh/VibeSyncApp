@@ -2,13 +2,45 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f0f7f9;
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background-attachment: fixed;
+}
+
+
+
+.song-details-container{
+    display:flex;
+    padding:20px;
+
+}
+
+.song-details-text{
+    color:#39125C;
+    padding-top: 20px;
+}
+
+.song-details-text p{
+    margin:10px;
+
+}
+
+.bg-music-background{
+    background: url('/images/BGMusic.png');
+    background-repeat: no-repeat;
+}
+
+.song-details-container img{
+    width:40%;
+    height:auto;
+    border-radius: 20px;
 }
 
 .song-name {
     margin-top: 8px;
     /* color: #fff; */
-    font-size: 20px;
+    font-size: 1.8rem;
+    line-height: 1.5rem;
+    font-weight: 700;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
@@ -20,12 +52,32 @@
 
 .artist-name {
     font-size: small;
+    opacity:0.7;
+    font-size:1rem;
+    font-weight:600;
+    padding-top: 5px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
 }
 
 .subheading-payment {
-    color: grey;
-    font-size: small;
     margin-bottom: 0px;
+    text-align: center;
+    font-size:0.75rem;
+    font-weight:600;
+    color: #39125C;
+    border-radius: 15px;
+    background-color: #ef9a9a;
+    width:60%;
+    margin: auto;
+    align-items: center;
+    padding-bottom: 2px;
+}
+
+.subheading-payment img{
+    width: 13px;
 }
 
 .label {
@@ -41,21 +93,22 @@
 }
 
 .btnPayment {
-    background-color: #08a4f2; /* Pink color */
+    background-color: #39125C; /* Pink color */
     color: white;
     border: none;
     border-radius: 20px;
-    padding: 8px 16px; /* Adjust padding as needed */
+    padding: 0px 16px; /* Adjust padding as needed */
     cursor: pointer;
     margin: auto;
     width: -webkit-fill-available;
+    max-width: 14rem;
 }
 
 .amount-inputfield {
     border: 2px solid #59b0ef; /* Pink color */
-    border-radius: 20px;
-    padding: 5px 10px; /* Adjust padding as needed */
-    width: 250px; /* Adjust width as needed */
+    border-radius: 15px;
+    padding: 3px 10px; /* Adjust padding as needed */
+    width: 30%; /* Adjust width as needed */
     margin-right: 10px; /* Adjust margin as needed */
 }
 
@@ -73,7 +126,7 @@
 }
 
 .btn--primaryPayment {
-    background-color: #87c4ed;
+    background-color: #39125C;
     color: #242424;
     border: ridge;
 }
@@ -95,21 +148,17 @@
 .bid-button-container {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
 }
 
 .btn-bid {
-    background-color: #3399cc;
+    background-color: #39125C;
     color: white;
     border: none;
     padding: 5px 10px; 
     cursor: pointer;
     border-radius: 5px;
 }
-
-    .btn-bid:hover {
-        background-color: #287b9b;
-    }
 
 .bid-text {
     margin-top: 5px; 
@@ -195,6 +244,10 @@
     margin-top: 1px;
 }
 
+.special-announcement-header{
+    max-width: screen;
+}
+
 .announcement-button {
     background-color: #39125C;
     color: white;
@@ -234,4 +287,231 @@
     border-radius: 5px;
     font-size: 14px;
     resize: none;
+}
+
+
+.mic-announcement-button{
+    background-color: #39125C;
+    color:#fff;
+    display: flex;
+    align-items: center;
+    padding:3px 10px;
+    gap:10px;
+    font-weight:700;
+    margin:10px;
+    border-radius:10px;
+}
+
+.mic-announcement-button p {
+    margin:0;
+}
+
+.mic-announcement-button img{
+    width:25px;
+}
+
+
+
+.mic-announcement-buttons{
+    display: flex;
+    flex-wrap: wrap;
+    gap:10px;
+    font-size: 0.75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.mic-announcement-buttons button{
+    width: auto;
+    border-radius: 10px;
+    background-color: #39125C;
+    color: #fff;
+    padding:2px 5px;
+    margin-top: 0;
+}
+
+.mic-announcement-message{
+    border-radius: 10px;
+    width: 93%;
+    margin: 10px;
+    padding: 5px;
+}
+
+.screen-announcement-upload-section{
+    padding:10px;
+    display: flex;
+    gap:10px;
+}
+
+.screen-announcement-message{
+    border-radius: 10px;
+    width: 60%;
+    padding: 5px;
+    height: 5rem;
+}
+
+
+
+
+
+
+.upload-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 200px;
+    cursor: pointer;
+    position: relative;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+}
+.upload-container:hover {
+    background-color: #fff;
+}
+.upload-container input[type="file"] {
+    display: none;
+}
+.upload-icon {
+    font-size: 40px;
+    color: #fff;
+    opacity: 0.5;
+}
+.upload-text {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #555;
+}
+
+
+.amount-selection-division{
+    margin:15px;
+    padding:20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding-bottom: 0;
+}
+
+.minimum-bid-container{
+    border-bottom: 5px dotted #fff;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    font-size: 1.4rem;
+    align-items: center;
+    font-weight: 700;
+    color: #39125C;
+    margin-bottom: 0px;
+}
+
+.minimum-bid-value{
+    background-color: #fff;
+    width:5rem;
+    border-radius: 5px;
+    text-align: left;
+    padding:2px 10px;
+    color: #777;
+}
+
+.tip-amount-section{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #39125C;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.tip-amount-section input{
+    text-align: center;
+    color: #39125C;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.tip-info{
+    display: flex;
+    font-size: 0.7rem;
+    margin: 10px;
+    border-radius: 15px;
+    background-color: #ef9a9a;
+    padding: 2px 2px;
+    align-items: center;
+}
+
+.tip-info p{
+    margin: 0;
+    color: #39125C;
+    font-weight: 600;
+}
+
+.tip-info img{
+    width:15px;
+    height: 15px;
+    padding: 2px;
+}
+
+.payment-icon{
+    width: 2rem;
+    height: 2rem;
+}
+
+.payment-btn-text{
+    display: flex;
+    align-items: center;
+    gap:20px;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.refund-info-footer{
+    color: #39125C;
+    margin: 10px;
+    font-weight: 600;
+    opacity: 0.8;
+    font-weight: 700;
+}
+
+.refund-info-footer p{
+    margin: 5px;
+}
+
+.login-proposal{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #39125C;
+    gap:10px;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 10px 15px;
+}
+
+.login-proposal p{
+    align-items: center;
+    font-weight: 700;
+    margin: 0;
+}
+
+.login-img{
+    width:20px;
+    height: 20px;
+}
+
+.increase-tip-button{
+    position: relative;
+    left:-35px;
+}
+
+.decrease-tip-button{
+    position: relative;
+    left:20px;
+}
+
+.check-box{
+    margin-left: auto;
 }

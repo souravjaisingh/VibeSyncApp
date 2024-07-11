@@ -28,7 +28,8 @@ function PaymentIndex() {
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isPromoApplied, setIsPromoApplied] = useState(false);
     const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
-    const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true); 
+    const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
+    const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
 
     //console.log(rowData);
 
@@ -270,115 +271,183 @@ function PaymentIndex() {
     return (
         <div className='song-details'>
             {/* Display the medium-sized image */}
-            <span className="back-icon" onClick={handleBack}>
-                &lt;&lt; Back &nbsp;
-            </span>
 
-            {/* Conditionally render HTML or Album Image */}
+            <div className='bg-music-background'>
+                {/* Conditionally render HTML or Album Image */}
 
-            {isSpecialAnnouncement ? (
-                <div>
-                    <div className="special-announcement">
-                        <button className="announcement-button">Mic Announcement (₹100)</button>
-                        <div className="button-group">
-                            <button className="sub-button">Happy Birthday</button>
-                            <button className="sub-button">Happy Anniversary</button>
-                            <button className="sub-button">Congratulations</button>
+                {isSpecialAnnouncement ? (
+                    <div className='special-announcement-header'>
+                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                            <img src="images/mic2.png" />
+                                <p>Mic Announcement (₹100)</p>
+                                {isMicAnnouncement ? (<>
+                                    <img className='check-box' src="images/tick_checkbox.png" />
+                                </>) : (<>
+                                    <img className='check-box' src="images/untick_checkbox.png" />
+                                </>)}
                         </div>
-                        <textarea className="message-textarea" placeholder="Type your message..." maxLength={40}></textarea>
+                        {isMicAnnouncement ? (
+                            <>
+                                <div className='mic-announcement-buttons'>
+                                    <button onClick={() => document.getElementById('message-mic-text').value = "Happy Birthday"}>Happy Birthday</button>
+                                    <button onClick={() => document.getElementById('message-mic-text').value = "Happy Anniversary"}>Happy Anniversary</button>
+                                    <button onClick={() => document.getElementById('message-mic-text').value = "Congratulations"}>Congratulations</button>
+                                </div>
+
+                                <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' />
+                            </>
+                        ) : (<></>)}
+
+                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(false)}>
+                            <img src="images/screen.png" /><p>Screen Announcement (₹100)</p>
+                                {isMicAnnouncement ? (<>
+                                    <img className='check-box' src="images/untick_checkbox.png" />
+                                </>) : (<>
+                                    <img className='check-box' src="images/tick_checkbox.png" />
+                                </>)}
+                        </div>
+
+                        {isMicAnnouncement ? (
+                            <>
+
+                            </>
+                        ) : (<>
+
+                            <div className='mic-announcement-buttons'>
+                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
+                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
+                                <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
+                            </div>
+                            <div className='screen-announcement-upload-section'>
+                                <textarea id="message-screen-text" placeholder="Type your message.." maxlength="40" className='screen-announcement-message' />
+                                <div class="upload-container" onClick={() => document.getElementById('file-upload').click()}>
+                                    <div class="upload-icon">&#128190;</div>
+                                    <div class="upload-text">Upload File</div>
+                                    <input type="file" id="file-upload" />
+                                </div>
+                            </div>
+                        </>)}
+
                     </div>
-                </div>
-            ) : (
-                <>
-                    <img
-                        src={rowData.album.images[0].url}
-                        alt="Album Image"
-                        style={{ width: '300px', height: 'auto' }}
-                    />
-                    <p className='event-name'>{rowData.eventName}</p>                                  
-                    <p className='song-name'>{rowData.name}</p>
-                    <p className='text-muted artist-name'>
-                        {rowData.artists.map((artist) => artist.name).join(', ')}
-                    </p>
-                </>
-            )}
-            {/* <RazorpayPayment data={amount} /> */}
-            <form onSubmit={handleSubmit} className='center-form'>
-                <p className='label'>Tip the DJ (Min amount- INR {rowData.minimumBid}):<br></br>
-                    <span className='subheading-payment'><i>Played within 40 mins or refund.</i></span>
-                </p>
-
-
-                <div className='bid-buttons'>
-                    {bidAmounts.map((bid, index) => (
-                        <div key={index} className='bid-button-container'>
-                            <button
-                                type="button"
-                                onClick={() => setAmount(bid.amount)}
-                                className='btn-bid'
-                            >
-                                ₹{bid.amount}
-                            </button>
-                            <div className='bid-text'>{bid.text}</div>
+                ) : (
+                    <>
+                    <div className='song-details-container'>
+                        <img
+                            src={rowData.album.images[0].url}
+                            alt="Album Image"
+                        />
+                        <div className='song-details-text'>
+                            <p className='song-name'>{rowData.name}</p>
+                            <p className='artist-name'>
+                                {rowData.artists.map((artist) => artist.name).join(', ')}
+                            </p>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                            <div className='subheading-payment'>
+                                <img src = "images/disclaimerIcon.png"/>
+                                ( Played within 40 mins or refund )</div>
+                            </>
+                )}
+                {/* <RazorpayPayment data={amount} /> */}
+                <form onSubmit={handleSubmit} className='center-form'>
 
+                    <div className='amount-selection-division'>
 
-                <input
-                    className='amount-inputfield'
-                    type="number"
-                    placeholder='Enter amount in rupees'
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    required
-                />
+                        <p className='minimum-bid-container'>
+                            <div>Groove Amount</div>
+                            <div className='minimum-bid-value'>₹{rowData.minimumBid}</div>
+                        </p>
 
-                <br></br>
-                {/* <Promocode onApply={handlePromoApply} /> */}
-                <br></br>
-                {/* Display the text below the Apply button */}
-                {/* <div className="promo-instruction">
+                        <div className='bid-buttons'>
+                            {bidAmounts.map((bid, index) => (
+                                <div key={index} className='bid-button-container'>
+                                    <button
+                                        type="button"
+                                        onClick={() => setAmount(bid.amount + rowData.minimumBid)}
+                                        className='btn-bid'
+                                    >
+                                        ₹{bid.amount}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className='tip-amount-section'>
+                            <div>
+                                Choose the Tip
+                            </div>
+                            <div onClick = {()=>{setAmount(amount-10)}} className='decrease-tip-button'>-</div>
+                            <input
+                                className='amount-inputfield'
+                                type="number"
+                                placeholder='Enter amount in rupees'
+                                value={amount - rowData.minimumBid}
+                                onChange={(e) => setAmount(e.target.value + rowData.minimumBid)}
+                                required
+                            />
+                            <div onClick = {()=>{setAmount(amount+10)}} className='increase-tip-button'>+</div>
+                        </div>
+                        <br></br>
+
+                    </div>
+
+                    <div className='tip-info'>
+                        <img src="images/disclaimerIcon.png" />
+                        <p>{isSpecialAnnouncement ? ("(The more you tip, the sooner your announcement will be made)") : ("(The more you tip, the higher chances of your song being played)")}</p>
+                    </div>
+                    {/* <Promocode onApply={handlePromoApply} /> */}
+                    <br></br>
+                    {/* Display the text below the Apply button */}
+                    {/* <div className="promo-instruction">
                 Use <b>Vibe50</b> to get 50% off upto Rs. 250
             </div> */}
-                {/* Conditionally render promo code message and disable Apply button */}
-                {(!isPromoAvailable && isPromoApplied) && (
-                    <div className="promo-code-message" style={{ color: 'red' }}>
-                        Promocode is applicable once per user.
+                    {/* Conditionally render promo code message and disable Apply button */}
+                    {(!isPromoAvailable && isPromoApplied) && (
+                        <div className="promo-code-message" style={{ color: 'red' }}>
+                            Promocode is applicable once per user.
+                        </div>
+                    )}
+                    <div>
+                        <button
+                            className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live'
+                                || amount < rowData.minimumBid
+                                || (!isPromoAvailable && isPromoApplied)) ? 'disabledButton' : ''}`}
+                            id="rzp-button1"
+                            onClick={handlePayButtonClick}
+                            disabled={rowData.eventStatus !== 'Live'
+                                || amount < rowData.minimumBid
+                                || (!isPromoAvailable && isPromoApplied)}
+                        >
+                            <div className='payment-btn-text'>
+                                <img className='payment-icon' src="images/payment.png" />
+                                <div>Pay | ₹{amount}</div>
+                            </div>
+                        </button>
+                        {isPromoApplied && isPromoAvailable && (
+                            <span>Yayy! You will only pay {Math.max(amount / 2, amount - 250)}</span>
+                        )}
+                        {rowData.eventStatus !== 'Live' && (
+                            <p style={{ textAlign: 'center' }}><i>DJ is not accepting requests right now.</i></p>
+                        )}
+                    </div>
+                </form>
+
+                <div className='login-proposal'>
+                        <img className='login-img' src="images/log_in.png" />
+                        <p>Login & Get 50% off instantly!</p>
+                </div>
+
+                <div className='refund-info-footer'>
+                    <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>
+                    <p>~ If DJ accepts the request and doesn't play your song within 40 mins, you'll be issued a full refund.</p>
+                </div>
+                {/* Render the success message if showSuccessMessage is true */}
+                {showSuccessMessage && (
+                    <div className="success-message">
+                        Payment Successful!
                     </div>
                 )}
-                <div>
-                    <button
-                        className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live'
-                            || amount < rowData.minimumBid
-                            || (!isPromoAvailable && isPromoApplied)) ? 'disabledButton' : ''}`}
-                        id="rzp-button1"
-                        onClick={handlePayButtonClick}
-                        disabled={rowData.eventStatus !== 'Live'
-                            || amount < rowData.minimumBid
-                            || (!isPromoAvailable && isPromoApplied)}
-                    >
-                        Pay
-                    </button>
-                    {isPromoApplied && isPromoAvailable && (
-                        <span>Yayy! You will only pay {Math.max(amount / 2, amount - 250)}</span>
-                    )}
-                    {rowData.eventStatus !== 'Live' && (
-                        <p style={{ textAlign: 'center' }}><i>DJ is not accepting requests right now.</i></p>
-                    )}
-                </div>
-            </form>
-
-            <br></br>
-            <em className="text-muted small info">~ Should the DJ decline your request, a refund will be issued to your original payment method.</em>
-            <em className="text-muted small info">~ If DJ accepts the request and doesn't play your song within 40 mins, you'll be issued a full refund.</em>
-
-            {/* Render the success message if showSuccessMessage is true */}
-            {showSuccessMessage && (
-                <div className="success-message">
-                    Payment Successful!
-                </div>
-            )}
+            </div>
         </div>
     );
 }

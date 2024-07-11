@@ -28,6 +28,9 @@ function PaymentIndex() {
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isPromoApplied, setIsPromoApplied] = useState(false);
     const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
+    const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true); 
+
+    //console.log(rowData);
 
     const handleBack = () => {
         navigate(-1); // Go back to the previous page when back button is clicked
@@ -48,7 +51,15 @@ function PaymentIndex() {
     //     // Check promo code availability when component mounts
     //     checkPromoCodeAvailability();
     // }, []);
-    console.log(rowData);
+
+    //useEffect(() => {
+    //    console.log("RowData: ", rowData);
+    //    if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
+    //        console.log("Setting IsSpecialAnnouncement: ", rowData.IsSpecialAnnouncement);
+    //        setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
+    //    }
+    //}, [rowData]);
+
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -96,6 +107,10 @@ function PaymentIndex() {
     }
     useEffect(() => {
         setAmount(rowData.minimumBid);
+
+        if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
+            setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
+        }
         const loadRazorpayScript = async () => {
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -258,16 +273,35 @@ function PaymentIndex() {
             <span className="back-icon" onClick={handleBack}>
                 &lt;&lt; Back &nbsp;
             </span>
-            <img
-                src={rowData.album.images[0].url}
-                alt="Album Image"
-                style={{ width: '300px', height: 'auto' }}
-            />
-            <p className='event-name'>{rowData.eventName}</p>
-            <p className='song-name'>{rowData.name}</p>
-            <p className='text-muted artist-name'>
-                {rowData.artists.map((artist) => artist.name).join(', ')}
-            </p>
+
+            {/* Conditionally render HTML or Album Image */}
+
+            {isSpecialAnnouncement ? (
+                <div>
+                    <div className="special-announcement">
+                        <button className="announcement-button">Mic Announcement (₹100)</button>
+                        <div className="button-group">
+                            <button className="sub-button">Happy Birthday</button>
+                            <button className="sub-button">Happy Anniversary</button>
+                            <button className="sub-button">Congratulations</button>
+                        </div>
+                        <textarea className="message-textarea" placeholder="Type your message..." maxLength={40}></textarea>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <img
+                        src={rowData.album.images[0].url}
+                        alt="Album Image"
+                        style={{ width: '300px', height: 'auto' }}
+                    />
+                    <p className='event-name'>{rowData.eventName}</p>                                  
+                    <p className='song-name'>{rowData.name}</p>
+                    <p className='text-muted artist-name'>
+                        {rowData.artists.map((artist) => artist.name).join(', ')}
+                    </p>
+                </>
+            )}
             {/* <RazorpayPayment data={amount} /> */}
             <form onSubmit={handleSubmit} className='center-form'>
                 <p className='label'>Tip the DJ (Min amount- INR {rowData.minimumBid}):<br></br>

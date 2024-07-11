@@ -278,6 +278,7 @@ function SongSearch() {
             data.songId = data.id;
             delete data.id;
 
+            data.IsSpecialAnnouncement = false;
             const concatenatedJson = { ...eventData, ...data };
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
@@ -291,8 +292,21 @@ function SongSearch() {
     };
 
     const MakeSpecialAnnouncementHandler = () => {
-        //TODO: Make a function to call when user wants to make a special announcement
-    }
+        if (eventData) {
+            const eventDataCopy = { ...eventData };
+            eventDataCopy.eventId = eventData.id;
+            delete eventDataCopy.id;
+
+            // Set the IsSpecialAnnouncement flag
+            eventDataCopy.IsSpecialAnnouncement = true;
+
+            const concatenatedJson = { ...eventDataCopy };
+            const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
+
+            console.log("Event data copy : ",eventDataCopy);
+            navigate(`/paymentIndex?data=${rowDataString}`);
+        }
+    };
 
     return (
         <>

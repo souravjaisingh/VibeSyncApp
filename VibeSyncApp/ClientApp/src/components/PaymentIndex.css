@@ -187,3 +187,51 @@
         opacity: 0;
     }
 }
+
+.special-announcement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1px;
+}
+
+.announcement-button {
+    background-color: #39125C;
+    color: white;
+    border: none;
+    padding: 5px 0px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    width : 100%;
+    text-align : center;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.sub-button {
+    background-color: #39125C;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.message-textarea {
+    width: 100%;
+    max-width: 300px;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: none;
+}

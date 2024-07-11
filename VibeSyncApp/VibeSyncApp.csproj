@@ -32,6 +32,10 @@
 		<None Remove="$(SpaRoot)**" />
 		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="ClientApp\src\components\Modal.css" />
+	  <None Remove="ClientApp\src\components\Modal.js" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="libwkhtmltox.dll">

@@ -33,6 +33,7 @@ function SongSearch() {
     const [activePlaylistId, setActivePlaylistId] = useState(null);
     const [minAmount, setMinAmount] = useState(0);
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
+    const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
 
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
@@ -253,6 +254,7 @@ function SongSearch() {
         if (qrcodeParam === 'true' && !eventData) {
             try {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
+                console.log('Fetched Event Data:', response); // Debug log
                 setEventData(response);
                 if (response != null) {
                     localStorage.setItem('venue', response.venue);
@@ -264,7 +266,9 @@ function SongSearch() {
                 console.error('Error fetching data:', error);
             }
         } else if (!eventData) {
-            setEventData(JSON.parse(decodeURIComponent(rowDataString)));
+            const eventDataFromParams = JSON.parse(decodeURIComponent(rowDataString));
+            console.log('Event Data from Params:', eventDataFromParams); // Debug log
+            setEventData(eventDataFromParams);
         } else if (enqueuedSongs == null) {
             fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
         }
@@ -278,6 +282,7 @@ function SongSearch() {
             data.songId = data.id;
             delete data.id;
 
+            data.IsSpecialAnnouncement = false;
             const concatenatedJson = { ...eventData, ...data };
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
@@ -291,8 +296,30 @@ function SongSearch() {
     };
 
     const MakeSpecialAnnouncementHandler = () => {
-        //TODO: Make a function to call when user wants to make a special announcement
-    }
+       
+        if (eventData.acceptingRequests == false && eventData.displayRequests == false) {
+            setShowAnnouncementModal(true);
+        }
+
+        else if (eventData) {
+            const eventDataCopy = { ...eventData };
+            eventDataCopy.eventId = eventData.id;
+            delete eventDataCopy.id;
+
+            // Set the IsSpecialAnnouncement flag
+            eventDataCopy.IsSpecialAnnouncement = true;
+
+            const concatenatedJson = { ...eventDataCopy };
+            const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
+
+            console.log("Event data copy : ", eventDataCopy);
+            navigate(`/paymentIndex?data=${rowDataString}`);
+        }
+    };
+
+    const handleAnnouncementModalClose = () => {
+        setShowAnnouncementModal(false);
+    };
 
     return (
         <>
@@ -385,6 +412,18 @@ function SongSearch() {
                     </div>
                 </div>
             </div>
+
+            
+            {/* Announcement Modal */}
+            
+            <div className="modal" style={{ display: showAnnouncementModal ? 'block' : 'none' }}>
+                <div className="modal-content">
+                    <h2>Announcement Disabled</h2>
+                    <p>This club/DJ is not taking announcements currently</p>
+                    <button onClick={handleAnnouncementModalClose}>Close</button>
+                </div>
+            </div>
+
             <div>
                 {/* Other content */}
                 <StickyBar type="bid" data={messages}

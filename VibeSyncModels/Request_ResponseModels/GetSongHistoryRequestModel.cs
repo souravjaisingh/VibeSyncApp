@@ -32,6 +32,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public long UserId { get; set; }
         public string SongStatus { get; set; }
         public bool IsAllRequest { get; set; }
+        
         /// <summary>
         /// Determines whether the specified object is valid.
         /// </summary>

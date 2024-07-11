@@ -18,13 +18,14 @@ export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, ven
         venue : venue,
         eventStartDateTime : starttime,
         eventEndDateTime : endtime,
-        minimumBid : minbid,
+        minimumBid: minbid,
+        acceptingRequests: acceptingRequests, //for requests
+        displayRequests: displayRequests ,
         latitude : lat,
         longitude : lng,
         eventGenre : genre,
-        eventStatus: eventstatus,
-        acceptingRequests: acceptingRequests, //for requests
-        displayRequests: displayRequests 
+        eventStatus: eventstatus
+       
     }
 
     if(isUpdate == true){

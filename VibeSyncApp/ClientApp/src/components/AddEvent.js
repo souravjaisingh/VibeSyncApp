@@ -32,6 +32,8 @@ const AddressTypeahead = () => {
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA'))? true:false);
     console.log(rowData);
+    const [acceptingRequests, setAcceptingRequests] = useState( false);
+    const [displayRequests, setDisplayRequests] = useState( false);
     
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
     const twoHoursAfterCurrentTime = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
@@ -74,6 +76,19 @@ const AddressTypeahead = () => {
             setMinimumBid(input);
         }
     };
+
+    //requesting announcement functions
+
+    const handleAcceptingRequestsChange = (event) => {
+        setAcceptingRequests(event.target.checked);
+        console.log(event.target.checked);
+    };
+
+    const handleDisplayRequestsChange = (event) => {
+        setDisplayRequests(event.target.checked);
+        console.log(event.target.checked);
+    };
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         // Validation: Check if any input field is empty
@@ -90,6 +105,7 @@ const AddressTypeahead = () => {
         } else {
             try {
                 setLoading(true);
+
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
                     , theme
@@ -101,8 +117,11 @@ const AddressTypeahead = () => {
                     , 44.765432
                     , minimumBid
                     , rowData ? true : false
+                    , acceptingRequests
+                    , displayRequests
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
+                    
                 );
                 setLoading(false);
                 if (res != null) {
@@ -246,6 +265,30 @@ const AddressTypeahead = () => {
                         value={minimumBid}
                         onChange={handleMinimumBidChange}
                     />
+                </div>
+
+                {/*accepting reuests or not*/}
+                <div className="request">
+                    
+                    <input
+                        type="checkbox"
+                        id="acceptingRequests"
+                        checked={acceptingRequests}
+                        onChange={handleAcceptingRequestsChange}
+                    />
+                    <label htmlFor="acceptingRequests">Accept Announcement Requests</label>
+
+                </div>
+                <div className="request">
+                   
+                    <input
+                        type="checkbox"
+                        id="displayRequests"
+                        checked={displayRequests}
+                        onChange={handleDisplayRequestsChange}
+                    />
+                    <label htmlFor="displayRequests">Display Announcement Requests on Screen</label>
+
                 </div>
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
                 {rowDataString && (

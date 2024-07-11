@@ -134,5 +134,8 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The name of the album.
         /// </value>
         public DateTime? PaymentDateTime { get; set; }
+        public string MicAnnouncement { get; set; }
+        public string ScreenAnnouncement { get; set; }
+
     }
 }

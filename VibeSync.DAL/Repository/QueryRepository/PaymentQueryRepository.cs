@@ -143,6 +143,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 ArtistName = request.ArtistName,
                 AlbumName = request.AlbumName,
                 AlbumImage = request.AlbumImage,
+                MicAnnouncement = request.MicAnnouncement,
+                ScreenAnnouncement = request.ScreenAnnouncement,
                 OrderId = order["id"].ToString(),
                 SongStatus = Constants.SongStatusPaymentInProgress
             };

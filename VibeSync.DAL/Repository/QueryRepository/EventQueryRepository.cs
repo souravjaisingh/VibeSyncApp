@@ -57,7 +57,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                     MinimumBid = events.MinimumBid,
                     Venue = events.Venue,
                     CreatedBy = events.CreatedBy,
-                    CreatedOn = events.CreatedOn
+                    CreatedOn = events.CreatedOn,
+                    AcceptingRequests = events.AcceptingRequests,
+                    DisplayRequests = events.DisplayRequests
                 }
                 ).Where(x=> x.EventStatus != Constants.EventDeleted)
                 .OrderBy(x => x.EventStatus).ThenByDescending(res => res.CreatedOn).ToList();
@@ -94,7 +96,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 ModifiedBy = e.ModifiedBy,
                                 ModifiedOn = e.ModifiedOn,
                                 Latitude = e.Latitude,
-                                Longitude = e.Longitude
+                                Longitude = e.Longitude,
+                                AcceptingRequests = e.AcceptingRequests,
+                                DisplayRequests = e.DisplayRequests
                             }).Where(x=> x.EventStatus != Constants.EventDeleted)
                             .ToList().AsEnumerable();
             return response;
@@ -132,7 +136,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 ModifiedBy = e.ModifiedBy,
                                 ModifiedOn = e.ModifiedOn,
                                 Latitude = e.Latitude,
-                                Longitude = e.Longitude
+                                Longitude = e.Longitude,
+                                AcceptingRequests = e.AcceptingRequests,
+                                DisplayRequests = e.DisplayRequests
                             }).Where(x => x.EventStatus == Constants.Live && x.EventStatus != Constants.EventDeleted).ToList();
             for (int i = 0; i < response.Count; i++)
             {
@@ -197,7 +203,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                         MinimumBid = e.MinimumBid,
                         Venue = e.Venue,
                         CreatedBy = e.CreatedBy,
-                        CreatedOn = e.CreatedOn
+                        CreatedOn = e.CreatedOn,
+                        AcceptingRequests = e.AcceptingRequests,
+                        DisplayRequests = e.DisplayRequests
                     }
                 )
                 .Where(e => e.Id == request.EventId)
@@ -237,7 +245,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                             MinimumBid = e.MinimumBid,
                             Venue = e.Venue,
                             CreatedBy = e.CreatedBy,
-                            CreatedOn = e.CreatedOn
+                            CreatedOn = e.CreatedOn,
+                            AcceptingRequests = e.AcceptingRequests,
+                            DisplayRequests = e.DisplayRequests
                         }
                     )
                     .FirstOrDefault();

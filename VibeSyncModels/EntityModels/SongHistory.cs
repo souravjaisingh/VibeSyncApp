@@ -28,6 +28,8 @@ namespace VibeSyncModels.EntityModels
         public string ArtistName { get; set; }
         public string AlbumName { get; set; }
         public string OrderId { get; set; }
+        public string MicAnnouncement { get; set; }
+        public string ScreenAnnouncement { get; set; }
 
         public virtual Dj Dj { get; set; }
         public virtual Event Event { get; set; }

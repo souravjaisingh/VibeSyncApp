@@ -22,7 +22,10 @@ namespace VibeSync.DAL.Handler
     /// </summary>
     /// <seealso cref="MediatR.IRequestHandler&lt;VibeSyncModels.Request_ResponseModels.GetSongRequestModel, VibeSyncModels.Request_ResponseModels.SongDetails&gt;" />
     public class SongsHandler : IRequestHandler<GetSongRequestModel, List<SongDetails>>,
-        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryModel>>, IRequestHandler<SongHistoryModel, string>, IRequestHandler<GetPlaylistList, List<GetPlaylistList>>, IRequestHandler<GetPlaylistTracks, List<SongDetails>>
+        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryModel>>, 
+        IRequestHandler<SongHistoryModel, string>, 
+        IRequestHandler<GetPlaylistList, List<GetPlaylistList>>, 
+        IRequestHandler<GetPlaylistTracks, List<SongDetails>>
     {
         /// <summary>
         /// Gets or sets the song query repository.

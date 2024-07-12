@@ -31,17 +31,18 @@ function SongSearch() {
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
-    const [minAmount, setMinAmount] = useState(0);
+    const [minAmount, setMinAmount] = useState(Math.floor(Math.random() * (100 - 60 + 1)) + 60);
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
 
-    useEffect(() => {
-        const uri = JSON.parse(decodeURIComponent(rowDataString));
-        if(qrcodeParam == null){
-            const Amount = parseFloat(uri["minimumBid"]);
-            setMinAmount(Amount)
-        }
-    });
+
+    // useEffect(() => {
+    //     const uri = JSON.parse(decodeURIComponent(rowDataString));
+    //     if(qrcodeParam == null){
+    //         const Amount = parseFloat(uri["minimumBid"]);
+    //         setMinAmount(Amount)
+    //     }
+    // });
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -161,8 +162,8 @@ function SongSearch() {
                 localStorage.setItem('userId', 0); // 0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
-                const Amount = parseFloat(uri["minimumBid"]);
-                setMinAmount(Amount);
+                // const Amount = parseFloat(uri["minimumBid"]);
+                // setMinAmount(Amount);
                 setShouldRefresh(true);
             }
             return;
@@ -256,6 +257,7 @@ function SongSearch() {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
                 console.log('Fetched Event Data:', response); // Debug log
                 setEventData(response);
+                //setMinAmount(eventData.minimumBid);
                 if (response != null) {
                     localStorage.setItem('venue', response.venue);
                     fetchEnqSongs(response.id);
@@ -266,9 +268,7 @@ function SongSearch() {
                 console.error('Error fetching data:', error);
             }
         } else if (!eventData) {
-            const eventDataFromParams = JSON.parse(decodeURIComponent(rowDataString));
-            console.log('Event Data from Params:', eventDataFromParams); // Debug log
-            setEventData(eventDataFromParams);
+            setEventData(JSON.parse(decodeURIComponent(rowDataString)));
         } else if (enqueuedSongs == null) {
             fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
         }

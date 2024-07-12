@@ -91,13 +91,35 @@ export default function DjLiveSongs() {
                 try {
                     const res = await GetSongsByEventId(rowData.id != null ? rowData.id : localStorage.getItem('eventId'));
                     // Separate the requests into accepted and unaccepted
-                    const unaccepted = res.filter((request) => request.songStatus === 'Pending');
-                    const accepted = res.filter((request) => request.songStatus === 'Accepted');
+                    //const unaccepted = res.filter((request) => request.songStatus === 'Pending');
+                    //const accepted = res.filter((request) => request.songStatus === 'Accepted');
 
-                    // Combine the arrays so that Pending requests appear on top
-                    const sortedRequests = [...unaccepted, ...accepted];
+                    //// Combine the arrays so that Pending requests appear on top
+                    //const sortedRequests = [...unaccepted, ...accepted];
 
-                    sortedRequests.sort((a, b) => {
+                    //sortedRequests.sort((a, b) => {
+                    //    if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
+                    //        return -1; // 'Pending' requests come first
+                    //    } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
+                    //        return 1; // 'Pending' requests come first
+                    //    } else {
+                    //        return new Date(a.modifiedOn) - new Date(b.modifiedOn); // Sort by modifiedOn in descending order
+                    //    }
+
+                    // Separate songs and announcements
+                    const songRequests = res.filter((request) => request.songId); // Assuming songId exists for song requests
+                    const specialAnnouncements = res.filter((request) => request.micAnnouncement); // Filtering based on micAnnouncement field
+
+                    const unacceptedSongs = songRequests.filter((request) => request.songStatus === 'Pending');
+                    const acceptedSongs = songRequests.filter((request) => request.songStatus === 'Accepted');
+                    const sortedSongs = [...unacceptedSongs, ...acceptedSongs];
+
+                    // Separate the announcements into accepted and unaccepted
+                    const unacceptedAnnouncements = specialAnnouncements.filter((request) => request.songStatus === 'Pending');
+                    const acceptedAnnouncements = specialAnnouncements.filter((request) => request.songStatus === 'Accepted');
+                    const sortedAnnouncements = [...unacceptedAnnouncements, ...acceptedAnnouncements];
+
+                    sortedSongs.sort((a, b) => {
                         if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
                             return -1; // 'Pending' requests come first
                         } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
@@ -107,7 +129,17 @@ export default function DjLiveSongs() {
                         }
                     });
 
-                    const highestIdInResponse = Math.max(...sortedRequests.map(request => request.id), 0);
+                    sortedAnnouncements.sort((a, b) => {
+                        if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
+                            return -1; // 'Pending' requests come first
+                        } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
+                            return 1; // 'Pending' requests come first
+                        } else {
+                            return new Date(a.modifiedOn) - new Date(b.modifiedOn); // Sort by modifiedOn in descending order
+                        }
+                    });
+
+                    const highestIdInResponse = Math.max(...sortedSongs.map(request => request.id), 0);
                     const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
                     console.log(isNewRequest);
                     if (isNewRequest === true && Notification.permission === 'granted') {
@@ -120,8 +152,8 @@ export default function DjLiveSongs() {
                     lastHighestRecordIdRef.current = highestIdInResponse;
 
 
-                    setUserHistory(sortedRequests);
-                    console.log(sortedRequests);
+                    setUserHistory(sortedSongs);
+                    console.log(sortedSongs);
                 } catch (error) {
                     setError(true);
                     setErrorMessage(error.message);
@@ -357,20 +389,55 @@ export default function DjLiveSongs() {
                         <MDBTableBody>
                             {userHistory.map((result, index) => (
                                 <tr key={index}>
-                                    <td>
-                                        <img
-                                            src={result.image}
-                                            alt={`Album Cover for ${result.albumName}`}
-                                            style={{ width: '45px', height: '45px' }}
-                                            className='rounded-circle'
-                                        />
-                                        <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>
-                                    </td>
-                                    <td>
-                                        <p className='fw-bold mb-1'>{result.songName}</p>
-                                        <p className='text-muted mb-0'>{result.artistName}</p>
-                                    </td>
-                                    <td>{result.albumName}</td>
+                                    {/*<td>*/}
+                                    {/*    <img*/}
+                                    {/*        src={result.image}*/}
+                                    {/*        alt={`Album Cover for ${result.albumName}`}*/}
+                                    {/*        style={{ width: '45px', height: '45px' }}*/}
+                                    {/*        className='rounded-circle'*/}
+                                    {/*    />*/}
+                                    {/*    <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>*/}
+                                    {/*</td>*/}
+                                    {/*<td>*/}
+                                    {/*    <p className='fw-bold mb-1'>{result.songName}</p>*/}
+                                    {/*    <p className='text-muted mb-0'>{result.artistName}</p>*/}
+                                    {/*</td>*/}
+                                    {/*<td>{result.albumName}</td>*/}
+                                    {result.micAnnouncement ? (
+                                        <>
+                                            <td>
+                                                <img
+                                                    src={`${process.env.PUBLIC_URL}/images/micDark.png`}
+                                                    alt="Microphone Icon"
+                                                    style={{ width: '45px', height: '45px' }}
+                                                    className='rounded-circle'
+                                                />
+                                            </td>
+                                            <td colSpan="2">
+                                                <p className='fw-bold mb-1' style={{ fontSize: '12px' }}>Special Announcement</p>
+                                                <p className='text-muted mb-0' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
+                                            </td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td>
+                                                <img
+                                                    src={result.image}
+                                                    alt={`Album Cover for ${result.albumName}`}
+                                                    style={{ width: '45px', height: '45px' }}
+                                                    className='rounded-circle'
+                                                />
+                                                <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>
+                                            </td>
+                                            <td>
+                                                <p className='fw-bold mb-1'>{result.songName}</p>
+                                                <p className='text-muted mb-0'>{result.artistName}</p>
+                                            </td>
+                                            <td>{result.albumName}</td>
+                                        </>
+                                    )}
+
+
                                     {result && result.songStatus === 'Pending' && (
                                         <td>
                                             <div className='button-container'>

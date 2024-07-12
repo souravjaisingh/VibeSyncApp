@@ -250,6 +250,11 @@
     padding-left: 30px;
 }
 
+    .search-bar.hidden-content-margin {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem; 
+    }
+
 .container-for-table {
     max-height: 400px;
     overflow: auto;
@@ -263,7 +268,7 @@
 }
 
 .container-for-table{
-    /* background: url('/images/BGMusic.png'); */
+    background: url('../../public/images/BGMusic.png');
     background-repeat: no-repeat;
 }
 

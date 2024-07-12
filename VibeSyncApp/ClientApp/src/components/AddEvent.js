@@ -34,7 +34,10 @@ const AddressTypeahead = () => {
     console.log(rowData);
     const [acceptingRequests, setAcceptingRequests] = useState( false);
     const [displayRequests, setDisplayRequests] = useState( false);
-    
+    const [hidePlaylist, setHidePlaylist] = useState(false); // Default value is false
+
+
+
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
     const twoHoursAfterCurrentTime = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
 
@@ -119,8 +122,10 @@ const AddressTypeahead = () => {
                     , rowData ? true : false
                     , acceptingRequests
                     , displayRequests
+                    , hidePlaylist 
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
+                    
                     
                 );
                 setLoading(false);
@@ -287,9 +292,19 @@ const AddressTypeahead = () => {
                         checked={displayRequests}
                         onChange={handleDisplayRequestsChange}
                     />
-                    <label htmlFor="displayRequests">Display Announcement Requests on Screen</label>
+                    <label htmlFor="displayRequests">Display Requests on Screen</label>
 
                 </div>
+                <div className="request">
+                    <input
+                        type="checkbox"
+                        id="hidePlaylist"
+                        checked={hidePlaylist}
+                        onChange={(event) => setHidePlaylist(event.target.checked)}
+                    />
+                    <label htmlFor="hidePlaylist">Hide Available Playlists</label>
+                </div>
+
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
                 {rowDataString && (
                 <button type='button' onClick={handleDelete} className="btn btn--danger btn--medium " style={{color: "red"}}>

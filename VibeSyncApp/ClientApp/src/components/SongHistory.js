@@ -49,7 +49,11 @@ export default function SongHistory() {
 
     useEffect(() => {
         fetchData(filter);
+
+
     }, [filter]);
+
+
 
     function formatDateTime(datetimeString) {
         const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -91,21 +95,13 @@ export default function SongHistory() {
     return (
         <>
             <div className="song-history-container">
-                <ul style={{ listStyleType: 'circle' }}>
-                    <li>
-                        <em className="text-muted small info">Should the DJ decline your request, a refund will be issued to your original payment method.</em>
-                    </li>
-                    <li>
-                        <em className="text-muted small info">If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</em>
-                    </li>
-                </ul>
-
-
+            <div className='bg-music-song-history'>
+                <div className='song-inner-container'>
                 <div className="filter-container">
-                    <label className="filter-label" htmlFor="statusFilter">Filter by Status:</label>
+                    <label className="filter-label" htmlFor="statusFilter">SONG REQUESTS</label>
                     <select
                         id="statusFilter"
-                        className="filter-select"
+                        className="filter-select-song-history"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     >
@@ -117,58 +113,60 @@ export default function SongHistory() {
                     </select>
                 </div>
 
-                {isLoading ? (
-                    <p>Loading...</p>
-                ) : userHistory.length === 0 ? (
-                    <p>You haven't requested any songs yet</p>
-                ) : (
-                    <table className="song--history--table" align="middle" responsive hover>
-                        <tbody>
-                            {userHistory.map((result, index) => (
-                                <React.Fragment key={index}>
-                                    <tr className="song--history--body--row">
-                                        <td rowSpan="2">
-                                            <img
-                                                src={result.image}
-                                                alt={`Album Cover for ${result.albumName}`}
-                                                className="album--cover--image"
-                                            />
-                                        </td>
-                                        <td rowSpan="2" className="song--details">
-                                            <p className="song--name">{result.songName}</p>
-                                            <p className="artist--name">{result.artistName}</p>
-                                        </td>
-                                        <td>{result.albumName}</td>
-                                        <td>INR {result.totalAmount || 0}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Status: <b>{result.songStatus}</b></p>
-                                            {result.songStatus === 'Played' && (
-                                                <a
-                                                    href={`Invoice/GetInvoiceByPaymentId?paymentId=${result.paymentId}`}
-                                                    className="text-decoration-none"
-                                                    style={{ fontSize: 'small', color: 'blue' }}
-                                                    download={`invoice_${result.paymentId}.pdf`}
-                                                    onClick={(e) => e.stopPropagation()}
-                                                >
-                                                    Download Invoice
-                                                </a>
-                                            )}
-                                            {result.songStatus === 'Refunded' && (
-                                            <p className="reject-message">Sorry,not the vibe!</p>  
-                                            )}
-                                        </td>
-                                        <td colSpan="5">
-                                            <DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} />
-                                            <p className="text-muted mb-0" style={{ fontSize: 'small' }}>Txn id: {result.paymentId}</p>
-                                        </td>
-                                    </tr>
-                                </React.Fragment>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+                
+                    {isLoading ? (
+                        <p>Loading...</p>
+                    ) : userHistory.length === 0 ? (
+                        <p>You haven't requested any songs yet</p>
+                    ) : (
+                        <>
+                            {userHistory.map((result, index) => {
+                                return (
+                                    <div className='song-row-history-page'>
+                                        <div className='history-page-left-content'>
+                                            <div className='song-row-song-name'>{result.songName}</div>
+                                            <div className='song-row-artist-name'>{result.artistName}</div>
+                                        </div>
+                                        <div className='history-page-middle-content'>
+                                            <div className='song-row-amount-paid'>₹{result.totalAmount}</div>
+                                            <div className='time-paymentid-block'>
+                                                <div  className="date-time-payment"><DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} /></div>
+                                                <div >Txn ID: {result.paymentId}</div>
+                                            </div>
+                                        </div>
+                                        <div className='history-page-right-content'>
+                                            {result.songStatus==='Played'?
+                                                (<div className='btn-right-content btn-payment-green'>
+                                                    {result.songStatus}
+                                                </div>)
+                                                :
+                                            result.songStatus==='Refunded'?
+                                                (<div className='btn-right-content btn-payment-yellow'>
+                                                    {result.songStatus}
+                                                </div>)
+                                                :result.songStatus==='Rejected'?
+                                                (<div className='btn-right-content btn-payment-red'>
+                                                    {result.songStatus}
+                                                </div>)
+                                                :result.songStatus==='Pending'?
+                                                (<div className='btn-right-content btn-payment-yellow'>
+                                                    {result.songStatus}
+                                                </div>)
+                                                :result.songStatus==='Accepted'?
+                                                (<div className='btn-right-content btn-payment-yellow'>
+                                                    {result.songStatus}
+                                                </div>)
+                                                :''
+                                            }
+                                        </div>
+                                    </div>
+                                )
+                            })}
+
+                        </>
+                    )}
+                </div>
+                </div>
             </div>
         </>
     );

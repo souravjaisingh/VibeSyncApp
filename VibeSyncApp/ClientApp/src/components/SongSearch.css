@@ -268,7 +268,7 @@
 }
 
 .container-for-table{
-    background: url('../../public/images/BGMusic.png');
+    background: url('../Resources/BGMusic.png');
     background-repeat: no-repeat;
 }
 

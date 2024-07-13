@@ -271,7 +271,7 @@ function SongSearch() {
             setEventData(JSON.parse(decodeURIComponent(rowDataString)));
         } else if (enqueuedSongs == null) {
             fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
-        } 
+        }
     }, [qrcodeParam, urlEventId, urlUserId, eventData]);
 
     const handleRowClick = (data) => {
@@ -322,7 +322,7 @@ function SongSearch() {
 
     return (
         <>
-            
+
             <div className='song-search'>
                 {eventData && (
                     <div className="search-container">
@@ -358,7 +358,7 @@ function SongSearch() {
 
 
                 <div className="search-page">
-                    <div className={`search-bar ${eventData?.hidePlaylist ? 'hidden-content-margin' : ''}`}>
+                <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
                         <input
                             type="text"
                             className="search-input"
@@ -366,44 +366,43 @@ function SongSearch() {
                             value={searchQuery}
                             onChange={handleSearchChange}
                         />
-                        <img src="/images/SearchButton1.png" className='search-icon-song-search' />
+                        <img src="/images/SearchButton1.png" className="search-icon-song-search" />
                     </div>
 
-                    {eventData?.hidePlaylist !== true && (
+                    {eventData && eventData.hidePlaylist !== true && (
                         <>
-                    <div className='choose-from-collections-text'>
-                        <p>OR</p>
-                        <p>CHOOSE FROM OUR COLLECTIONS</p>
+                            <div className="choose-from-collections-text">
+                                <p>OR</p>
+                                <p>CHOOSE FROM OUR COLLECTIONS</p>
+                            </div>
 
-                    </div>
-                    
-                        <div className="playlist-buttons">
-                            {listOfPlaylists && listOfPlaylists.map((playlist) => (
-                                <button
-                                    key={playlist.id}
-                                    className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
-                                    onClick={() => handlePlaylistClick(playlist.id)}
-                                >
-                                    {playlist.name}
-                                </button>
-                            ))}
+                            <div className="playlist-buttons">
+                                {listOfPlaylists && listOfPlaylists.map((playlist) => (
+                                    <button
+                                        key={playlist.id}
+                                        className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                        onClick={() => handlePlaylistClick(playlist.id)}
+                                    >
+                                        {playlist.name}
+                                    </button>
+                                ))}
                             </div>
                         </>
                     )}
 
-                    {(searchQuery.trim() !== '' || !eventData?.hidePlaylist) && (
-                        <div className='container-for-table' style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
+                    {(searchQuery.trim() !== '' || !(eventData && eventData.hidePlaylist)) && (
+                        <div className="container-for-table" style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
                             {results && results.map((result, index) => (
-                                <div key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
+                                <div key={index} className="songs-row" onClick={() => handleRowClick(result)}>
                                     <div>
                                         <img
                                             src={result.album.images[result.album.images.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
                                         />
                                     </div>
-                                    <div className='song-card-text'>
-                                        <span className='song-name'>{result.name}</span>
-                                        <span className='song-artists'>
+                                    <div className="song-card-text">
+                                        <span className="song-name">{result.name}</span>
+                                        <span className="song-artists">
                                             {result.artists.map((artist) => artist.name).join(', ')}
                                         </span>
                                     </div>
@@ -412,13 +411,13 @@ function SongSearch() {
                             {loading && <p>Loading...</p>}
                         </div>
                     )}
-
                 </div>
+
             </div>
 
-            
+
             {/* Announcement Modal */}
-            
+
             <div className="modal" style={{ display: showAnnouncementModal ? 'block' : 'none' }}>
                 <div className="modal-content">
                     <h2>Announcement Disabled</h2>

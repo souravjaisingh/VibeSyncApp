@@ -188,7 +188,7 @@ function PaymentIndex() {
             userId: localStorage.getItem('userId'),
             TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
             EventId: rowData.eventId,
-            DjId: rowData.djId, 
+            DjId: rowData.djId,
             ...(isAnnouncement ? {
                 MicAnnouncement: micAnnouncementMessage
             } : {
@@ -264,41 +264,41 @@ function PaymentIndex() {
 
     //async function upsertPaymentDetails(orderId, payId) {
     //    try {
-            //const obj = {
-            //    UserId: localStorage.getItem('userId'),
-            //    OrderId: orderId,
-            //    TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
-            //    PaymentId: payId,
-            //    EventId: rowData.eventId,
-            //    DjId: rowData.djId,
-            //    SongId: rowData.songId,
-            //    SongName: rowData.name,
-            //    ArtistId: rowData.artists[0].id,
-            //    ArtistName: rowData.artists[0].name,
-            //    AlbumName: rowData.album.name,
-            //    AlbumImage: rowData.album.images[0].url
-            //};
+    //const obj = {
+    //    UserId: localStorage.getItem('userId'),
+    //    OrderId: orderId,
+    //    TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
+    //    PaymentId: payId,
+    //    EventId: rowData.eventId,
+    //    DjId: rowData.djId,
+    //    SongId: rowData.songId,
+    //    SongName: rowData.name,
+    //    ArtistId: rowData.artists[0].id,
+    //    ArtistName: rowData.artists[0].name,
+    //    AlbumName: rowData.album.name,
+    //    AlbumImage: rowData.album.images[0].url
+    //};
 
-            async function upsertPaymentDetails(orderId, payId) {
-                try {
-                    const obj = {
-                        UserId: localStorage.getItem('userId'),
-                        OrderId: orderId,
-                        TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
-                        PaymentId: payId,
-                        EventId: rowData.eventId,
-                        DjId: rowData.djId,
-                        ...(rowData.isMicAnnouncement ? {
-                            MicAnnouncement: micAnnouncementMessage
-                        } : {
-                            SongId: rowData.songId,
-                            SongName: rowData.name,
-                            ArtistId: rowData.artists[0].id,
-                            ArtistName: rowData.artists[0].name,
-                            AlbumName: rowData.album.name,
-                            AlbumImage: rowData.album.images[0].url
-                        })
-                    };
+    async function upsertPaymentDetails(orderId, payId) {
+        try {
+            const obj = {
+                UserId: localStorage.getItem('userId'),
+                OrderId: orderId,
+                TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
+                PaymentId: payId,
+                EventId: rowData.eventId,
+                DjId: rowData.djId,
+                ...(rowData.isMicAnnouncement ? {
+                    MicAnnouncement: micAnnouncementMessage
+                } : {
+                    SongId: rowData.songId,
+                    SongName: rowData.name,
+                    ArtistId: rowData.artists[0].id,
+                    ArtistName: rowData.artists[0].name,
+                    AlbumName: rowData.album.name,
+                    AlbumImage: rowData.album.images[0].url
+                })
+            };
 
             var res = await UpsertPayment(obj);
             navigate('/songhistory');
@@ -343,12 +343,12 @@ function PaymentIndex() {
                     <div className='special-announcement-header'>
                         <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
                             <img src="images/mic2.png" />
-                                <p>Mic Announcement (₹100)</p>
-                                {isMicAnnouncement ? (<>
-                                    <img className='check-box' src="images/tick_checkbox.png" />
-                                </>) : (<>
-                                    <img className='check-box' src="images/untick_checkbox.png" />
-                                </>)}
+                            <p>Mic Announcement (₹100)</p>
+                            {isMicAnnouncement ? (<>
+                                <img className='check-box' src="images/tick_checkbox.png" />
+                            </>) : (<>
+                                <img className='check-box' src="images/untick_checkbox.png" />
+                            </>)}
                         </div>
                         {isMicAnnouncement ? (
                             <>
@@ -365,11 +365,11 @@ function PaymentIndex() {
 
                         <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(false)}>
                             <img src="images/screen.png" /><p>Screen Announcement (₹100)</p>
-                                {isMicAnnouncement ? (<>
-                                    <img className='check-box' src="images/untick_checkbox.png" />
-                                </>) : (<>
-                                    <img className='check-box' src="images/tick_checkbox.png" />
-                                </>)}
+                            {isMicAnnouncement ? (<>
+                                <img className='check-box' src="images/untick_checkbox.png" />
+                            </>) : (<>
+                                <img className='check-box' src="images/tick_checkbox.png" />
+                            </>)}
                         </div>
 
                         {isMicAnnouncement ? (
@@ -396,22 +396,22 @@ function PaymentIndex() {
                     </div>
                 ) : (
                     <>
-                    <div className='song-details-container'>
-                        <img
-                            src={rowData.album.images[0].url}
-                            alt="Album Image"
-                        />
-                        <div className='song-details-text'>
-                            <p className='song-name'>{rowData.name}</p>
-                            <p className='artist-name'>
-                                {rowData.artists.map((artist) => artist.name).join(', ')}
-                            </p>
+                        <div className='song-details-container'>
+                            <img
+                                src={rowData.album.images[0].url}
+                                alt="Album Image"
+                            />
+                            <div className='song-details-text'>
+                                <p className='song-name'>{rowData.name}</p>
+                                <p className='artist-name'>
+                                    {rowData.artists.map((artist) => artist.name).join(', ')}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                            <div className='subheading-payment'>
-                                <img src = "images/disclaimerIcon.png"/>
-                                ( Played within 40 mins or refund )</div>
-                            </>
+                        <div className='subheading-payment'>
+                            <img src="images/disclaimerIcon.png" />
+                            ( Played within 40 mins or refund )</div>
+                    </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
                 <form onSubmit={handleSubmit} className='center-form'>
@@ -438,19 +438,32 @@ function PaymentIndex() {
                         </div>
 
                         <div className='tip-amount-section'>
-                            <div>
+                            <div className='choose-tip-label'>
                                 Choose the Tip
                             </div>
-                            <div onClick = {()=>{setAmount(amount-10)}} className='decrease-tip-button'>-</div>
-                            <input
-                                className='amount-inputfield'
-                                type="number"
-                                placeholder='Enter amount in rupees'
-                                value={amount - rowData.minimumBid}
-                                onChange={(e) => setAmount(e.target.value + rowData.minimumBid)}
-                                required
-                            />
-                            <div onClick = {()=>{setAmount(amount+10)}} className='increase-tip-button'>+</div>
+                            <div className='tip-amount-input-btns'>
+                                <div onClick={() => { setAmount(amount - 10) }} className='decrease-tip-button'>-</div>
+                                <input
+                                    className='amount-inputfield'
+                                    type="number"
+                                    placeholder='Enter amount in rupees'
+                                    value={amount - rowData.minimumBid}
+                                    onChange={
+                                        (e) => {
+                                            const value = e.target.value;
+                                            // Regular expression to check if the value is an integer
+                                            const integerRegex = /^\d*$/;
+
+                                            if (integerRegex.test(value)) {
+                                                // If value is an integer, update the amount state
+                                                setAmount(value === '' ? rowData.minimumBid : Number(value) + rowData.minimumBid);
+                                            }
+                                        }
+                                    }
+                                    required
+                                />
+                                <div onClick={() => { setAmount(amount + 10) }} className='increase-tip-button'>+</div>
+                            </div>
                         </div>
                         <br></br>
 
@@ -498,8 +511,8 @@ function PaymentIndex() {
                 </form>
 
                 <div className='login-proposal'>
-                        <img className='login-img' src="images/log_in.png" />
-                        <p>Login & Get 50% off instantly!</p>
+                    <img className='login-img' src="images/log_in.png" />
+                    <p>Login & Get 50% off instantly!</p>
                 </div>
 
                 <div className='refund-info-footer'>

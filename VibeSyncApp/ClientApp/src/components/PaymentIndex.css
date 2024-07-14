@@ -108,8 +108,9 @@
     border: 2px solid #59b0ef; /* Pink color */
     border-radius: 15px;
     padding: 3px 10px; /* Adjust padding as needed */
-    width: 30%; /* Adjust width as needed */
-    margin-right: 10px; /* Adjust margin as needed */
+    width: 6rem;
+    /* width: 30%; Adjust width as needed */
+    /* margin-right: 10px; Adjust margin as needed */
 }
 
 .back-icon {
@@ -504,7 +505,7 @@
 
 .increase-tip-button{
     position: relative;
-    left:-35px;
+    left:-25px;
 }
 
 .decrease-tip-button{
@@ -514,4 +515,11 @@
 
 .check-box{
     margin-left: auto;
+}
+
+.tip-amount-input-btns{
+    display: flex;
+}
+.choose-tip-label{
+    width:10rem;
 }

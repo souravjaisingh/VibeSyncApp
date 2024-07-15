@@ -359,7 +359,7 @@ function PaymentIndex() {
                                 </div>
 
                                 <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' value={micAnnouncementMessage} onChange={(e) => setMicAnnouncementMessage(e.target.value)} // Update the mic announcement message
-                                /> />
+                                /> 
                             </>
                         ) : (<></>)}
 
@@ -410,7 +410,7 @@ function PaymentIndex() {
                         </div>
                         <div className='subheading-payment'>
                             <img src="images/disclaimerIcon.png" />
-                            ( Played within 40 mins or refund )</div>
+                            ( Played within 30 mins or refund )</div>
                     </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
@@ -517,7 +517,7 @@ function PaymentIndex() {
 
                 <div className='refund-info-footer'>
                     <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>
-                    <p>~ If DJ accepts the request and doesn't play your song within 40 mins, you'll be issued a full refund.</p>
+                    <p>~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</p>
                 </div>
                 {/* Render the success message if showSuccessMessage is true */}
                 {showSuccessMessage && (

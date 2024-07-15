@@ -86,40 +86,20 @@ export default function DjLiveSongs() {
     useEffect(() => {
         if ((rowData && rowData.id) || localStorage.getItem('eventId') != null) {
             let lastHighestRecordId = Math.max(...userHistory.map(request => request.id), 0);
-            
+
             async function fetchData() {
                 try {
                     const res = await GetSongsByEventId(rowData.id != null ? rowData.id : localStorage.getItem('eventId'));
-                    // Separate the requests into accepted and unaccepted
-                    //const unaccepted = res.filter((request) => request.songStatus === 'Pending');
-                    //const accepted = res.filter((request) => request.songStatus === 'Accepted');
-
-                    //// Combine the arrays so that Pending requests appear on top
-                    //const sortedRequests = [...unaccepted, ...accepted];
-
-                    //sortedRequests.sort((a, b) => {
-                    //    if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
-                    //        return -1; // 'Pending' requests come first
-                    //    } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
-                    //        return 1; // 'Pending' requests come first
-                    //    } else {
-                    //        return new Date(a.modifiedOn) - new Date(b.modifiedOn); // Sort by modifiedOn in descending order
-                    //    }
 
                     // Separate songs and announcements
                     const songRequests = res.filter((request) => request.songId); // Assuming songId exists for song requests
                     const specialAnnouncements = res.filter((request) => request.micAnnouncement); // Filtering based on micAnnouncement field
 
-                    const unacceptedSongs = songRequests.filter((request) => request.songStatus === 'Pending');
-                    const acceptedSongs = songRequests.filter((request) => request.songStatus === 'Accepted');
-                    const sortedSongs = [...unacceptedSongs, ...acceptedSongs];
+                    // Combine the song requests and announcements
+                    const combinedRequests = [...songRequests, ...specialAnnouncements];
 
-                    // Separate the announcements into accepted and unaccepted
-                    const unacceptedAnnouncements = specialAnnouncements.filter((request) => request.songStatus === 'Pending');
-                    const acceptedAnnouncements = specialAnnouncements.filter((request) => request.songStatus === 'Accepted');
-                    const sortedAnnouncements = [...unacceptedAnnouncements, ...acceptedAnnouncements];
-
-                    sortedSongs.sort((a, b) => {
+                    // Sort the combined requests
+                    combinedRequests.sort((a, b) => {
                         if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
                             return -1; // 'Pending' requests come first
                         } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
@@ -129,21 +109,11 @@ export default function DjLiveSongs() {
                         }
                     });
 
-                    sortedAnnouncements.sort((a, b) => {
-                        if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
-                            return -1; // 'Pending' requests come first
-                        } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
-                            return 1; // 'Pending' requests come first
-                        } else {
-                            return new Date(a.modifiedOn) - new Date(b.modifiedOn); // Sort by modifiedOn in descending order
-                        }
-                    });
-
-                    const highestIdInResponse = Math.max(...sortedSongs.map(request => request.id), 0);
+                    const highestIdInResponse = Math.max(...combinedRequests.map(request => request.id), 0);
                     const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
                     console.log(isNewRequest);
                     if (isNewRequest === true && Notification.permission === 'granted') {
-                        if(!isMobile){
+                        if (!isMobile) {
                             console.log('inside !isMobile if clause');
                             notifyUser(); //desktop notification
                         }
@@ -151,19 +121,16 @@ export default function DjLiveSongs() {
                     }
                     lastHighestRecordIdRef.current = highestIdInResponse;
 
-
-                    setUserHistory(sortedSongs);
-                    console.log(sortedSongs);
+                    setUserHistory(combinedRequests);
+                    console.log(combinedRequests);
                 } catch (error) {
                     setError(true);
                     setErrorMessage(error.message);
                     console.error('Error fetching user request history:', error);
                 }
-
             }
-            
+
             fetchData();
-            
 
             const interval = setInterval(() => {
                 fetchData(); // Fetch data every 15 seconds
@@ -172,7 +139,8 @@ export default function DjLiveSongs() {
             // Clear the interval on component unmount to prevent memory leaks
             return () => clearInterval(interval);
         }
-    }, [rowData.id]); // Add rowData.id to the dependency array
+    }, [rowData.id]);
+ // Add rowData.id to the dependency array
 
     // useEffect(() => {
     //     const updatedTimes = {};

@@ -63,9 +63,10 @@
 }
 
 .subheading-payment {
+    padding-top : 3px;
     margin-bottom: 0px;
     text-align: center;
-    font-size:0.75rem;
+    font-size:0.7rem;
     font-weight:600;
     color: #39125C;
     border-radius: 15px;
@@ -442,6 +443,7 @@
 }
 
 .tip-info p{
+    padding-top : 3px;
     margin: 0;
     color: #39125C;
     font-weight: 600;

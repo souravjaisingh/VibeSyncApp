@@ -340,7 +340,7 @@ function SongSearch() {
                             <div className='special-announcements right-content-button-container' onClick={MakeSpecialAnnouncementHandler}>
                                 <div class="right-content-button-text">
                                     <p>Make <strong>Special</strong></p>
-                                    <p>Announcements for Special Occasions!</p>
+                                    <p><b>Announcements</b> for Special Occasions!</p>
                                 </div>
                                 <div class="right-content-button-icon">
                                     <img src="images/mic.png" alt="Microphone Icon" />
@@ -391,7 +391,7 @@ function SongSearch() {
                     )}
 
                     {(searchQuery.trim() !== '' || !(eventData && eventData.hidePlaylist)) && (
-                        <div className="container-for-table" style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
+                        <div className="container-for-table" style={{ maxHeight: '500px', overflow: 'auto', fontFamily: 'Poppins, sans-serif' }} ref={tableRef}>
                             {results && results.map((result, index) => (
                                 <div key={index} className="songs-row" onClick={() => handleRowClick(result)}>
                                     <div>
@@ -401,7 +401,7 @@ function SongSearch() {
                                         />
                                     </div>
                                     <div className="song-card-text">
-                                        <span className="song-name">{result.name}</span>
+                                        <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700"}}>{result.name}</span>
                                         <span className="song-artists">
                                             {result.artists.map((artist) => artist.name).join(', ')}
                                         </span>

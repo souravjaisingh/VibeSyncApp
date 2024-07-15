@@ -141,6 +141,9 @@ const AddressTypeahead = () => {
             setStartEventTime(rowData.eventStartDateTime)
             SetEventDesc(rowData.eventDescription)
             setMinimumBid(rowData.minimumBid)
+            setAcceptingRequests(rowData.acceptingRequests)
+            setDisplayRequests(rowData.displayRequests)    
+            setHidePlaylist(rowData.hidePlaylist)
         } else {
             // Reset input fields when rowData becomes null
             setVenueName('');
@@ -149,6 +152,9 @@ const AddressTypeahead = () => {
             setStartEventTime('');
             SetEventDesc('');
             setMinimumBid('');
+            setAcceptingRequests(false);  
+            setDisplayRequests(false);    
+            setHidePlaylist(false);
         }
     }, []);
     

@@ -189,16 +189,13 @@ function PaymentIndex() {
             TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
             EventId: rowData.eventId,
             DjId: rowData.djId,
-            ...(isAnnouncement ? {
-                MicAnnouncement: micAnnouncementMessage
-            } : {
-                SongId: rowData.songId,
-                SongName: rowData.name,
-                ArtistId: artistId,
-                ArtistName: artistName,
-                AlbumName: albumName,
-                AlbumImage: albumImage
-            })
+            SongId: rowData.songId,
+            SongName: rowData.name,
+            ArtistId: artistId,
+            ArtistName: artistName,
+            AlbumName: albumName,
+            AlbumImage: albumImage,
+            MicAnnouncement: micAnnouncementMessage
         };
 
 
@@ -359,7 +356,7 @@ function PaymentIndex() {
                                 </div>
 
                                 <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' value={micAnnouncementMessage} onChange={(e) => setMicAnnouncementMessage(e.target.value)} // Update the mic announcement message
-                                /> 
+                                />
                             </>
                         ) : (<></>)}
 

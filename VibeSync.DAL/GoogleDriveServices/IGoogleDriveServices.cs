@@ -12,5 +12,6 @@ namespace VibeSync.DAL.GoogleDriveServices
     public interface IGoogleDriveServices
     {
         Task<string> UploadFileAndGetUrlAsync(IFormFile file);
+        
     }
 }

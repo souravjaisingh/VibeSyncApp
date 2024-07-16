@@ -393,6 +393,7 @@
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     padding-bottom: 0;
+
 }
 
 .minimum-bid-container{
@@ -524,4 +525,19 @@
 }
 .choose-tip-label{
     width:10rem;
+}
+
+.gst-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around; 
+    color: #39125C;
+    font-size: 1.0rem;
+    font-weight: 700;
+    margin-left: -15px;
+}
+
+.gst-info div:nth-child(2) {
+    text-align : right;
+     margin-left: 10px; /* Adjust this value to move the total amount div to the left */
 }

@@ -34,6 +34,25 @@ function SongSearch() {
     const [minAmount, setMinAmount] = useState(0);
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
+    const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+
+    const handleSearchBarClick = (e) => {
+        e.stopPropagation();
+        setIsSearchBarActive(true);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = () => {
+            setIsSearchBarActive(false);
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
 
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
@@ -365,6 +384,7 @@ function SongSearch() {
                             placeholder="Search your song"
                             value={searchQuery}
                             onChange={handleSearchChange}
+                            onClick={handleSearchBarClick}  
                         />
                         <img src="/images/SearchButton1.png" className='search-icon-song-search' />
                     </div>
@@ -391,7 +411,7 @@ function SongSearch() {
                         </>
                     )}
 
-                    {(searchQuery.trim() !== '' || !eventData?.hidePlaylist) && (
+                    {(searchQuery.trim() !== '' || !eventData?.hidePlaylist || isSearchBarActive) && (
                         <div className='container-for-table' style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
                             {results && results.map((result, index) => (
                                 <div key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>

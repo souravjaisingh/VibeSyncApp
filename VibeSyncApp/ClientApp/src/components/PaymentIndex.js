@@ -279,7 +279,7 @@ function PaymentIndex() {
                     <div className='special-announcement-header'>
                         <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
                             <img src="images/mic2.png" />
-                                <p>Mic Announcement (₹100)</p>
+                                <p>Mic Announcement</p>
                                 {isMicAnnouncement ? (<>
                                     <img className='check-box' src="images/tick_checkbox.png" />
                                 </>) : (<>
@@ -299,7 +299,7 @@ function PaymentIndex() {
                         ) : (<></>)}
 
                         <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(false)}>
-                            <img src="images/screen.png" /><p>Screen Announcement (₹100)</p>
+                            <img src="images/screen.png" /><p>Screen Announcement</p>
                                 {isMicAnnouncement ? (<>
                                     <img className='check-box' src="images/untick_checkbox.png" />
                                 </>) : (<>

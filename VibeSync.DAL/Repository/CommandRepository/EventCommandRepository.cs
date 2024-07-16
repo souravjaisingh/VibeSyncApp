@@ -119,6 +119,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 eventEntity.AcceptingRequests = request.AcceptingRequests; 
                 eventEntity.DisplayRequests = request.DisplayRequests; 
                 eventEntity.HidePlaylist = request.HidePlaylist;
+                eventEntity.MinimumBidForSpecialRequest = request.MinimumBidForSpecialRequest;
                 _context.Events.Update(eventEntity);
                 // Save changes to the database
                 var response = await _context.SaveChangesAsync();

@@ -149,7 +149,7 @@ function PaymentIndex() {
 
         // Check if mic announcement message is empty
         if (isSpecialAnnouncement && !micAnnouncementMessage) {
-            setLocalError('Please Give a message for announcement!');
+            setLocalError('Please give a message for announcement!');
             console.log("Inside this function")
             return; // Stop execution if message is not provided
         }

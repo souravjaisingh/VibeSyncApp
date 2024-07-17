@@ -341,7 +341,7 @@ function PaymentIndex() {
                         {rowData.acceptingRequests && (
                             <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
                                 <img src="images/mic2.png" />
-                                <p>Mic Announcement (₹100)</p>
+                                <p>Mic Announcement</p>
                                 <img className='check-box' src="images/tick_checkbox.png" />
                                 
                             </div>
@@ -366,7 +366,7 @@ function PaymentIndex() {
                         {rowData.displayRequests && (
                             <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
                                 <img src="images/screen.png" />
-                                <p>Screen Announcement (₹100)</p>
+                                <p>Screen Announcement</p>
                                 <img className='check-box' src="images/tick_checkbox.png" />
                                 
                             </div>

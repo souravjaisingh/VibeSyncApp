@@ -31,6 +31,10 @@ function PaymentIndex() {
     const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
     const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
     const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(''); // New state for mic announcement message
+    const [localError, setLocalError] = useState('');
+    const gstRate = 0.18;
+    const gstAmount = Math.round(amount * gstRate);
+    const totalAmountWithGst = amount + gstAmount;
 
 
     console.log(rowData);
@@ -141,6 +145,17 @@ function PaymentIndex() {
 
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
+        setLocalError('');
+
+        // Check if mic announcement message is empty
+        if (isSpecialAnnouncement && !micAnnouncementMessage) {
+            setLocalError('Please give a message for announcement!');
+            console.log("Inside this function")
+            return; // Stop execution if message is not provided
+        }
+
+
+
         // Load the Razorpay script
         // Once the script is loaded, proceed with payment initiation
         const parsedAmount = parseFloat(isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
@@ -184,7 +199,7 @@ function PaymentIndex() {
         }
 
         const obj = {
-            amount: parsedAmount * 100,
+            amount:totalAmountWithGst * 100,
             userId: localStorage.getItem('userId'),
             TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
             EventId: rowData.eventId,
@@ -252,8 +267,8 @@ function PaymentIndex() {
 
             rzp.open();
         } catch (error) {
-            setError(true);
-            setErrorMessage(error.message);
+            // Handle error locally, preventing it from reaching the global handler
+            setLocalError(error.message);
             console.error(error);
         }
 
@@ -353,14 +368,13 @@ function PaymentIndex() {
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Happy Anniversary"}>Happy Anniversary</button>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Congratulations"}>Congratulations</button>
                                 </div>
-                                <textarea
-                                    id="message-mic-text"
-                                    placeholder="Type your message.."
-                                    maxLength="40"
-                                    className='mic-announcement-message'
-                                    value={micAnnouncementMessage}
-                                    onChange={(e) => setMicAnnouncementMessage(e.target.value)} // Update the mic announcement message
+
+                                <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' value={micAnnouncementMessage} onChange={(e) => {
+                                    setMicAnnouncementMessage(e.target.value);
+                                    if (localError) setLocalError(''); // Clear error message on typing
+                                }} // Update the mic announcement message
                                 />
+                                   {localError && <p style={{ color: 'red', fontWeight: 'bold' ,textAlign : 'center' }}>{localError}</p>}
                             </>
                         )}
                         {rowData.displayRequests && (
@@ -403,9 +417,9 @@ function PaymentIndex() {
                                 </p>
                             </div>
                         </div>
-                        <div className='subheading-payment'>
-                            <img src="images/disclaimerIcon.png" />
-                            ( Played within 30 mins or refund )</div>
+                            <div className='subheading-payment'>
+                                <img src="images/disclaimerIcon.png" className= 'disclaimer-icon' />
+                               Played within 30 mins or refund </div>
                     </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
@@ -461,13 +475,28 @@ function PaymentIndex() {
                             </div>
                         </div>
                         <br></br>
+                        <div className='gst-info'>
+                            <div>GST (18%)</div>
+                            <div>₹{gstAmount}</div>
+                        </div>
+                        <br></br>
+                        <div className='promocode'>
+                            <span>Promocode</span>
+                            <input
+                                type="text"
+                                className="value"
+                                placeholder="Login to apply"
+                            />
+                            <button className="apply-btn">Apply</button>
+                        </div>
+                        
 
                     </div>
-
                     <div className='tip-info'>
                         <img src="images/disclaimerIcon.png" />
-                        <p>{isSpecialAnnouncement ? ("(The more you tip, the sooner your announcement will be made)") : ("(The more you tip, the higher chances of your song being played)")}</p>
+                        <p>{isSpecialAnnouncement ? ("More you tip, the sooner your announcement will be made") : ("More you tip, higher chances of song being played")}</p>
                     </div>
+
                     {/* <Promocode onApply={handlePromoApply} /> */}
                     <br></br>
                     {/* Display the text below the Apply button */}
@@ -481,6 +510,7 @@ function PaymentIndex() {
                         </div>
                     )}
                     <div>
+                        
                         <button
                             className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live'
                                 || amount < rowData.minimumBid
@@ -493,7 +523,7 @@ function PaymentIndex() {
                         >
                             <div className='payment-btn-text'>
                                 <img className='payment-icon' src="images/payment.png" />
-                                <div>Pay | ₹{amount}</div>
+                                <div>Pay | ₹{totalAmountWithGst}</div>
                             </div>
                         </button>
                         {isPromoApplied && isPromoAvailable && (

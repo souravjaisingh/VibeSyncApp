@@ -44,7 +44,7 @@ namespace VibeSync.DAL.DBContext
                 });
             }
         }
-  
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -309,13 +309,9 @@ namespace VibeSync.DAL.DBContext
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SongId)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.SongId).HasMaxLength(50);
 
-                entity.Property(e => e.SongName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.SongName).HasMaxLength(50);
 
                 entity.Property(e => e.SongStatus)
                     .IsRequired()

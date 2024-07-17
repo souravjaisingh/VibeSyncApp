@@ -31,7 +31,7 @@ function SongSearch() {
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
-    const [minAmount, setMinAmount] = useState(0);
+    const [minAmount, setMinAmount] = useState(Math.floor(Math.random() * (100 - 60 + 1)) + 60);
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
@@ -53,7 +53,6 @@ function SongSearch() {
         };
     }, []);
 
-
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
         if(qrcodeParam == null){
@@ -61,6 +60,14 @@ function SongSearch() {
             setMinAmount(Amount)
         }
     });
+
+    // useEffect(() => {
+    //     const uri = JSON.parse(decodeURIComponent(rowDataString));
+    //     if(qrcodeParam == null){
+    //         const Amount = parseFloat(uri["minimumBid"]);
+    //         setMinAmount(Amount)
+    //     }
+    // });
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -180,8 +187,8 @@ function SongSearch() {
                 localStorage.setItem('userId', 0); // 0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
-                const Amount = parseFloat(uri["minimumBid"]);
-                setMinAmount(Amount);
+                // const Amount = parseFloat(uri["minimumBid"]);
+                // setMinAmount(Amount);
                 setShouldRefresh(true);
             }
             return;
@@ -275,6 +282,7 @@ function SongSearch() {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
                 console.log('Fetched Event Data:', response); // Debug log
                 setEventData(response);
+                //setMinAmount(eventData.minimumBid);
                 if (response != null) {
                     localStorage.setItem('venue', response.venue);
                     fetchEnqSongs(response.id);
@@ -285,12 +293,10 @@ function SongSearch() {
                 console.error('Error fetching data:', error);
             }
         } else if (!eventData) {
-            const eventDataFromParams = JSON.parse(decodeURIComponent(rowDataString));
-            console.log('Event Data from Params:', eventDataFromParams); // Debug log
-            setEventData(eventDataFromParams);
+            setEventData(JSON.parse(decodeURIComponent(rowDataString)));
         } else if (enqueuedSongs == null) {
             fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
-        } 
+        }
     }, [qrcodeParam, urlEventId, urlUserId, eventData]);
 
     const handleRowClick = (data) => {
@@ -341,7 +347,7 @@ function SongSearch() {
 
     return (
         <>
-            
+
             <div className='song-search'>
                 {eventData && (
                     <div className="search-container">
@@ -359,7 +365,7 @@ function SongSearch() {
                             <div className='special-announcements right-content-button-container' onClick={MakeSpecialAnnouncementHandler}>
                                 <div class="right-content-button-text">
                                     <p>Make <strong>Special</strong></p>
-                                    <p>Announcements for Special Occasions!</p>
+                                    <p><b>Announcements</b> for Special Occasions!</p>
                                 </div>
                                 <div class="right-content-button-icon">
                                     <img src="images/mic.png" alt="Microphone Icon" />
@@ -377,7 +383,7 @@ function SongSearch() {
 
 
                 <div className="search-page">
-                    <div className={`search-bar ${eventData?.hidePlaylist ? 'hidden-content-margin' : ''}`}>
+                <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
                         <input
                             type="text"
                             className="search-input"
@@ -386,44 +392,43 @@ function SongSearch() {
                             onChange={handleSearchChange}
                             onClick={handleSearchBarClick}  
                         />
-                        <img src="/images/SearchButton1.png" className='search-icon-song-search' />
+                        <img src="/images/SearchButton1.png" className="search-icon-song-search" />
                     </div>
 
-                    {eventData?.hidePlaylist !== true && (
+                    {eventData && eventData.hidePlaylist !== true && (
                         <>
-                    <div className='choose-from-collections-text'>
-                        <p>OR</p>
-                        <p>CHOOSE FROM OUR COLLECTIONS</p>
+                            <div className="choose-from-collections-text">
+                                <p>OR</p>
+                                <p>CHOOSE FROM OUR COLLECTIONS</p>
+                            </div>
 
-                    </div>
-                    
-                        <div className="playlist-buttons">
-                            {listOfPlaylists && listOfPlaylists.map((playlist) => (
-                                <button
-                                    key={playlist.id}
-                                    className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
-                                    onClick={() => handlePlaylistClick(playlist.id)}
-                                >
-                                    {playlist.name}
-                                </button>
-                            ))}
+                            <div className="playlist-buttons">
+                                {listOfPlaylists && listOfPlaylists.map((playlist) => (
+                                    <button
+                                        key={playlist.id}
+                                        className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                        onClick={() => handlePlaylistClick(playlist.id)}
+                                    >
+                                        {playlist.name}
+                                    </button>
+                                ))}
                             </div>
                         </>
                     )}
 
-                    {(searchQuery.trim() !== '' || !eventData?.hidePlaylist || isSearchBarActive) && (
-                        <div className='container-for-table' style={{ maxHeight: '500px', overflow: 'auto' }} ref={tableRef}>
+                    {(searchQuery.trim() !== '' || !(eventData && eventData.hidePlaylist) || isSearchBarActive) && (
+                        <div className="container-for-table" style={{ maxHeight: '500px', overflow: 'auto', fontFamily: 'Poppins, sans-serif' }} ref={tableRef}>
                             {results && results.map((result, index) => (
-                                <div key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
+                                <div key={index} className="songs-row" onClick={() => handleRowClick(result)}>
                                     <div>
                                         <img
                                             src={result.album.images[result.album.images.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
                                         />
                                     </div>
-                                    <div className='song-card-text'>
-                                        <span className='song-name'>{result.name}</span>
-                                        <span className='song-artists'>
+                                    <div className="song-card-text">
+                                        <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700"}}>{result.name}</span>
+                                        <span className="song-artists">
                                             {result.artists.map((artist) => artist.name).join(', ')}
                                         </span>
                                     </div>
@@ -432,13 +437,13 @@ function SongSearch() {
                             {loading && <p>Loading...</p>}
                         </div>
                     )}
-
                 </div>
+
             </div>
 
-            
+
             {/* Announcement Modal */}
-            
+
             <div className="modal" style={{ display: showAnnouncementModal ? 'block' : 'none' }}>
                 <div className="modal-content">
                     <h2>Announcement Disabled</h2>

@@ -101,7 +101,7 @@ export default function LoginForm() {
                     {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : <></>}
                     <div className="email">
                         <label className="form__label" for="email">Email* </label>
-                        <input required type="email" id="email" className='form__input' value={email} onChange={(e) => handleInputChange(e)} placeholder="Email" readOnly={errorMessage === 'Invalid Password'} />
+                        <input required type="email" id="email" className='form__input' value={email} onChange={(e) => handleInputChange(e)} placeholder="Email" />
                     </div>
 
                     <div className="password-container">

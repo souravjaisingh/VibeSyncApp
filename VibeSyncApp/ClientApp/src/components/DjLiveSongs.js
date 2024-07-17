@@ -86,18 +86,20 @@ export default function DjLiveSongs() {
     useEffect(() => {
         if ((rowData && rowData.id) || localStorage.getItem('eventId') != null) {
             let lastHighestRecordId = Math.max(...userHistory.map(request => request.id), 0);
-            
+
             async function fetchData() {
                 try {
                     const res = await GetSongsByEventId(rowData.id != null ? rowData.id : localStorage.getItem('eventId'));
-                    // Separate the requests into accepted and unaccepted
-                    const unaccepted = res.filter((request) => request.songStatus === 'Pending');
-                    const accepted = res.filter((request) => request.songStatus === 'Accepted');
 
-                    // Combine the arrays so that Pending requests appear on top
-                    const sortedRequests = [...unaccepted, ...accepted];
+                    // Separate songs and announcements
+                    const songRequests = res.filter((request) => request.songId); // Assuming songId exists for song requests
+                    const specialAnnouncements = res.filter((request) => request.micAnnouncement); // Filtering based on micAnnouncement field
 
-                    sortedRequests.sort((a, b) => {
+                    // Combine the song requests and announcements
+                    const combinedRequests = [...songRequests, ...specialAnnouncements];
+
+                    // Sort the combined requests
+                    combinedRequests.sort((a, b) => {
                         if (a.songStatus === 'Pending' && b.songStatus !== 'Pending') {
                             return -1; // 'Pending' requests come first
                         } else if (a.songStatus !== 'Pending' && b.songStatus === 'Pending') {
@@ -107,11 +109,11 @@ export default function DjLiveSongs() {
                         }
                     });
 
-                    const highestIdInResponse = Math.max(...sortedRequests.map(request => request.id), 0);
+                    const highestIdInResponse = Math.max(...combinedRequests.map(request => request.id), 0);
                     const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
                     console.log(isNewRequest);
                     if (isNewRequest === true && Notification.permission === 'granted') {
-                        if(!isMobile){
+                        if (!isMobile) {
                             console.log('inside !isMobile if clause');
                             notifyUser(); //desktop notification
                         }
@@ -119,19 +121,16 @@ export default function DjLiveSongs() {
                     }
                     lastHighestRecordIdRef.current = highestIdInResponse;
 
-
-                    setUserHistory(sortedRequests);
-                    console.log(sortedRequests);
+                    setUserHistory(combinedRequests);
+                    console.log(combinedRequests);
                 } catch (error) {
                     setError(true);
                     setErrorMessage(error.message);
                     console.error('Error fetching user request history:', error);
                 }
-
             }
-            
+
             fetchData();
-            
 
             const interval = setInterval(() => {
                 fetchData(); // Fetch data every 15 seconds
@@ -140,7 +139,8 @@ export default function DjLiveSongs() {
             // Clear the interval on component unmount to prevent memory leaks
             return () => clearInterval(interval);
         }
-    }, [rowData.id]); // Add rowData.id to the dependency array
+    }, [rowData.id]);
+ // Add rowData.id to the dependency array
 
     // useEffect(() => {
     //     const updatedTimes = {};
@@ -357,20 +357,55 @@ export default function DjLiveSongs() {
                         <MDBTableBody>
                             {userHistory.map((result, index) => (
                                 <tr key={index}>
-                                    <td>
-                                        <img
-                                            src={result.image}
-                                            alt={`Album Cover for ${result.albumName}`}
-                                            style={{ width: '45px', height: '45px' }}
-                                            className='rounded-circle'
-                                        />
-                                        <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>
-                                    </td>
-                                    <td>
-                                        <p className='fw-bold mb-1'>{result.songName}</p>
-                                        <p className='text-muted mb-0'>{result.artistName}</p>
-                                    </td>
-                                    <td>{result.albumName}</td>
+                                    {/*<td>*/}
+                                    {/*    <img*/}
+                                    {/*        src={result.image}*/}
+                                    {/*        alt={`Album Cover for ${result.albumName}`}*/}
+                                    {/*        style={{ width: '45px', height: '45px' }}*/}
+                                    {/*        className='rounded-circle'*/}
+                                    {/*    />*/}
+                                    {/*    <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>*/}
+                                    {/*</td>*/}
+                                    {/*<td>*/}
+                                    {/*    <p className='fw-bold mb-1'>{result.songName}</p>*/}
+                                    {/*    <p className='text-muted mb-0'>{result.artistName}</p>*/}
+                                    {/*</td>*/}
+                                    {/*<td>{result.albumName}</td>*/}
+                                    {result.micAnnouncement ? (
+                                        <>
+                                            <td>
+                                                <img
+                                                    src={`${process.env.PUBLIC_URL}/images/micDark.png`}
+                                                    alt="Microphone Icon"
+                                                    style={{ width: '45px', height: '45px' }}
+                                                    className='rounded-circle'
+                                                />
+                                            </td>
+                                            <td colSpan="2">
+                                                <p className='fw-bold mb-1' style={{ fontSize: '12px' }}>Special Announcement</p>
+                                                <p className='text-muted mb-0' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
+                                            </td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td>
+                                                <img
+                                                    src={result.image}
+                                                    alt={`Album Cover for ${result.albumName}`}
+                                                    style={{ width: '45px', height: '45px' }}
+                                                    className='rounded-circle'
+                                                />
+                                                <p className='text-muted mb-0 money'>&#8377;{result.totalAmount || 0}</p>
+                                            </td>
+                                            <td>
+                                                <p className='fw-bold mb-1'>{result.songName}</p>
+                                                <p className='text-muted mb-0'>{result.artistName}</p>
+                                            </td>
+                                            <td>{result.albumName}</td>
+                                        </>
+                                    )}
+
+
                                     {result && result.songStatus === 'Pending' && (
                                         <td>
                                             <div className='button-container'>

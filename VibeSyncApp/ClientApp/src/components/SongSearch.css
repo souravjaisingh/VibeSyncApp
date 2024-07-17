@@ -1,9 +1,16 @@
-    /* CSS Styles */
-    .song-search{
-        background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
-        background-attachment: fixed;
-        
-    }
+/* Import Poppins font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+/* Apply Poppins font to the entire page */
+html body {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+/* CSS Styles */
+.song-search {
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background-attachment: fixed;
+}
     .search-container {
         display: flex;
         flex-wrap: wrap;
@@ -21,22 +28,20 @@
         max-width: 100%; /* Ensure the image doesn't exceed its container width */
         height: auto; /* Maintain aspect ratio */
     }
-    
-    .left-content {
-        flex: 0 0 auto;
-       
-        border-radius: 15px;
-        background-color: #39125C;
-        display: flex;
-        color: #ffffff; 
-        height:4rem;
-        place-items: center; 
-        width:40%;
-        min-width:8rem;
-        margin:20px;
-        margin-right: 0px;
-        
-    }
+
+.left-content {
+    flex: 0 0 auto;
+    border-radius: 15px;
+    background-color: #D7DEFE;
+    display: flex;
+    color: #39125C;
+    height: 4rem;
+    place-items: center;
+    width: 40%;
+    min-width: 8rem;
+    margin: 20px;
+    margin-right: 0px;
+}
 
     .left-content img{
         width: 3.75rem;
@@ -53,33 +58,37 @@
         padding-bottom: 10px;
     }
 
-    .right-content {
-        width:40%;
-        border-radius:15px;
-        background-color: #39125C;
-        color:#fff;
-        font-size:0.75rem;
-        height:4rem;
-        min-width:8rem;
-    }
+.right-content {
+    background: linear-gradient(to right, #39125C, #5497B9); /* Replace with your gradient colors */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center content horizontally */
+    align-items: left;
+    border-radius: 35px;
+    width: 41%;
+    border-radius: 15px;
+    background-color: #39125C;
+    color: #fff;
+    font-size: 0.75rem;
+    height: 5rem;
+    min-width: 8rem;
+}
     
     
     .search-heading {
         font-size: 24px;
         margin-bottom: 20px;
     }
-    
-    
-    .search-input {
-        width: 100%;
-        padding: 5px 20px;
-        margin-top: 15px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: 700;
-        
-    }
+
+
+.search-input {
+    width: 100%;
+    padding: 7px 20px;
+    margin-top: 15px;
+    border: 4px solid #39125C;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+}
     
     .search-results {
         list-style: none;
@@ -196,8 +205,8 @@
 }
 
 .song-name{
-    font-size: 1.5rem; 
-    line-height: 0.2rem;
+    font-size: 1.1rem; 
+    line-height: 1.3rem;
     font-weight:700;
 }
 
@@ -259,7 +268,7 @@
     max-height: 400px;
     overflow: auto;
     font-size: small;
-    width: 100%; /* Ensure table container occupies full width */
+    width: 94%; /* Ensure table container occupies full width */
     padding: 5px; /* Add padding for spacing */
     box-sizing: border-box; /* Include padding in width calculation */
     margin:10px;
@@ -268,7 +277,7 @@
 }
 
 .container-for-table{
-    background: url('../../public/images/BGMusic.png');
+    background: url('../Resources/BGMusic.png');
     background-repeat: no-repeat;
 }
 
@@ -366,10 +375,11 @@
 
 
 .search-icon-song-search {
+    top : 2px;
     position: relative;
     right: 35px; 
-    width: 30px; /* Increase size as needed */
-    height: 30px;
+    width: 33px; /* Increase size as needed */
+    height: 34px;
     cursor: pointer;
     transform: translateY(18px);
 }
@@ -384,6 +394,10 @@
     width:90%;
     text-align:left;
 }
+.event-desc img {
+    margin-right: 5px; /* Adjust the margin-right as needed */
+    vertical-align: middle; /* Aligns image vertically with text */
+    }
 
 .right-content:hover{
     cursor: pointer;
@@ -404,7 +418,7 @@
 
 
 
-.right-content-button-container {
+/*.right-content-button-container {
     display: flex;
     align-items: center;
     border-radius: 20px;
@@ -429,8 +443,58 @@
 .right-content-button-icon img {
     width: 40px;
     height: auto;
+}*/
+
+.right-content-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensure content is spaced out */
+    border-radius: 20px;
+    padding: 10px; /* Adjust padding for better spacing */
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 12px; /* Slightly increased font size */
+    background: radial-gradient(circle, #39125C #5497B9);
+    width: 100%; /* Full width of parent container */
+    height: 100%; /* Full height of parent container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
+.right-content-button-text {
+    flex: 1; /* Allow text to grow */
+    /*font-weight: bold;*/ /* Make text bold */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center; /* Center text */
+}
+
+    .right-content-button-text p {
+        margin: 0;
+        line-height: 1.2;
+    }
+
+        .right-content-button-text p strong {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+.right-content-button-icon {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the start to move them up */
+    width: 50px; /* Set a fixed width for the icon container */
+    height: 50px; /* Set a fixed height for the icon container */
+    margin-top: -10px; /* Move the icon up */
+}
+
+    .right-content-button-icon img {
+        max-width: 100%; /* Ensure the icon fits within the container */
+        max-height: 100%; /* Ensure the icon fits within the container */
+        width: 40px; /* Adjusted to your original size */
+        height: auto;
+    }
 
 .modal {
     display: none;

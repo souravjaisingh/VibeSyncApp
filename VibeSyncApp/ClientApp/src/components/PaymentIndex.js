@@ -30,8 +30,10 @@ function PaymentIndex() {
     const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
     const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
     const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
+    const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(''); // New state for mic announcement message
 
-    //console.log(rowData);
+
+    console.log(rowData);
 
     const handleBack = () => {
         navigate(-1); // Go back to the previous page when back button is clicked
@@ -107,7 +109,7 @@ function PaymentIndex() {
         });
     }
     useEffect(() => {
-        setAmount(rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? rowData.minimumBid + 100 : rowData.minimumBid);
 
         if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
             setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
@@ -148,6 +150,39 @@ function PaymentIndex() {
             return;
         }
 
+
+        //const obj = {
+        //    amount: parsedAmount * 100,
+        //    userId: localStorage.getItem('userId'),
+        //    TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
+        //    EventId: rowData.eventId,
+        //    DjId: rowData.djId,
+        //    SongId: rowData.songId,
+        //    SongName: rowData.name,
+        //    ArtistId: rowData.artists[0].id,
+        //    ArtistName: rowData.artists[0].name,
+        //    AlbumName: rowData.album.name,
+        //    AlbumImage: rowData.album.images[0].url
+        //};
+
+        const isAnnouncement = rowData.isSpecialAnnouncement || rowData.isMicAnnouncement;
+        let artistId = '';
+        let artistName = '';
+        let albumName = '';
+        let albumImage = '';
+
+        if (rowData.artists && rowData.artists[0]) {
+            artistId = rowData.artists[0].id;
+            artistName = rowData.artists[0].name;
+        }
+
+        if (rowData.album) {
+            albumName = rowData.album.name;
+            if (rowData.album.images && rowData.album.images[0]) {
+                albumImage = rowData.album.images[0].url;
+            }
+        }
+
         const obj = {
             amount: parsedAmount * 100,
             userId: localStorage.getItem('userId'),
@@ -156,11 +191,15 @@ function PaymentIndex() {
             DjId: rowData.djId,
             SongId: rowData.songId,
             SongName: rowData.name,
-            ArtistId: rowData.artists[0].id,
-            ArtistName: rowData.artists[0].name,
-            AlbumName: rowData.album.name,
-            AlbumImage: rowData.album.images[0].url
+            ArtistId: artistId,
+            ArtistName: artistName,
+            AlbumName: albumName,
+            AlbumImage: albumImage,
+            MicAnnouncement: micAnnouncementMessage
         };
+
+
+
         try {
             const res = await GetPaymentInitiationDetails(obj);
             setPaymentInitiationData(res);
@@ -170,7 +209,8 @@ function PaymentIndex() {
                 amount: parsedAmount * 100,
                 currency: 'INR',
                 name: 'VibeSync',
-                description: 'Song request',
+                description: rowData.isMicAnnouncement ? 'Mic announcement request' : 'Song request',
+                image: VBLogo,
                 image: VBLogo,
                 order_id: res.orderId,
                 handler: function (response) {
@@ -219,6 +259,23 @@ function PaymentIndex() {
 
     };
 
+    //async function upsertPaymentDetails(orderId, payId) {
+    //    try {
+    //const obj = {
+    //    UserId: localStorage.getItem('userId'),
+    //    OrderId: orderId,
+    //    TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
+    //    PaymentId: payId,
+    //    EventId: rowData.eventId,
+    //    DjId: rowData.djId,
+    //    SongId: rowData.songId,
+    //    SongName: rowData.name,
+    //    ArtistId: rowData.artists[0].id,
+    //    ArtistName: rowData.artists[0].name,
+    //    AlbumName: rowData.album.name,
+    //    AlbumImage: rowData.album.images[0].url
+    //};
+
     async function upsertPaymentDetails(orderId, payId) {
         try {
             const obj = {
@@ -228,12 +285,16 @@ function PaymentIndex() {
                 PaymentId: payId,
                 EventId: rowData.eventId,
                 DjId: rowData.djId,
-                SongId: rowData.songId,
-                SongName: rowData.name,
-                ArtistId: rowData.artists[0].id,
-                ArtistName: rowData.artists[0].name,
-                AlbumName: rowData.album.name,
-                AlbumImage: rowData.album.images[0].url
+                ...(rowData.isMicAnnouncement ? {
+                    MicAnnouncement: micAnnouncementMessage
+                } : {
+                    SongId: rowData.songId,
+                    SongName: rowData.name,
+                    ArtistId: rowData.artists[0].id,
+                    ArtistName: rowData.artists[0].name,
+                    AlbumName: rowData.album.name,
+                    AlbumImage: rowData.album.images[0].url
+                })
             };
 
             var res = await UpsertPayment(obj);
@@ -277,76 +338,75 @@ function PaymentIndex() {
 
                 {isSpecialAnnouncement ? (
                     <div className='special-announcement-header'>
-                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
-                            <img src="images/mic2.png" />
-                                <p>Mic Announcement</p>
-                                {isMicAnnouncement ? (<>
-                                    <img className='check-box' src="images/tick_checkbox.png" />
-                                </>) : (<>
-                                    <img className='check-box' src="images/untick_checkbox.png" />
-                                </>)}
-                        </div>
-                        {isMicAnnouncement ? (
+                        {rowData.acceptingRequests && (
+                            <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                                <img src="images/mic2.png" />
+                                <p>Mic Announcement (₹100)</p>
+                                <img className='check-box' src="images/tick_checkbox.png" />
+                                
+                            </div>
+                        )}
+                        {rowData.acceptingRequests && isMicAnnouncement && (
                             <>
                                 <div className='mic-announcement-buttons'>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Happy Birthday"}>Happy Birthday</button>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Happy Anniversary"}>Happy Anniversary</button>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Congratulations"}>Congratulations</button>
                                 </div>
-
-                                <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' />
+                                <textarea
+                                    id="message-mic-text"
+                                    placeholder="Type your message.."
+                                    maxLength="40"
+                                    className='mic-announcement-message'
+                                    value={micAnnouncementMessage}
+                                    onChange={(e) => setMicAnnouncementMessage(e.target.value)} // Update the mic announcement message
+                                />
                             </>
-                        ) : (<></>)}
-
-                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(false)}>
-                            <img src="images/screen.png" /><p>Screen Announcement</p>
-                                {isMicAnnouncement ? (<>
-                                    <img className='check-box' src="images/untick_checkbox.png" />
-                                </>) : (<>
-                                    <img className='check-box' src="images/tick_checkbox.png" />
-                                </>)}
-                        </div>
-
-                        {isMicAnnouncement ? (
+                        )}
+                        {rowData.displayRequests && (
+                            <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                                <img src="images/screen.png" />
+                                <p>Screen Announcement (₹100)</p>
+                                <img className='check-box' src="images/tick_checkbox.png" />
+                                
+                            </div>
+                        )}
+                        {rowData.displayRequests && isMicAnnouncement && (
                             <>
-
-                            </>
-                        ) : (<>
-
-                            <div className='mic-announcement-buttons'>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
-                            </div>
-                            <div className='screen-announcement-upload-section'>
-                                <textarea id="message-screen-text" placeholder="Type your message.." maxlength="40" className='screen-announcement-message' />
-                                <div class="upload-container" onClick={() => document.getElementById('file-upload').click()}>
-                                    <div class="upload-icon">&#128190;</div>
-                                    <div class="upload-text">Upload File</div>
-                                    <input type="file" id="file-upload" />
+                                <div className='mic-announcement-buttons'>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
                                 </div>
-                            </div>
-                        </>)}
-
+                                <div className='screen-announcement-upload-section'>
+                                    <textarea id="message-screen-text" placeholder="Type your message.." maxLength="40" className='screen-announcement-message' />
+                                    <div className="upload-container" onClick={() => document.getElementById('file-upload').click()}>
+                                        <div className="upload-icon">&#128190;</div>
+                                        <div className="upload-text">Upload File</div>
+                                        <input type="file" id="file-upload" />
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 ) : (
                     <>
-                    <div className='song-details-container'>
-                        <img
-                            src={rowData.album.images[0].url}
-                            alt="Album Image"
-                        />
-                        <div className='song-details-text'>
-                            <p className='song-name'>{rowData.name}</p>
-                            <p className='artist-name'>
-                                {rowData.artists.map((artist) => artist.name).join(', ')}
-                            </p>
+                        <div className='song-details-container'>
+                            <img
+                                src={rowData.album.images[0].url}
+                                alt="Album Image"
+                            />
+                            <div className='song-details-text'>
+                                <p className='song-name'>{rowData.name}</p>
+                                <p className='artist-name'>
+                                    {rowData.artists.map((artist) => artist.name).join(', ')}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                            <div className='subheading-payment'>
-                                <img src = "images/disclaimerIcon.png"/>
-                                ( Played within 40 mins or refund )</div>
-                            </>
+                        <div className='subheading-payment'>
+                            <img src="images/disclaimerIcon.png" />
+                            ( Played within 30 mins or refund )</div>
+                    </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
                 <form onSubmit={handleSubmit} className='center-form'>
@@ -373,19 +433,32 @@ function PaymentIndex() {
                         </div>
 
                         <div className='tip-amount-section'>
-                            <div>
+                            <div className='choose-tip-label'>
                                 Choose the Tip
                             </div>
-                            <div onClick = {()=>{setAmount(amount-10)}} className='decrease-tip-button'>-</div>
-                            <input
-                                className='amount-inputfield'
-                                type="number"
-                                placeholder='Enter amount in rupees'
-                                value={amount - rowData.minimumBid}
-                                onChange={(e) => setAmount(e.target.value + rowData.minimumBid)}
-                                required
-                            />
-                            <div onClick = {()=>{setAmount(amount+10)}} className='increase-tip-button'>+</div>
+                            <div className='tip-amount-input-btns'>
+                                <div onClick={() => { setAmount(amount - 10) }} className='decrease-tip-button'>-</div>
+                                <input
+                                    className='amount-inputfield'
+                                    type="number"
+                                    placeholder='Enter amount in rupees'
+                                    value={amount - rowData.minimumBid}
+                                    onChange={
+                                        (e) => {
+                                            const value = e.target.value;
+                                            // Regular expression to check if the value is an integer
+                                            const integerRegex = /^\d*$/;
+
+                                            if (integerRegex.test(value)) {
+                                                // If value is an integer, update the amount state
+                                                setAmount(value === '' ? rowData.minimumBid : Number(value) + rowData.minimumBid);
+                                            }
+                                        }
+                                    }
+                                    required
+                                />
+                                <div onClick={() => { setAmount(amount + 10) }} className='increase-tip-button'>+</div>
+                            </div>
                         </div>
                         <br></br>
 
@@ -433,13 +506,13 @@ function PaymentIndex() {
                 </form>
 
                 <div className='login-proposal'>
-                        <img className='login-img' src="images/log_in.png" />
-                        <p>Login & Get 50% off instantly!</p>
+                    <img className='login-img' src="images/log_in.png" />
+                    <p>Login & Get 50% off instantly!</p>
                 </div>
 
                 <div className='refund-info-footer'>
                     <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>
-                    <p>~ If DJ accepts the request and doesn't play your song within 40 mins, you'll be issued a full refund.</p>
+                    <p>~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</p>
                 </div>
                 {/* Render the success message if showSuccessMessage is true */}
                 {showSuccessMessage && (

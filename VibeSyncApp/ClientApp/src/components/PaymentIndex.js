@@ -353,16 +353,15 @@ function PaymentIndex() {
 
                 {isSpecialAnnouncement ? (
                     <div className='special-announcement-header'>
-                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
-                            <img src="images/mic2.png" />
-                            <p>Mic Announcement (₹100)</p>
-                            {isMicAnnouncement ? (<>
+                        {rowData.acceptingRequests && (
+                            <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                                <img src="images/mic2.png" />
+                                <p>Mic Announcement</p>
                                 <img className='check-box' src="images/tick_checkbox.png" />
-                            </>) : (<>
-                                <img className='check-box' src="images/untick_checkbox.png" />
-                            </>)}
-                        </div>
-                        {isMicAnnouncement ? (
+                                
+                            </div>
+                        )}
+                        {rowData.acceptingRequests && isMicAnnouncement && (
                             <>
                                 <div className='mic-announcement-buttons'>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Happy Birthday"}>Happy Birthday</button>
@@ -377,37 +376,32 @@ function PaymentIndex() {
                                 />
                                    {localError && <p style={{ color: 'red', fontWeight: 'bold' ,textAlign : 'center' }}>{localError}</p>}
                             </>
-                        ) : (<></>)}
-                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(false)}>
-                            <img src="images/screen.png" /><p>Screen Announcement (₹100)</p>
-                            {isMicAnnouncement ? (<>
-                                <img className='check-box' src="images/untick_checkbox.png" />
-                            </>) : (<>
+                        )}
+                        {rowData.displayRequests && (
+                            <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                                <img src="images/screen.png" />
+                                <p>Screen Announcement</p>
                                 <img className='check-box' src="images/tick_checkbox.png" />
-                            </>)}
-                        </div>
-
-                        {isMicAnnouncement ? (
+                                
+                            </div>
+                        )}
+                        {rowData.displayRequests && isMicAnnouncement && (
                             <>
-
-                            </>
-                        ) : (<>
-
-                            <div className='mic-announcement-buttons'>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
-                            </div>
-                            <div className='screen-announcement-upload-section'>
-                                <textarea id="message-screen-text" placeholder="Type your message.." maxlength="40" className='screen-announcement-message' />
-                                <div class="upload-container" onClick={() => document.getElementById('file-upload').click()}>
-                                    <div class="upload-icon">&#128190;</div>
-                                    <div class="upload-text">Upload File</div>
-                                    <input type="file" id="file-upload" />
+                                <div className='mic-announcement-buttons'>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
                                 </div>
-                            </div>
-                        </>)}
-
+                                <div className='screen-announcement-upload-section'>
+                                    <textarea id="message-screen-text" placeholder="Type your message.." maxLength="40" className='screen-announcement-message' />
+                                    <div className="upload-container" onClick={() => document.getElementById('file-upload').click()}>
+                                        <div className="upload-icon">&#128190;</div>
+                                        <div className="upload-text">Upload File</div>
+                                        <input type="file" id="file-upload" />
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 ) : (
                     <>

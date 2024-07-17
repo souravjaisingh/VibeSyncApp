@@ -246,12 +246,11 @@
 .btn-payment-yellow{
     background-color: yellow;
 }
-
-.mic-announcement-message  {
+.mic-announcement-message {
     white-space: normal;
     word-wrap: break-word;
-    overflow-wrap: break-word ;
-    overflow: hidden ;
+    overflow-wrap: break-word;
+    overflow: hidden;
     text-overflow: ellipsis;
     max-height: 3em; /* Adjust this value based on the desired height */
     display: -webkit-box;

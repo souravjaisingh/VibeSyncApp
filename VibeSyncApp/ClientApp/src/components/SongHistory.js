@@ -124,16 +124,16 @@ export default function SongHistory() {
                                     return (
                                         <div key={index} className='song-row-history-page'>
                                             <div className='history-page-left-content'>
-                                                  {result.micAnnouncement ? (
+                                                {result.micAnnouncement ? (
                                                     <div style={{ overflowWrap: 'break-word', overflow: 'hidden' }}>
                                                         {result.micAnnouncement}
                                                     </div>
-                                               ) : (
-                                                  <>
+                                                ) : (
+                                                    <>
                                                         <div classname='song-row-song-name'>{result.songName}</div>
-                                                      <div classname='song-row-artist-name'>{result.artistName}</div>
-                                                   </>
-                                               )}
+                                                        <div classname='song-row-artist-name'>{result.artistName}</div>
+                                                    </>
+                                                )}
                                             </div>
                                             <div className='history-page-middle-content'>
                                                 <div className='song-row-amount-paid'>₹{result.totalAmount}</div>

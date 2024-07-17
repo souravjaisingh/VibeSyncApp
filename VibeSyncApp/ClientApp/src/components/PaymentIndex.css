@@ -511,13 +511,11 @@
 .increase-tip-button{
     position: relative;
     left:-25px;
-    /*margin-left : 10px;*/
 }
 
 .decrease-tip-button{
     position: relative;
     left:20px;
-    /*margin-right:10px;*/
 }
 
 .check-box{

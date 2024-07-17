@@ -79,6 +79,7 @@
 
 .subheading-payment img{
     width: 13px;
+    margin-right:4px;
 }
 
 .label {
@@ -397,6 +398,7 @@
 }
 
 .minimum-bid-container{
+    padding-left : 3px;
     border-bottom: 5px dotted #fff;
     display: flex;
     justify-content: space-between;
@@ -409,7 +411,7 @@
 }
 
 .minimum-bid-value{
-    background-color: #fff;
+    background-color: #ede8e8;
     width:5rem;
     border-radius: 5px;
     text-align: left;
@@ -509,11 +511,13 @@
 .increase-tip-button{
     position: relative;
     left:-25px;
+    /*margin-left : 10px;*/
 }
 
 .decrease-tip-button{
     position: relative;
     left:20px;
+    /*margin-right:10px;*/
 }
 
 .check-box{
@@ -522,22 +526,60 @@
 
 .tip-amount-input-btns{
     display: flex;
+    align-items : center;
 }
 .choose-tip-label{
-    width:10rem;
+    width:11rem;
+    margin-right :10px;
 }
 
 .gst-info {
+    margin-top : -11px;
     display: flex;
     align-items: center;
     justify-content: space-around; 
     color: #39125C;
-    font-size: 1.0rem;
+    font-size: 15px;
     font-weight: 700;
-    margin-left: -15px;
+    margin-left: -28px;
 }
 
 .gst-info div:nth-child(2) {
     text-align : right;
-     margin-left: 10px; /* Adjust this value to move the total amount div to the left */
+     margin-left: 123px; /* Adjust this value to move the total amount div to the left */
 }
+
+.promocode {
+    display: flex;
+    align-items: center;
+    color: #39125C;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: -14px;
+}
+
+    .promocode span {
+        margin-right: 10px;
+        margin-left : 7px;/* Adjust spacing between "Promocode" and input */
+    }
+
+    .promocode input {
+        font-weight: 700;
+        text-align: center;
+        background-color: #ede8e8;
+        border: 1px solid #39125C;
+        border-radius: 4px;
+        font-size: 15px;
+        padding: 5px;
+        width: 150px;
+    }
+
+    .promocode .apply-btn {
+        margin-top: -2px;
+        background-color: #39125C;
+        color: white;
+        border-radius: 13px;
+        padding: 5px 10px; /* Adjust padding as needed */
+        cursor: pointer;
+        margin-left: 10px; /* Adjust spacing between input and button */
+    }

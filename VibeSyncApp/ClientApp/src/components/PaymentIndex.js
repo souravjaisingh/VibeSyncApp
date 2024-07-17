@@ -148,8 +148,9 @@ function PaymentIndex() {
         setLocalError('');
 
         // Check if mic announcement message is empty
-        if (isMicAnnouncement && !micAnnouncementMessage) {
+        if (isSpecialAnnouncement && !micAnnouncementMessage) {
             setLocalError('Give the mic a message to announce!');
+            console.log("Inside this function")
             return; // Stop execution if message is not provided
         }
 
@@ -422,9 +423,9 @@ function PaymentIndex() {
                                 </p>
                             </div>
                         </div>
-                        <div className='subheading-payment'>
-                            <img src="images/disclaimerIcon.png" />
-                            ( Played within 30 mins or refund )</div>
+                            <div className='subheading-payment'>
+                                <img src="images/disclaimerIcon.png" className= 'disclaimer-icon' />
+                               Played within 30 mins or refund </div>
                     </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
@@ -481,14 +482,25 @@ function PaymentIndex() {
                         </div>
                         <br></br>
                         <div className='gst-info'>
-                            <div>GST (18%) applicable</div>
+                            <div>GST (18%)</div>
                             <div>₹{gstAmount}</div>
                         </div>
+                        <br></br>
+                        <div className='promocode'>
+                            <span>Promocode</span>
+                            <input
+                                type="text"
+                                className="value"
+                                placeholder="Login to apply"
+                            />
+                            <button className="apply-btn">Apply</button>
+                        </div>
+                        
 
                     </div>
                     <div className='tip-info'>
                         <img src="images/disclaimerIcon.png" />
-                        <p>{isSpecialAnnouncement ? ("(The more you tip, the sooner your announcement will be made)") : ("(The more you tip, the higher chances of your song being played)")}</p>
+                        <p>{isSpecialAnnouncement ? ("More you tip, the sooner your announcement will be made") : ("More you tip, higher chances of song being played")}</p>
                     </div>
 
                     {/* <Promocode onApply={handlePromoApply} /> */}

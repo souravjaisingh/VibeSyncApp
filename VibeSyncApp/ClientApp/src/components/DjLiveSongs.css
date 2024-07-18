@@ -175,6 +175,13 @@
     z-index: 2;
 }
 
+.edit-profile-link{
+    color: #fff;
+    background-color: #39125C;
+    border-radius: 15px;
+    padding: 5px 10px;
+}
+
 
 .img-song-req-dj-side{
     border-radius: 15px;
@@ -185,10 +192,17 @@
 
 .dj-side-song-req-header{
     padding: 10px;
-    display: flex;
-    justify-content: space-between;
     margin: 0px 10px;
     align-items: center;
+}
+
+.update-event-live-link{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px auto;
+    align-items: center;
+    max-width: 36rem;
 }
 
 .song-announcement-request-container{

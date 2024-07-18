@@ -84,12 +84,13 @@ export default function DjLiveSongs() {
         }
     }
 
-    const handleLiveToggle = ()=>{
+    const handleLiveToggle = async()=>{
         // Handle toggle state changes
         let live_toggle_rowData = rowData;
         live_toggle_rowData.eventStatus = !isLive?'Live':'Not live';
         setIsLive(!isLive);
-        UpdateEventDetails(live_toggle_rowData);
+        await UpdateEventDetails(live_toggle_rowData);
+        navigate('/djhome')
     };
 
     useEffect(() => {

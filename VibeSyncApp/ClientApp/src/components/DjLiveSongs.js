@@ -319,7 +319,7 @@ export default function DjLiveSongs() {
         const paymentTime = new Date(paymentDateTime);
         const endTime = new Date(paymentTime.getTime() + 30 * 60 * 1000); // Add 30 minutes
         const remainingTime = Math.max(0, (endTime - currentTime) / 1000 / 60); // Convert to minutes
-        return remainingTime > 0 ? remainingTime.toFixed(0) : 7; // Return null when remaining time is 0 or less
+        return remainingTime > 0 ? remainingTime.toFixed(0) : null; // Return null when remaining time is 0 or less
     };
     return (
         <div className='song-history-container'>

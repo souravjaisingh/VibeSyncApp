@@ -9,6 +9,8 @@ import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
 import { useLoadingContext } from './LoadingProvider';
 import { DeleteEventByEventId } from './services/EventsService';
+import { GetPlaylistList} from './services/SongsService';
+
 
 const AddressTypeahead = () => {
     const { error, setError } = useContext(MyContext);
@@ -36,6 +38,8 @@ const AddressTypeahead = () => {
     const [displayRequests, setDisplayRequests] = useState( false);
     const [hidePlaylist, setHidePlaylist] = useState(false); // Default value is false
 
+    const [playlists, setPlaylists] = useState([]);
+    const [checkedPlaylists, setCheckedPlaylists] = useState([]);
 
 
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
@@ -91,6 +95,31 @@ const AddressTypeahead = () => {
         setDisplayRequests(event.target.checked);
         console.log(event.target.checked);
     };
+
+    const fetchPlaylists = async () => {
+        try {
+            const playlists = await GetPlaylistList();
+            setPlaylists(playlists);
+            setCheckedPlaylists(playlists.map(playlist => playlist.id)); // Check all playlists by default
+        } catch (error) {
+            console.error('Error fetching playlists:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPlaylists();
+    }, []);
+
+    const handleCheckboxChange = (playlistId) => {
+        setCheckedPlaylists((prevCheckedPlaylists) => {
+            if (prevCheckedPlaylists.includes(playlistId)) {
+                return prevCheckedPlaylists.filter(id => id !== playlistId);
+            } else {
+                return [...prevCheckedPlaylists, playlistId];
+            }
+        });
+    };
+
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -108,7 +137,7 @@ const AddressTypeahead = () => {
         } else {
             try {
                 setLoading(true);
-
+              
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
                     , theme
@@ -125,7 +154,7 @@ const AddressTypeahead = () => {
                     , hidePlaylist 
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
-                    
+                    , checkedPlaylists 
                     
                 );
                 setLoading(false);
@@ -168,6 +197,10 @@ const AddressTypeahead = () => {
             setAcceptingRequests(rowData.acceptingRequests)
             setDisplayRequests(rowData.displayRequests)
             setHidePlaylist(rowData.hidePlaylist)
+            // Set the checked playlists if they are available in rowData
+            if (rowData.checkedPlaylists) {
+                setCheckedPlaylists(rowData.checkedPlaylists);
+            }
         } else {
             // Reset input fields when rowData becomes null
             setVenueName('');
@@ -179,6 +212,7 @@ const AddressTypeahead = () => {
             setAcceptingRequests(false);
             setDisplayRequests(false);
             setHidePlaylist(false);
+            setCheckedPlaylists([]);
         }
     }, []);
     
@@ -310,6 +344,25 @@ const AddressTypeahead = () => {
                     />
                     <label htmlFor="hidePlaylist">Hide Available Playlists</label>
                 </div>
+
+                {!hidePlaylist && (
+                <div className="playlist-selection">
+                        <label style={{left: '20px'} }>Available Playlists:</label>
+                    <div className="playlist-checkboxes" >
+                        {playlists.map((playlist) => (
+                            <div key={playlist.id} className="request">
+                                <input
+                                    type="checkbox"
+                                    id={`playlist-${playlist.id}`}
+                                    checked={checkedPlaylists.includes(playlist.id)}
+                                    onChange={() => handleCheckboxChange(playlist.id)}
+                                />
+                                <label htmlFor={`playlist-${playlist.id}`}>{playlist.name}</label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                )}
 
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
                 {rowDataString && (

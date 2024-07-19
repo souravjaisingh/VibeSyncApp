@@ -35,7 +35,10 @@ function PaymentIndex() {
     const gstRate = 0.18;
     const gstAmount = Math.round(amount * gstRate);
     const totalAmountWithGst = amount + gstAmount;
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
+    const handleShow = () => setShowLoginModal(true);
+    const handleClose = () => setShowLoginModal(false);
 
     console.log(rowData);
 
@@ -535,10 +538,38 @@ function PaymentIndex() {
                     </div>
                 </form>
 
-                <div className='login-proposal'>
+                <div className='login-proposal' onClick={handleShow}>
                     <img className='login-img' src="images/log_in.png" />
                     <p>Login & Get 50% off instantly!</p>
                 </div>
+
+                {showLoginModal && (
+                    <div className="modal-overlay" onClick={handleClose}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <span className="modal-title">Login</span>
+                            </div>
+                            <div className="modal-body">
+                                <div class="input-container">
+                                <img src="images/user_image.png" alt="Placeholder" class="input-icon"/>
+                                    <input type="text" placeholder="Mobile Number*" className="input-field" />
+                                </div>
+                                <button className="get-otp-button" style={{ width: "37%",height:"19px", boxShadow: "none", padding: "8px", fontWeight:"700" }}>Get OTP</button>
+                                <div className="text-center " style={{ color: "#39125C", fontWeight:"600", marginTop:"5px", marginBottom:"3px" }}>Or Login with</div>
+                                <div className="auth-buttons">
+
+                                    <img src="images/g.png" className="g-icon" />
+                                    <img src="images/emailIcon.png" className="email-icon" />
+                                    
+                                </div>
+                                <div className="footer-links">
+                                    <a href="#" onClick={handleClose}>Create Account</a>
+                                    <a href="#" onClick={handleClose}>Forgot Password?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className='refund-info-footer'>
                     <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>

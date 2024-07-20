@@ -113,7 +113,7 @@ function PaymentIndex() {
         });
     }
     useEffect(() => {
-        setAmount(isSpecialAnnouncement ? rowData.minimumBid + 100 : rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBid*1.1): rowData.minimumBid);
 
         if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
             setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);

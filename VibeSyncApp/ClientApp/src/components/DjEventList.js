@@ -11,6 +11,7 @@ import './DjEventList.css';
 import { Live } from './Constants';
 import { UpdateEventDetails } from './services/EventsService'
 import { ListGroup } from 'react-bootstrap';
+import { useLoadingContext } from './LoadingProvider';
 export default function DjEventList() {
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
@@ -20,6 +21,7 @@ export default function DjEventList() {
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [isLive,setIsLive] = useState([]);
+    const { setLoading } = useLoadingContext();
 
     const [eventId, setEventId] = useState(null);
 
@@ -77,7 +79,9 @@ export default function DjEventList() {
         e.stopPropagation();
         let live_array_after_toggle = filteredData[key];
         live_array_after_toggle.eventStatus = live_array_after_toggle.eventStatus == Live? 'Not live':'Live';
+        setLoading(true);
         await UpdateEventDetails(live_array_after_toggle)
+        setLoading(false);
         navigate('/djhome')
         // // Handle toggle state changes
         // let live_toggle_rowData = filteredData[key];

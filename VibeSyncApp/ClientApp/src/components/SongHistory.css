@@ -237,14 +237,14 @@
     background-attachment: fixed;
     background-position: center;
 }
-.btn-payment-red{
-    background-color: red;
+.btn-payment-red {
+    background-color: #F7795D;
 }
-.btn-payment-green{
-    background-color: green;
+.btn-payment-green {
+    background-color: #5AC6A4;
 }
-.btn-payment-yellow{
-    background-color: yellow;
+.btn-payment-yellow {
+    background-color: #FFDE79;
 }
 .mic-announcement-message {
     white-space: normal;

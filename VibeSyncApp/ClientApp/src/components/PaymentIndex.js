@@ -8,6 +8,7 @@ import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
 import addNotification from 'react-push-notification';
+import GoogleLogin from './GoogleLogin';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -36,7 +37,11 @@ function PaymentIndex() {
     const gstAmount = Math.round(amount * gstRate);
     const totalAmountWithGst = amount + gstAmount;
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showGoogleLogin, setShowGoogleLogin] = useState(false);
 
+    const handleImageClick = () => {
+        setShowGoogleLogin(true); // Show GoogleLogin component when the image is clicked
+    };
     const handleShow = () => setShowLoginModal(true);
     const handleClose = () => setShowLoginModal(false);
 
@@ -557,14 +562,25 @@ function PaymentIndex() {
                                 <button className="get-otp-button" style={{ width: "37%",height:"19px", boxShadow: "none", padding: "8px", fontWeight:"700" }}>Get OTP</button>
                                 <div className="text-center " style={{ color: "#39125C", fontWeight:"600", marginTop:"5px", marginBottom:"3px" }}>Or Login with</div>
                                 <div className="auth-buttons">
-
-                                    <img src="images/g.png" className="g-icon" />
-                                    <img src="images/emailIcon.png" className="email-icon" />
+                                    <div>
+                                        <img src="images/g.png" className="g-icon"  onClick={handleImageClick}/>
+                                        
+                                    </div>
+                                    {showGoogleLogin && (
+                                        <GoogleLogin
+                                            isUser={{ isUser: true }} 
+                                            triggerLogin={(login) => login()} 
+                                            showButton={false} 
+                                        />
+                                    )}
+                                    <Link to='/loginForm' className='btn-mobile'>
+                                        <img src="images/emailIcon.png" className="email-icon" />
+                                    </Link>
                                     
                                 </div>
                                 <div className="footer-links">
-                                    <a href="#" onClick={handleClose}>Create Account</a>
-                                    <a href="#" onClick={handleClose}>Forgot Password?</a>
+                                    <a style={{ color: "#39125C" }} onClick={handleClose}>Create Account</a>
+                                    <a style={{ color: "#39125C" } } onClick={handleClose}>Forgot Password?</a>
                                 </div>
                             </div>
                         </div>

@@ -9,7 +9,7 @@ import { MyContext } from '../App';
 import { useLoadingContext } from './LoadingProvider';
 
 
-export default function GoogleLogin(isUser){
+export default function GoogleLogin({ isUser, triggerLogin, showButton }){
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
@@ -25,6 +25,13 @@ export default function GoogleLogin(isUser){
         onSuccess: (codeResponse) => setUser(codeResponse),
         onError: (error) => console.log('Login Failed:', error)
     });
+
+    useEffect(() => {
+        if (triggerLogin) {
+            triggerLogin(login);
+        }
+    }, [triggerLogin]);
+
     useEffect(
     () => {
         if (!(user.access_token==null || user.access_token==undefined)) {
@@ -86,13 +93,15 @@ export default function GoogleLogin(isUser){
     setProfile(null);
     };
     return(
-    <>
-        <div>
+        <>
+         {showButton && (
+            <div>
             <br />
             <br />
             {/* <p style={{fontFamily:'sans-serif'}}>Sign up to request a song</p> */}
             <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google   <span className="google-icon"></span></button>
-        </div>
+            </div>
+         )}
         {showErrorMessage && (
         <div className="err-message">
             You cannot impersonate different role!

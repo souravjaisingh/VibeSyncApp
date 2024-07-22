@@ -35,7 +35,7 @@ function Cards() {
         </i></p>
         <br></br>
 
-        <GoogleLogin isUser={!isUser} />
+              <GoogleLogin isUser={!isUser}  showButton={true} />
         <button onClick={handleAnonymousLogin} className='btn btn--outline btn--medium'>
           Request Anonymously
         </button>

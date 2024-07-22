@@ -1,25 +1,9 @@
 .cards {
-    padding: 4rem;
     background: #fff;
-    background-image: url("../../src/Resources/closeup-dj-working-blue-light.jpg");
+    background: linear-gradient(160deg, #d7defe 70%, #4C526C);
+    background-attachment: fixed;
     background-size: cover;
     text-align: center;
-}
-
-
-h1 {
-  text-align: center;
-  color: #fff;
-}
-
-.cards__container {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  max-width: 1120px;
-  width: 100%;
-  margin: 0 auto;
-  color: #fff;
 }
 
 .cards__wrapper {
@@ -31,8 +15,29 @@ h1 {
   margin-bottom: 24px;
 }
 
+
+
+h1 {
+  text-align: center;
+  color: #fff;
+}
+
+.cards__container {
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  color: #fff;
+}
+
+
+h1 {
+  text-align: center;
+  color: #fff;
+}
+
+
 .signup-link{
-  color: rgb(152, 171, 189);
+  color: #39125C;
 }
 
 .signup-label{
@@ -78,8 +83,6 @@ h1 {
   max-width: calc((100%) - 60px);
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
-  background-color: #1f98f4;
   box-sizing: border-box;
 }
 
@@ -116,31 +119,224 @@ Button{
   margin-top: 15px;
 }
 
-@media only screen and (min-width: 1200px) {
-  .content__blog__container {
-    width: 84%;
+
+
+
+
+@media only screen and (max-width: 500px){
+  .lander-footer-1{
+    display: flex !important;
   }
-}
-
-@media only screen and (min-width: 1024px) {
-  .cards__items {
-    display: flex;
+  .lander-footer-2{
+    display: flex !important;
   }
-}
-
-@media only screen and (max-width: 1024px) {
-  .cards__item {
-    margin-bottom: 2rem;
+  .cards__container{
+    display: block !important;
+    height: auto !important;
   }
-}
-/* UserLogin.css */
 
-/* Default background */
-.cards {
-  background-image: url('../Resources/dj1.jpg');
+  .tagline-header{
+    color: #fff !important;
+    font-size: 1rem !important;
+    text-shadow: 2px 2px #000000;
+  }
+  
+  .lander-header{
+    background: url('/images/lander_header_photo.png');
+    height: 300px !important;
+    background-size: 550px 500px !important;
+    background-position: 50% 100% !important;
+    background-repeat: no-repeat;
+    width: 100% !important;
+  }
+  .lander-main-content{
+    width: 100% !important;
+    height: auto !important;
+    background: url('/images/BGMusic.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: 0% 80% !important;
+    background-attachment: fixed !important;
+  }
+  .main-selection-content{
+
+  }
+
 }
 
-/* Background when isUser is true */
-.cards.isUserBackground {
-  background-image: url('../Resources/vibes10.jpg');
+.tagline-header{
+  color: #39125C;
+  font-size: 1.75rem;
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.lander-footer-1{
+  display: none;
+}
+.lander-footer-2{
+  display: none;
+}
+
+.lander-header{
+  width: 70%;
+}
+
+.cards__container{
+  display: flex;
+  height: 100vh;
+}
+
+.main-selection-content{
+  overflow: hidden;
+  background: linear-gradient();
+  margin: auto;
+}
+
+.main-selection-content p{
+  font-weight: 600;
+  color: #39125C;
+  font-size: 1rem;
+  margin: 0;
+  margin-top: 10px;
+}
+.req-anonymously-button{
+  color: #fff;
+  background-color: #39125C;
+  font-weight: 600;
+  padding: 5px 20px;
+  border-radius: 10px;
+  margin: 15px auto;
+  margin-bottom: 5px;
+}
+.choose-login-label{
+  margin-top: 0 !important;
+}
+.user-dj-toggle{
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  font-size: 1.75rem;
+  align-items: center;
+}
+.dj-user-toggle-img{
+  border-radius: 100%;
+  width: 5.5rem;
+  height: 5.5rem;
+  border: 0px solid #fff;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+.checked-dj-user{
+
+  border-width: 4px;
+}
+.dj-button-img{
+  background: url('/images/dj_button_bg.png');
+}
+.user-button-img{
+  background: url('/images/user_button_bg.png');
+}
+.google-email-login-container{
+  display: flex;
+  gap:30px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+.email-icon{
+  width:50px;
+  align-items: center;
+}
+.lander-footer-1{
+  margin-top: 10px;
+}
+.lander-footer-1-text{
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
+  transform: translateX(-20%);
+  text-shadow: 1px 0px #fd5eab, -1px 0px #5aadfa;
+  /* text-shadow: -1px -1px #0011ff; */
+}
+
+.lander-footer-1 img{
+  width: 50%;
+  transform: translateX(-20%);
+}
+
+.lander-footer-2{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.lander-footer-2-text{
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 1rem;
+  transform: translateX(20%);
+  text-shadow: 1px 1px #000000;
+  /* text-shadow: -1px -1px #0011ff; */
+}
+
+.lander-footer-2 img{
+  width: 60%;
+  transform: translateX(20%);
+
+}
+
+.create-forgot-creds-container{
+  color: #39125C !important;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.lander-header{
+  background: url('/images/lander_header_photo.png');
+  height: 300px;
+  background-size: 700px 600px;
+  background-position: 50% 190%;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+.lander-main-content{
+  display: flex;
+  align-items: center;
+  
+  height: 100vh;
+  width: 30%;
+  background: linear-gradient(to right bottom,#fff,#d7defe);
+}
+
+.get-otp-button{
+  color: #39125C;
+  background-color: #fff;
+  width: 150px;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 10px;
+  border: none;
+  font-size: 1.25rem;
+  padding: 5px 15px;
+  font-weight: 600;
+}
+
+.mobile-number-container{
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr)); 
+
+}
+
+.mobile-number-input{
+  width: 200px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
 }

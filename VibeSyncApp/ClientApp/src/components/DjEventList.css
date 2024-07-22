@@ -14,6 +14,7 @@
 .dj-home-dj-info-container{
     display: flex;
     margin: 15px;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     color: #39125C;
@@ -28,7 +29,7 @@
 .dj-home-event-card{
     display: flex;
     margin: 10px;
-    
+    max-width: 24rem;
     margin-top: 20px;
     height: 5rem;
     border-radius: 15px;

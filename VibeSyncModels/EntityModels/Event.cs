@@ -34,6 +34,7 @@ namespace VibeSyncModels.EntityModels
         public bool DisplayRequests { get; set; }
         public bool HidePlaylist { get; set; }
         public int? MinimumBidForSpecialRequest { get; set; }
+        public string Playlists { get; set; }
 
         public virtual Dj Dj { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }

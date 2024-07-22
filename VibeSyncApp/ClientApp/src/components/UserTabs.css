@@ -1,6 +1,6 @@
 .tabs {
     display: flex;
-    height: 20px;
+    /* height: 20px; */
 }
 
 .tab {
@@ -27,9 +27,8 @@
 
 .panel {
     display: none;
-    background-color: aliceblue !important;
     padding: 10px;
-    margin-top: 55px;
+    /* margin-top: 55px; */
 }
 
 .panel.active {

@@ -11,6 +11,7 @@ import { useLoadingContext } from './LoadingProvider';
 import { RefundPayment } from './services/PaymentService';
 import addNotification from 'react-push-notification';
 import { isMobile } from 'react-device-detect';
+import { UpdateEventDetails } from './services/EventsService';
 
 
 export default function DjLiveSongs() {
@@ -31,7 +32,7 @@ export default function DjLiveSongs() {
     const [rejectedRecords, setRejectedRecords] = useState([]);
     const [isNewRequest, setIsNewRequest] = useState(false); // State to track new requests
     const lastHighestRecordIdRef = useRef(0);
-
+    const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA'))? true:false);
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -82,6 +83,15 @@ export default function DjLiveSongs() {
             })
         }
     }
+
+    const handleLiveToggle = async()=>{
+        // Handle toggle state changes
+        let live_toggle_rowData = rowData;
+        live_toggle_rowData.eventStatus = !isLive?'Live':'Not live';
+        setIsLive(!isLive);
+        await UpdateEventDetails(live_toggle_rowData);
+        navigate('/djhome')
+    };
 
     useEffect(() => {
         if ((rowData && rowData.id) || localStorage.getItem('eventId') != null) {
@@ -162,6 +172,8 @@ export default function DjLiveSongs() {
     //     });
     //     setRemainingTimes(updatedTimes);
     // }, [userHistory, rejectedRecords]); // Add rejectedRecords to the dependency array
+
+
 
     const handleAcceptRequest = async (record) => {
         try {
@@ -304,6 +316,30 @@ export default function DjLiveSongs() {
             console.error('Error updating stop incoming requests:', error);
         }
     };
+    const toggleLiveAPI = async () => {
+        try {
+            // Call your API here with the updated toggle value
+            const res = await eventDetailsUpsertHelper(
+                localStorage.getItem('userId'),
+                'default',
+                rowData.eventDescription,
+                rowData.venue,
+                rowData.eventStartDateTime,
+                rowData.eventEndDateTime,
+                12.123456, // Modify once Google Maps API gets implemented
+                44.765432,
+                rowData.minimumBid,
+                true,
+                rowData.id,
+                isLive?Live : LiveButNotAcceptingRequests  // Pass the toggle value to the API
+            );
+            console.log(res);
+        } catch (error) {
+            setError(true);
+            setErrorMessage(error.message);
+            console.error('Error updating stop incoming requests:', error);
+        }
+    };
     const handleToggleClick = () => {
         setLoading(true);
         setStopIncomingRequests(!stopIncomingRequests);
@@ -325,22 +361,18 @@ export default function DjLiveSongs() {
         <div className='song-history-container'>
             <div className='bg-music-dj-side'>
                 <div className='dj-side-song-req-header'>
-                    {/* <a className="edit-profile-link" onClick={handleEditProfileClick}>Edit Event</a> */}
                     <div className='label-song-requests'>SONG REQUESTS</div>
-                    <div className="toggle-container">
-                        <label htmlFor="liveToggle">LIVE</label>
-                        <input
-                            type="checkbox"
-                            id="liveToggle"
-                            checked={stopIncomingRequests}
-                            onChange={handleToggleClick}
-                            style={{ display: 'none' }} // hide the actual checkbox
-                        />
-                        <div
-                            className={`toggle-slider ${stopIncomingRequests ? 'active' : ''}`}
-                            onClick={handleToggleClick}
-                        >
-                            <div className={`slider-thumb ${stopIncomingRequests ? 'active' : ''}`} />
+                    <div className='label-song-requests'>{rowData.eventName}</div>
+                    <div className='update-event-live-link'>
+                        <a className="edit-profile-link" onClick={handleEditProfileClick}>UPDATE EVENT</a>
+                        <div className="toggle-container">
+
+                            <label htmlFor="liveToggle">LIVE</label>
+                            <div className={`toggle-slider ${isLive ? 'active' : ''}`} onClick={handleLiveToggle}>
+                                <div className={`slider-thumb ${isLive ? 'active' : ''}`} />
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -349,282 +381,282 @@ export default function DjLiveSongs() {
                     <div className='song-history-table'>
 
                         {userHistory.map((result, index) => {
-                            return(<>
-                                {calculateRemainingTime(result.paymentDateTime)<10?(<>
-                                
+                            return (<>
+                                {calculateRemainingTime(result.paymentDateTime) < 10 ? (<>
+
                                     <div key={index} className='song-announcement-request-container-red'>
-                                <div className='request-announcement-amount'>
-                                    ₹{result.totalAmount}
-                                </div>
-                                
-                                {result.micAnnouncement ? (
-                                    <>
-                                     <div className='dj-side-img-text'>
-                                        <div>
-                                            <img
-                                                src={`${process.env.PUBLIC_URL}/images/micDark.png`}
-                                                alt="Microphone Icon"
-                                                style={{ width: '45px', height: '45px' }}
-                                                className='rounded-circle'
-                                            />
+                                        <div className='request-announcement-amount'>
+                                            ₹{result.totalAmount}
                                         </div>
-                                        <div colSpan="2">
-                                            <p className='dj-side-song-req-title' style={{ fontSize: '12px' }}>Special Announcement</p>
-                                            <p className='dj-side-song-req-text' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
-                                        </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className='dj-side-img-text'>
-                                            <div>
-                                                <img
-                                                    src={result.image}
-                                                    alt={`Album Cover for ${result.albumName}`}
-                                                    className='img-song-req-dj-side'
-                                                />
-                                            </div>
-                                            <div>
-                                                <p className='dj-side-song-req-title'>{result.songName}</p>
-                                                <p className='dj-side-song-req-text'>{result.artistName}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+
+                                        {result.micAnnouncement ? (
+                                            <>
+                                                <div className='dj-side-img-text'>
+                                                    <div>
+                                                        <img
+                                                            src={`${process.env.PUBLIC_URL}/images/micDark.png`}
+                                                            alt="Microphone Icon"
+                                                            style={{ width: '45px', height: '45px' }}
+                                                            className='rounded-circle'
+                                                        />
+                                                    </div>
+                                                    <div colSpan="2">
+                                                        <p className='dj-side-song-req-title' style={{ fontSize: '12px' }}>Special Announcement</p>
+                                                        <p className='dj-side-song-req-text' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className='dj-side-img-text'>
+                                                    <div>
+                                                        <img
+                                                            src={result.image}
+                                                            alt={`Album Cover for ${result.albumName}`}
+                                                            className='img-song-req-dj-side'
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <p className='dj-side-song-req-title'>{result.songName}</p>
+                                                        <p className='dj-side-song-req-text'>{result.artistName}</p>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
 
 
-                                {result && result.songStatus === 'Pending' && (
-                                    <td>
-                                        <div className='button-container'>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-                                                <button
-                                                    onClick={() => handleAcceptRequest(result)}
-                                                    className='accept-button-yes'
-                                                >
-                                                    ✔
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='close-button-X'
-                                                >X
-                                                </button>
-                                            </div>
-                                            <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
-                                                    <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                )}
+                                        {result && result.songStatus === 'Pending' && (
+                                            <td>
+                                                <div className='button-container'>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+                                                        <button
+                                                            onClick={() => handleAcceptRequest(result)}
+                                                            className='accept-button-yes'
+                                                        >
+                                                            ✔
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleRejectRequest(result)}
+                                                            className='close-button-X'
+                                                        >X
+                                                        </button>
+                                                    </div>
+                                                    <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                        <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        )}
 
-                                {result && result.songStatus === 'Accepted' && (
-                                    <td>
-                                        <div className='button-container'>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
-                                                <button
-                                                    onClick={() => handleMarkAsPlayed(result)}
-                                                    className='btn-primary-mark-as-played'
-                                                >
-                                                    MARK PLAYED
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='close-button-X'
-                                                >X
-                                                </button>
-                                            </div>
-                                            <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
-                                                    <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                )}
-                            </div>
-                                
-                                </>):
-                                    calculateRemainingTime(result.paymentDateTime)<15?(<>
+                                        {result && result.songStatus === 'Accepted' && (
+                                            <td>
+                                                <div className='button-container'>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
+                                                        <button
+                                                            onClick={() => handleMarkAsPlayed(result)}
+                                                            className='btn-primary-mark-as-played'
+                                                        >
+                                                            MARK PLAYED
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleRejectRequest(result)}
+                                                            className='close-button-X'
+                                                        >X
+                                                        </button>
+                                                    </div>
+                                                    <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                        <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        )}
+                                    </div>
+
+                                </>) :
+                                    calculateRemainingTime(result.paymentDateTime) < 15 ? (<>
                                         <div key={index} className='song-announcement-request-container-yellow'>
-                                <div className='request-announcement-amount'>
-                                    ₹{result.totalAmount}
-                                </div>
-                                
-                                {result.micAnnouncement ? (
-                                    <>
-                                         <div className='dj-side-img-text'>
-                                        <div>
-                                            <img
-                                                src={`${process.env.PUBLIC_URL}/images/micDark.png`}
-                                                alt="Microphone Icon"
-                                                style={{ width: '45px', height: '45px' }}
-                                                className='rounded-circle'
-                                            />
-                                        </div>
-                                        <div colSpan="2">
-                                            <p className='dj-side-song-req-title' style={{ fontSize: '12px' }}>Special Announcement</p>
-                                            <p className='dj-side-song-req-text' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
-                                        </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className='dj-side-img-text'>
-                                            <div>
-                                                <img
-                                                    src={result.image}
-                                                    alt={`Album Cover for ${result.albumName}`}
-                                                    className='img-song-req-dj-side'
-                                                />
+                                            <div className='request-announcement-amount'>
+                                                ₹{result.totalAmount}
                                             </div>
-                                            <div>
-                                                <p className='dj-side-song-req-title'>{result.songName}</p>
-                                                <p className='dj-side-song-req-text'>{result.artistName}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+
+                                            {result.micAnnouncement ? (
+                                                <>
+                                                    <div className='dj-side-img-text'>
+                                                        <div>
+                                                            <img
+                                                                src={`${process.env.PUBLIC_URL}/images/micDark.png`}
+                                                                alt="Microphone Icon"
+                                                                style={{ width: '45px', height: '45px' }}
+                                                                className='rounded-circle'
+                                                            />
+                                                        </div>
+                                                        <div colSpan="2">
+                                                            <p className='dj-side-song-req-title' style={{ fontSize: '12px' }}>Special Announcement</p>
+                                                            <p className='dj-side-song-req-text' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className='dj-side-img-text'>
+                                                        <div>
+                                                            <img
+                                                                src={result.image}
+                                                                alt={`Album Cover for ${result.albumName}`}
+                                                                className='img-song-req-dj-side'
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p className='dj-side-song-req-title'>{result.songName}</p>
+                                                            <p className='dj-side-song-req-text'>{result.artistName}</p>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
 
 
-                                {result && result.songStatus === 'Pending' && (
-                                    <td>
-                                        <div className='button-container'>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-                                                <button
-                                                    onClick={() => handleAcceptRequest(result)}
-                                                    className='accept-button-yes'
-                                                >
-                                                    ✔
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='close-button-X'
-                                                >X
-                                                </button>
-                                            </div>
-                                            <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
-                                                    <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                )}
+                                            {result && result.songStatus === 'Pending' && (
+                                                <td>
+                                                    <div className='button-container'>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+                                                            <button
+                                                                onClick={() => handleAcceptRequest(result)}
+                                                                className='accept-button-yes'
+                                                            >
+                                                                ✔
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleRejectRequest(result)}
+                                                                className='close-button-X'
+                                                            >X
+                                                            </button>
+                                                        </div>
+                                                        <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                            <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            )}
 
-                                {result && result.songStatus === 'Accepted' && (
-                                    <td>
-                                        <div className='button-container'>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
-                                                <button
-                                                    onClick={() => handleMarkAsPlayed(result)}
-                                                    className='btn-primary-mark-as-played'
-                                                >
-                                                    MARK PLAYED
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='close-button-X'
-                                                >X
-                                                </button>
-                                            </div>
-                                            <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
-                                                    <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
-                                            </div>
+                                            {result && result.songStatus === 'Accepted' && (
+                                                <td>
+                                                    <div className='button-container'>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
+                                                            <button
+                                                                onClick={() => handleMarkAsPlayed(result)}
+                                                                className='btn-primary-mark-as-played'
+                                                            >
+                                                                MARK PLAYED
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleRejectRequest(result)}
+                                                                className='close-button-X'
+                                                            >X
+                                                            </button>
+                                                        </div>
+                                                        <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                            <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            )}
                                         </div>
-                                    </td>
-                                )}
-                            </div>
-                                    </>):(<>
-                                    
+                                    </>) : (<>
+
                                         <div key={index} className='song-announcement-request-container'>
-                                <div className='request-announcement-amount'>
-                                    ₹{result.totalAmount}
-                                </div>
-                                
-                                {result.micAnnouncement ? (
-                                    <>
-                                     <div className='dj-side-img-text'>
-                                        <div>
-                                            <img
-                                                src={`${process.env.PUBLIC_URL}/images/micDark.png`}
-                                                alt="Microphone Icon"
-                                                style={{ width: '45px', height: '45px' }}
-                                                className='rounded-circle'
-                                            />
-                                        </div>
-                                        <div colSpan="2">
-                                            <p className='dj-side-song-req-title' style={{ fontSize: '12px' }}>Special Announcement</p>
-                                            <p className='dj-side-song-req-text' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
-                                        </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className='dj-side-img-text'>
-                                            <div>
-                                                <img
-                                                    src={result.image}
-                                                    alt={`Album Cover for ${result.albumName}`}
-                                                    className='img-song-req-dj-side'
-                                                />
+                                            <div className='request-announcement-amount'>
+                                                ₹{result.totalAmount}
                                             </div>
-                                            <div>
-                                                <p className='dj-side-song-req-title'>{result.songName}</p>
-                                                <p className='dj-side-song-req-text'>{result.artistName}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+
+                                            {result.micAnnouncement ? (
+                                                <>
+                                                    <div className='dj-side-img-text'>
+                                                        <div>
+                                                            <img
+                                                                src={`${process.env.PUBLIC_URL}/images/micDark.png`}
+                                                                alt="Microphone Icon"
+                                                                style={{ width: '45px', height: '45px' }}
+                                                                className='rounded-circle'
+                                                            />
+                                                        </div>
+                                                        <div colSpan="2">
+                                                            <p className='dj-side-song-req-title' style={{ fontSize: '12px' }}>Special Announcement</p>
+                                                            <p className='dj-side-song-req-text' style={{ fontSize: '10px' }}>{result.micAnnouncement}</p>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className='dj-side-img-text'>
+                                                        <div>
+                                                            <img
+                                                                src={result.image}
+                                                                alt={`Album Cover for ${result.albumName}`}
+                                                                className='img-song-req-dj-side'
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p className='dj-side-song-req-title'>{result.songName}</p>
+                                                            <p className='dj-side-song-req-text'>{result.artistName}</p>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
 
 
-                                {result && result.songStatus === 'Pending' && (
-                                    <td>
-                                        <div className='button-container'>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-                                                <button
-                                                    onClick={() => handleAcceptRequest(result)}
-                                                    className='accept-button-yes'
-                                                >
-                                                    ✔
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='close-button-X'
-                                                >X
-                                                </button>
-                                            </div>
-                                            <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
-                                                    <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                )}
+                                            {result && result.songStatus === 'Pending' && (
+                                                <td>
+                                                    <div className='button-container'>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+                                                            <button
+                                                                onClick={() => handleAcceptRequest(result)}
+                                                                className='accept-button-yes'
+                                                            >
+                                                                ✔
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleRejectRequest(result)}
+                                                                className='close-button-X'
+                                                            >X
+                                                            </button>
+                                                        </div>
+                                                        <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                            <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            )}
 
-                                {result && result.songStatus === 'Accepted' && (
-                                    <td>
-                                        <div className='button-container'>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
-                                                <button
-                                                    onClick={() => handleMarkAsPlayed(result)}
-                                                    className='btn-primary-mark-as-played'
-                                                >
-                                                    MARK PLAYED
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRejectRequest(result)}
-                                                    className='close-button-X'
-                                                >X
-                                                </button>
-                                            </div>
-                                            <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
-                                                    <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
-                                            </div>
+                                            {result && result.songStatus === 'Accepted' && (
+                                                <td>
+                                                    <div className='button-container'>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
+                                                            <button
+                                                                onClick={() => handleMarkAsPlayed(result)}
+                                                                className='btn-primary-mark-as-played'
+                                                            >
+                                                                MARK PLAYED
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleRejectRequest(result)}
+                                                                className='close-button-X'
+                                                            >X
+                                                            </button>
+                                                        </div>
+                                                        <div className='timer-container' style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>
+                                                            <div style={{ fontSize: '12px', fontWeight: '700' }}>⏰ {calculateRemainingTime(result.paymentDateTime)} Mins Left</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            )}
                                         </div>
-                                    </td>
-                                )}
-                            </div>
-                                    
+
                                     </>)
-                                
+
                                 }
-                                </>
+                            </>
                             )
-                            
+
                         })}
                     </div>
                 ) : (

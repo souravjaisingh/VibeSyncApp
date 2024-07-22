@@ -121,7 +121,7 @@ function PaymentIndex() {
         });
     }
     useEffect(() => {
-        setAmount(isSpecialAnnouncement ? rowData.minimumBid + 100 : rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBid*1.1): rowData.minimumBid);
 
         if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
             setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
@@ -382,6 +382,9 @@ function PaymentIndex() {
                                     if (localError) setLocalError(''); // Clear error message on typing
                                 }} // Update the mic announcement message
                                 />
+                                <div className='subheading-payment'>
+                                    <img src="images/disclaimerIcon.png" className='disclaimer-icon' />
+                                    Played within 30 mins or refund </div>
                                    {localError && <p style={{ color: 'red', fontWeight: 'bold' ,textAlign : 'center' }}>{localError}</p>}
                             </>
                         )}
@@ -408,6 +411,7 @@ function PaymentIndex() {
                                         <input type="file" id="file-upload" />
                                     </div>
                                 </div>
+
                             </>
                         )}
                     </div>
@@ -459,7 +463,7 @@ function PaymentIndex() {
                                 Choose the Tip
                             </div>
                             <div className='tip-amount-input-btns'>
-                                <div onClick={() => { setAmount(amount - 10) }} className='decrease-tip-button'>-</div>
+                                <div onClick={() => { if (amount > 1) { setAmount(amount - 10); } }} className='decrease-tip-button'>-</div>
                                 <input
                                     className='amount-inputfield'
                                     type="number"
@@ -588,7 +592,7 @@ function PaymentIndex() {
                 )}
 
                 <div className='refund-info-footer'>
-                    <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>
+                    <p>~ If the DJ decline your request, a refund will be issued to your original payment method.</p>
                     <p>~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</p>
                 </div>
                 {/* Render the success message if showSuccessMessage is true */}

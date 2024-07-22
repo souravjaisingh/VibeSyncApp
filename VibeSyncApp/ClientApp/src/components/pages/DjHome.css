@@ -1,5 +1,5 @@
 .DjHome {
-    background-color: #f0f7f9;
+    background: linear-gradient(160deg, #d7defe 70%, #4C526C);
 }
 
 .center-button {
@@ -19,19 +19,18 @@
 }
 
 .btn-medium {
-    padding: 8px 16px;
-    font-size: 20px;
-    border: ridge;
+    font-size: 12px;
 }
 
 /* Media query for responsive button size */
 @media (max-width: 768px) {
     .btn-medium {
-        padding: 3px 8px;
-        font-size: 12px;
+        font-size: 10px;
     }
 }
 .toolbar-button{
     border-radius: 20px;
-    background-color: rgb(192 217 245 / 25%);
+    background-color: #39125C;
+    color: #fff;
+    padding: 5px 10px;
 }

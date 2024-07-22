@@ -8,7 +8,10 @@ import SongSearch from './SongSearch';
 import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
 import './DjEventList.css';
-
+import { Live } from './Constants';
+import { UpdateEventDetails } from './services/EventsService'
+import { ListGroup } from 'react-bootstrap';
+import { useLoadingContext } from './LoadingProvider';
 export default function DjEventList() {
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
@@ -17,6 +20,8 @@ export default function DjEventList() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [isLive,setIsLive] = useState([]);
+    const { setLoading } = useLoadingContext();
 
     const [eventId, setEventId] = useState(null);
 
@@ -56,6 +61,8 @@ export default function DjEventList() {
         }
     };
 
+
+
     async function getEventsData() {
         try {
             const res = await GetDjEvents(localStorage.getItem('userId'));
@@ -67,11 +74,39 @@ export default function DjEventList() {
         }
     }
 
+
+    const handleLiveToggle = async(e,key)=>{
+        e.stopPropagation();
+        let live_array_after_toggle = filteredData[key];
+        live_array_after_toggle.eventStatus = live_array_after_toggle.eventStatus == Live? 'Not live':'Live';
+        setLoading(true);
+        await UpdateEventDetails(live_array_after_toggle)
+        setLoading(false);
+        navigate('/djhome')
+        // // Handle toggle state changes
+        // let live_toggle_rowData = filteredData[key];
+        // live_toggle_rowData.eventStatus = !isLive[key]?'Live':'Not live';
+        // let live_array_after_toggle = isLive;
+        // live_array_after_toggle[key] = !live_array_after_toggle[key];
+        // setIsLive(live_array_after_toggle);
+        // await UpdateEventDetails(live_array_after_toggle);
+    };
+
+
+
     useEffect(() => {
         getEventsData();
     }, [])
     return (
         <>
+            {filteredData.length > 0 ? (<>
+                <div className='dj-home-dj-info-container'>
+                    <img src={filteredData[0].djPhoto} className='dj-home-dj-photo' />
+                    <div>{filteredData[0].djName}</div>
+                </div>
+            </>) : (<></>)}
+
+
             <MDBInput
                 type="text"
                 value={searchQuery}
@@ -80,63 +115,47 @@ export default function DjEventList() {
             />
             {filteredData.length === 0 ? (
                 <p style={{ color: "red" }}>You don't have any upcoming events as of now.</p>
-            ) : (
-                <MDBTable align="middle" responsive hover>
-                    <MDBTableHead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Event Name</th>
-                            <th scope="col">Venue</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </MDBTableHead>
-                    <MDBTableBody>
-                        {filteredData.map((item) => (
-                            <tr onClick={(e) => handleRowClick(item)}>
-                                <td>
-                                    <div className="d-flex align-items-center">
-                                        <img
-                                            src={item.djPhoto}
-                                            alt=""
-                                            style={{ width: "45px", height: "45px" }}
-                                            className="rounded-circle"
-                                        />
-                                        <div className="ms-3">
-                                            <p className="fw-bold mb-1">{item.djName}</p>
-                                            <p className="text-muted mb-0">{item.djDescription}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p className="fw-normal mb-1">{item.eventName}</p>
-                                </td>
-                                <td>
-                                    <p className="fw-normal mb-1">{item.venue}</p>
-                                </td>
-                                <td>
-                                    <MDBBadge color={item.eventStatus === 'Not live' ? 'warning' : 'success'} pill>
-                                        {item.eventStatus === 'Not live' ? 'Upcoming' : 'Live'}
-                                    </MDBBadge>
-                                    <br />
-                                    <a
-                                        className='qr-code'
-                                        href="#!"
-                                        onClick={(e) => {
-                                            e.preventDefault(); // Prevent the default anchor behavior
+            ) : (<div>
 
-                                            e.currentTarget === e.target && openModal(e, item); // Call your openModal function
-                                        }}
-                                    >
-                                        QR Code
-                                        {/* <button className="btn btn--primary btn--medium btn-pay">Show QR Code</button> */}
-                                    </a>
-                                    <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} eventId={eventId} />
 
-                                </td>
-                            </tr>
-                        ))}
-                    </MDBTableBody>
-                </MDBTable>
+                {filteredData.map((item,key) => (
+                    <div className='dj-home-event-card' onClick={(e) => handleRowClick(item)}>
+
+                        <div className='dj-home-event-name'>
+                            {item.eventName}
+                        </div>
+                        <div className='dj-home-event-venue'>
+                            {item.venue}
+                        </div>
+                        <div className='dj-home-qr-live-toggle'>
+                            <div className="dj-home-toggle-container">
+
+                                <label htmlFor="liveToggle">LIVE</label>
+                                <div className={`dj-home-toggle-slider ${item.eventStatus==Live ? 'active' : ''}`} onClick={(e)=>handleLiveToggle(e,key)}>
+                                    <div className={`dj-home-slider-thumb ${item.eventStatus==Live ? 'active' : ''}`} />
+                                </div>
+
+
+                            </div>
+                            <a
+                                className='qr-code'
+                                href="#!"
+                                onClick={(e) => {
+                                    e.preventDefault(); // Prevent the default anchor behavior
+
+                                    e.currentTarget === e.target && openModal(e, item); // Call your openModal function
+                                }}
+                            >
+                                GET QR Code
+                                {/* <button className="btn btn--primary btn--medium btn-pay">Show QR Code</button> */}
+                            </a>
+                            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} eventId={eventId} />
+                        </div>
+
+
+                    </div>
+                ))}
+            </div>
             )}
         </>
     );

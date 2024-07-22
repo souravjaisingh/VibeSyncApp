@@ -107,7 +107,8 @@
 }
 
 .amount-inputfield {
-    border: 2px solid #59b0ef; /* Pink color */
+    width : 100px;
+    border: 2px solid #59b0ef; 
     border-radius: 15px;
     padding: 3px 10px; /* Adjust padding as needed */
     width: 6rem;
@@ -388,13 +389,12 @@
 }
 
 
-.amount-selection-division{
-    margin:15px;
-    padding:20px;
-    background-color: rgba(255, 255, 255, 0.2);
+.amount-selection-division {
+    margin: 15px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.57);
     border-radius: 10px;
     padding-bottom: 0;
-
 }
 
 .minimum-bid-container{
@@ -420,6 +420,7 @@
 }
 
 .tip-amount-section{
+    width : 105%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -558,26 +559,27 @@
 
     .promocode span {
         margin-right: 10px;
-        margin-left : 7px;/* Adjust spacing between "Promocode" and input */
+        margin-left : 4px;/* Adjust spacing between "Promocode" and input */
     }
 
     .promocode input {
+        margin-bottom : 7px;
         font-weight: 700;
         text-align: center;
         background-color: #ede8e8;
         border: 1px solid #39125C;
         border-radius: 4px;
         font-size: 15px;
-        padding: 5px;
-        width: 150px;
+        padding: 0px;
+        width: 122px;
     }
 
     .promocode .apply-btn {
-        margin-top: -2px;
+        margin-top: -7px;
         background-color: #39125C;
         color: white;
         border-radius: 13px;
-        padding: 5px 10px; /* Adjust padding as needed */
+        padding: 0px 10px; /* Adjust padding as needed */
         cursor: pointer;
         margin-left: 10px; /* Adjust spacing between input and button */
     }

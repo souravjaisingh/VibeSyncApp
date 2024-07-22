@@ -93,15 +93,15 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton }){
     setProfile(null);
     };
     return(
-        <>
-         {showButton && (
-            <div>
-            <br />
-            <br />
+
+    <>
+  {showButton && (
+        <div>
             {/* <p style={{fontFamily:'sans-serif'}}>Sign up to request a song</p> */}
-            <button className='btn btn--outline btn--medium' onClick={() => login()}>Sign in with Google   <span className="google-icon"></span></button>
-            </div>
-         )}
+            <div className='google-icon-container' onClick={() => login()}><span className="google-icon"></span></div>
+        </div>
+ )}
+
         {showErrorMessage && (
         <div className="err-message">
             You cannot impersonate different role!

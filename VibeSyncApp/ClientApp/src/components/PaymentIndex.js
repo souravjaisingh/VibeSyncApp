@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useState } from 'react';
+﻿import React, { useContext, useEffect, useState} from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
@@ -9,6 +9,8 @@ import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
 import addNotification from 'react-push-notification';
 import GoogleLogin from './GoogleLogin';
+import { useLoadingContext } from './LoadingProvider';
+import { loginUserHelper } from '../Helpers/UserHelper';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -38,12 +40,82 @@ function PaymentIndex() {
     const totalAmountWithGst = amount + gstAmount;
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showGoogleLogin, setShowGoogleLogin] = useState(false);
+    const [loginMethod, setLoginMethod] = useState('mobile'); // State to track the login method
+    const [email, setEmail] = useState('');
+    const [emailFocused, setEmailFocused] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordFocused, setPasswordFocused] = useState(false);
+    const [loginError, setLoginError] = useState(null);
+    const { setLoading } = useLoadingContext();
 
     const handleImageClick = () => {
-        setShowGoogleLogin(true); // Show GoogleLogin component when the image is clicked
+        setShowGoogleLogin(prevState => !prevState); // Toggle Google login visibility
     };
+
     const handleShow = () => setShowLoginModal(true);
-    const handleClose = () => setShowLoginModal(false);
+
+    const handleClose = () => {
+        setShowLoginModal(false);
+        setLoginMethod('mobile'); // Reset to mobile login when closing the modal
+        setShowGoogleLogin(false);
+        setEmail('');
+        setPassword('');
+        setLoginError(null);
+    };
+
+    const handleEmailIconClick = () => {
+        setLoginMethod(prevMethod => prevMethod === 'email' ? 'mobile' : 'email'); // Toggle between email and mobile login
+        setShowGoogleLogin(false); 
+    };
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        if (id === "email") {
+            setEmail(value);
+        }
+        if (id === "password") {
+            setPassword(value);
+        }
+    }
+
+    const handleLogin = async () => {
+        setLoginError(false);
+        try {
+            if (!email || !password) {
+                setLoginError(true);
+                return;
+            }
+
+            setLoading(true);
+            const response = await loginUserHelper(email, password);
+            setLoading(false);
+
+            if (response && response.isUser === true) {
+                localStorage.setItem('userId', response.id);
+                localStorage.setItem('isUser', true);
+                if (localStorage.getItem('redirectUrl')) {
+                    setTimeout(() => {
+                        const redirectUrl = localStorage.getItem('redirectUrl');
+                        navigate(redirectUrl);
+                    }, 0);
+                } else {
+                    navigate('/userhome');
+                }
+            } else if (response && response.isUser === false) {
+                localStorage.setItem('userId', response.id);
+                localStorage.setItem('isUser', false);
+                navigate('/djhome');
+            } else {
+                // If response indicates an error
+                setLoginError(true);
+            }
+        } catch (error) {
+            setLoginError(true); // Show login error message
+            setErrorMessage('Incorrect email or password.'); // Update the error message
+            setLoading(false);
+        }
+    }
+
 
     console.log(rowData);
 
@@ -62,19 +134,7 @@ function PaymentIndex() {
             console.error('Error checking promo code availability:', error);
         }
     };
-    // useEffect(() => {
-    //     // Check promo code availability when component mounts
-    //     checkPromoCodeAvailability();
-    // }, []);
-
-    //useEffect(() => {
-    //    console.log("RowData: ", rowData);
-    //    if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
-    //        console.log("Setting IsSpecialAnnouncement: ", rowData.IsSpecialAnnouncement);
-    //        setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
-    //    }
-    //}, [rowData]);
-
+    
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -555,12 +615,36 @@ function PaymentIndex() {
                                 <span className="modal-title">Login</span>
                             </div>
                             <div className="modal-body">
-                                <div class="input-container">
-                                <img src="images/user_image.png" alt="Placeholder" class="input-icon"/>
-                                    <input type="text" placeholder="Mobile Number*" className="input-field" />
-                                </div>
-                                <button className="get-otp-button" style={{ width: "37%",height:"19px", boxShadow: "none", padding: "8px", fontWeight:"700" }}>Get OTP</button>
-                                <div className="text-center " style={{ color: "#39125C", fontWeight:"600", marginTop:"5px", marginBottom:"3px" }}>Or Login with</div>
+                                {loginMethod === 'mobile' ? (
+                                    <>
+                                        <div className="input-container">
+                                            <img src="images/user_image.png" alt="Placeholder" className="input-icon" />
+                                            <input type="text" placeholder="Mobile Number*" className="input-field" />
+                                        </div>
+                                        <button className="get-otp-button" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
+                                    </>
+                                ) : (
+                                        <>
+                                            <div className="email">
+                                                {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
+                                                {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : null}
+                                                <div className="input-container">
+                                                    {!emailFocused && !email && (
+                                                        <img src="images/emailIcon.png" alt="Email" className="input-icon" />
+                                                    )}
+                                                    <input required type="email" id="email" className='input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
+                                                </div>
+                                                <div className="input-container">
+                                                    {!passwordFocused && !password && (
+                                                    <img src="images/password_lock.png" alt="Password" className="input-icon" />
+                                                    )}
+                                                    <input required type="password" id="password" className='input-field' value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
+                                                 </div>
+                                                <button onClick={handleLogin} type="submit" className="btn btn--primary btn--medium" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Login</button>
+                                            </div>
+                                        </>
+                                )}
+                                <div className="text-center " style={{ color: "#39125C", fontWeight: "600", marginTop: "5px", marginBottom: "3px" }}>Or Login with</div>
                                 <div className="auth-buttons">
                                     <div>
                                         <img src="images/g.png" className="g-icon"  onClick={handleImageClick}/>
@@ -573,10 +657,9 @@ function PaymentIndex() {
                                             showButton={false} 
                                         />
                                     )}
-                                    <Link to='/loginForm' className='btn-mobile'>
-                                        <img src="images/emailIcon.png" className="email-icon" />
-                                    </Link>
-                                    
+                                    <div className='btn-mobile' onClick={handleEmailIconClick}>
+                                        <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="email-icon" alt="Toggle login method" />
+                                    </div>
                                 </div>
                                 <div className="footer-links">
                                     <a style={{ color: "#39125C" }} onClick={handleClose}>Create Account</a>

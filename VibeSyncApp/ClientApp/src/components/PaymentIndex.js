@@ -8,6 +8,8 @@ import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
 import addNotification from 'react-push-notification';
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -39,6 +41,8 @@ function PaymentIndex() {
 
     const handleShow = () => setShowLoginModal(true);
     const handleClose = () => setShowLoginModal(false);
+
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     console.log(rowData);
 
@@ -542,6 +546,14 @@ function PaymentIndex() {
                     </div>
                 </form>
 
+                <div>
+                    {/* Other content */}
+                    <StickyBar type="bid" data={messages}
+                        minAmount={rowData.minimumBid}
+                        onClose={() => { setIsStickyBarVisible(false); }}
+                        isVisible={isStickyBarVisible}
+                    />
+                </div>
                 <div className='login-proposal' onClick={handleShow}>
                     <img className='login-img' src="images/log_in.png" />
                     <p>Login & Get 50% off instantly!</p>

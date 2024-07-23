@@ -170,9 +170,16 @@
 
 .bg-music-dj-side{
     background: url('/images/BGMusic.png');
-    background-repeat: no-repeat;
+    /* background-repeat: no-repeat; */
     background-size: 100%;
     z-index: 2;
+}
+
+.edit-profile-link{
+    color: #fff;
+    background-color: #39125C;
+    border-radius: 15px;
+    padding: 5px 10px;
 }
 
 
@@ -185,29 +192,38 @@
 
 .dj-side-song-req-header{
     padding: 10px;
-    display: flex;
-    justify-content: space-between;
     margin: 0px 10px;
     align-items: center;
+}
+
+.update-event-live-link{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px auto;
+    align-items: center;
+    max-width: 36rem;
 }
 
 .song-announcement-request-container{
     margin:10px 20px;
     border-radius: 15px;
     position: relative;
-    background: linear-gradient(120deg,#fff 10%,#D7DEFE 40%,#fff 70%);
+    background: linear-gradient(160deg,#fff 10%,#D7DEFE 40%,#fff 90%);
     max-width: 24rem;
     width: 100%;
     justify-content: space-between;
     display: flex;
     align-items: center;
+    box-shadow: 2px 2px rgb(0 0 0 / 0.2);
+    
 }
 
 .song-announcement-request-container-red{
     margin:10px 20px;
     border-radius: 15px;
     position: relative;
-    background: linear-gradient(120deg,#f37f7b 10%,#D7DEFE 40%,#ec9b99 70%);
+    background: linear-gradient(150deg,#FF9999 10%,#fff 40%, #fff 50%,#FF9999 100%);
     max-width: 24rem;
     width: 100%;
     justify-content: space-between;
@@ -219,7 +235,7 @@
     margin:10px 20px;
     border-radius: 15px;
     position: relative;
-    background: linear-gradient(120deg,#f7faa2 10%,#D7DEFE 40%,#f7faa2 70%);
+    background: linear-gradient(150deg,#FFDE79 10%,#fff 40%, #fff 60%,#FFDE79 100%);
     max-width: 24rem;
     width: 100%;
     justify-content: space-between;

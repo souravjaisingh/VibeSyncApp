@@ -100,7 +100,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 Longitude = e.Longitude,
                                 AcceptingRequests = e.AcceptingRequests,
                                 DisplayRequests = e.DisplayRequests,
-                                HidePlaylist = e.HidePlaylist
+                                HidePlaylist = e.HidePlaylist,
+                                Playlists = e.Playlists
                             }).Where(x=> x.EventStatus != Constants.EventDeleted)
                             .ToList().AsEnumerable();
             return response;

@@ -30,6 +30,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public bool AcceptingRequests { get; set; }
         public bool DisplayRequests { get; set; }
         public bool HidePlaylist { get; set; }
+        public int? MinimumBidForSpecialRequest { get; set; }
         public string Playlists { get; set; }
 
     }

@@ -35,6 +35,8 @@ const AddressTypeahead = () => {
     const [acceptingRequests, setAcceptingRequests] = useState( false);
     const [displayRequests, setDisplayRequests] = useState( false);
     const [hidePlaylist, setHidePlaylist] = useState(false); // Default value is false
+    const [minimumBidForSpecialRequest, setMinimumBidForSpecialRequest] = useState('');
+
 
 
 
@@ -80,16 +82,36 @@ const AddressTypeahead = () => {
         }
     };
 
+    const handleSpecialRequestMinBidChange = (event) => {
+        const input = event.target.value;
+        if (/^\d*\.?\d*$/.test(input)) {
+            setMinimumBidForSpecialRequest(input);
+        }
+    };
+
+
+
     //requesting announcement functions
 
     const handleAcceptingRequestsChange = (event) => {
-        setAcceptingRequests(event.target.checked);
+        const isChecked = event.target.checked;
+        setAcceptingRequests(isChecked);
         console.log(event.target.checked);
+
+        // Clear minimumBidForSpecialRequest if both acceptingRequests and displayRequests are false
+        if (!isChecked && !displayRequests) {
+            setMinimumBidForSpecialRequest(null);
+        }
     };
 
     const handleDisplayRequestsChange = (event) => {
-        setDisplayRequests(event.target.checked);
+        const isChecked = event.target.checked;
+        setDisplayRequests(isChecked);
         console.log(event.target.checked);
+
+        if (!acceptingRequests && !isChecked) {
+            setMinimumBidForSpecialRequest(null);
+        }
     };
     
     const handleSubmit = async (event) => {
@@ -120,11 +142,14 @@ const AddressTypeahead = () => {
                     , 44.765432
                     , minimumBid
                     , rowData ? true : false
+                    , minimumBidForSpecialRequest // Updated field 
                     , acceptingRequests
                     , displayRequests
                     , hidePlaylist 
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
+
+
                     
                     
                 );
@@ -158,6 +183,7 @@ const AddressTypeahead = () => {
     };
 
     useEffect(() => {
+        console.log("Rowdata is : ", rowData);
         if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
@@ -168,6 +194,8 @@ const AddressTypeahead = () => {
             setAcceptingRequests(rowData.acceptingRequests)
             setDisplayRequests(rowData.displayRequests)
             setHidePlaylist(rowData.hidePlaylist)
+            setMinimumBidForSpecialRequest(rowData.minimumBidForSpecialRequest || '');
+            
         } else {
             // Reset input fields when rowData becomes null
             setVenueName('');
@@ -179,6 +207,7 @@ const AddressTypeahead = () => {
             setAcceptingRequests(false);
             setDisplayRequests(false);
             setHidePlaylist(false);
+            setMinimumBidForSpecialRequest(''); // Updated field
         }
     }, []);
     
@@ -301,6 +330,21 @@ const AddressTypeahead = () => {
                     <label htmlFor="displayRequests">Display Requests on Screen</label>
 
                 </div>
+                {(acceptingRequests || displayRequests) && (
+                    <div className="input-group">
+                        <label htmlFor="minimumBidForSpecialRequestInput">Minimum Bid for Special Request<span style={{ color: 'red' }}>*</span></label>
+                        <input
+                            type="number"
+                            id="minimumBidForSpecialRequestInput"
+                            placeholder="Minimum Bid for Special Request"
+                            className='event-input-fields'
+                            value={minimumBidForSpecialRequest}
+                            onChange={handleSpecialRequestMinBidChange}
+                            disabled={!(acceptingRequests || displayRequests)}
+                        />
+                    </div>
+                )}
+
                 <div className="request">
                     <input
                         type="checkbox"

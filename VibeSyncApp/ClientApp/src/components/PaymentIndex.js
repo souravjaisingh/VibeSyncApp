@@ -8,6 +8,8 @@ import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
 import addNotification from 'react-push-notification';
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -31,7 +33,16 @@ function PaymentIndex() {
     const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
     const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
     const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(''); // New state for mic announcement message
+    const [localError, setLocalError] = useState('');
+    const gstRate = 0.18;
+    const gstAmount = Math.round(amount * gstRate);
+    const totalAmountWithGst = amount + gstAmount;
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
+    const handleShow = () => setShowLoginModal(true);
+    const handleClose = () => setShowLoginModal(false);
+
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     console.log(rowData);
 
@@ -109,7 +120,7 @@ function PaymentIndex() {
         });
     }
     useEffect(() => {
-        setAmount(isSpecialAnnouncement ? rowData.minimumBid + 100 : rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBid*1.1): rowData.minimumBid);
 
         if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
             setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
@@ -141,6 +152,17 @@ function PaymentIndex() {
 
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
+        setLocalError('');
+
+        // Check if mic announcement message is empty
+        if (isSpecialAnnouncement && !micAnnouncementMessage) {
+            setLocalError('Please give a message for announcement!');
+            console.log("Inside this function")
+            return; // Stop execution if message is not provided
+        }
+
+
+
         // Load the Razorpay script
         // Once the script is loaded, proceed with payment initiation
         const parsedAmount = parseFloat(isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
@@ -184,7 +206,7 @@ function PaymentIndex() {
         }
 
         const obj = {
-            amount: parsedAmount * 100,
+            amount:totalAmountWithGst * 100,
             userId: localStorage.getItem('userId'),
             TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
             EventId: rowData.eventId,
@@ -252,8 +274,8 @@ function PaymentIndex() {
 
             rzp.open();
         } catch (error) {
-            setError(true);
-            setErrorMessage(error.message);
+            // Handle error locally, preventing it from reaching the global handler
+            setLocalError(error.message);
             console.error(error);
         }
 
@@ -338,16 +360,15 @@ function PaymentIndex() {
 
                 {isSpecialAnnouncement ? (
                     <div className='special-announcement-header'>
-                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
-                            <img src="images/mic2.png" />
-                            <p>Mic Announcement (₹100)</p>
-                            {isMicAnnouncement ? (<>
+                        {rowData.acceptingRequests && (
+                            <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                                <img src="images/mic2.png" />
+                                <p>Mic Announcement</p>
                                 <img className='check-box' src="images/tick_checkbox.png" />
-                            </>) : (<>
-                                <img className='check-box' src="images/untick_checkbox.png" />
-                            </>)}
-                        </div>
-                        {isMicAnnouncement ? (
+                                
+                            </div>
+                        )}
+                        {rowData.acceptingRequests && isMicAnnouncement && (
                             <>
                                 <div className='mic-announcement-buttons'>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Happy Birthday"}>Happy Birthday</button>
@@ -355,41 +376,43 @@ function PaymentIndex() {
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Congratulations"}>Congratulations</button>
                                 </div>
 
-                                <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' value={micAnnouncementMessage} onChange={(e) => setMicAnnouncementMessage(e.target.value)} // Update the mic announcement message
+                                <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' value={micAnnouncementMessage} onChange={(e) => {
+                                    setMicAnnouncementMessage(e.target.value);
+                                    if (localError) setLocalError(''); // Clear error message on typing
+                                }} // Update the mic announcement message
                                 />
+                                <div className='subheading-payment'>
+                                    <img src="images/disclaimerIcon.png" className='disclaimer-icon' />
+                                    Played within 30 mins or refund </div>
+                                   {localError && <p style={{ color: 'red', fontWeight: 'bold' ,textAlign : 'center' }}>{localError}</p>}
                             </>
-                        ) : (<></>)}
-
-                        <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(false)}>
-                            <img src="images/screen.png" /><p>Screen Announcement (₹100)</p>
-                            {isMicAnnouncement ? (<>
-                                <img className='check-box' src="images/untick_checkbox.png" />
-                            </>) : (<>
+                        )}
+                        {rowData.displayRequests && (
+                            <div className='mic-announcement-button' onClick={() => setIsMicAnnouncement(true)}>
+                                <img src="images/screen.png" />
+                                <p>Screen Announcement</p>
                                 <img className='check-box' src="images/tick_checkbox.png" />
-                            </>)}
-                        </div>
-
-                        {isMicAnnouncement ? (
+                                
+                            </div>
+                        )}
+                        {rowData.displayRequests && isMicAnnouncement && (
                             <>
+                                <div className='mic-announcement-buttons'>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
+                                    <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
+                                </div>
+                                <div className='screen-announcement-upload-section'>
+                                    <textarea id="message-screen-text" placeholder="Type your message.." maxLength="40" className='screen-announcement-message' />
+                                    <div className="upload-container" onClick={() => document.getElementById('file-upload').click()}>
+                                        <div className="upload-icon">&#128190;</div>
+                                        <div className="upload-text">Upload File</div>
+                                        <input type="file" id="file-upload" />
+                                    </div>
+                                </div>
 
                             </>
-                        ) : (<>
-
-                            <div className='mic-announcement-buttons'>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Birthday"}>Happy Birthday</button>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Happy Anniversary"}>Happy Anniversary</button>
-                                <button onClick={() => document.getElementById('message-screen-text').value = "Congratulations"}>Congratulations</button>
-                            </div>
-                            <div className='screen-announcement-upload-section'>
-                                <textarea id="message-screen-text" placeholder="Type your message.." maxlength="40" className='screen-announcement-message' />
-                                <div class="upload-container" onClick={() => document.getElementById('file-upload').click()}>
-                                    <div class="upload-icon">&#128190;</div>
-                                    <div class="upload-text">Upload File</div>
-                                    <input type="file" id="file-upload" />
-                                </div>
-                            </div>
-                        </>)}
-
+                        )}
                     </div>
                 ) : (
                     <>
@@ -405,9 +428,9 @@ function PaymentIndex() {
                                 </p>
                             </div>
                         </div>
-                        <div className='subheading-payment'>
-                            <img src="images/disclaimerIcon.png" />
-                            ( Played within 30 mins or refund )</div>
+                            <div className='subheading-payment'>
+                                <img src="images/disclaimerIcon.png" className= 'disclaimer-icon' />
+                               Played within 30 mins or refund </div>
                     </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
@@ -439,7 +462,7 @@ function PaymentIndex() {
                                 Choose the Tip
                             </div>
                             <div className='tip-amount-input-btns'>
-                                <div onClick={() => { setAmount(amount - 10) }} className='decrease-tip-button'>-</div>
+                                <div onClick={() => { if (amount > 1) { setAmount(amount - 10); } }} className='decrease-tip-button'>-</div>
                                 <input
                                     className='amount-inputfield'
                                     type="number"
@@ -463,13 +486,28 @@ function PaymentIndex() {
                             </div>
                         </div>
                         <br></br>
+                        <div className='gst-info'>
+                            <div>GST (18%)</div>
+                            <div>₹{gstAmount}</div>
+                        </div>
+                        <br></br>
+                        <div className='promocode'>
+                            <span>Promocode</span>
+                            <input
+                                type="text"
+                                className="value"
+                                placeholder="Login to apply"
+                            />
+                            <button className="apply-btn">Apply</button>
+                        </div>
+                        
 
                     </div>
-
                     <div className='tip-info'>
                         <img src="images/disclaimerIcon.png" />
-                        <p>{isSpecialAnnouncement ? ("(The more you tip, the sooner your announcement will be made)") : ("(The more you tip, the higher chances of your song being played)")}</p>
+                        <p>{isSpecialAnnouncement ? ("More you tip, the sooner your announcement will be made") : ("More you tip, higher chances of song being played")}</p>
                     </div>
+
                     {/* <Promocode onApply={handlePromoApply} /> */}
                     <br></br>
                     {/* Display the text below the Apply button */}
@@ -483,6 +521,7 @@ function PaymentIndex() {
                         </div>
                     )}
                     <div>
+                        
                         <button
                             className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live'
                                 || amount < rowData.minimumBid
@@ -495,7 +534,7 @@ function PaymentIndex() {
                         >
                             <div className='payment-btn-text'>
                                 <img className='payment-icon' src="images/payment.png" />
-                                <div>Pay | ₹{amount}</div>
+                                <div>Pay | ₹{totalAmountWithGst}</div>
                             </div>
                         </button>
                         {isPromoApplied && isPromoAvailable && (
@@ -507,13 +546,49 @@ function PaymentIndex() {
                     </div>
                 </form>
 
-                <div className='login-proposal'>
+                <div>
+                    {/* Other content */}
+                    <StickyBar type="bid" data={messages}
+                        minAmount={rowData.minimumBid}
+                        onClose={() => { setIsStickyBarVisible(false); }}
+                        isVisible={isStickyBarVisible}
+                    />
+                </div>
+                <div className='login-proposal' onClick={handleShow}>
                     <img className='login-img' src="images/log_in.png" />
                     <p>Login & Get 50% off instantly!</p>
                 </div>
 
+                {showLoginModal && (
+                    <div className="modal-overlay" onClick={handleClose}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <span className="modal-title">Login</span>
+                            </div>
+                            <div className="modal-body">
+                                <div class="input-container">
+                                <img src="images/user_image.png" alt="Placeholder" class="input-icon"/>
+                                    <input type="text" placeholder="Mobile Number*" className="input-field" />
+                                </div>
+                                <button className="get-otp-button" style={{ width: "37%",height:"19px", boxShadow: "none", padding: "8px", fontWeight:"700" }}>Get OTP</button>
+                                <div className="text-center " style={{ color: "#39125C", fontWeight:"600", marginTop:"5px", marginBottom:"3px" }}>Or Login with</div>
+                                <div className="auth-buttons">
+
+                                    <img src="images/g.png" className="g-icon" />
+                                    <img src="images/emailIcon.png" className="email-icon" />
+                                    
+                                </div>
+                                <div className="footer-links">
+                                    <a href="#" onClick={handleClose}>Create Account</a>
+                                    <a href="#" onClick={handleClose}>Forgot Password?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className='refund-info-footer'>
-                    <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>
+                    <p>~ If the DJ decline your request, a refund will be issued to your original payment method.</p>
                     <p>~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</p>
                 </div>
                 {/* Render the success message if showSuccessMessage is true */}

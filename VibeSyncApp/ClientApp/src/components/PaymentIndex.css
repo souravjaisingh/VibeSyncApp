@@ -25,7 +25,7 @@
 }
 
 .bg-music-background{
-    background: url('/images/BGMusic.png');
+   background: url('/images/BGMusic.png');
     background-repeat: no-repeat;
 }
 
@@ -79,6 +79,7 @@
 
 .subheading-payment img{
     width: 13px;
+    margin-right:4px;
 }
 
 .label {
@@ -106,7 +107,8 @@
 }
 
 .amount-inputfield {
-    border: 2px solid #59b0ef; /* Pink color */
+    width : 100px;
+    border: 2px solid #59b0ef; 
     border-radius: 15px;
     padding: 3px 10px; /* Adjust padding as needed */
     width: 6rem;
@@ -387,15 +389,16 @@
 }
 
 
-.amount-selection-division{
-    margin:15px;
-    padding:20px;
-    background-color: rgba(255, 255, 255, 0.2);
+.amount-selection-division {
+    margin: 15px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.57);
     border-radius: 10px;
     padding-bottom: 0;
 }
 
 .minimum-bid-container{
+    padding-left : 3px;
     border-bottom: 5px dotted #fff;
     display: flex;
     justify-content: space-between;
@@ -408,7 +411,7 @@
 }
 
 .minimum-bid-value{
-    background-color: #fff;
+    background-color: #ede8e8;
     width:5rem;
     border-radius: 5px;
     text-align: left;
@@ -417,6 +420,7 @@
 }
 
 .tip-amount-section{
+    width : 105%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -521,7 +525,184 @@
 
 .tip-amount-input-btns{
     display: flex;
+    align-items : center;
 }
 .choose-tip-label{
-    width:10rem;
+    width:11rem;
+    margin-right :10px;
+}
+
+.gst-info {
+    margin-top : -11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around; 
+    color: #39125C;
+    font-size: 15px;
+    font-weight: 700;
+    margin-left: -28px;
+}
+
+.gst-info div:nth-child(2) {
+    text-align : right;
+     margin-left: 123px; /* Adjust this value to move the total amount div to the left */
+}
+
+.promocode {
+    display: flex;
+    align-items: center;
+    color: #39125C;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: -14px;
+}
+
+    .promocode span {
+        margin-right: 10px;
+        margin-left : 4px;/* Adjust spacing between "Promocode" and input */
+    }
+
+    .promocode input {
+        margin-bottom : 7px;
+        font-weight: 700;
+        text-align: center;
+        background-color: #ede8e8;
+        border: 1px solid #39125C;
+        border-radius: 4px;
+        font-size: 15px;
+        padding: 0px;
+        width: 122px;
+    }
+
+    .promocode .apply-btn {
+        margin-top: -7px;
+        background-color: #39125C;
+        color: white;
+        border-radius: 13px;
+        padding: 0px 10px; /* Adjust padding as needed */
+        cursor: pointer;
+        margin-left: 10px; /* Adjust spacing between input and button */
+    }
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: flex-end;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    background: linear-gradient(333deg, rgba(255,255,255,1) 0%, rgba(215,222,254,1) 35%, rgba(255,255,255,1) 100%);
+    width: 100%;
+    box-shadow: 0 -15px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    margin: 0px;
+    border-radius: 80px 80px 0 0;
+    border: none;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 4px;
+    padding-top:0px;
+    border-bottom:none;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #39125C;
+    margin-bottom: 5px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-body {
+   
+    text-align: center;
+    padding:0px;
+}
+
+.input-field {
+    all: unset;
+    width: 70%;
+    height: 20px;
+    padding: 8px;
+    padding-left:0px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #D3D3D3;
+    font-weight: 600;
+    
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 55px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px; /* Adjust size according to your image */
+}
+
+
+.get-otp-button {
+    width: 30%;
+    height:100px;
+    background-color: #39125C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 0px;
+}
+
+
+
+.footer-links {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0px;
+}
+
+    .footer-links a {
+        color: #39125C;
+        text-decoration: none;
+        font-weight:600;
+    }
+
+.email-icon{
+    width:60px;
+    height:50px;
+}
+
+.g-icon{
+    background-image:none;
+    width:50px;
+    height:50px;
 }

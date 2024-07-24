@@ -8,20 +8,21 @@ import { Link } from 'react-router-dom';
 export default function DjHome() {
     return (
         <div className='DjHome'>
+
             <div className='center-button'>
-                <Link to='/djprofile' className='btn-mobile left-button'>
+                <Link to='/djprofile' className='btn-medium left-button'>
                     <button className='toolbar-button'>
-                        Update Profile
+                        UPDATE PROFILE
                     </button>
                 </Link>
-                <Link to='/eventdetails' className='btn-mobile'>
+                <Link to='/eventdetails' className='btn-medium'>
                     <button className='toolbar-button'>
-                        Add Event
+                        ADD EVENTS
                     </button>
                 </Link>
-                <Link to='/showtransactions' className='btn-mobile right-button'>
+                <Link to='/showtransactions' className='btn-medium right-button'>
                     <button className='toolbar-button'>
-                        Show Transactions
+                        SHOW TRANSACTIONS
                     </button>
                 </Link>
             </div>

@@ -237,12 +237,23 @@
     background-attachment: fixed;
     background-position: center;
 }
-.btn-payment-red{
-    background-color: red;
+.btn-payment-red {
+    background-color: #F7795D;
 }
-.btn-payment-green{
-    background-color: green;
+.btn-payment-green {
+    background-color: #5AC6A4;
 }
-.btn-payment-yellow{
-    background-color: yellow;
+.btn-payment-yellow {
+    background-color: #FFDE79;
+}
+.mic-announcement-message {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3em; /* Adjust this value based on the desired height */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to display */
+    -webkit-box-orient: vertical;
 }

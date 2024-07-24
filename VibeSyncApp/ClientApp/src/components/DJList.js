@@ -78,6 +78,7 @@ export default function DjList() {
 
     return (
         <div className='dj-lists-wrapper'>
+            <div className = 'image-bg'>
             <div className="search-filter-bar">
                 <div className="search-bar-container">
                     <input
@@ -153,7 +154,7 @@ export default function DjList() {
                 onClose={() => { setIsStickyBarVisible(false); }}
                 isVisible={isStickyBarVisible}
             />
-
+            </div>
         </div>
     );
 }

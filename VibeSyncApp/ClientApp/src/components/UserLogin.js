@@ -89,17 +89,22 @@ const handleSubmit = async () => {
         setLoading(false);
     }
 }
+
     const handleForgotPasswordClick = () => {
         setShowInfoBox(!showInfoBox);
+
     }
 
 
   return (
     <div className={`cards `}>
       <div className='cards__container'>
+
         <div className='lander-header'>
           <div>
+
             <img className='lander-logo-desktop' src="images/VSlogo.png" style={{ height: '20vh', marginTop: '20px', color: '#39125C' }} />
+
             <img className='lander-logo-mobile' src="images/lander_vibesync.png" style={{ width: '90vw', marginTop: '20px', color: '#39125C', marginBottom: '10px' }} />
           </div>
         </div>
@@ -135,6 +140,7 @@ const handleSubmit = async () => {
                       (<><img src = "images/eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)}/></>)}
                   </div></div>
                   <button className='get-otp-button-lander' onClick={() => handleSubmit()}>Login</button>
+
                   {isMobileLogin?(<></>):(
                     <div className='forgot-password-container'>
                       <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
@@ -151,12 +157,24 @@ const handleSubmit = async () => {
                 <p>Or login with</p>
               </div>
               <div className='google-email-login-container'>
-                <GoogleLogin isUser={!isUser} />
+                <GoogleLogin isUser={!isUser} showButton={true}/>
                 <div onClick={()=>setIsMobileLogin(!isMobileLogin)} className='btn-mobile'>
                   {isMobileLogin?(<img src='images/emailIcon.png' className='email-icon' />):
                   (<img src='images/phone-call.png' className='phone-call-icon'/>)}
                   
                 </div>
+              </div>
+
+              <div className='create-forgot-creds-container'>
+                <div>NEW HERE?</div>
+
+                <Link
+                  className='signup-link'
+                  to={`/sign-up/${isUser ? 'false' : 'true'}`}
+                >
+                  SIGN UP
+                </Link>
+
               </div>
 
               <div className='create-forgot-creds-container'>
@@ -195,6 +213,7 @@ const handleSubmit = async () => {
 
           </div>
         </div>
+
 
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VSlogo3.png';
@@ -20,6 +20,10 @@ function NavbarComponent() {
 
     const location = useLocation();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [location]);
 
     function handleRequestsClick() {
         setMenuOpen(false); 
@@ -95,7 +99,6 @@ function NavbarComponent() {
             <div className="logo-container">
                 <div className="logo" onClick={handleLogoClick}>
                     <img src={vibeSyncLogo} alt="App Logo" />
-                    {/* <div>Apka Gaana, Apki Vibe</div> */}
                 </div>
             </div>
             {localStorage.getItem('userId') != null && (
@@ -115,16 +118,7 @@ function NavbarComponent() {
                             {localStorage.getItem('userId') === '0' ? 'All Requests' : 'Your Requests'}
                         </Button>
                     )}
-                {/* {(location.pathname.startsWith('/SongSearch') ||
-                    location.pathname.startsWith('/songsearch') ||
-                    //location.pathname.startsWith('/songhistory') ||
-                    location.pathname.startsWith('/paymentIndex')) && (
-                        <Button
-                            className="btn-navigation-bar"
-                            onClick={(e) => handleAcceptedRequestsClick()}>
-                            Accepted Requests
-                        </Button>
-                    )} */}
+                
                 {(localStorage.getItem('userId') == 10077 && (
                     location.pathname.startsWith('/SongSearch') ||
                     location.pathname.startsWith('/songsearch') ||
@@ -145,17 +139,7 @@ function NavbarComponent() {
                 )}
             </div>
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
-                {/* {(location.pathname === '/djhome'
-                    || location.pathname === '/djprofile'
-                    || location.pathname === '/eventdetails'
-                    || location.pathname === '/showtransactions'
-                    || location.pathname === '/djlivesongs') && (
-                        <Button
-                            className="btn-navigation-bar"
-                            onClick={(e) => handlePlaylistsClick()}>
-                            Playlists
-                        </Button>
-                    )} */}
+               
                 {(location.pathname.startsWith('/djhome') ||
                     location.pathname.startsWith('/djlivesongs') ||
                     location.pathname.startsWith('/showtransactions') ||

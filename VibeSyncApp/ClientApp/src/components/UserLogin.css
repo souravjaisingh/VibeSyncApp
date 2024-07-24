@@ -443,10 +443,12 @@ Button{
 .eye-password-click{
   width: 20px !important;
   margin-top: 10px;
+
 }
 .forgot-password-container{
   color: #39125C;
   padding-top: 5px;
+
 }
 #forgot-password-tip{
   font-size: 0.7rem;

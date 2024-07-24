@@ -30,7 +30,7 @@ function PaymentIndex() {
     const [showPromoInput, setShowPromoInput] = useState(false);
     const [promoCode, setPromoCode] = useState('');
     const [isPromoValid, setIsPromoValid] = useState(false);
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state.rowData);
     const rowDataString = searchParams.get('data');
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isPromoApplied, setIsPromoApplied] = useState(false);

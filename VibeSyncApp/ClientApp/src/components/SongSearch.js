@@ -14,7 +14,7 @@ function SongSearch() {
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const location = useLocation();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.search);
     const rowDataString = searchParams.get('data');
     const qrcodeParam = searchParams.get('qrcode');
     const urlEventId = searchParams.get('eventId');
@@ -312,7 +312,7 @@ function SongSearch() {
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
             localStorage.removeItem('redirectUrl');
-            navigate(`/paymentIndex?data=${rowDataString}`);
+            navigate(`/paymentIndex`,{state:{rowData:"?data="+rowDataString}});
         }
     };
 
@@ -337,7 +337,7 @@ function SongSearch() {
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
             console.log("Event data copy : ", eventDataCopy);
-            navigate(`/paymentIndex?data=${rowDataString}`);
+            navigate(`/paymentIndex`,{state:{rowData:"?data="+rowDataString}});
         }
     };
 
@@ -347,7 +347,6 @@ function SongSearch() {
 
     return (
         <>
-
             <div className='song-search'>
                 {eventData && (
                     <div className="search-container">

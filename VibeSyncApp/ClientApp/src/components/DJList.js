@@ -41,7 +41,7 @@ export default function DjList() {
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
 
         // Navigate to the detail view with the serialized rowData as a parameter
-        navigate(`/SongSearch?data=${rowDataString}`);
+        navigate(`/SongSearch`,{state:{rowData:"?data="+rowDataString}});
         //navigate('/SongSearch');
     };
 

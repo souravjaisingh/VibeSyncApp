@@ -347,8 +347,8 @@ Button{
 .lander-header{
   background: url('/images/lander_header_photo_hd.png');
   height: 300px;
-  background-size: 60vw 70vh;
-  background-position: 50% 40vh;
+  background-size: 110vh 90vh;
+  background-position: 50% 30vh;
   background-repeat: no-repeat;
   height: 100vh;
 }
@@ -443,4 +443,11 @@ Button{
 .eye-password-click{
   width: 20px !important;
   margin-top: 10px;
+}
+.forgot-password-container{
+  color: #39125C;
+  padding-top: 5px;
+}
+#forgot-password-tip{
+  font-size: 0.7rem;
 }

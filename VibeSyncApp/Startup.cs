@@ -99,7 +99,7 @@ namespace VibeSyncApp
                     sqlOptions.EnableRetryOnFailure();
                 });
             });
-            //services.AddHostedService<DatabaseKeepAliveService>();
+            services.AddHostedService<DatabaseKeepAliveService>();
             // Configure logging
             services.AddLogging(builder =>
             {

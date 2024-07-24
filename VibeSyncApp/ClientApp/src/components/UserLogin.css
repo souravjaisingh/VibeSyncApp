@@ -38,6 +38,9 @@ h1 {
 
 .signup-link{
   color: #39125C;
+  background-color: #fff;
+  padding: 3px 10px;
+  border-radius: 10px;
 }
 
 .signup-label{
@@ -123,7 +126,10 @@ Button{
 
 
 
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 1000px){
+  .footer-lander{
+    display: block !important;
+  }
   .lander-footer-1{
     display: flex !important;
   }
@@ -135,23 +141,39 @@ Button{
     height: auto !important;
   }
 
+  .lander-logo-mobile{
+    display: block !important;
+  }
+
   .tagline-header{
-    color: #fff !important;
+    color: #39125C !important;
     font-size: 1rem !important;
-    text-shadow: 2px 2px #000000;
+  }
+
+  .lander-logo-desktop{
+    display: none;
   }
   
+  .lander-main-content{
+    margin: 0 !important;
+    padding-top:0 !important;
+    padding-bottom: 0 !important;
+  }
+
   .lander-header{
-    background: url('/images/lander_header_photo.png');
+    background: url('/images/lander_header_photo_hd.png');
     height: 300px !important;
     background-size: 550px 500px !important;
     background-position: 50% 100% !important;
     background-repeat: no-repeat;
     width: 100% !important;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr)); 
+    place-items: center;
   }
   .lander-main-content{
     width: 100% !important;
-    height: auto !important;
     background: url('/images/BGMusic.png') !important;
     background-repeat: no-repeat !important;
     background-position: 0% 80% !important;
@@ -163,6 +185,10 @@ Button{
 
 }
 
+.lander-logo-mobile{
+  display: none;
+}
+
 .tagline-header{
   color: #39125C;
   font-size: 1.75rem;
@@ -170,10 +196,7 @@ Button{
   font-weight: 700;
 }
 
-.lander-footer-1{
-  display: none;
-}
-.lander-footer-2{
+.footer-lander{
   display: none;
 }
 
@@ -185,6 +208,7 @@ Button{
   display: flex;
   height: 100vh;
 }
+
 
 .main-selection-content{
   overflow: hidden;
@@ -207,35 +231,39 @@ Button{
   border-radius: 10px;
   margin: 15px auto;
   margin-bottom: 5px;
+  font-size: 1.2rem;
 }
 .choose-login-label{
   margin-top: 0 !important;
 }
 .user-dj-toggle{
   display: flex;
-  justify-content: center;
-  gap: 20px;
+  justify-content: space-around;
+  max-width: 80%;
   padding: 10px;
   font-size: 1.75rem;
   align-items: center;
+  margin: auto;
 }
 .dj-user-toggle-img{
   border-radius: 100%;
   width: 5.5rem;
   height: 5.5rem;
-  border: 0px solid #39125C;
+  border: 0px solid #33bcfb;
   align-items: center;
   display: flex;
   justify-content: center;
 }
 .checked-dj-user{
-
-  border-width: 4px;
+  opacity:1 !important;
+  border-width: 6px;
 }
 .dj-button-img{
+  opacity:0.5;
   background: url('/images/dj_button_bg.png');
 }
 .user-button-img{
+  opacity: 0.5;
   background: url('/images/user_button_bg.png');
 }
 .google-email-login-container{
@@ -249,27 +277,39 @@ Button{
   width:50px;
   align-items: center;
 }
-.lander-footer-1{
-  margin-top: 10px;
+.phone-call-icon{
+  width:50px;
+  height: 50px;
+  align-items: center;
 }
 .lander-footer-1-text{
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  color: #d7defe;
   transform: translateX(-20%);
   text-shadow: 1px 0px #fd5eab, -1px 0px #5aadfa;
   /* text-shadow: -1px -1px #0011ff; */
+  display: grid ;
+  align-items: center;
+  place-items: center;
+  grid-template-columns: repeat(1, minmax(0, 1fr)); 
+}
+
+.lander-footer-1-text img{
+  transform: translateX(0%) !important;
 }
 
 .lander-footer-1 img{
   width: 50%;
   transform: translateX(-20%);
 }
+.footer-match-vibes-text{
+  padding: 10px;
+  color:#d7defe;
+  font-size: 1.2rem;
+}
 
 .lander-footer-2{
   margin-top: 10px;
-  margin-bottom: 10px;
 }
 .lander-footer-2-text{
   align-items: center;
@@ -287,17 +327,25 @@ Button{
 
 }
 
+.lander-footer-2-text img{
+  transform: translateX(0%) !important;
+}
+
 .create-forgot-creds-container{
   color: #39125C !important;
   display: flex;
-  justify-content: space-evenly;
-  font-size: 0.75rem;
+  justify-content: center;
+  gap:20px;
+  font-size: 1.25rem;
   font-weight: 700;
   margin-top: 10px;
+  padding-bottom: 10px;
+  align-items: center;
+  margin: 10px auto;
 }
 
 .lander-header{
-  background: url('/images/lander_header_photo.png');
+  background: url('/images/lander_header_photo_hd.png');
   height: 300px;
   background-size: 700px 600px;
   background-position: 50% 190%;
@@ -305,16 +353,31 @@ Button{
   height: 100vh;
 }
 
+.footer-lander{
+  background:linear-gradient(180deg,#421c63,#1a4e78);
+  padding-top: 20px;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+}
+
+.footer-1000-users-text{
+  font-size: 2rem;
+  color: #d7defe;
+  font-weight: 700;
+}
+
 .lander-main-content{
   display: flex;
   align-items: center;
-  
-  height: 100vh;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-radius: 20px;
+  margin: 20px;
   width: 30%;
   background: linear-gradient(to right bottom,#fff,#d7defe);
 }
 
-.get-otp-button{
+.get-otp-button-lander{
   color: #39125C;
   background-color: #fff;
   width: 150px;
@@ -339,4 +402,45 @@ Button{
   margin-top: 10px;
   padding: 5px 10px;
   border-radius: 10px;
+  padding-left: 30px;
+  opacity: 0.7;
+  border: none;
+  transform: translateX(-10px);
+}
+
+.email-input{
+  width: 250px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  opacity: 0.7;
+  border: none;
+}
+.password-input{
+  width: 250px;
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  opacity: 0.7;
+  border: none;
+}
+
+.user-image-icon-lander{
+  width:20px;
+  transform: translateX(15px);
+  opacity: 1 !important;
+}
+
+.password-input-field{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin: auto;
+  transform: translateX(12px);
+}
+.eye-password-click{
+  width: 20px !important;
+  margin-top: 10px;
 }

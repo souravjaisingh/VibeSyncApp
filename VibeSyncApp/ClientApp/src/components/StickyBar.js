@@ -6,7 +6,7 @@ const getRandomIndex = (array) => {
 };
 
 const getRandomAmount = (minAmount) => {
-    return minAmount + Math.floor(Math.random() * 31) + 30;
+    return minAmount + Math.floor(Math.random() * 101) + 100;
 };
 
 const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {

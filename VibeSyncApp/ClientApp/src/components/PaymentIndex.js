@@ -11,6 +11,8 @@ import addNotification from 'react-push-notification';
 import GoogleLogin from './GoogleLogin';
 import { useLoadingContext } from './LoadingProvider';
 import { loginUserHelper } from '../Helpers/UserHelper';
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -116,6 +118,8 @@ function PaymentIndex() {
         }
     }
 
+
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     console.log(rowData);
 
@@ -607,6 +611,14 @@ function PaymentIndex() {
                     </div>
                 </form>
 
+                <div>
+                    {/* Other content */}
+                    <StickyBar type="bid" data={messages}
+                        minAmount={rowData.minimumBid}
+                        onClose={() => { setIsStickyBarVisible(false); }}
+                        isVisible={isStickyBarVisible}
+                    />
+                </div>
                 <div className='login-proposal' onClick={handleShow}>
                     <img className='login-img' src="images/log_in.png" />
                     <p>Login & Get 50% off instantly!</p>
@@ -665,10 +677,10 @@ function PaymentIndex() {
                                         <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="email-icon" alt="Toggle login method" />
                                     </div>
                                 </div>
-                                <div className="footer-links">
+                                { /*<div className="footer-links">
                                     <a style={{ color: "#39125C" }} onClick={handleClose}>Create Account</a>
                                     <a style={{ color: "#39125C" } } onClick={handleClose}>Forgot Password?</a>
-                                </div>
+                                </div> */} 
                             </div>
                         </div>
                     </div>

@@ -678,7 +678,7 @@
 
 .auth-buttons {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     margin-top: 0px;
 }
 
@@ -699,10 +699,12 @@
 .email-icon{
     width:60px;
     height:50px;
+    margin: 10px;
 }
 
 .g-icon{
     background-image:none;
     width:50px;
     height:50px;
+    margin: 10px;
 }

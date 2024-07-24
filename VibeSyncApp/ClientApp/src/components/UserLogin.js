@@ -89,9 +89,10 @@ const handleSubmit = async () => {
         setLoading(false);
     }
 }
-    const handleForgotPasswordClick = (e) => {
-        e.preventDefault(); // Prevent the default behavior of anchor tag
-        setShowInfoBox(prev => !prev); // Toggle visibility of info box
+
+    const handleForgotPasswordClick = () => {
+        setShowInfoBox(!showInfoBox);
+
     }
 
 
@@ -101,7 +102,9 @@ const handleSubmit = async () => {
 
         <div className='lander-header'>
           <div>
-            <img className='lander-logo-desktop' src="images/VSlogo.png" style={{ width: '30vw', marginTop: '20px', color: '#39125C' }} />
+
+            <img className='lander-logo-desktop' src="images/VSlogo.png" style={{ height: '20vh', marginTop: '20px', color: '#39125C' }} />
+
             <img className='lander-logo-mobile' src="images/lander_vibesync.png" style={{ width: '90vw', marginTop: '20px', color: '#39125C', marginBottom: '10px' }} />
           </div>
         </div>
@@ -138,6 +141,13 @@ const handleSubmit = async () => {
                   </div></div>
                   <button className='get-otp-button-lander' onClick={() => handleSubmit()}>Login</button>
 
+                  {isMobileLogin?(<></>):(
+                    <div className='forgot-password-container'>
+                      <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
+                      {showInfoBox?(<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
+                      We're here at your disposal.</div>):(<></>)}
+                    </div>
+                  )}
                 </div>
 
               )}
@@ -147,12 +157,24 @@ const handleSubmit = async () => {
                 <p>Or login with</p>
               </div>
               <div className='google-email-login-container'>
-                              <GoogleLogin isUser={!isUser} showButton={true} />
+                <GoogleLogin isUser={!isUser} showButton={true}/>
                 <div onClick={()=>setIsMobileLogin(!isMobileLogin)} className='btn-mobile'>
                   {isMobileLogin?(<img src='images/emailIcon.png' className='email-icon' />):
                   (<img src='images/phone-call.png' className='phone-call-icon'/>)}
                   
                 </div>
+              </div>
+
+              <div className='create-forgot-creds-container'>
+                <div>NEW HERE?</div>
+
+                <Link
+                  className='signup-link'
+                  to={`/sign-up/${isUser ? 'false' : 'true'}`}
+                >
+                  SIGN UP
+                </Link>
+
               </div>
 
               <div className='create-forgot-creds-container'>

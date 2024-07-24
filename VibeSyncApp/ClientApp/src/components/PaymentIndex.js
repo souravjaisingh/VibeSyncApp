@@ -8,9 +8,11 @@ import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
 import addNotification from 'react-push-notification';
+
 import GoogleLogin from './GoogleLogin';
 import { useLoadingContext } from './LoadingProvider';
 import { loginUserHelper } from '../Helpers/UserHelper';
+
 import StickyBar from './StickyBar';
 import { messages } from './Constants';
 
@@ -118,6 +120,8 @@ function PaymentIndex() {
         }
     }
 
+
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 

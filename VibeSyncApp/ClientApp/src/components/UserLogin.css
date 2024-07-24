@@ -348,7 +348,7 @@ Button{
   background: url('/images/lander_header_photo_hd.png');
   height: 300px;
   background-size: 60vw 70vh;
-  background-position: 50% 140%;
+  background-position: 50% 40vh;
   background-repeat: no-repeat;
   height: 100vh;
 }

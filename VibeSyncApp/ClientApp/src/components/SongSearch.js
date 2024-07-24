@@ -14,7 +14,7 @@ function SongSearch() {
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const location = useLocation();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.state.rowData);
+    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.search);
     const rowDataString = searchParams.get('data');
     const qrcodeParam = searchParams.get('qrcode');
     const urlEventId = searchParams.get('eventId');

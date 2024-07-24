@@ -99,7 +99,7 @@ const handleSubmit = async () => {
       <div className='cards__container'>
         <div className='lander-header'>
           <div>
-            <img className='lander-logo-desktop' src="images/VSlogo.png" style={{ width: '30vw', marginTop: '20px', color: '#39125C' }} />
+            <img className='lander-logo-desktop' src="images/VSlogo.png" style={{ height: '20vh', marginTop: '20px', color: '#39125C' }} />
             <img className='lander-logo-mobile' src="images/lander_vibesync.png" style={{ width: '90vw', marginTop: '20px', color: '#39125C', marginBottom: '10px' }} />
           </div>
         </div>

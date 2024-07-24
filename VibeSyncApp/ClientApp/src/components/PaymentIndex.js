@@ -123,7 +123,6 @@ function PaymentIndex() {
 
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
-    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
     console.log(rowData);
 

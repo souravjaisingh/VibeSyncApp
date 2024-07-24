@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import './UserLogin.css';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLogin from './GoogleLogin';
 import Switch from './LoginToggleButton';
+import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
+import { loginUserHelper } from '../Helpers/UserHelper';
+
+const errorCssClass = 'input_error';
+const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
+const phoneRegex = /^[6-9]\d{9}$/;
 
 function Cards() {
   const [isUser, setIsUser] = useState(false);
+  const [isMobileLogin, setIsMobileLogin] = useState(true);
   const navigate = useNavigate();
+  const { error, setError } = useContext(MyContext);
+  const { errorMessage, setErrorMessage } = useContext(MyContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const { setLoading } = useLoadingContext();
+  const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
 
   const handleAnonymousLogin = () => {
     // Implement your anonymous login logic here
@@ -16,6 +32,68 @@ function Cards() {
     navigate('/userhome')
 
   };
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    if (id === "email") {
+        setEmail(value);
+        // validateEmail(value);
+    }
+    if (id === "password") {
+        setPassword(value);
+        // setpasswordError(false);
+        // validatePassword(value);
+    }
+}
+
+const handleSubmit = async () => {
+    setLoginError(false);
+    try {
+        console.log(email, password);
+        if (email == null || email == '' || email == undefined) {
+            setLoginError(true);
+        }
+        if (password == null || password == '' || password == undefined) {
+            setLoginError(true);
+        }
+        setLoading(true);
+        const response = await loginUserHelper(email, password);
+        setLoading(false);
+        if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
+            localStorage.setItem('userId', response.id);
+            localStorage.setItem('isUser', true);
+            console.log(localStorage.getItem('redirectUrl'));
+            setTimeout(() => {
+                const redirectUrl = localStorage.getItem('redirectUrl');
+                console.log(redirectUrl);
+                navigate(redirectUrl);
+            }, 0);
+        }
+        else if (response && response.isUser == true) {
+            localStorage.setItem('userId', response.id);
+            localStorage.setItem('isUser', true);
+            navigate('/userhome')
+        }
+        else if (response && response.isUser == false) {
+            localStorage.setItem('userId', response.id);
+            localStorage.setItem('isUser', false);
+            navigate('/djhome')
+        }
+        else {
+            setLoginError(true);
+        }
+    }
+    catch (error) {
+        setError(true);
+        setErrorMessage(error.message);
+        setLoading(false);
+    }
+}
+    const handleForgotPasswordClick = (e) => {
+        e.preventDefault(); // Prevent the default behavior of anchor tag
+        setShowInfoBox(prev => !prev); // Toggle visibility of info box
+    }
+
 
   return (
     <div className={`cards `}>
@@ -41,21 +119,39 @@ function Cards() {
                   (<><span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img dj-button-img' ><span>DJ</span></span>
                     <span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img checked-dj-user user-button-img'><span>User</span></span></>)}
               </div>
-              <div className='mobile-number-container'>
+              {isMobileLogin?(<div className='mobile-number-container'>
                 <div>
                   <img className='user-image-icon-lander' src = "images/user_image_lander.png"/>
                   <input className='mobile-number-input' placeholder='Mobile Number' />
                 </div>
                 <button className='get-otp-button-lander'>Get OTP</button>
-              </div>
+              </div>):(
+                  <div className='mobile-number-container'>
+                  <div>
+                    <input className='email-input' id = 'email' placeholder='E-mail' value={email} onChange={(e) => handleInputChange(e)}/>
+                    <div className='password-input-field'>
+                      <input className='password-input' id='password' type={showPassword ? "text" : "password"} placeholder='Password' value={password}
+                                onChange={(e) => handleInputChange(e)}/>
+                      {showPassword?(<><img src = "images/hidden-eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)}/></>):
+                      (<><img src = "images/eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)}/></>)}
+                  </div></div>
+                  <button className='get-otp-button-lander' onClick={() => handleSubmit()}>Login</button>
+
+                </div>
+
+              )}
+
+              
               <div>
                 <p>Or login with</p>
               </div>
               <div className='google-email-login-container'>
                 <GoogleLogin isUser={!isUser} />
-                <Link to='/loginForm' className='btn-mobile'>
-                  <img src="images/emailIcon.png" className='email-icon' />
-                </Link>
+                <div onClick={()=>setIsMobileLogin(!isMobileLogin)} className='btn-mobile'>
+                  {isMobileLogin?(<img src='images/emailIcon.png' className='email-icon' />):
+                  (<img src='images/phone-call.png' className='phone-call-icon'/>)}
+                  
+                </div>
               </div>
 
               <div className='create-forgot-creds-container'>

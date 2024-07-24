@@ -165,17 +165,7 @@ const handleSubmit = async () => {
                 </div>
               </div>
 
-              <div className='create-forgot-creds-container'>
-                <div>NEW HERE?</div>
-
-                <Link
-                  className='signup-link'
-                  to={`/sign-up/${isUser ? 'false' : 'true'}`}
-                >
-                  SIGN UP
-                </Link>
-
-              </div>
+             
 
               <div className='create-forgot-creds-container'>
                 <div>NEW HERE?</div>

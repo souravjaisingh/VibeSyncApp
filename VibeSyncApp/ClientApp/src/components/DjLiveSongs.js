@@ -21,7 +21,7 @@ export default function DjLiveSongs() {
     const [acceptedHistory, setAcceptedHistory] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state.rowData);
     const rowDataString = searchParams.get('data');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const rowData = JSON.parse(decodeURIComponent(rowDataString)) || {};
@@ -348,7 +348,7 @@ export default function DjLiveSongs() {
         stopRequestsAPI();
     };
     function handleEditProfileClick() {
-        navigate(`/eventdetails?data=${rowDataString}`); // Navigate to the specified URL
+        navigate(`/eventdetails`,{state:{rowData:'?data='+rowDataString}}); // Navigate to the specified URL
     }
     const calculateRemainingTime = (paymentDateTime) => {
         const currentTime = new Date();

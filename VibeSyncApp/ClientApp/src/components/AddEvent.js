@@ -26,7 +26,7 @@ const AddressTypeahead = () => {
     const [eventDesc, SetEventDesc] = useState('');
     const { setLoading } = useLoadingContext();
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.state);
     const rowDataString = searchParams.get('data');
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));

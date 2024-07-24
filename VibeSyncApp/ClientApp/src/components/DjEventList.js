@@ -54,9 +54,9 @@ export default function DjEventList() {
             console.log(rowData);
 
             if (rowData.eventStatus === 'Live' || rowData.eventStatus === 'Live-NA') {
-                navigate(`/djlivesongs?data=${rowDataString}`);
+                navigate(`/djlivesongs`,{state:{rowData:"?data="+rowDataString}});
             } else {
-                navigate(`/eventdetails?data=${rowDataString}`);
+                navigate(`/eventdetails`,{state:{rowData:"?data="+rowDataString}});
             }
         }
     };

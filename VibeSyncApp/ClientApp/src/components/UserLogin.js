@@ -89,9 +89,8 @@ const handleSubmit = async () => {
         setLoading(false);
     }
 }
-    const handleForgotPasswordClick = (e) => {
-        e.preventDefault(); // Prevent the default behavior of anchor tag
-        setShowInfoBox(prev => !prev); // Toggle visibility of info box
+    const handleForgotPasswordClick = () => {
+        setShowInfoBox(!showInfoBox);
     }
 
 
@@ -136,7 +135,13 @@ const handleSubmit = async () => {
                       (<><img src = "images/eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)}/></>)}
                   </div></div>
                   <button className='get-otp-button-lander' onClick={() => handleSubmit()}>Login</button>
-
+                  {isMobileLogin?(<></>):(
+                    <div className='forgot-password-container'>
+                      <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
+                      {showInfoBox?(<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
+                      We're here at your disposal.</div>):(<></>)}
+                    </div>
+                  )}
                 </div>
 
               )}

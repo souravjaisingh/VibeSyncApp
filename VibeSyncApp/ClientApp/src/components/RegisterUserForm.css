@@ -214,7 +214,7 @@ input {
         cursor: pointer;
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 32rem) {
     .dj-img {
         margin: auto;
         margin-top: -102px;

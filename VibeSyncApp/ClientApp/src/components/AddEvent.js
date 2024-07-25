@@ -160,6 +160,30 @@ const AddressTypeahead = () => {
             try {
                 setLoading(true);
                 const playlists = checkedPlaylists.join(',');
+
+                { /* // Prepare the data to be sent
+                const eventData = {
+                    userId: localStorage.getItem('userId'),
+                    theme,
+                    eventDesc,
+                    venueName,
+                    eventStartTime,
+                    eventEndTime,
+                    latitude: 12.123456,  // Modify once Google Maps API gets implemented
+                    longitude: 44.765432,
+                    minimumBid,
+                    minimumBidForSpecialRequest,
+                    acceptingRequests,
+                    displayRequests,
+                    hidePlaylist,
+                    eventId: rowDataString ? rowData.id : 0,
+                    eventStatus: isLive ? 'Live' : 'Not live',
+                    playlists: checkedPlaylists.join(',')  // Send the formatted playlist string
+                };
+
+                // Log the data to be sent
+                console.log('Data being sent to backend:', eventData); */}
+
               
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
@@ -222,9 +246,10 @@ const AddressTypeahead = () => {
             setAcceptingRequests(rowData.acceptingRequests)
             setDisplayRequests(rowData.displayRequests)
             setHidePlaylist(rowData.hidePlaylist)
+            setMinimumBidForSpecialRequest(rowData.minimumBidForSpecialRequest || '');
             // Set the checked playlists if they are available in rowData
-            if (rowData.checkedPlaylists) {
-                setCheckedPlaylists(rowData.checkedPlaylists);
+            if (rowData.playlists) {
+                setCheckedPlaylists(rowData.playlists.split(','));
             }
         } else {
             // Reset input fields when rowData becomes null
@@ -237,6 +262,7 @@ const AddressTypeahead = () => {
             setAcceptingRequests(false);
             setDisplayRequests(false);
             setHidePlaylist(false);
+            setMinimumBidForSpecialRequest(''); // Updated field
             setCheckedPlaylists([]);
         }
     }, []);

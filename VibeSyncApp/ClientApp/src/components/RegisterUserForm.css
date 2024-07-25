@@ -4,6 +4,11 @@ body {
     /*background: linear-gradient(to right, #2c3e50, #bdc3c7);*/ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(160deg, #d7defe 70%, #4C526C) !important;
 }
+
+.container {
+    position: relative;
+    z-index: 1;
+}
     .dj-img{
     margin-top: -102px;
     }
@@ -11,6 +16,14 @@ body {
         max-width : 32rem;
         margin : auto;
     }
+.bg-music {
+    position: absolute;
+    top: -4px;
+    left: 7px;
+    width: 98%;
+    height: 50%;
+    z-index: -1;
+}
 .eye-password-click1 {
     position : absolute;
     right : 34px;

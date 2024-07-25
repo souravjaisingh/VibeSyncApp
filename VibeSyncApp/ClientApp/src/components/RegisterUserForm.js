@@ -155,6 +155,9 @@ export default function RegisterUser(isUser) {
 
     return (
         <>
+            <div className="container">
+            <div className>
+                <img src="/images/BGMusic.png" alt="music bg" className="bg-music" />
             <div>
                 <img className="dj-img" src="/images/signup4.png" alt="Sign Up" />
                 <p className="text-overlay">SIGN UP</p>
@@ -234,7 +237,9 @@ export default function RegisterUser(isUser) {
             <div class="footer">
                 <button onClick={() => handleSubmit()} type="submit" class="btn btn--primary btn--medium">Register</button>
             </div>
-            </div>
+                </div>
+                </div> 
+        </div>
         </>
     )
 }

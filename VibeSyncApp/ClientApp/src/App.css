@@ -76,13 +76,12 @@ html,body
 }
 
 .sign-up {
-    background-image: url('../src/Resources/DJWhite2.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     color: #fff;
     display: flow-root;
-    /* font-size: 100px; */
+    
 }
 .loginForm {
   background-image: url('../src/Resources/DJWhite2.jpg');
@@ -91,7 +90,6 @@ html,body
   background-repeat: no-repeat;
   color: #fff;
   display: flow-root;
-  /* font-size: 100px; */
 }
 .loading-overlay {
   position: fixed;

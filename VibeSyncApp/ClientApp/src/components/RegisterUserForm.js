@@ -154,7 +154,12 @@ export default function RegisterUser(isUser) {
     }
 
     return (
-        <div className="form col-10">
+        <>
+            <div>
+                <img className="dj-img" src="/images/signup4.png" alt="Sign Up" />
+                <p className="text-overlay">SIGN UP</p>
+            </div>
+            <div className="form col-10" style={{ borderRadius :  "4px" }}>
             <div className="form-body">
                 <div className="username">
                     <label className="form__label" for="firstName">First Name* </label>
@@ -177,8 +182,8 @@ export default function RegisterUser(isUser) {
                     </select>
                 </div>
                 <div className='phone'>
-                    <label className="form__label" for="phone">Phone Number* </label>
-                    <input className={`form__input ${phoneError ? errorCssClass : ""}`} type='text' id='phone' value={phoneNumber} onChange={(e) => handleInputChange(e)} placeholder='Phone Number'></input>
+                    <label className="form__label" for="phone">Phone No. </label>
+                    <input className={`form__input ${phoneError ? errorCssClass : ""}`} type='text' id='phone' value={phoneNumber} onChange={(e) => handleInputChange(e)} placeholder='Phone No.'></input>
                     {/* <PhoneInput
                         containerClass={errorCssClass}
                         inputStyle={{outerWidth:200}}
@@ -188,37 +193,33 @@ export default function RegisterUser(isUser) {
                         onChange={(e) => phoneNumberfun(e)}
                     /> */}
                 </div>
-                <div className='password-container'>
-                    <div className="password">
-                        <label className="form__label" for="password">Password* </label>
-                        <input required className={`form__input ${passwordError ? errorCssClass : ""}`} type={showPassword ? "text" : "password"} id="password" value={password} onChange={(e) => handleInputChange(e)} placeholder="Password" />
-                        {passwordError ? <span className='password-warning'>Must be minimum 8 chracters.</span> : ''}
+                    <div className='password-container'>
+                        <div className="password">
+                            <label className="form__label" htmlFor="password">Password* </label>
+                            <div className = "password-box1">
+                            <div className="password-input-box">
+                                <input required className={`form__input ${passwordError ? errorCssClass : ""}`} type={showPassword ? "text" : "password"} id="password" value={password} onChange={(e) => handleInputChange(e)} placeholder="Password" />
+                                <img src={showPassword ? "images/hidden-eye-password.png" : "images/eye-password.png"} className='eye-password-click1' onClick={() => setShowPassword(!showPassword)} alt="toggle visibility" />
+                                </div>
+                                {passwordError ? <p className='password-warning'>Must be minimum 8 characters.</p> : ''}
+                            </div>
+                        </div>
                     </div>
-                    <div className="show-password">
-                        <label htmlFor="check">Show Password &nbsp;</label>
-                        <input
-                            id="check"
-                            type="checkbox"
-                            value={showPassword}
-                            onChange={() => setShowPassword((prev) => !prev)}
-                        />
+                <div className='password-container'>
+                        <div className="confirm-password">
+                            <label className="form__label" htmlFor="confirmPassword">Confirm Password* </label>
+                            <div>
+                                <div className="password-input-box">
+                                    <input required className={`form__input ${confirmPasswordError ? errorCssClass : ""}`} type={showConfirmPassword ? "text" : "password"} id="confirmPassword" value={confirmPassword} onChange={(e) => handleInputChange(e)} placeholder="Confirm Pass" style={{ padding: "5px 10px", width: "99%", height: "91%" }} />
+                                    <img src={showConfirmPassword ? "images/hidden-eye-password.png" : "images/eye-password.png"} className='eye-password-click1' onClick={() => setShowConfirmPassword(!showConfirmPassword)} alt="toggle visibility"
+                                        style={{
+                                            top: passwordError ? "375px" : confirmPasswordError ? "330px" : "330px"
+                                        }} />
+                                </div>
+                                {confirmPasswordError ? <p className='password-warning' style={{ marginLeft: "29px", width : "146px" }}>Password and Confirm password must be the same.</p> : ''}
+                            </div>
                     </div>
                 </div>
-                <div className='password-container'>
-                    <div className="confirm-password">
-                        <label className="form__label" for="confirmPassword">Confirm Password* </label>
-                        <input required className="form__input" type={showConfirmPassword ? "text" : "password"} id="confirmPassword" value={confirmPassword} onChange={(e) => handleInputChange(e)} placeholder="Confirm Password" />
-                        {confirmPasswordError ? <span className='password-warning'>Passwords didn't match.</span> : ''}
-                    </div>
-                    <div className="show-password">
-                        <label htmlFor="check">Show Password &nbsp;</label>
-                        <input
-                            id="check"
-                            type="checkbox"
-                            value={showConfirmPassword}
-                            onChange={() => setShowConfirmPassword((prev) => !prev)}
-                        />
-                    </div>
                     <div className="dj-checkbox">
                         <label className="dj-label form__label" htmlFor="djCheckbox">Are you a DJ?</label>
                         <input
@@ -229,11 +230,11 @@ export default function RegisterUser(isUser) {
                             onChange={() => setIsItAUser(isItAUser == 'false' ? 'true' : 'false')}
                         />
                     </div>
-                </div>
             </div>
             <div class="footer">
                 <button onClick={() => handleSubmit()} type="submit" class="btn btn--primary btn--medium">Register</button>
             </div>
-        </div>
+            </div>
+        </>
     )
 }

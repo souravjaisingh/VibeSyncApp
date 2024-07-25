@@ -1,36 +1,114 @@
-    body{
-        background: #bdc3c7;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right, #2c3e50, #bdc3c7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+body {
+    /*background: #bdc3c7;*/ /* fallback for old browsers */
+    /*background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);*/ /* Chrome 10-25, Safari 5.1-6 */
+    /*background: linear-gradient(to right, #2c3e50, #bdc3c7);*/ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(160deg, #d7defe 70%, #4C526C) !important;
+}
+    .dj-img{
+    margin-top: -102px;
+    }
+    .sign-up{
+        max-width : 32rem;
+        margin : auto;
+    }
+.eye-password-click1 {
+    position : absolute;
+    right : 34px;
+    top   :280px;
+    width: 20px !important;
+    margin-top: 10px;
+}
+.text-overlay {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5em;
+    font-weight: bold;
+    color: white;
+}
+input {
+    opacity: 0.7;
+    border-radius: 10px;
+    padding: 5px 10px;
+    width: 59%;
+    border: 0px;
+}
+
+    .password-input-box{
+        margin-left :24px;
+        display : flex;
+        place-items : end;
+     }
+
+     #password{
+         width: 99%;
+     }
+    #confirmPassword{
+        padding : 5px 10px;
+        width : 99%;
+        height : 91%;
     }
 
-    .form{
-        /* background-color: white; */
-        background-image: url("../../src/Resources/DJWhite.jpg");
-        border-radius: 5px;
-        width: 550px;
-        margin: 20px auto;
-        padding: 20px;
-        margin-left: 20px;
-        background-color: gainsboro;
-        background-blend-mode: lighten;
-        /* height: 600px; */
-        color:black;
+    #check {
+    width: 10%;
+}
+    .username{
+        display: flex;
+     }
+    
+    .lastname{
+        display: flex;
+     }
+    .email{
+       display: flex;
+     }  
+    
+    .gender{
+        display : flex;
     }
+
+    .phone{
+        display : flex;
+    }
+
+    .password{
+        display : flex;
+    }
+
+    .confirm-password{
+        display : flex;
+    }
+
+.form {
+    border-radius: 5px;
+    width: 550px;
+    margin-top: -9px !important;
+    margin-right: 0px !important;
+    /*margin: 20px auto;*/
+    padding: 9px !important;
+    margin-left: 31px !important;
+    background-color: #f0f3fff5 !important;
+    background-blend-mode: lighten;
+    /* height: 600px; */
+    color: #39125C !important;
+    font-weight: 600;
+}
 
     .password-warning{
         display: block;
         font-size: smaller;
         color: orangered;
     }
-    .btn {
-        padding: 8px 20px;
-        border-radius: 2px;
-        outline: none;
-        border: none;
-        cursor: pointer;
-        width: auto;
-    }
+.btn {
+    background-color: #39125C!important; 
+    color : white !important;
+    border-radius: 17px!important;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    width: auto;
+}
     
     .btn--primary {
         background-color: #007BFF;
@@ -65,16 +143,17 @@
     }
     .form-body{
         text-align: left;
-        padding: 20px 10px;
+        padding: 8px 10px !important;
     }
 
     .form-body > *{
-        padding: 5px;
+        padding: 8px!important;
     }
 
     .form__label{
+        margin-bottom : 0px;
         width: 49% !important;
-        font-size: small;
+        font-size: medium;
     }
 
     .form_input{
@@ -83,9 +162,11 @@
     .input_error{
         border-block-color: red;
     }
-    #gender{
-        width:186px;
-    }
+    #gender {
+    padding : 5px 10px;
+    width: 162px;
+    color: #39125C;
+}
     /* .phone{
         display: flex;
         width: 200px;
@@ -109,21 +190,14 @@
     
     
     .show-password {
+        display : flex;
         align-self: end;
         margin-top: 10px;
-        margin-right: 60px;
+        /*margin-right: 60px;*/
         font-size: small;
     }
     
-    /* Media query for small screens (e.g., mobile devices) */
-    @media (max-width: 480px) {
-        .show-password {
-            align-self: auto; /* Center-align for small screens */
-            margin-top: 5px; /* Reduce top margin for spacing */
-            font-size: small;
-        }
-    }
-    
+
     .dj-checkbox {
         display: flex;
         align-items: center;
@@ -135,8 +209,22 @@
     }
     
     #djCheckbox {
-        width: 20px;
+        width: 17px;
         height: 20px;
         cursor: pointer;
     }
-    
+
+@media (min-width: 1200px) {
+    .dj-img {
+        margin: auto;
+        margin-top: -102px;
+        transform: translateX(10%);
+    }
+
+    .password-input-box {
+        width: 204px;
+    }
+    #gender{
+        width : 204px;
+    }
+}

@@ -41,7 +41,7 @@ export default function DjList() {
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
 
         // Navigate to the detail view with the serialized rowData as a parameter
-        navigate(`/SongSearch?data=${rowDataString}`);
+        navigate(`/SongSearch`,{state:{rowData:"?data="+rowDataString}});
         //navigate('/SongSearch');
     };
 
@@ -78,6 +78,7 @@ export default function DjList() {
 
     return (
         <div className='dj-lists-wrapper'>
+            <div className = 'image-bg'>
             <div className="search-filter-bar">
                 <div className="search-bar-container">
                     <input
@@ -153,7 +154,7 @@ export default function DjList() {
                 onClose={() => { setIsStickyBarVisible(false); }}
                 isVisible={isStickyBarVisible}
             />
-
+            </div>
         </div>
     );
 }

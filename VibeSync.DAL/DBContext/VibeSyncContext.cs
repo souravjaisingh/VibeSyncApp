@@ -44,8 +44,6 @@ namespace VibeSync.DAL.DBContext
                 });
             }
         }
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -106,6 +104,8 @@ namespace VibeSync.DAL.DBContext
                     .HasMaxLength(50);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DisplayRequests).HasColumnName("DisplayRequests ");
 
                 entity.Property(e => e.EventDescription).HasMaxLength(100);
 
@@ -260,7 +260,7 @@ namespace VibeSync.DAL.DBContext
                     .WithMany(p => p.Settlements)
                     .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Settlemen__Event__40F9A68C");
+                    .HasConstraintName("FK__Settlemen__Event__3D2915A8");
             });
 
             modelBuilder.Entity<SongHistory>(entity =>

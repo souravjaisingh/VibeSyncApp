@@ -19,6 +19,7 @@ export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, ven
         eventStartDateTime : starttime,
         eventEndDateTime : endtime,
         minimumBid: minbid,
+        minimumBidForSpecialRequest: minBidForSpecialRequest,
         acceptingRequests: acceptingRequests, //for requests
         displayRequests: displayRequests,
         hidePlaylist: hidePlaylist,
@@ -26,7 +27,7 @@ export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, ven
         longitude : lng,
         eventGenre : genre,
         eventStatus: eventstatus,
-        checkedPlaylists: checkedPlaylists
+        playlists: checkedPlaylists.join(',') // Convert checkedPlaylists to comma-separated string
        
     }
 

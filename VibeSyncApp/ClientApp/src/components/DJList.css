@@ -217,11 +217,21 @@
     background: linear-gradient(160deg, #d7defe 70%, #4C526C);
     background-attachment: fixed;
     padding-bottom: 1rem;
+
 }
 
-.down-arrow{
+.image-bg {
+    background-image: url("/images/BGMusic.png");
+    background-repeat: no-repeat;
+    background-size: 60%; /* 50% width and auto height */
+    /*background-size: cover;*/
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.down-arrow {
     position: relative;
     left: -14px;
     font-size: 0.85rem;
-    line-height: 1.25rem; 
+    line-height: 1.25rem;
 }

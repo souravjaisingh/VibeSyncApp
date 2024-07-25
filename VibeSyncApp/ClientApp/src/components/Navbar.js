@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VSlogo3.png';
@@ -21,19 +21,28 @@ function NavbarComponent() {
     const location = useLocation();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [location]);
+
     function handleRequestsClick() {
+        setMenuOpen(false); 
         navigate('/songhistory');
     }
     function handleAcceptedRequestsClick() {
+        setMenuOpen(false); 
         navigate('/acceptedRequests');
     }
     function handlePlaylistsClick() {
+        setMenuOpen(false); 
         navigate('/playlists');
     }
-    function handleSettlementsClick(){
+    function handleSettlementsClick() {
+        setMenuOpen(false);
         navigate('/settlements');
     }
-    function handleSetlementsHistoryClick(){
+    function handleSetlementsHistoryClick() {
+        setMenuOpen(false);
         navigate('/settlementshistory');
     }
 
@@ -43,6 +52,7 @@ function NavbarComponent() {
             if (localStorage.getItem('userId') != 0) {
                 const res = await Logout();
                 setLoading(false);
+                setMenuOpen(false); 
                 if (res) {
                     navigate('/');
                 }
@@ -50,6 +60,7 @@ function NavbarComponent() {
             else{
                 localStorage.clear();
                 setLoading(false);
+                setMenuOpen(false);
                 navigate('/');
             }
         }
@@ -88,7 +99,6 @@ function NavbarComponent() {
             <div className="logo-container">
                 <div className="logo" onClick={handleLogoClick}>
                     <img src={vibeSyncLogo} alt="App Logo" />
-                    {/* <div>Apka Gaana, Apki Vibe</div> */}
                 </div>
             </div>
             {localStorage.getItem('userId') != null && (
@@ -101,7 +111,6 @@ function NavbarComponent() {
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
                 {(location.pathname.startsWith('/SongSearch') ||
                     location.pathname.startsWith('/songsearch') ||
-                    location.pathname.startsWith('/acceptedRequests') ||
                     location.pathname.startsWith('/paymentIndex')) && (
                         <Button
                             className="btn-navigation-bar"
@@ -109,16 +118,7 @@ function NavbarComponent() {
                             {localStorage.getItem('userId') === '0' ? 'All Requests' : 'Your Requests'}
                         </Button>
                     )}
-                {(location.pathname.startsWith('/SongSearch') ||
-                    location.pathname.startsWith('/songsearch') ||
-                    //location.pathname.startsWith('/songhistory') ||
-                    location.pathname.startsWith('/paymentIndex')) && (
-                        <Button
-                            className="btn-navigation-bar"
-                            onClick={(e) => handleAcceptedRequestsClick()}>
-                            Accepted Requests
-                        </Button>
-                    )}
+                
                 {(localStorage.getItem('userId') == 10077 && (
                     location.pathname.startsWith('/SongSearch') ||
                     location.pathname.startsWith('/songsearch') ||
@@ -134,22 +134,12 @@ function NavbarComponent() {
                         className="btn-navigation-bar"
                         onClick={(e) => handleLogoutClick()}
                     >
-                        Logout
+                        Log Out
                     </Button>
                 )}
             </div>
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
-                {/* {(location.pathname === '/djhome'
-                    || location.pathname === '/djprofile'
-                    || location.pathname === '/eventdetails'
-                    || location.pathname === '/showtransactions'
-                    || location.pathname === '/djlivesongs') && (
-                        <Button
-                            className="btn-navigation-bar"
-                            onClick={(e) => handlePlaylistsClick()}>
-                            Playlists
-                        </Button>
-                    )} */}
+               
                 {(location.pathname.startsWith('/djhome') ||
                     location.pathname.startsWith('/djlivesongs') ||
                     location.pathname.startsWith('/showtransactions') ||

@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useState } from 'react';
+﻿import React, { useContext, useEffect, useState} from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RazorPayAppId } from './Constants';
 import './PaymentIndex.css';
@@ -8,6 +8,13 @@ import VBLogo from '../Resources/VB_Logo_2.png';
 import Promocode from './Promocode';
 import * as Constants from '../components/Constants';
 import addNotification from 'react-push-notification';
+
+import GoogleLogin from './GoogleLogin';
+import { useLoadingContext } from './LoadingProvider';
+import { loginUserHelper } from '../Helpers/UserHelper';
+
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
 
 function PaymentIndex() {
     const { error, setError } = useContext(MyContext);
@@ -23,7 +30,7 @@ function PaymentIndex() {
     const [showPromoInput, setShowPromoInput] = useState(false);
     const [promoCode, setPromoCode] = useState('');
     const [isPromoValid, setIsPromoValid] = useState(false);
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state.rowData);
     const rowDataString = searchParams.get('data');
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isPromoApplied, setIsPromoApplied] = useState(false);
@@ -31,6 +38,118 @@ function PaymentIndex() {
     const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
     const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
     const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(''); // New state for mic announcement message
+    const [localError, setLocalError] = useState('');
+    const gstRate = 0.18;
+    const gstAmount = Math.round(amount * gstRate);
+    const totalAmountWithGst = amount + gstAmount;
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showGoogleLogin, setShowGoogleLogin] = useState(false);
+    const [loginMethod, setLoginMethod] = useState('mobile'); // State to track the login method
+    const [email, setEmail] = useState('');
+    const [emailFocused, setEmailFocused] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordFocused, setPasswordFocused] = useState(false);
+    const [loginError, setLoginError] = useState(null);
+    const { setLoading } = useLoadingContext();
+    const [successMessage, setSuccessMessage] = useState('');
+    const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
+
+
+    const handleImageClick = () => {
+        setShowGoogleLogin(prevState => !prevState); // Toggle Google login visibility
+    };
+
+    const handleShow = () => setShowLoginModal(true);
+
+    const handleClose = () => {
+        setShowLoginModal(false);
+        setLoginMethod('mobile'); // Reset to mobile login when closing the modal
+        setShowGoogleLogin(false);
+        setEmail('');
+        setPassword('');
+        setLoginError(null);
+    };
+
+    const handleEmailIconClick = () => {
+        setLoginMethod(prevMethod => prevMethod === 'email' ? 'mobile' : 'email'); // Toggle between email and mobile login
+        setShowGoogleLogin(false); 
+    };
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        if (id === "email") {
+            setEmail(value);
+        }
+        if (id === "password") {
+            setPassword(value);
+        }
+    }
+
+    const handleForgotPasswordClick = () => {
+        setShowInfoBox(!showInfoBox);
+
+    }
+
+    const handleLogin = async () => {
+        setLoginError(false);
+        try {
+            if (!email || !password) {
+                setLoginError(true);
+                return;
+            }
+
+            setLoading(true);
+            const response = await loginUserHelper(email, password);
+            setLoading(false);
+
+            if (response && response.isUser === true) {
+                localStorage.setItem('userId', response.id);
+                localStorage.setItem('isUser', true);
+                setSuccessMessage('Login successful');
+
+                const currentUrl = window.location.pathname;
+                const redirectUrl = localStorage.getItem('redirectUrl');
+
+                if (currentUrl === '/paymentIndex') {
+                    console.log('Staying on the payments page');
+                    setTimeout(() => {
+                        setShowLoginModal(false);
+                        setSuccessMessage('');
+                    }, 1000); // Close modal after 2 seconds
+                } else if (redirectUrl) {
+                    setTimeout(() => {
+                        setShowLoginModal(false);
+                        setSuccessMessage('');
+                        navigate(redirectUrl);
+                    }, 1000); // Close modal after 2 seconds
+                } else {
+                    setTimeout(() => {
+                        setShowLoginModal(false);
+                        setSuccessMessage('');
+                        navigate('/userhome');
+                    }, 1000); // Close modal after 2 seconds
+                }
+            } else if (response && response.isUser === false) {
+                localStorage.setItem('userId', response.id);
+                localStorage.setItem('isUser', false);
+                setSuccessMessage('Login successful');
+                setTimeout(() => {
+                    setShowLoginModal(false);
+                    setSuccessMessage('');
+                    navigate('/djhome');
+                }, 1000); // Close modal after 2 seconds
+            } else {
+                setLoginError(true);
+            }
+        } catch (error) {
+            setLoginError(true);
+            setErrorMessage('Incorrect email or password.');
+            setLoading(false);
+        }
+    }
+
+
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
 
 
     console.log(rowData);
@@ -50,19 +169,7 @@ function PaymentIndex() {
             console.error('Error checking promo code availability:', error);
         }
     };
-    // useEffect(() => {
-    //     // Check promo code availability when component mounts
-    //     checkPromoCodeAvailability();
-    // }, []);
-
-    //useEffect(() => {
-    //    console.log("RowData: ", rowData);
-    //    if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
-    //        console.log("Setting IsSpecialAnnouncement: ", rowData.IsSpecialAnnouncement);
-    //        setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
-    //    }
-    //}, [rowData]);
-
+    
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -109,7 +216,7 @@ function PaymentIndex() {
         });
     }
     useEffect(() => {
-        setAmount(isSpecialAnnouncement ? rowData.minimumBid + 100 : rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBid*1.1): rowData.minimumBid);
 
         if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
             setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
@@ -141,6 +248,17 @@ function PaymentIndex() {
 
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
+        setLocalError('');
+
+        // Check if mic announcement message is empty
+        if (isSpecialAnnouncement && !micAnnouncementMessage) {
+            setLocalError('Please give a message for announcement!');
+            console.log("Inside this function")
+            return; // Stop execution if message is not provided
+        }
+
+
+
         // Load the Razorpay script
         // Once the script is loaded, proceed with payment initiation
         const parsedAmount = parseFloat(isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
@@ -184,7 +302,7 @@ function PaymentIndex() {
         }
 
         const obj = {
-            amount: parsedAmount * 100,
+            amount:totalAmountWithGst * 100,
             userId: localStorage.getItem('userId'),
             TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
             EventId: rowData.eventId,
@@ -252,8 +370,8 @@ function PaymentIndex() {
 
             rzp.open();
         } catch (error) {
-            setError(true);
-            setErrorMessage(error.message);
+            // Handle error locally, preventing it from reaching the global handler
+            setLocalError(error.message);
             console.error(error);
         }
 
@@ -353,14 +471,16 @@ function PaymentIndex() {
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Happy Anniversary"}>Happy Anniversary</button>
                                     <button onClick={() => document.getElementById('message-mic-text').value = "Congratulations"}>Congratulations</button>
                                 </div>
-                                <textarea
-                                    id="message-mic-text"
-                                    placeholder="Type your message.."
-                                    maxLength="40"
-                                    className='mic-announcement-message'
-                                    value={micAnnouncementMessage}
-                                    onChange={(e) => setMicAnnouncementMessage(e.target.value)} // Update the mic announcement message
+
+                                <textarea id="message-mic-text" placeholder="Type your message.." maxlength="40" className='mic-announcement-message' value={micAnnouncementMessage} onChange={(e) => {
+                                    setMicAnnouncementMessage(e.target.value);
+                                    if (localError) setLocalError(''); // Clear error message on typing
+                                }} // Update the mic announcement message
                                 />
+                                <div className='subheading-payment'>
+                                    <img src="images/disclaimerIcon.png" className='disclaimer-icon' />
+                                    Played within 30 mins or refund </div>
+                                   {localError && <p style={{ color: 'red', fontWeight: 'bold' ,textAlign : 'center' }}>{localError}</p>}
                             </>
                         )}
                         {rowData.displayRequests && (
@@ -386,6 +506,7 @@ function PaymentIndex() {
                                         <input type="file" id="file-upload" />
                                     </div>
                                 </div>
+
                             </>
                         )}
                     </div>
@@ -403,9 +524,9 @@ function PaymentIndex() {
                                 </p>
                             </div>
                         </div>
-                        <div className='subheading-payment'>
-                            <img src="images/disclaimerIcon.png" />
-                            ( Played within 30 mins or refund )</div>
+                            <div className='subheading-payment'>
+                                <img src="images/disclaimerIcon.png" className= 'disclaimer-icon' />
+                               Played within 30 mins or refund </div>
                     </>
                 )}
                 {/* <RazorpayPayment data={amount} /> */}
@@ -437,7 +558,7 @@ function PaymentIndex() {
                                 Choose the Tip
                             </div>
                             <div className='tip-amount-input-btns'>
-                                <div onClick={() => { setAmount(amount - 10) }} className='decrease-tip-button'>-</div>
+                                <div onClick={() => { if (amount > 1) { setAmount(amount - 10); } }} className='decrease-tip-button'>-</div>
                                 <input
                                     className='amount-inputfield'
                                     type="number"
@@ -461,13 +582,28 @@ function PaymentIndex() {
                             </div>
                         </div>
                         <br></br>
+                        <div className='gst-info'>
+                            <div>GST (18%)</div>
+                            <div>₹{gstAmount}</div>
+                        </div>
+                        <br></br>
+                        <div className='promocode'>
+                            <span>Promocode</span>
+                            <input
+                                type="text"
+                                className="value"
+                                placeholder="Login to apply"
+                            />
+                            <button className="apply-btn">Apply</button>
+                        </div>
+                        
 
                     </div>
-
                     <div className='tip-info'>
                         <img src="images/disclaimerIcon.png" />
-                        <p>{isSpecialAnnouncement ? ("(The more you tip, the sooner your announcement will be made)") : ("(The more you tip, the higher chances of your song being played)")}</p>
+                        <p>{isSpecialAnnouncement ? ("More you tip, the sooner your announcement will be made") : ("More you tip, higher chances of song being played")}</p>
                     </div>
+
                     {/* <Promocode onApply={handlePromoApply} /> */}
                     <br></br>
                     {/* Display the text below the Apply button */}
@@ -481,6 +617,7 @@ function PaymentIndex() {
                         </div>
                     )}
                     <div>
+                        
                         <button
                             className={`btnPayment btn--primaryPayment btn--mediumPayment ${(rowData.eventStatus !== 'Live'
                                 || amount < rowData.minimumBid
@@ -493,7 +630,7 @@ function PaymentIndex() {
                         >
                             <div className='payment-btn-text'>
                                 <img className='payment-icon' src="images/payment.png" />
-                                <div>Pay | ₹{amount}</div>
+                                <div>Pay | ₹{totalAmountWithGst}</div>
                             </div>
                         </button>
                         {isPromoApplied && isPromoAvailable && (
@@ -505,13 +642,96 @@ function PaymentIndex() {
                     </div>
                 </form>
 
-                <div className='login-proposal'>
+                <div>
+                    {/* Other content */}
+                    <StickyBar type="bid" data={messages}
+                        minAmount={rowData.minimumBid}
+                        onClose={() => { setIsStickyBarVisible(false); }}
+                        isVisible={isStickyBarVisible}
+                    />
+                </div>
+                <div className='login-proposal' onClick={handleShow}>
                     <img className='login-img' src="images/log_in.png" />
                     <p>Login & Get 50% off instantly!</p>
                 </div>
 
+                {showLoginModal && (
+                    <div className="modal-overlay" onClick={handleClose}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <span className="modal-title">Login</span>
+                            </div>
+                            <div className="modal-body">
+                                {successMessage ? (
+                                    <div className="success-message">{successMessage}</div>
+                                ) : (
+                                    <>
+                                        {loginMethod === 'mobile' ? (
+                                            <>
+                                                <div className="input-container">
+                                                    <img src="images/user_image.png" alt="Placeholder" className="input-icon" />
+                                                    <input type="text" placeholder="Mobile Number*" className="input-field" />
+                                                </div>
+                                                <button className="get-otp-button" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="email">
+                                                            {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
+                                                            {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : null}
+                                                    <div className="input-container">
+                                                        {!emailFocused && !email && (
+                                                            <img src="images/emailIcon.png" alt="Email" className="input-icon" />
+                                                        )}
+                                                        <input required type="email" id="email" className='input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
+                                                    </div>
+                                                    <div className="input-container">
+                                                        {!passwordFocused && !password && (
+                                                            <img src="images/password_lock.png" alt="Password" className="input-icon" />
+                                                        )}
+                                                        <input required type="password" id="password" className='input-field' value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
+                                                    </div>
+                                                            <button onClick={handleLogin} type="submit" className="btn btn--primary btn--medium" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Login</button>
+                                                            
+                                                                <div className='forgot-password-container'>
+                                                                    <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
+                                                                    {showInfoBox ? (<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
+                                                                        We're here at your disposal.</div>) : (<></>)}
+                                                                </div>
+                                                            
+                                                        </div>
+                                            </>
+                                        )}
+                                        <div className="text-center " style={{ color: "#39125C", fontWeight: "600", marginTop: "5px", marginBottom: "3px" }}>Or Login with</div>
+                                        <div className="auth-buttons">
+                                            <div>
+                                                <img src="images/g.png" className="g-icon" onClick={handleImageClick} />
+                                            </div>
+                                            {showGoogleLogin && (
+                                                <GoogleLogin
+                                                    isUser={{ isUser: true }}
+                                                    triggerLogin={(login) => login()}
+                                                    showButton={false}
+                                                />
+                                            )}
+                                            <div className='btn-mobile' onClick={handleEmailIconClick}>
+                                                <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="email-icon" alt="Toggle login method" />
+                                            </div>
+                                            </div>
+                                            { /*<div className="footer-links">
+                                                   <a style={{ color: "#39125C" }} onClick={handleClose}>Create Account</a>
+                                                   <a style={{ color: "#39125C" } } onClick={handleClose}>Forgot Password?</a>
+                                              </div> */}
+                                    </>
+                                )}
+                            </div>
+
+                        </div>
+                    </div>
+                )}
+
                 <div className='refund-info-footer'>
-                    <p>~ Should the DJ decline your request, a refund will be issued to your original payment method.</p>
+                    <p>~ If the DJ decline your request, a refund will be issued to your original payment method.</p>
                     <p>~ If DJ accepts the request and doesn't play your song within 30 mins, you'll be issued a full refund.</p>
                 </div>
                 {/* Render the success message if showSuccessMessage is true */}

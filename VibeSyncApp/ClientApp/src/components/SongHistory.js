@@ -95,77 +95,85 @@ export default function SongHistory() {
     return (
         <>
             <div className="song-history-container">
-            <div className='bg-music-song-history'>
-                <div className='song-inner-container'>
-                <div className="filter-container">
-                    <label className="filter-label" htmlFor="statusFilter">SONG REQUESTS</label>
-                    <select
-                        id="statusFilter"
-                        className="filter-select-song-history"
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                    >
-                        <option value="All">All</option>
-                        <option value="Played">Played</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Accepted">Accepted</option>
-                        <option value="Refunded">Refunded</option>
-                    </select>
-                </div>
+                <div className='bg-music-song-history'>
+                    <div className='song-inner-container'>
+                        <div className="filter-container">
+                            <label className="filter-label" htmlFor="statusFilter">SONG REQUESTS</label>
+                            <select
+                                id="statusFilter"
+                                className="filter-select-song-history"
+                                value={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                            >
+                                <option value="All">All</option>
+                                <option value="Played">Played</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Refunded">Refunded</option>
+                            </select>
+                        </div>
 
-                
-                    {isLoading ? (
-                        <p>Loading...</p>
-                    ) : userHistory.length === 0 ? (
-                        <p>You haven't requested any songs yet</p>
-                    ) : (
-                        <>
-                            {userHistory.map((result, index) => {
-                                return (
-                                    <div className='song-row-history-page'>
-                                        <div className='history-page-left-content'>
-                                            <div className='song-row-song-name'>{result.songName}</div>
-                                            <div className='song-row-artist-name'>{result.artistName}</div>
-                                        </div>
-                                        <div className='history-page-middle-content'>
-                                            <div className='song-row-amount-paid'>₹{result.totalAmount}</div>
-                                            <div className='time-paymentid-block'>
-                                                <div  className="date-time-payment"><DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} /></div>
-                                                <div >Txn ID: {result.paymentId}</div>
+
+                        {isLoading ? (
+                            <p>Loading...</p>
+                        ) : userHistory.length === 0 ? (
+                            <p>You haven't requested any songs yet</p>
+                        ) : (
+                            <>
+                                {userHistory.map((result, index) => {
+                                    return (
+                                        <div key={index} className='song-row-history-page'>
+                                            <div className='history-page-left-content'>
+                                                {result.micAnnouncement ? (
+                                                    <div style={{ overflowWrap: 'break-word', overflow: 'hidden' }}>
+                                                        {result.micAnnouncement}
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div classname='song-row-song-name'>{result.songName}</div>
+                                                        <div classname='song-row-artist-name'>{result.artistName}</div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <div className='history-page-middle-content'>
+                                                <div className='song-row-amount-paid'>₹{result.totalAmount}</div>
+                                                <div className='time-paymentid-block'>
+                                                    <div className="date-time-payment"><DateTimeDisplay datetimeString={result.paymentDateTime || result.createdOn} /></div>
+                                                    <div >Txn ID: {result.paymentId}</div>
+                                                </div>
+                                            </div>
+                                            <div className='history-page-right-content'>
+                                                {result.songStatus === 'Played' ?
+                                                    (<div className='btn-right-content btn-payment-green'>
+                                                        {result.songStatus}
+                                                    </div>)
+                                                    :
+                                                    result.songStatus === 'Refunded' ?
+                                                        (<div className='btn-right-content btn-payment-yellow'>
+                                                            {result.songStatus}
+                                                        </div>)
+                                                        : result.songStatus === 'Rejected' ?
+                                                            (<div className='btn-right-content btn-payment-red'>
+                                                                {result.songStatus}
+                                                            </div>)
+                                                            : result.songStatus === 'Pending' ?
+                                                                (<div className='btn-right-content btn-payment-yellow'>
+                                                                    {result.songStatus}
+                                                                </div>)
+                                                                : result.songStatus === 'Accepted' ?
+                                                                    (<div className='btn-right-content btn-payment-yellow'>
+                                                                        {result.songStatus}
+                                                                    </div>)
+                                                                    : ''
+                                                }
                                             </div>
                                         </div>
-                                        <div className='history-page-right-content'>
-                                            {result.songStatus==='Played'?
-                                                (<div className='btn-right-content btn-payment-green'>
-                                                    {result.songStatus}
-                                                </div>)
-                                                :
-                                            result.songStatus==='Refunded'?
-                                                (<div className='btn-right-content btn-payment-yellow'>
-                                                    {result.songStatus}
-                                                </div>)
-                                                :result.songStatus==='Rejected'?
-                                                (<div className='btn-right-content btn-payment-red'>
-                                                    {result.songStatus}
-                                                </div>)
-                                                :result.songStatus==='Pending'?
-                                                (<div className='btn-right-content btn-payment-yellow'>
-                                                    {result.songStatus}
-                                                </div>)
-                                                :result.songStatus==='Accepted'?
-                                                (<div className='btn-right-content btn-payment-yellow'>
-                                                    {result.songStatus}
-                                                </div>)
-                                                :''
-                                            }
-                                        </div>
-                                    </div>
-                                )
-                            })}
+                                    )
+                                })}
 
-                        </>
-                    )}
-                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

@@ -28,7 +28,7 @@ const AddressTypeahead = () => {
     const [eventDesc, SetEventDesc] = useState('');
     const { setLoading } = useLoadingContext();
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.state);
     const rowDataString = searchParams.get('data');
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
@@ -37,9 +37,11 @@ const AddressTypeahead = () => {
     const [acceptingRequests, setAcceptingRequests] = useState( false);
     const [displayRequests, setDisplayRequests] = useState( false);
     const [hidePlaylist, setHidePlaylist] = useState(false); // Default value is false
+    const [minimumBidForSpecialRequest, setMinimumBidForSpecialRequest] = useState('');
 
     const [playlists, setPlaylists] = useState([]);
     const [checkedPlaylists, setCheckedPlaylists] = useState([]);
+
 
 
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
@@ -84,16 +86,36 @@ const AddressTypeahead = () => {
         }
     };
 
+    const handleSpecialRequestMinBidChange = (event) => {
+        const input = event.target.value;
+        if (/^\d*\.?\d*$/.test(input)) {
+            setMinimumBidForSpecialRequest(input);
+        }
+    };
+
+
+
     //requesting announcement functions
 
     const handleAcceptingRequestsChange = (event) => {
-        setAcceptingRequests(event.target.checked);
+        const isChecked = event.target.checked;
+        setAcceptingRequests(isChecked);
         console.log(event.target.checked);
+
+        // Clear minimumBidForSpecialRequest if both acceptingRequests and displayRequests are false
+        if (!isChecked && !displayRequests) {
+            setMinimumBidForSpecialRequest(null);
+        }
     };
 
     const handleDisplayRequestsChange = (event) => {
-        setDisplayRequests(event.target.checked);
+        const isChecked = event.target.checked;
+        setDisplayRequests(isChecked);
         console.log(event.target.checked);
+
+        if (!acceptingRequests && !isChecked) {
+            setMinimumBidForSpecialRequest(null);
+        }
     };
 
     const fetchPlaylists = async () => {
@@ -137,6 +159,7 @@ const AddressTypeahead = () => {
         } else {
             try {
                 setLoading(true);
+                const playlists = checkedPlaylists.join(',');
               
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
@@ -149,12 +172,13 @@ const AddressTypeahead = () => {
                     , 44.765432
                     , minimumBid
                     , rowData ? true : false
+                    , minimumBidForSpecialRequest // Updated field 
                     , acceptingRequests
                     , displayRequests
                     , hidePlaylist 
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
-                    , checkedPlaylists 
+                    , playlists  
                     
                 );
                 setLoading(false);
@@ -187,6 +211,7 @@ const AddressTypeahead = () => {
     };
 
     useEffect(() => {
+        console.log("Rowdata is : ", rowData);
         if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
@@ -335,6 +360,21 @@ const AddressTypeahead = () => {
                     <label htmlFor="displayRequests">Display Requests on Screen</label>
 
                 </div>
+                {(acceptingRequests || displayRequests) && (
+                    <div className="input-group">
+                        <label htmlFor="minimumBidForSpecialRequestInput">Minimum Bid for Special Request<span style={{ color: 'red' }}>*</span></label>
+                        <input
+                            type="number"
+                            id="minimumBidForSpecialRequestInput"
+                            placeholder="Minimum Bid for Special Request"
+                            className='event-input-fields'
+                            value={minimumBidForSpecialRequest}
+                            onChange={handleSpecialRequestMinBidChange}
+                            disabled={!(acceptingRequests || displayRequests)}
+                        />
+                    </div>
+                )}
+
                 <div className="request">
                     <input
                         type="checkbox"

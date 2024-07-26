@@ -558,7 +558,7 @@ function PaymentIndex() {
                                 Choose the Tip
                             </div>
                             <div className='tip-amount-input-btns'>
-                                <div onClick={() => { if (amount - rowData.minimumBid > 10) { setAmount(amount - 10); } }} className='decrease-tip-button'>-</div>
+                                <div onClick={() => { if (amount - rowData.minimumBid > 0) { setAmount(amount - 10); } }} className='decrease-tip-button'>-</div>
                                 <input
                                     className='amount-inputfield'
                                     type="number"

@@ -210,10 +210,10 @@ export default function RegisterUser(isUser) {
                     </div>
                 <div className='password-container'>
                         <div className="confirm-password">
-                            <label className="form__label" htmlFor="confirmPassword">Confirm Password* </label>
-                            <div>
+                                    <label className="form__label" htmlFor="confirmPassword">Confirm Password* </label>
+                                    <div className = "password-box2">
                                 <div className="password-input-box">
-                                    <input required className={`form__input ${confirmPasswordError ? errorCssClass : ""}`} type={showConfirmPassword ? "text" : "password"} id="confirmPassword" value={confirmPassword} onChange={(e) => handleInputChange(e)} placeholder="Confirm Pass" style={{ padding: "5px 10px", width: "99%", height: "91%" }} />
+                                    <input required className={`form__input ${confirmPasswordError ? errorCssClass : ""}`} type={showConfirmPassword ? "text" : "password"} id="confirmPassword" value={confirmPassword} onChange={(e) => handleInputChange(e)} placeholder="Confirm Pass"  />
                                     <img src={showConfirmPassword ? "images/hidden-eye-password.png" : "images/eye-password.png"} className='eye-password-click1' onClick={() => setShowConfirmPassword(!showConfirmPassword)} alt="toggle visibility"
                                         style={{
                                             top: passwordError ? "375px" : confirmPasswordError ? "330px" : "330px"

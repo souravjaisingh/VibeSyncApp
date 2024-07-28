@@ -161,7 +161,7 @@ export default function SongHistory() {
                                                                     {result.songStatus}
                                                                 </div>)
                                                                 : result.songStatus === 'Accepted' ?
-                                                                    (<div className='btn-right-content btn-payment-yellow'>
+                                                                    (<div className='btn-right-content btn-payment-lightgreen'>
                                                                         {result.songStatus}
                                                                     </div>)
                                                                     : ''

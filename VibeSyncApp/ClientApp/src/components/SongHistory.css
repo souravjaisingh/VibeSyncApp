@@ -246,6 +246,9 @@
 .btn-payment-yellow {
     background-color: #FFDE79;
 }
+.btn-payment-lightgreen {
+    background-color: #aff2c3;
+}
 .mic-announcement-message {
     white-space: normal;
     word-wrap: break-word;

@@ -128,3 +128,25 @@
 .request label{
     margin: 6px;
 }
+
+.playlist-selection {
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px;
+}
+
+
+.playlist-checkboxes {
+    max-height: 110px;
+    overflow-y: auto;
+    padding: 6px;
+    border: 1px solid #E5E4E2;
+    /* background-color: #E5E4E2; */
+}
+
+    .playlist-checkboxes .checkbox {
+        margin-bottom: 5px;
+    }

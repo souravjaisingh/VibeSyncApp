@@ -9,6 +9,8 @@ import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
 import { useLoadingContext } from './LoadingProvider';
 import { DeleteEventByEventId } from './services/EventsService';
+import { GetPlaylistList} from './services/SongsService';
+
 
 const AddressTypeahead = () => {
     const { error, setError } = useContext(MyContext);
@@ -37,6 +39,8 @@ const AddressTypeahead = () => {
     const [hidePlaylist, setHidePlaylist] = useState(false); // Default value is false
     const [minimumBidForSpecialRequest, setMinimumBidForSpecialRequest] = useState('');
 
+    const [playlists, setPlaylists] = useState([]);
+    const [checkedPlaylists, setCheckedPlaylists] = useState([]);
 
 
 
@@ -113,6 +117,31 @@ const AddressTypeahead = () => {
             setMinimumBidForSpecialRequest(null);
         }
     };
+
+    const fetchPlaylists = async () => {
+        try {
+            const playlists = await GetPlaylistList();
+            setPlaylists(playlists);
+            setCheckedPlaylists(playlists.map(playlist => playlist.id)); // Check all playlists by default
+        } catch (error) {
+            console.error('Error fetching playlists:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPlaylists();
+    }, []);
+
+    const handleCheckboxChange = (playlistId) => {
+        setCheckedPlaylists((prevCheckedPlaylists) => {
+            if (prevCheckedPlaylists.includes(playlistId)) {
+                return prevCheckedPlaylists.filter(id => id !== playlistId);
+            } else {
+                return [...prevCheckedPlaylists, playlistId];
+            }
+        });
+    };
+
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -130,7 +159,32 @@ const AddressTypeahead = () => {
         } else {
             try {
                 setLoading(true);
+                const playlists = checkedPlaylists.join(',');
 
+                { /* // Prepare the data to be sent
+                const eventData = {
+                    userId: localStorage.getItem('userId'),
+                    theme,
+                    eventDesc,
+                    venueName,
+                    eventStartTime,
+                    eventEndTime,
+                    latitude: 12.123456,  // Modify once Google Maps API gets implemented
+                    longitude: 44.765432,
+                    minimumBid,
+                    minimumBidForSpecialRequest,
+                    acceptingRequests,
+                    displayRequests,
+                    hidePlaylist,
+                    eventId: rowDataString ? rowData.id : 0,
+                    eventStatus: isLive ? 'Live' : 'Not live',
+                    playlists: checkedPlaylists.join(',')  // Send the formatted playlist string
+                };
+
+                // Log the data to be sent
+                console.log('Data being sent to backend:', eventData); */}
+
+              
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
                     , theme
@@ -148,9 +202,7 @@ const AddressTypeahead = () => {
                     , hidePlaylist 
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
-
-
-                    
+                    , playlists  
                     
                 );
                 setLoading(false);
@@ -195,7 +247,10 @@ const AddressTypeahead = () => {
             setDisplayRequests(rowData.displayRequests)
             setHidePlaylist(rowData.hidePlaylist)
             setMinimumBidForSpecialRequest(rowData.minimumBidForSpecialRequest || '');
-            
+            // Set the checked playlists if they are available in rowData
+            if (rowData.playlists) {
+                setCheckedPlaylists(rowData.playlists.split(','));
+            }
         } else {
             // Reset input fields when rowData becomes null
             setVenueName('');
@@ -208,6 +263,7 @@ const AddressTypeahead = () => {
             setDisplayRequests(false);
             setHidePlaylist(false);
             setMinimumBidForSpecialRequest(''); // Updated field
+            setCheckedPlaylists([]);
         }
     }, []);
     
@@ -354,6 +410,25 @@ const AddressTypeahead = () => {
                     />
                     <label htmlFor="hidePlaylist">Hide Available Playlists</label>
                 </div>
+
+                {!hidePlaylist && (
+                <div className="playlist-selection">
+                        <label style={{left: '20px'} }>Available Playlists:</label>
+                    <div className="playlist-checkboxes" >
+                        {playlists.map((playlist) => (
+                            <div key={playlist.id} className="request">
+                                <input
+                                    type="checkbox"
+                                    id={`playlist-${playlist.id}`}
+                                    checked={checkedPlaylists.includes(playlist.id)}
+                                    onChange={() => handleCheckboxChange(playlist.id)}
+                                />
+                                <label htmlFor={`playlist-${playlist.id}`}>{playlist.name}</label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                )}
 
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
                 {rowDataString && (

@@ -60,6 +60,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                     CreatedOn = events.CreatedOn,
                     AcceptingRequests = events.AcceptingRequests,
                     DisplayRequests = events.DisplayRequests,
+                    Playlists = events.Playlists,
                     HidePlaylist = events.HidePlaylist,
                     MinimumBidForSpecialRequest = events.MinimumBidForSpecialRequest   
                 }
@@ -144,6 +145,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                                 Longitude = e.Longitude,
                                 AcceptingRequests = e.AcceptingRequests,
                                 DisplayRequests = e.DisplayRequests,
+                                Playlists = e.Playlists,
                                 HidePlaylist = e.HidePlaylist,
                                 MinimumBidForSpecialRequest = e.MinimumBidForSpecialRequest
                             }).Where(x => x.EventStatus == Constants.Live && x.EventStatus != Constants.EventDeleted).ToList();
@@ -213,6 +215,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                         CreatedOn = e.CreatedOn,
                         AcceptingRequests = e.AcceptingRequests,
                         DisplayRequests = e.DisplayRequests,
+                        Playlists = e.Playlists,
                         HidePlaylist = e.HidePlaylist,
                         MinimumBidForSpecialRequest= e.MinimumBidForSpecialRequest
                     }
@@ -257,6 +260,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
                             CreatedOn = e.CreatedOn,
                             AcceptingRequests = e.AcceptingRequests,
                             DisplayRequests = e.DisplayRequests,
+                            Playlists   = e.Playlists,
                             HidePlaylist = e.HidePlaylist,
                             MinimumBidForSpecialRequest = e.MinimumBidForSpecialRequest
                         }

@@ -110,7 +110,7 @@
     width : 100px;
     border: 2px solid #59b0ef; 
     border-radius: 15px;
-    padding: 3px 10px; /* Adjust padding as needed */
+    padding: 3px 5px; /* Adjust padding as needed */
     width: 6rem;
     /* width: 30%; Adjust width as needed */
     /* margin-right: 10px; Adjust margin as needed */
@@ -517,6 +517,7 @@
 .decrease-tip-button{
     position: relative;
     left:20px;
+    z-index: 1;
 }
 
 .check-box{

@@ -367,8 +367,8 @@ const AddressTypeahead = () => {
 
                 {/*accepting reuests or not*/}
                 <div className="request">
-                    
-                    <input
+
+                    <input style={{ width : "13px" }}
                         type="checkbox"
                         id="acceptingRequests"
                         checked={acceptingRequests}
@@ -378,8 +378,8 @@ const AddressTypeahead = () => {
 
                 </div>
                 <div className="request">
-                   
-                    <input
+
+                    <input style={{ width: "13px" }}
                         type="checkbox"
                         id="displayRequests"
                         checked={displayRequests}
@@ -404,7 +404,7 @@ const AddressTypeahead = () => {
                 )}
 
                 <div className="request">
-                    <input
+                    <input style={{ width: "13px" }}
                         type="checkbox"
                         id="hidePlaylist"
                         checked={hidePlaylist}

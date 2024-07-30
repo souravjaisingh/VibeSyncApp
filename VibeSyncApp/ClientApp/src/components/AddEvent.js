@@ -161,7 +161,7 @@ const AddressTypeahead = () => {
                 setLoading(true);
                 const playlists = checkedPlaylists.join(',');
 
-                { /* // Prepare the data to be sent
+                 // Prepare the data to be sent
                 const eventData = {
                     userId: localStorage.getItem('userId'),
                     theme,
@@ -176,13 +176,14 @@ const AddressTypeahead = () => {
                     acceptingRequests,
                     displayRequests,
                     hidePlaylist,
+                    playlists,
                     eventId: rowDataString ? rowData.id : 0,
-                    eventStatus: isLive ? 'Live' : 'Not live',
-                    playlists: checkedPlaylists.join(',')  // Send the formatted playlist string
+                    eventStatus: isLive ? 'Live' : 'Not live'
+                    
                 };
 
                 // Log the data to be sent
-                console.log('Data being sent to backend:', eventData); */}
+                console.log('Data being sent to backend:', eventData); 
 
               
                 var res = await eventDetailsUpsertHelper(
@@ -199,10 +200,11 @@ const AddressTypeahead = () => {
                     , minimumBidForSpecialRequest // Updated field 
                     , acceptingRequests
                     , displayRequests
-                    , hidePlaylist 
+                    , hidePlaylist
+                    , playlists
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
-                    , playlists  
+                      
                     
                 );
                 setLoading(false);
@@ -246,10 +248,10 @@ const AddressTypeahead = () => {
             setAcceptingRequests(rowData.acceptingRequests)
             setDisplayRequests(rowData.displayRequests)
             setHidePlaylist(rowData.hidePlaylist)
-            setMinimumBidForSpecialRequest(rowData.minimumBidForSpecialRequest || '');
+            setMinimumBidForSpecialRequest(rowData.minimumBidForSpecialRequest || null);
             // Set the checked playlists if they are available in rowData
             if (rowData.playlists) {
-                setCheckedPlaylists(rowData.playlists.split(','));
+                setCheckedPlaylists(rowData.playlists.split(',').map(Number));
             }
         } else {
             // Reset input fields when rowData becomes null
@@ -262,7 +264,7 @@ const AddressTypeahead = () => {
             setAcceptingRequests(false);
             setDisplayRequests(false);
             setHidePlaylist(false);
-            setMinimumBidForSpecialRequest(''); // Updated field
+            setMinimumBidForSpecialRequest(null); // Updated field
             setCheckedPlaylists([]);
         }
     }, []);

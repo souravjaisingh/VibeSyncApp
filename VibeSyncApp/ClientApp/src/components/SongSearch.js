@@ -35,7 +35,7 @@ function SongSearch() {
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
-
+    
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
         setIsSearchBarActive(true);
@@ -345,6 +345,18 @@ function SongSearch() {
         setShowAnnouncementModal(false);
     };
 
+    const selectedPlaylistIds = eventData && eventData.playlists ? eventData.playlists.split(',') : [];
+
+
+    // Convert the string IDs to numbers
+    const selectedPlaylistIdsNumeric = selectedPlaylistIds.map(id => parseInt(id, 10));
+
+    // Filter the list of all playlists to get the selected ones
+    const selectedPlaylists = (listOfPlaylists || []).filter(playlist =>
+        selectedPlaylistIdsNumeric.includes(playlist.id)
+    );
+
+
     return (
         <>
             <div className='song-search'>
@@ -394,7 +406,7 @@ function SongSearch() {
                         <img src="/images/SearchButton1.png" className="search-icon-song-search" />
                     </div>
 
-                    {eventData && eventData.hidePlaylist !== true && (
+                    {eventData && (eventData.playlists !== null && eventData.playlists !== undefined && eventData.hidePlaylist !== true) && (
                         <>
                             <div className="choose-from-collections-text">
                                 <p>OR</p>
@@ -402,7 +414,7 @@ function SongSearch() {
                             </div>
 
                             <div className="playlist-buttons">
-                                {listOfPlaylists && listOfPlaylists.map((playlist) => (
+                                {selectedPlaylists.map(playlist => (
                                     <button
                                         key={playlist.id}
                                         className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}

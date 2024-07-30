@@ -35,7 +35,7 @@ function SongSearch() {
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
-
+    
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
         setIsSearchBarActive(true);
@@ -87,7 +87,17 @@ function SongSearch() {
                 const playlists = await GetPlaylistList();
                 if (playlists && playlists.length > 0) {
                     setListOfPlaylists(playlists);
-                    const firstPlaylistId = playlists[0].id;
+
+                    let firstPlaylistId;
+                    if (selectedPlaylistIds.length > 0) {
+                        // Find the first playlist ID from selectedPlaylistIds
+                        const foundPlaylist = playlists.find(playlist => selectedPlaylistIds.includes(playlist.id));
+                        firstPlaylistId = foundPlaylist ? foundPlaylist.id : playlists[0].id;
+                    } else {
+                        // Fallback to the first playlist in the fetched list
+                        firstPlaylistId = playlists[0].id;
+                    }
+
                     setActivePlaylistId(firstPlaylistId);
                     const songs = await GetSongsList(firstPlaylistId, 0, 50);
                     setResults(songs);
@@ -99,7 +109,7 @@ function SongSearch() {
         };
 
         fetchPlaylistsAndSongs();
-    }, []);
+    }, [eventData]); 
 
     const handlePlaylistClick = async (playlistId) => {
         try {
@@ -119,7 +129,6 @@ function SongSearch() {
                     showCheers(); // Show cheers animation
                 }
             }
-
         } catch (error) {
             console.error('Error fetching songs:', error);
         }
@@ -345,6 +354,22 @@ function SongSearch() {
         setShowAnnouncementModal(false);
     };
 
+
+    const selectedPlaylistIds = eventData && eventData.playlists ? eventData.playlists.split(',') : [];
+   // console.log('selectedPlaylistIds:', selectedPlaylistIds);
+
+   
+    if (!listOfPlaylists) {
+        return null; // or show a loading indicator
+    }
+
+    // Filter playlists based on selectedPlaylistIds
+    const filteredPlaylists = listOfPlaylists.filter(playlist =>
+        selectedPlaylistIds.includes(playlist.id)
+    );
+    // console.log('selectedPlaylists:', selectedPlaylists);
+
+
     return (
         <>
             <div className='song-search'>
@@ -401,19 +426,36 @@ function SongSearch() {
                                 <p>CHOOSE FROM OUR COLLECTIONS</p>
                             </div>
 
-                            <div className="playlist-buttons">
-                                {listOfPlaylists && listOfPlaylists.map((playlist) => (
-                                    <button
-                                        key={playlist.id}
-                                        className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
-                                        onClick={() => handlePlaylistClick(playlist.id)}
-                                    >
-                                        {playlist.name}
-                                    </button>
-                                ))}
+                            <div>
+                                {filteredPlaylists.length > 0 ? (
+                                    <div className="playlist-buttons">
+                                        {filteredPlaylists.map(playlist => (
+                                            <button
+                                                key={playlist.id}
+                                                className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                                onClick={() => handlePlaylistClick(playlist.id)}
+                                            >
+                                                {playlist.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="playlist-buttons">
+                                        {listOfPlaylists.map(playlist => (
+                                            <button
+                                                key={playlist.id}
+                                                className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                                onClick={() => handlePlaylistClick(playlist.id)}
+                                            >
+                                                {playlist.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </>
                     )}
+
 
                     {(searchQuery.trim() !== '' || !(eventData && eventData.hidePlaylist) || isSearchBarActive) && (
                         <div className="container-for-table" style={{ maxHeight: '500px', overflow: 'auto', fontFamily: 'Poppins, sans-serif' }} ref={tableRef}>

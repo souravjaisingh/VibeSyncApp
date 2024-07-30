@@ -176,6 +176,7 @@ input {
         border-block-color: red;
     }
     #gender {
+    border : 0px;
     padding : 5px 10px;
     width: 59%;
     color: #39125C;
@@ -250,14 +251,46 @@ input {
         width : 190px;
         margin-left : 14px;
     }
+    .password-warning {
+        margin-left : 41px !important;
+    }
 }
 
 
 @media (max-width: 450px) {
 
     #password, #confirmPassword {
-        width: 105%; /* Adjust as needed */
+        width: 105%; 
     }
 }
 
 
+@media (max-width: 360px) and (min-height: 700px) and (max-height: 900px) {
+    #password, #confirmPassword {
+        margin-left : -13px;
+        width: 114%;
+    }
+}
+
+@media (max-width: 380px) and (max-height: 680px) {
+    #password, #confirmPassword {
+        width: 128px;
+        margin-left : -8px;
+    }
+}
+
+@media (max-width: 345px) and (max-height: 900px) {
+    #password, #confirmPassword {
+        width: 114px;
+        margin-left: -20px;
+    }
+
+    .eye-password-click1 {
+        right: 30px;
+        top: 291px;
+    }
+    .text-overlay {
+        font-size : 2rem;
+        left : 59%;
+    }
+}

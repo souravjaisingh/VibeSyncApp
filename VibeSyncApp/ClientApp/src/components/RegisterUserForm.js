@@ -170,7 +170,7 @@ export default function RegisterUser(isUser) {
                 </div>
                 <div className="lastname">
                     <label className="form__label" for="lastName">Last Name </label>
-                    <input type="text" name="" id="lastName" value={lastName} className="form__input" onChange={(e) => handleInputChange(e)} placeholder="LastName" />
+                    <input type="text" name="" id="lastName" value={lastName} className="form__input" onChange={(e) => handleInputChange(e)} placeholder="Last Name" />
                 </div>
                 <div className="email">
                     <label className="form__label" for="email">Email* </label>
@@ -204,7 +204,7 @@ export default function RegisterUser(isUser) {
                                 <input required className={`form__input ${passwordError ? errorCssClass : ""}`} type={showPassword ? "text" : "password"} id="password" value={password} onChange={(e) => handleInputChange(e)} placeholder="Password" />
                                 <img src={showPassword ? "images/hidden-eye-password.png" : "images/eye-password.png"} className='eye-password-click1' onClick={() => setShowPassword(!showPassword)} alt="toggle visibility" />
                                 </div>
-                                {passwordError ? <p className='password-warning'>Must be minimum 8 characters.</p> : ''}
+                                        {passwordError ? <p className='password-warning' style={{ width: "137px" }}>Must be minimum 8 characters.</p> : ''}
                             </div>
                         </div>
                     </div>
@@ -219,7 +219,7 @@ export default function RegisterUser(isUser) {
                                             top: passwordError ? "375px" : confirmPasswordError ? "330px" : "330px"
                                         }} />
                                 </div>
-                                {confirmPasswordError ? <p className='password-warning' style={{ marginLeft: "29px", width : "146px" }}>Password and Confirm password must be the same.</p> : ''}
+                                {confirmPasswordError ? <p className='password-warning' style={{  width : "137px" }}>Password and Confirm password must be the same.</p> : ''}
                             </div>
                     </div>
                 </div>

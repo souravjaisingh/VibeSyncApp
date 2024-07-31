@@ -214,6 +214,7 @@ html body {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+    margin: 0 !important;
 }
 
 .song-artists{
@@ -551,4 +552,11 @@ html body {
         text-align: center;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         background-color: #39125c;
+    }
+
+    .no-songs-found{
+        font-weight: 700;
+        padding: 4px;
+        color: rgb(209, 59, 33);
+        text-align: center;
     }

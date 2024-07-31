@@ -35,6 +35,7 @@ function SongSearch() {
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+    const [NoSongsFound,setNoSongsFound] = useState(false);
     
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
@@ -246,6 +247,7 @@ function SongSearch() {
 
     const handleSearchChange = (event) => {
         setActivePlaylistId(null);
+        setNoSongsFound(false);
         const newQuery = event.target.value;
         setSearchQuery(newQuery);
         clearTimeout(typingTimeout);
@@ -265,6 +267,9 @@ function SongSearch() {
             setCurrentPage(1); // Reset current page
             const res = await GetSongsUsingSearchTerm(query, 1, 20);
             setResults(res);
+            if(res === null){
+                setNoSongsFound(true);
+            }
             setCurrentPage(2); // Set the next page to fetch
         } catch (error) {
             setError(true);
@@ -418,6 +423,8 @@ function SongSearch() {
                         />
                         <img src="/images/SearchButton1.png" className="search-icon-song-search" />
                     </div>
+
+                    {NoSongsFound?(<div className='no-songs-found'>No Songs Found!</div>):(<></>)}
 
                     {eventData && eventData.hidePlaylist !== true && (
                         <>

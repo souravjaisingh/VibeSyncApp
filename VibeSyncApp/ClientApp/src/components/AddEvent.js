@@ -270,8 +270,12 @@ const AddressTypeahead = () => {
     
 
     return (
+        <div className="address-typeahead-container">
         <div className="address-typeahead">
+                <h2 style={{ fontWeight: '700', color: '#39125C', fontSize: '32px', marginTop: '23px', marginBottom: '10px' }}>{rowDataString ? "Update Event" : "Add Event"}</h2>
+                <img src="/images/BGMusic.png" alt="Background" className="background-image" style={{top: '127px' ,position: 'absolute' , height: '156px'} } />
             <form className='event-form'>
+            <div className="header-container">
                 <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
                 {suggestions.length > 0 && (
                     <ul className="suggestions-list">
@@ -292,7 +296,7 @@ const AddressTypeahead = () => {
                             <div className={`slider-thumb ${isLive ? 'active' : ''}`} />
                         </div>
                     </div>
-                
+            </div>
                 <div className="input-group">
                     <label htmlFor="eventNameInput">Event Name</label>
                     <input
@@ -428,15 +432,18 @@ const AddressTypeahead = () => {
                         ))}
                     </div>
                 </div>
-                )}
+                    )}
 
+                <div className="button-group">
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
                 {rowDataString && (
-                <button type='button' onClick={handleDelete} className="btn btn--danger btn--medium " style={{color: "red"}}>
+                <button type='button' onClick={handleDelete} className="btn btn--danger btn--medium btndel " style={{color: "red"}}>
                     Delete event
                 </button>
-            )}
+                        )}
+                    </div>
             </form>
+            </div>
         </div>
 
     );

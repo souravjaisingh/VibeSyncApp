@@ -27,6 +27,7 @@
 .bg-music-background{
    background: url('/images/BGMusic.png');
     background-repeat: no-repeat;
+    background-size: 100%;
 }
 
 .song-details-container img{

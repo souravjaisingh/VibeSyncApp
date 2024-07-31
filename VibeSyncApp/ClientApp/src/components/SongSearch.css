@@ -21,7 +21,8 @@ html body {
         /* background-color: #f0f7f9; */
         padding:10px;
         padding-bottom: 0px;
-        
+        max-width: 48rem;
+        margin: auto;
     }
     
     .dj-image {
@@ -250,6 +251,11 @@ html body {
     margin-top: -11px;
     align-items: center; /* Center content horizontally */
     width:100%;
+    max-width: 48rem;
+    margin: auto;
+    background: url('../Resources/BGMusic.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
 }
 
 .search-bar {
@@ -277,8 +283,7 @@ html body {
 }
 
 .container-for-table{
-    background: url('../Resources/BGMusic.png');
-    background-repeat: no-repeat;
+
 }
 
 

@@ -52,14 +52,16 @@ namespace VibeSync.DAL.Handler
         /// <value>
         /// The base URL.
         /// </value>
-        private string BaseUrl { get; set; }
+        private string SpotifyBaseUrl { get; set; }
+        private string JioSaavanBaseUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the query parameters.
         /// </summary>
         /// <value>
         /// The query parameters.
         /// </value>
-        private string QueryParameters { get; set; }
+        private string JioSaavanQueryParameters { get; set; }
         private string GetPlaylists { get; set; }
         private string GetPlaylistTracks { get; set; }
 
@@ -100,8 +102,9 @@ namespace VibeSync.DAL.Handler
             AccessTokenUrl = configuration["SpotifyApi:AccessTokenUrl"];
             ClientSecret = configuration["SpotifyApi:ClientSecret"];
             ClientId = configuration["SpotifyApi:ClientId"];
-            BaseUrl = configuration["SpotifyApi:BaseUrl"];
-            QueryParameters = configuration["SpotifyApi:TrackSearch"];
+            SpotifyBaseUrl = configuration["SpotifyApi:BaseUrl"];
+            JioSaavanQueryParameters = configuration["JioSaavanApi:QueryParams"];
+            JioSaavanBaseUrl = configuration["JioSaavanApi:BaseUrl"];
             GetPlaylists = configuration["SpotifyApi:GetPlaylists"];
             GetPlaylistTracks = configuration["SpotifyApi:GetPlaylistTracks"];
             _songQueryRepository = songQueryRepository;
@@ -116,12 +119,31 @@ namespace VibeSync.DAL.Handler
         /// <returns></returns>
         public async Task<List<SongDetails>> Handle(GetSongRequestModel request, CancellationToken cancellationToken)
         {
+            string queryParameters = string.Format(JioSaavanQueryParameters, request.SongName, request.limit);
+
+            var response = await _httpClient.GetAsync($"{JioSaavanBaseUrl}{queryParameters}");
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var jsonObject = JObject.Parse(responseContent);
+            var items = jsonObject["data"]["results"].ToString();
+            var songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
+            var language = new List<string> { "english", "hindi", "punjabi" };
+            songDetails = songDetails.Where(x=> language.Contains(x.Language)).ToList();
+            return songDetails;
+        }
+        private List<SongDetails> FilterSongsByLanguage(List<SongDetails> songs, string language)
+        {
+            return songs.Where(song => song.Language.Equals(language, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        /// Commenting spotify code as shifting from spotify to Jio Saavn
+/*        public async Task<List<SongDetails>> Handle(GetSongRequestModel request, CancellationToken cancellationToken)
+        {
             var accessToken = await GetSpotifyAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             string queryParameters = string.Format(QueryParameters, request.SongName, request.Offset, request.limit);
 
-            var response = await _httpClient.GetAsync($"{BaseUrl}{queryParameters}");
+            var response = await _httpClient.GetAsync($"{SpotifyBaseUrl}{queryParameters}");
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(responseContent);
@@ -129,7 +151,7 @@ namespace VibeSync.DAL.Handler
             var songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
             return songDetails;
         }
-
+*/
         /// <summary>
         /// Handles a request
         /// </summary>
@@ -186,7 +208,7 @@ namespace VibeSync.DAL.Handler
             var accessToken = await GetSpotifyAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response = await _httpClient.GetAsync($"{BaseUrl}{GetPlaylists}");
+            var response = await _httpClient.GetAsync($"{SpotifyBaseUrl}{GetPlaylists}");
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(responseContent);
@@ -202,7 +224,7 @@ namespace VibeSync.DAL.Handler
 
             string url = string.Format(GetPlaylistTracks, request.Id, request.Offset, request.Limit);
 
-            var response = await _httpClient.GetAsync($"{BaseUrl}{url}");
+            var response = await _httpClient.GetAsync($"{SpotifyBaseUrl}{url}");
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(responseContent);

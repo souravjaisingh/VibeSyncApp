@@ -37,6 +37,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public string Name { get; set; }
         public List<Image> Image { get; set; }
         public string Language { get; set; }
+        public long? PlayCount { get; set; }
 
     }
     /// <summary>
@@ -51,8 +52,7 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The identifier.
         /// </value>
         public string Id { get; set; }
-        //commented Spotify response
-        //public List<Image> Images { get; set; }
+        public List<Image> Images { get; set; }
         /// <summary>
         /// Gets or sets the name.
         /// </summary>

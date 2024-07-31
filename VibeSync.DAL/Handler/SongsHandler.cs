@@ -119,7 +119,7 @@ namespace VibeSync.DAL.Handler
         /// <returns></returns>
         public async Task<List<SongDetails>> Handle(GetSongRequestModel request, CancellationToken cancellationToken)
         {
-            string queryParameters = string.Format(JioSaavanQueryParameters, request.SongName, request.limit);
+            string queryParameters = string.Format(JioSaavanQueryParameters, request.SongName, request.limit, request.Offset);
 
             var response = await _httpClient.GetAsync($"{JioSaavanBaseUrl}{queryParameters}");
             response.EnsureSuccessStatusCode();
@@ -128,7 +128,7 @@ namespace VibeSync.DAL.Handler
             var items = jsonObject["data"]["results"].ToString();
             var songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
             var language = new List<string> { "english", "hindi", "punjabi" };
-            songDetails = songDetails.Where(x=> language.Contains(x.Language)).ToList();
+            songDetails = songDetails.Where(x=> language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000).ToList();
             return songDetails;
         }
         private List<SongDetails> FilterSongsByLanguage(List<SongDetails> songs, string language)

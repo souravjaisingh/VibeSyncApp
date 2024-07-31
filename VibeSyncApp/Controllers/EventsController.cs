@@ -42,9 +42,6 @@ namespace VibeSyncApp.Controllers
         {
             _mediator = mediator;
             _logger = logger;
-            var builder = new ConfigurationBuilder().
-                SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json");
             Account account = new Account(
                 configuration["Cloudinary:CloudName"],
                 configuration["Cloudinary:ApiKey"],

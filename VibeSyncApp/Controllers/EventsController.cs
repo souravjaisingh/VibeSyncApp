@@ -12,6 +12,7 @@ using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
 using Coordinates = VibeSyncModels.Request_ResponseModels.Coordinates;
 using VibeSyncModels;
+using Microsoft.Extensions.Configuration;
 
 namespace VibeSyncApp.Controllers
 {
@@ -37,14 +38,18 @@ namespace VibeSyncApp.Controllers
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
-        public EventsController(IMediator mediator, ILogger<EventsController> logger)
+        public EventsController(IMediator mediator, ILogger<EventsController> logger, IConfiguration configuration)
         {
             _mediator = mediator;
             _logger = logger;
+            var builder = new ConfigurationBuilder().
+                SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json");
             Account account = new Account(
-                "dmotdf4iz",
-                "951319362253149",
-                "xGEG52arQq4QqiaafHI-qvPYvLU"
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
+
             );
             _cloudinary = new Cloudinary(account);
         }

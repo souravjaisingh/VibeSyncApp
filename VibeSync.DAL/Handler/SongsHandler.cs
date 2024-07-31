@@ -91,14 +91,9 @@ namespace VibeSync.DAL.Handler
         /// Initializes a new instance of the <see cref="SongsHandler"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository)
+        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository, IConfiguration configuration)
         {
             _httpClient = client;
-
-            var builder = new ConfigurationBuilder().
-                SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json");
-            var configuration = builder.Build();
             AccessTokenUrl = configuration["SpotifyApi:AccessTokenUrl"];
             ClientSecret = configuration["SpotifyApi:ClientSecret"];
             ClientId = configuration["SpotifyApi:ClientId"];

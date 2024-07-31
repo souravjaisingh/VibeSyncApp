@@ -192,11 +192,12 @@ html body {
     margin-top:0.5rem;
     color: #39125C;
     max-height: 3.5rem;
-
 }
 
 .songs-row img{
+    max-height: 100%;
     border-radius: 15px;
+    max-width: 56px;
 }
 
 .song-card-text{
@@ -209,6 +210,10 @@ html body {
     font-size: 1.1rem; 
     line-height: 1.3rem;
     font-weight:700;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
 }
 
 .song-artists{

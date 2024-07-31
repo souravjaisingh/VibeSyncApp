@@ -212,7 +212,7 @@ function SongSearch() {
                 //newData = await GetSongsList(activePlaylistId, (currentPage - 1) * 20, 20);
                 setLoading(false);
             } else {
-                newData = await GetSongsUsingSearchTerm(searchQuery, (currentPage - 1) * 20 + 1, 20);
+                newData = await GetSongsUsingSearchTerm(searchQuery, currentPage, 20);
                 setResults((prevData) => [...prevData, ...newData]);
                 setCurrentPage((prevPage) => prevPage + 1);
             }
@@ -263,7 +263,7 @@ function SongSearch() {
         try {
             setResults([]); // Clear previous results
             setCurrentPage(1); // Reset current page
-            const res = await GetSongsUsingSearchTerm(query, 0, 20);
+            const res = await GetSongsUsingSearchTerm(query, 1, 20);
             setResults(res);
             setCurrentPage(2); // Set the next page to fetch
         } catch (error) {
@@ -463,14 +463,14 @@ function SongSearch() {
                                 <div key={index} className="songs-row" onClick={() => handleRowClick(result)}>
                                     <div>
                                         <img
-                                            src={result.album.images[result.album.images.length - 1].url}
+                                            src={result.image[result.image.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
                                         />
                                     </div>
                                     <div className="song-card-text">
                                         <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700"}}>{result.name}</span>
                                         <span className="song-artists">
-                                            {result.artists.map((artist) => artist.name).join(', ')}
+                                            {result.artists.primary.map((artist) => artist.name).join(', ')}
                                         </span>
                                     </div>
                                 </div>

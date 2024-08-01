@@ -27,7 +27,7 @@ namespace VibeSync.DAL.BackgroundServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Running database keep-alive job at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Running database keep-alive/Refund job at: {time}", DateTimeOffset.Now);
 
                 using (var scope = _scopeFactory.CreateScope())
                 {
@@ -58,7 +58,9 @@ namespace VibeSync.DAL.BackgroundServices
                                 SongId = songHistory.SongId,
                                 SongStatus = songHistory.SongStatus,
                                 TotalAmount = payment.TotalAmount,
-                                UserId = songHistory.UserId
+                                UserId = songHistory.UserId,
+                                MicAnnouncement = songHistory.MicAnnouncement,
+                                ScreenAnnouncement = songHistory.ScreenAnnouncement
                             })
                             .Where(x => x.SongStatus == "Pending")
                             .ToListAsync();
@@ -89,7 +91,7 @@ namespace VibeSync.DAL.BackgroundServices
                         _logger.LogError(ex, "An error occurred while refunding.");
                     }
                 }
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
             }
         }
     }

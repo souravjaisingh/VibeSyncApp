@@ -29,8 +29,8 @@ namespace VibeSyncModels.EntityModels
         public bool IsSsologin { get; set; }
         public string UserOrDj { get; set; }
         public string Token { get; set; }
-        public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryDate { get; set; }
+        public string RefreshToken { get; set; }
 
         public virtual ICollection<Dj> Djs { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }

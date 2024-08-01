@@ -223,5 +223,10 @@ h1 {
   background-size: cover;
   display: inline-block;
   vertical-align: middle;
-  margin-right: 5px; /* Add spacing between the icon and text */
+}
+.google-icon-container{
+  background-color: #fff;
+  border-radius: 100%;
+  border: none;
+  padding:12px;
 }

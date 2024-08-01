@@ -8,9 +8,9 @@ export default function QrCodeDirect({eventId}) {
         eventId = localStorage.getItem('eventId') != null ? localStorage.getItem('eventId') : null
     }
     let url = 'https://vibesync.in/songsearch?qrcode=true&eventId='+eventId+'&userId='+localStorage.getItem('userId');
-    if(eventId == 18){
-        url = 'https://vibesyncdj.azurewebsites.net/songsearch?qrcode=true&eventId='+eventId+'&userId='+localStorage.getItem('userId');
-    }
+    // if(eventId == 18){
+    //     url = 'https://vibesyncdj.azurewebsites.net/songsearch?qrcode=true&eventId='+eventId+'&userId='+localStorage.getItem('userId');
+    // }
     console.log(url);
     const downloadQR = () => {
         const canvas = document.getElementById('event');

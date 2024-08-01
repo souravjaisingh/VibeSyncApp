@@ -123,7 +123,7 @@ export function handleAPIError(response) {
             case 503:
                 throw new Error("Hold on tight! Our team of highly trained monkeys is fixing the issue.");
             case 401:
-                throw new Error("Access denied! You need a magic wand or the secret handshake for this area.");
+                throw new Error("Invalid Password");
             case 409:
                 throw new Error("Double trouble! That email's already taken. Please choose a unique one. If you still think it's unique, probably our server has gone crazy.");
             default:

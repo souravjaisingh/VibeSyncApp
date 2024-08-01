@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -46,6 +47,28 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(DjController).GetMethod("GetDjProfile")}'s response: {JsonConvert.SerializeObject(result)}");
 
             return Ok(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetReviews([FromQuery] GetReviewRequestModel request)
+        {
+            _logger.LogInformation($"Entered: {typeof(DjController)}, API: {typeof(DjController).GetMethod("GetReviews")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var result = await _mediator.Send(request);
+
+            _logger.LogInformation($"{typeof(DjController).GetMethod("GetReviews")}'s response: {JsonConvert.SerializeObject(result)}");
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReview([FromBody] ReviewDetails request)
+        {
+            
+            _logger.LogInformation($"Entered: {typeof(DjController)}, API: {typeof(DjController).GetMethod("CreateReview")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var res = await _mediator.Send(request).ConfigureAwait(false);
+
+            _logger.LogInformation($"{typeof(DjController).GetMethod("CreateReview")}'s response: {JsonConvert.SerializeObject(res)}");
+            return Ok(res);
         }
     }
 }

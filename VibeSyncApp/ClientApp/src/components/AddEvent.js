@@ -9,6 +9,8 @@ import { MyContext } from '../App';
 import QRCodeModal from './QRCodeModal';
 import { useLoadingContext } from './LoadingProvider';
 import { DeleteEventByEventId } from './services/EventsService';
+import { GetPlaylistList} from './services/SongsService';
+
 
 const AddressTypeahead = () => {
     const { error, setError } = useContext(MyContext);
@@ -26,13 +28,22 @@ const AddressTypeahead = () => {
     const [eventDesc, SetEventDesc] = useState('');
     const { setLoading } = useLoadingContext();
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.state);
     const rowDataString = searchParams.get('data');
     const navigate = useNavigate();
     const rowData = JSON.parse(decodeURIComponent(rowDataString));
     const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA'))? true:false);
     console.log(rowData);
-    
+    const [acceptingRequests, setAcceptingRequests] = useState( false);
+    const [displayRequests, setDisplayRequests] = useState( false);
+    const [hidePlaylist, setHidePlaylist] = useState(false); // Default value is false
+    const [minimumBidForSpecialRequest, setMinimumBidForSpecialRequest] = useState('');
+
+    const [playlists, setPlaylists] = useState([]);
+    const [checkedPlaylists, setCheckedPlaylists] = useState([]);
+
+
+
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
     const twoHoursAfterCurrentTime = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
 
@@ -74,6 +85,64 @@ const AddressTypeahead = () => {
             setMinimumBid(input);
         }
     };
+
+    const handleSpecialRequestMinBidChange = (event) => {
+        const input = event.target.value;
+        if (/^\d*\.?\d*$/.test(input)) {
+            setMinimumBidForSpecialRequest(input);
+        }
+    };
+
+
+
+    //requesting announcement functions
+
+    const handleAcceptingRequestsChange = (event) => {
+        const isChecked = event.target.checked;
+        setAcceptingRequests(isChecked);
+        console.log(event.target.checked);
+
+        // Clear minimumBidForSpecialRequest if both acceptingRequests and displayRequests are false
+        if (!isChecked && !displayRequests) {
+            setMinimumBidForSpecialRequest(null);
+        }
+    };
+
+    const handleDisplayRequestsChange = (event) => {
+        const isChecked = event.target.checked;
+        setDisplayRequests(isChecked);
+        console.log(event.target.checked);
+
+        if (!acceptingRequests && !isChecked) {
+            setMinimumBidForSpecialRequest(null);
+        }
+    };
+
+    const fetchPlaylists = async () => {
+        try {
+            const playlists = await GetPlaylistList();
+            setPlaylists(playlists);
+            setCheckedPlaylists(playlists.map(playlist => playlist.id)); // Check all playlists by default
+        } catch (error) {
+            console.error('Error fetching playlists:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPlaylists();
+    }, []);
+
+    const handleCheckboxChange = (playlistId) => {
+        setCheckedPlaylists((prevCheckedPlaylists) => {
+            if (prevCheckedPlaylists.includes(playlistId)) {
+                return prevCheckedPlaylists.filter(id => id !== playlistId);
+            } else {
+                return [...prevCheckedPlaylists, playlistId];
+            }
+        });
+    };
+
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         // Validation: Check if any input field is empty
@@ -90,6 +159,33 @@ const AddressTypeahead = () => {
         } else {
             try {
                 setLoading(true);
+                const playlists = checkedPlaylists.join(',');
+
+                 // Prepare the data to be sent
+                const eventData = {
+                    userId: localStorage.getItem('userId'),
+                    theme,
+                    eventDesc,
+                    venueName,
+                    eventStartTime,
+                    eventEndTime,
+                    latitude: 12.123456,  // Modify once Google Maps API gets implemented
+                    longitude: 44.765432,
+                    minimumBid,
+                    minimumBidForSpecialRequest,
+                    acceptingRequests,
+                    displayRequests,
+                    hidePlaylist,
+                    playlists,
+                    eventId: rowDataString ? rowData.id : 0,
+                    eventStatus: isLive ? 'Live' : 'Not live'
+                    
+                };
+
+                // Log the data to be sent
+                console.log('Data being sent to backend:', eventData); 
+
+              
                 var res = await eventDetailsUpsertHelper(
                     localStorage.getItem('userId')
                     , theme
@@ -101,8 +197,15 @@ const AddressTypeahead = () => {
                     , 44.765432
                     , minimumBid
                     , rowData ? true : false
+                    , minimumBidForSpecialRequest // Updated field 
+                    , acceptingRequests
+                    , displayRequests
+                    , hidePlaylist
+                    , playlists
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
+                      
+                    
                 );
                 setLoading(false);
                 if (res != null) {
@@ -134,6 +237,7 @@ const AddressTypeahead = () => {
     };
 
     useEffect(() => {
+        console.log("Rowdata is : ", rowData);
         if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
@@ -142,8 +246,13 @@ const AddressTypeahead = () => {
             SetEventDesc(rowData.eventDescription)
             setMinimumBid(rowData.minimumBid)
             setAcceptingRequests(rowData.acceptingRequests)
-            setDisplayRequests(rowData.displayRequests)    
+            setDisplayRequests(rowData.displayRequests)
             setHidePlaylist(rowData.hidePlaylist)
+            setMinimumBidForSpecialRequest(rowData.minimumBidForSpecialRequest || null);
+            // Set the checked playlists if they are available in rowData
+            if (rowData.playlists) {
+                setCheckedPlaylists(rowData.playlists.split(',').map(Number));
+            }
         } else {
             // Reset input fields when rowData becomes null
             setVenueName('');
@@ -152,17 +261,23 @@ const AddressTypeahead = () => {
             setStartEventTime('');
             SetEventDesc('');
             setMinimumBid('');
-            setAcceptingRequests(false);  
-            setDisplayRequests(false);    
+            setAcceptingRequests(false);
+            setDisplayRequests(false);
             setHidePlaylist(false);
+            setMinimumBidForSpecialRequest(null); // Updated field
+            setCheckedPlaylists([]);
         }
     }, []);
     
     
 
     return (
+        <div className="address-typeahead-container">
         <div className="address-typeahead">
+                <h2 style={{ fontWeight: '700', color: '#39125C', fontSize: '32px', marginTop: '23px', marginBottom: '10px' }}>{rowDataString ? "Update Event" : "Add Event"}</h2>
+                <img src="/images/BGMusic.png" alt="Background" className="background-image" style={{top: '127px' ,position: 'absolute' , height: '156px'} } />
             <form className='event-form'>
+            <div className="header-container">
                 <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>
                 {suggestions.length > 0 && (
                     <ul className="suggestions-list">
@@ -183,7 +298,7 @@ const AddressTypeahead = () => {
                             <div className={`slider-thumb ${isLive ? 'active' : ''}`} />
                         </div>
                     </div>
-                
+            </div>
                 <div className="input-group">
                     <label htmlFor="eventNameInput">Event Name</label>
                     <input
@@ -253,13 +368,84 @@ const AddressTypeahead = () => {
                         onChange={handleMinimumBidChange}
                     />
                 </div>
+
+                {/*accepting reuests or not*/}
+                <div className="request">
+
+                    <input style={{ width : "13px" }}
+                        type="checkbox"
+                        id="acceptingRequests"
+                        checked={acceptingRequests}
+                        onChange={handleAcceptingRequestsChange}
+                    />
+                    <label htmlFor="acceptingRequests">Accept Announcement Requests</label>
+
+                </div>
+                <div className="request">
+
+                    <input style={{ width: "13px" }}
+                        type="checkbox"
+                        id="displayRequests"
+                        checked={displayRequests}
+                        onChange={handleDisplayRequestsChange}
+                    />
+                    <label htmlFor="displayRequests">Display Requests on Screen</label>
+
+                </div>
+                {(acceptingRequests || displayRequests) && (
+                    <div className="input-group">
+                        <label htmlFor="minimumBidForSpecialRequestInput">Minimum Bid for Special Request<span style={{ color: 'red' }}>*</span></label>
+                        <input
+                            type="number"
+                            id="minimumBidForSpecialRequestInput"
+                            placeholder="Minimum Bid for Special Request"
+                            className='event-input-fields'
+                            value={minimumBidForSpecialRequest}
+                            onChange={handleSpecialRequestMinBidChange}
+                            disabled={!(acceptingRequests || displayRequests)}
+                        />
+                    </div>
+                )}
+
+                <div className="request">
+                    <input style={{ width: "13px" }}
+                        type="checkbox"
+                        id="hidePlaylist"
+                        checked={hidePlaylist}
+                        onChange={(event) => setHidePlaylist(event.target.checked)}
+                    />
+                    <label htmlFor="hidePlaylist">Hide Available Playlists</label>
+                </div>
+
+                {!hidePlaylist && (
+                <div className="playlist-selection">
+                        <label style={{left: '20px'} }>Available Playlists:</label>
+                    <div className="playlist-checkboxes" >
+                        {playlists.map((playlist) => (
+                            <div key={playlist.id} className="request">
+                                <input
+                                    type="checkbox"
+                                    id={`playlist-${playlist.id}`}
+                                    checked={checkedPlaylists.includes(playlist.id)}
+                                    onChange={() => handleCheckboxChange(playlist.id)}
+                                />
+                                <label htmlFor={`playlist-${playlist.id}`}>{playlist.name}</label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                    )}
+
+                <div className="button-group">
                 <button type='button' onClick={(event) => handleSubmit(event)} className="btn btn--primary btn--medium btn-pay"> {rowDataString ? 'Update event' : 'Add event'}</button>
                 {rowDataString && (
-                <button type='button' onClick={handleDelete} className="btn btn--danger btn--medium " style={{color: "red"}}>
+                <button type='button' onClick={handleDelete} className="btn btn--danger btn--medium btndel " style={{color: "red"}}>
                     Delete event
                 </button>
-            )}
+                        )}
+                    </div>
             </form>
+            </div>
         </div>
 
     );

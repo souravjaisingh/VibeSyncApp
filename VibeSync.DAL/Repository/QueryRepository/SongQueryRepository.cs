@@ -66,6 +66,8 @@ namespace VibeSync.DAL.Repository.QueryRepository
                     ArtistId = joined.SongHistory.ArtistId,
                     ArtistName = joined.SongHistory.ArtistName,
                     AlbumName = joined.SongHistory.AlbumName,
+                    MicAnnouncement = joined.SongHistory.MicAnnouncement,
+                    ScreenAnnouncement = joined.SongHistory.ScreenAnnouncement,
                     Dj = joined.SongHistory.Dj,
                     Event = joined.SongHistory.Event,
                     User = joined.SongHistory.User,
@@ -104,7 +106,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 SongId = songHistory.SongId,
                 SongStatus = songHistory.SongStatus,
                 TotalAmount = payment.TotalAmount,
-                UserId = songHistory.UserId
+                UserId = songHistory.UserId,
+                MicAnnouncement = songHistory.MicAnnouncement,
+                ScreenAnnouncement = songHistory.ScreenAnnouncement
             });
 
             if (userId > 0)

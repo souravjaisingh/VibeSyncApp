@@ -1,8 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels;
+using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Repository.CommandRepository
@@ -13,14 +16,19 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// The context
         /// </summary>
         private readonly VibeSyncContext _context;
+        private readonly IMapper _mapper;
+
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserCommandRepository"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="mapper">The mapper.</param>
-        public DjCommandRepository(IDBContextFactory context)
+        public DjCommandRepository(IDBContextFactory context, IMapper mapper)
         {
             _context = context.GetDBContext();
+            _mapper = mapper;
         }
         /// <summary>
         /// Updates the dj.
@@ -30,6 +38,8 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <exception cref="VibeSyncModels.CustomException"></exception>
         public async Task<string> UpdateDj(UpdateDjCommandModel request)
         {
+
+            
             var djEntity = _context.Djs.Where(x => x.Id == request.Id).FirstOrDefault();
             if (djEntity != null)
             {
@@ -63,5 +73,39 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 throw new CustomException("Entity not found");
             }
         }
+
+        public async Task<bool> CreateReview(ReviewDetails request)
+        {
+            var reviewDetails = _mapper.Map<Review>(request);
+            if (reviewDetails == null)
+            {
+                throw new ArgumentNullException(nameof(reviewDetails));
+            }
+
+            reviewDetails.CreatedOn = DateTime.Now;
+            _context.Set<Review>().Add(reviewDetails);
+
+            try
+            {
+                var response = await _context.SaveChangesAsync();
+                if (response > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new CustomException(Constants.DbOperationFailed);
+                }
+            }
+            catch (Exception ex)
+            {
+          
+                throw new CustomException(Constants.DbOperationFailed);
+            }
+
+
+
+        }
+
     }
 }

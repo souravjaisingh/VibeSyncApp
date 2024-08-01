@@ -1,92 +1,196 @@
-    .song-details {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: #f0f7f9;
-    }
+.song-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background-attachment: fixed;
+}
 
-    .song-name {
-        margin-top: 8px;
-        /* color: #fff; */
-        font-size: 20px;
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-            'Lucida Sans', Arial, sans-serif;
-    }
-    .event-name{
-        font-size: smaller;
-        margin-bottom: auto;
-        color: grey;
-    }
-    .artist-name{
-        font-size: small;
-    }
-    .subheading-payment{
-        color: grey;
-        font-size: small;
-    }
 
-    .label {
-        margin-top: 8px;
-        font-size: 18px;
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-            'Lucida Sans', Arial, sans-serif;
-        text-align: center;
-    }
-    .promo-instruction{
-        font-size: small;
-    }
-    .btnPayment {
-        background-color: #08a4f2; /* Pink color */
-        color: white;
-        border: none;
-        border-radius: 20px;
-        padding: 8px 16px; /* Adjust padding as needed */
-        cursor: pointer;
-        margin: auto;
-        width: -webkit-fill-available;
-    }
-    .amount-inputfield{
-        border: 2px solid #59b0ef; /* Pink color */
-        border-radius: 20px;
-        padding: 5px 10px; /* Adjust padding as needed */
-        width: 250px; /* Adjust width as needed */
-        margin-right: 10px; /* Adjust margin as needed */
-    }
-    .back-icon {
-        cursor: pointer;
-        font-size: smaller;
-        margin-bottom: 20px;
-        display: inline-block;
-        padding: 5px 10px;
-        /* border: 1px solid #333; */
-        border-radius: 5px;
-        margin-right: auto;
-        margin-top: 10px;
-        /* background-color: #f4f4f4; */
-    }
-    .btn--primaryPayment {
-        background-color: #87c4ed;
-        color: #242424;
-        border: ridge;
-    }
 
-    .btn--outline {
-        background-color: transparent;
-        color: #fff;
-        padding: 8px 18px;
-        border: 1px solid var(--primary);
-        transition: all 0.3s ease-out;
-    }
 
-    .btn--mediumPayment {
-        padding: 8px 20px;
-        font-size: 18px;
-    }
 
-    .btn--large {
-        padding: 12px 26px;
-        font-size: 20px;
-    }
+
+.song-details-container{
+    display:flex;
+    padding:20px;
+    gap:10px;   
+    justify-content: center;
+}
+
+
+.song-details-text{
+    color:#39125C;
+    padding-top: 20px;
+}
+
+.song-details-text p{
+    margin:10px;
+
+}
+
+.bg-music-background{
+   background: url('/images/BGMusic.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.song-details-container img{
+    height:auto;
+    border-radius: 20px;
+    max-width: 8rem;
+}
+
+.song-name-payment {
+    margin-top: 8px;
+    /* color: #fff; */
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    font-weight: 800;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.event-name {
+    font-size: smaller;
+    margin-bottom: auto;
+    color: grey;
+}
+
+.artist-name {
+    font-size: small;
+    opacity:0.7;
+    font-size:1rem;
+    font-weight:600;
+    padding-top: 5px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.subheading-payment {
+    padding-top : 3px;
+    margin-bottom: 0px;
+    text-align: center;
+    font-size:0.7rem;
+    font-weight:600;
+    color: #39125C;
+    border-radius: 15px;
+    background-color: #ef9a9a;
+    width:60%;
+    margin: auto;
+    align-items: center;
+    padding-bottom: 2px;
+    max-width: 24rem;
+}
+
+.subheading-payment img{
+    width: 13px;
+    margin-right:4px;
+}
+
+.label {
+    margin-top: 8px;
+    margin-bottom: 0px;
+    font-size: 18px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+}
+
+.promo-instruction {
+    font-size: small;
+}
+
+.btnPayment {
+    background-color: #39125C; /* Pink color */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0px 16px; /* Adjust padding as needed */
+    cursor: pointer;
+    margin: auto;
+    width: -webkit-fill-available;
+    max-width: 14rem;
+}
+
+.amount-inputfield {
+    width : 100px;
+    border: 2px solid #59b0ef; 
+    border-radius: 15px;
+    padding: 3px 5px; /* Adjust padding as needed */
+    width: 6rem;
+    /* width: 30%; Adjust width as needed */
+    /* margin-right: 10px; Adjust margin as needed */
+}
+
+.back-icon {
+    cursor: pointer;
+    font-size: smaller;
+    margin-bottom: 20px;
+    display: inline-block;
+    padding: 5px 10px;
+    /* border: 1px solid #333; */
+    border-radius: 5px;
+    margin-right: auto;
+    margin-top: 10px;
+    /* background-color: #f4f4f4; */
+}
+
+.btn--primaryPayment {
+    background-color: #39125C;
+    color: #242424;
+    border: ridge;
+}
+
+.btn--outline {
+    background-color: transparent;
+    color: #fff;
+    padding: 8px 18px;
+    border: 1px solid var(--primary);
+    transition: all 0.3s ease-out;
+}
+
+.bid-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+}
+
+.bid-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-bid {
+    background-color: #39125C;
+    color: white;
+    border: none;
+    padding: 5px 10px; 
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.bid-text {
+    margin-top: 5px; 
+    font-size: 0.8rem; 
+    color: #666; 
+}
+
+
+.btn--mediumPayment {
+    padding: 8px 20px;
+    font-size: 18px;
+}
+
+.btn--large {
+    padding: 12px 26px;
+    font-size: 20px;
+}
 
     .btn--large:hover,
     .btn--medium:hover {
@@ -96,54 +200,537 @@
         transition: 250ms;
     }
 
-    .disabledButton {
-        background-color: gray;
-        /* Add any additional styles for a disabled appearance */
+.disabledButton {
+    background-color: gray;
+    /* Add any additional styles for a disabled appearance */
+}
+
+/* Add this CSS to your component's stylesheet or a separate CSS file */
+/* Add this CSS to your component's stylesheet or a separate CSS file */
+.success-message {
+    background-color: #4caf50;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    position: fixed;
+    bottom: 0;
+    /* Display at the bottom of the screen */
+    left: 0;
+    right: 0;
+    /* Stretch the message to full width */
+    z-index: 999;
+    width: 100%;
+    animation: slideUp 0.5s ease-in-out, fadeOut 2s ease-in-out forwards;
+}
+
+.center-form {
+    text-align: center;
+    width:90%;
+    margin:auto;
+    max-width: 32rem;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100%);
     }
 
-    /* Add this CSS to your component's stylesheet or a separate CSS file */
-    /* Add this CSS to your component's stylesheet or a separate CSS file */
-    .success-message {
-        background-color: #4caf50;
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.special-announcement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1px;
+}
+
+.special-announcement-header{
+    max-width: screen;
+}
+
+.announcement-button {
+    background-color: #39125C;
+    color: white;
+    border: none;
+    padding: 5px 0px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    width : 100%;
+    text-align : center;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.sub-button {
+    background-color: #39125C;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.message-textarea {
+    width: 100%;
+    max-width: 300px;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: none;
+}
+
+
+.mic-announcement-button{
+    background-color: #39125C;
+    color:#fff;
+    display: flex;
+    align-items: center;
+    padding:3px 10px;
+    gap:10px;
+    font-weight:700;
+    margin:10px;
+    border-radius:10px;
+}
+
+.mic-announcement-button p {
+    margin:0;
+}
+
+.mic-announcement-button img{
+    width:25px;
+}
+
+
+
+.mic-announcement-buttons{
+    display: flex;
+    flex-wrap: wrap;
+    gap:10px;
+    font-size: 0.75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.mic-announcement-buttons button{
+    width: auto;
+    border-radius: 10px;
+    background-color: #39125C;
+    color: #fff;
+    padding:2px 5px;
+    margin-top: 0;
+}
+
+.mic-announcement-message{
+    border-radius: 10px;
+    width: 93%;
+    margin: 10px;
+    padding: 5px;
+}
+
+.screen-announcement-upload-section{
+    padding:10px;
+    display: flex;
+    gap:10px;
+}
+
+.screen-announcement-message{
+    border-radius: 10px;
+    width: 60%;
+    padding: 5px;
+    height: 5rem;
+}
+
+
+
+
+
+
+.upload-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 200px;
+    cursor: pointer;
+    position: relative;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+}
+.upload-container:hover {
+    background-color: #fff;
+}
+.upload-container input[type="file"] {
+    display: none;
+}
+.upload-icon {
+    font-size: 40px;
+    color: #fff;
+    opacity: 0.5;
+}
+.upload-text {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #555;
+}
+
+
+.amount-selection-division {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.57);
+    border-radius: 10px;
+    padding-bottom: 0;
+    max-width: 36rem;
+    margin: 15px auto;
+}
+
+.minimum-bid-container{
+    padding-left : 3px;
+    border-bottom: 5px dotted #fff;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    font-size: 1.4rem;
+    align-items: center;
+    font-weight: 700;
+    color: #39125C;
+    margin-bottom: 0px;
+}
+
+.minimum-bid-value{
+    background-color: #ede8e8;
+    width:5rem;
+    border-radius: 5px;
+    text-align: center;
+    padding:2px 10px;
+    color: #777;
+}
+
+.tip-amount-section{
+    width : 105%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #39125C;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.tip-amount-section input{
+    text-align: center;
+    color: #39125C;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.tip-info{
+    display: flex;
+    font-size: 0.7rem;
+    margin: 10px auto;
+    border-radius: 15px;
+    background-color: #ef9a9a;
+    padding: 2px 2px;
+    align-items: center;
+    max-width: 32rem;
+}
+
+.tip-info p{
+    padding-top : 3px;
+    margin: 0;
+    color: #39125C;
+    font-weight: 600;
+}
+
+.tip-info-content{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+   
+}
+
+.tip-info img{
+    width:15px;
+    height: 15px;
+    padding: 2px;
+    margin: auto;
+}
+
+.payment-icon{
+    width: 2rem;
+    height: 2rem;
+}
+
+.payment-btn-text{
+    display: flex;
+    align-items: center;
+    gap:20px;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.refund-info-footer{
+    color: #39125C;
+    margin: 10px;
+    font-weight: 600;
+    opacity: 0.8;
+    font-weight: 700;
+}
+
+.refund-info-footer p{
+    margin: 5px;
+}
+
+.login-proposal{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #39125C;
+    gap:10px;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 10px 15px;
+}
+
+.login-proposal p{
+    align-items: center;
+    font-weight: 700;
+    margin: 0;
+}
+
+.login-img{
+    width:20px;
+    height: 20px;
+}
+
+.increase-tip-button{
+    position: relative;
+    left:-25px;
+}
+
+.decrease-tip-button{
+    position: relative;
+    left:20px;
+    z-index: 1;
+}
+
+.check-box{
+    margin-left: auto;
+}
+
+.tip-amount-input-btns{
+    display: flex;
+    align-items : center;
+}
+.choose-tip-label{
+    width:11rem;
+    margin-right :10px;
+}
+
+.gst-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    color: #39125C;
+    font-size: 15px;
+    font-weight: 700;
+    margin-right: 28px;
+    margin-top: 5px;
+    padding-left: 3px;
+}
+
+.gst-info div:nth-child(2) {
+    text-align : right;
+     margin-left: 123px; /* Adjust this value to move the total amount div to the left */
+}
+
+.promocode {
+    display: flex;
+    align-items: center;
+    color: #39125C;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: -14px;
+    justify-content: space-between;
+}
+
+    .promocode span {
+        margin-left : 4px;/* Adjust spacing between "Promocode" and input */
+    }
+
+    .promocode input {
+        margin-bottom : 7px;
+        font-weight: 700;
+        text-align: center;
+        background-color: #ede8e8;
+        border: 1px solid #39125C;
+        border-radius: 4px;
+        font-size: 15px;
+        padding: 0px;
+        width: 122px;
+    }
+
+    .promocode .apply-btn {
+        margin-top: -7px;
+        background-color: #39125C;
         color: white;
-        text-align: center;
-        padding: 16px;
-        position: fixed;
-        bottom: 0;
-        /* Display at the bottom of the screen */
-        left: 0;
-        right: 0;
-        /* Stretch the message to full width */
-        z-index: 999;
-        width: 100%;
-        animation: slideUp 0.5s ease-in-out, fadeOut 2s ease-in-out forwards;
-    }
-    .center-form{
-        text-align: center;
+        border-radius: 13px;
+        padding: 0px 10px; /* Adjust padding as needed */
+        cursor: pointer;
+        margin-left: 10px; /* Adjust spacing between input and button */
     }
 
-    @keyframes slideUp {
-        0% {
-            transform: translateY(100%);
-        }
 
-        100% {
-            transform: translateY(0);
-        }
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: flex-end;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    background: linear-gradient(333deg, rgba(255,255,255,1) 0%, rgba(215,222,254,1) 35%, rgba(255,255,255,1) 100%);
+    width: 100%;
+    box-shadow: 0 -15px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    margin: 0px;
+    border-radius: 80px 80px 0 0;
+    border: none;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 4px;
+    padding-top:0px;
+    border-bottom:none;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #39125C;
+    margin-bottom: 5px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-body {
+   
+    text-align: center;
+    padding:0px;
+}
+
+.input-field {
+    all: unset;
+    width: 70%;
+    height: 20px;
+    padding: 8px;
+    padding-left:0px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #D3D3D3;
+    font-weight: 600;
+    
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 55px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px; /* Adjust size according to your image */
+}
+
+
+.get-otp-button {
+    width: 30%;
+    height:100px;
+    background-color: #39125C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+}
+
+
+
+.footer-links {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0px;
+}
+
+    .footer-links a {
+        color: #39125C;
+        text-decoration: none;
+        font-weight:600;
     }
 
-    @keyframes fadeOut {
+.email-icon{
+    width:60px;
+    height:50px;
+    margin: 10px;
+}
 
-        0%,
-        100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.5;
-        }
-
-        100% {
-            opacity: 0;
-        }
-    }
+.g-icon{
+    background-image:none;
+    width:50px;
+    height:50px;
+    margin: 10px;
+}

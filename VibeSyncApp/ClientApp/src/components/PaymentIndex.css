@@ -27,6 +27,7 @@
 .bg-music-background{
    background: url('/images/BGMusic.png');
     background-repeat: no-repeat;
+    background-size: 100%;
 }
 
 .song-details-container img{
@@ -390,11 +391,12 @@
 
 
 .amount-selection-division {
-    margin: 15px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.57);
     border-radius: 10px;
     padding-bottom: 0;
+    max-width: 36rem;
+    margin: 15px auto;
 }
 
 .minimum-bid-container{
@@ -439,11 +441,12 @@
 .tip-info{
     display: flex;
     font-size: 0.7rem;
-    margin: 10px;
+    margin: 10px auto;
     border-radius: 15px;
     background-color: #ef9a9a;
     padding: 2px 2px;
     align-items: center;
+    max-width: 32rem;
 }
 
 .tip-info p{
@@ -453,10 +456,18 @@
     font-weight: 600;
 }
 
+.tip-info-content{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+   
+}
+
 .tip-info img{
     width:15px;
     height: 15px;
     padding: 2px;
+    margin: auto;
 }
 
 .payment-icon{

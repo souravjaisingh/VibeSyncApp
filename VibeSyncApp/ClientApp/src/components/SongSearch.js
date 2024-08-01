@@ -35,6 +35,7 @@ function SongSearch() {
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+    const [NoSongsFound,setNoSongsFound] = useState(false);
     
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
@@ -212,7 +213,7 @@ function SongSearch() {
                 //newData = await GetSongsList(activePlaylistId, (currentPage - 1) * 20, 20);
                 setLoading(false);
             } else {
-                newData = await GetSongsUsingSearchTerm(searchQuery, (currentPage - 1) * 20 + 1, 20);
+                newData = await GetSongsUsingSearchTerm(searchQuery, currentPage, 20);
                 setResults((prevData) => [...prevData, ...newData]);
                 setCurrentPage((prevPage) => prevPage + 1);
             }
@@ -246,6 +247,7 @@ function SongSearch() {
 
     const handleSearchChange = (event) => {
         setActivePlaylistId(null);
+        setNoSongsFound(false);
         const newQuery = event.target.value;
         setSearchQuery(newQuery);
         clearTimeout(typingTimeout);
@@ -263,8 +265,11 @@ function SongSearch() {
         try {
             setResults([]); // Clear previous results
             setCurrentPage(1); // Reset current page
-            const res = await GetSongsUsingSearchTerm(query, 0, 20);
+            const res = await GetSongsUsingSearchTerm(query, 1, 20);
             setResults(res);
+            if(res === null){
+                setNoSongsFound(true);
+            }
             setCurrentPage(2); // Set the next page to fetch
         } catch (error) {
             setError(true);
@@ -419,6 +424,8 @@ function SongSearch() {
                         <img src="/images/SearchButton1.png" className="search-icon-song-search" />
                     </div>
 
+                    {NoSongsFound?(<div className='no-songs-found'>No Songs Found!</div>):(<></>)}
+
                     {eventData && eventData.hidePlaylist !== true && (
                         <>
                             <div className="choose-from-collections-text">
@@ -463,14 +470,14 @@ function SongSearch() {
                                 <div key={index} className="songs-row" onClick={() => handleRowClick(result)}>
                                     <div>
                                         <img
-                                            src={result.album.images[result.album.images.length - 1].url}
+                                            src={result.image[result.image.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
                                         />
                                     </div>
                                     <div className="song-card-text">
                                         <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700"}}>{result.name}</span>
                                         <span className="song-artists">
-                                            {result.artists.map((artist) => artist.name).join(', ')}
+                                            {result.artists.primary.map((artist) => artist.name).join(', ')}
                                         </span>
                                     </div>
                                 </div>

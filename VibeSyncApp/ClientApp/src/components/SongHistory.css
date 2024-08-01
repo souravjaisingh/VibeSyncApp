@@ -155,6 +155,8 @@
 
 .song-inner-container{
     padding: 20px;
+    max-width: 48rem;
+    margin: auto;
 }
 
 .song-row-history-page{
@@ -169,6 +171,7 @@
 .bg-music-song-history{
     
     background-image: url("/images/BGMusic.png");
+    background-size: 100%;
 }
 
 .history-page-left-content{

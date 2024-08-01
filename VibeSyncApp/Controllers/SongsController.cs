@@ -46,7 +46,8 @@ namespace VibeSyncApp.Controllers
 
             // Log the response as JSON
             _logger.LogInformation($"{typeof(SongsController).GetMethod("GetSong")}'s response: {JsonConvert.SerializeObject(result)}");
-
+            if (result.Count == 0)
+                return NoContent();
             return Ok(result);
         }
 

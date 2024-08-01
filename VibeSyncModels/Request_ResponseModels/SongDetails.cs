@@ -20,7 +20,7 @@ namespace VibeSyncModels.Request_ResponseModels
         /// <value>
         /// The artists.
         /// </value>
-        public List<Artist> Artists { get; set; }
+        public Artists Artists { get; set; }
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
@@ -35,6 +35,10 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The name.
         /// </value>
         public string Name { get; set; }
+        public List<Image> Image { get; set; }
+        public string Language { get; set; }
+        public long? PlayCount { get; set; }
+
     }
     /// <summary>
     /// Album
@@ -48,12 +52,6 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The identifier.
         /// </value>
         public string Id { get; set; }
-        /// <summary>
-        /// Gets or sets the images.
-        /// </summary>
-        /// <value>
-        /// The images.
-        /// </value>
         public List<Image> Images { get; set; }
         /// <summary>
         /// Gets or sets the name.
@@ -63,25 +61,18 @@ namespace VibeSyncModels.Request_ResponseModels
         /// </value>
         public string Name { get; set; }
     }
+    public class Artist
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+
+    }
     /// <summary>
     /// Artist
     /// </summary>
-    public class Artist
+    public class Artists
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        public string Id { get; set; }
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
+        public List<Artist> Primary { get; set; }
     }
     /// <summary>
     /// Image
@@ -89,12 +80,13 @@ namespace VibeSyncModels.Request_ResponseModels
     public class Image
     {
         /// <summary>
-        /// Gets or sets the height.
+        /// Gets or sets the quality.
         /// </summary>
         /// <value>
-        /// The height.
+        /// The quality.
         /// </value>
-        public int Height { get; set; }
+        public string Quality { get; set; }
+
         /// <summary>
         /// Gets or sets the URL.
         /// </summary>
@@ -102,12 +94,27 @@ namespace VibeSyncModels.Request_ResponseModels
         /// The URL.
         /// </value>
         public string Url { get; set; }
-        /// <summary>
-        /// Gets or sets the width.
-        /// </summary>
-        /// <value>
-        /// The width.
-        /// </value>
-        public int Width { get; set; }
+        //commented Spotify response
+        /*        /// <summary>
+                /// Gets or sets the height.
+                /// </summary>
+                /// <value>
+                /// The height.
+                /// </value>
+                public int Height { get; set; }
+                /// <summary>
+                /// Gets or sets the URL.
+                /// </summary>
+                /// <value>
+                /// The URL.
+                /// </value>
+                public string Url { get; set; }
+                /// <summary>
+                /// Gets or sets the width.
+                /// </summary>
+                /// <value>
+                /// The width.
+                /// </value>
+                public int Width { get; set; }*/
     }
 }

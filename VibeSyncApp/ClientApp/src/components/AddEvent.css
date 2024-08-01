@@ -1,22 +1,22 @@
 /* AddEvent.css */
 .address-typeahead {
+    background: linear-gradient(160deg, #d7defe 70%, #4C526C);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 80vh;
-    /* Ensures the form is centered vertically on the viewport */
-    background-color: #f5f5f5;
-    /* Light background color */
 }
+ 
+
 
 .event-form {
+    margin-bottom : 16px;
+    background: linear-gradient(to right bottom, #fff, #d7defe);
+    color: #39125C;
     max-width: 400px;
     padding: 20px;
-    background-color: aliceblue;
-    /* Light background color for the form */
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     flex-direction: column;
     align-items: center;
@@ -33,8 +33,43 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-pay {
+.header-container {
+    margin-top : 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
     width: 100%;
+}
+
+.header-container p {
+    margin: 0;
+}
+
+    .input-group {
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 15px !important;
+   }
+
+    .input-group label {
+        flex: 1;
+        margin-right: 10px !important;
+        text-align: left; 
+    }
+
+    .input-group .event-input-fields {
+        background-color : white;
+        opacity : 0.7;
+        width : 50%;
+        flex: 1 !important;
+        padding: 8px !important;
+        border: 0px solid #ccc !important;
+        border-radius: 10px !important;
+    }
+
+.btn-pay {
+    width: 50%;
     padding: 10px;
     margin: 10px 0;
     background-color: #007BFF;
@@ -44,6 +79,15 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.btndel {
+    margin-top: 11px!important;
+    margin-bottom : 10px;
+    height: 46px!important;
+    width: 50%!important;
+    padding: 10px!important;
+    font-size: 16px!important;
 }
 
 .btn-pay:hover {
@@ -117,36 +161,28 @@
     font-weight: bold;
 }
 
-.request{
-    font-weight:bold;
+.request {
+    margin-right : 6px !important;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
     font-size: 16px;
     display: flex;
-    margin:2px;
-   
+    margin: 2px;
 }
 
 .request label{
-    margin: 6px;
+    order: 1;
+    /*margin: 6px;*/
+    text-align: left;
 }
 
-.playlist-selection {
-    margin-bottom: 20px;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 5px;
+.request input[type="checkbox"] {
+    order: 2;
+    width: 13px;
+    margin-left: 10px;
 }
 
-
-.playlist-checkboxes {
-    max-height: 110px;
-    overflow-y: auto;
-    padding: 6px;
-    border: 1px solid #E5E4E2;
-    /* background-color: #E5E4E2; */
+.playlist-selection{
+    margin-top : 10px;
 }
-
-    .playlist-checkboxes .checkbox {
-        margin-bottom: 5px;
-    }

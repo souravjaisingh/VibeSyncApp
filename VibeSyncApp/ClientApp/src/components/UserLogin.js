@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState,useContext,useEffect } from 'react';
 import './UserLogin.css';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLogin from './GoogleLogin';
@@ -11,7 +11,7 @@ const errorCssClass = 'input_error';
 const emailRegex = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
 const phoneRegex = /^[6-9]\d{9}$/;
 
-function Cards() {
+function Cards(props) {
   const [isUser, setIsUser] = useState(false);
   const [isMobileLogin, setIsMobileLogin] = useState(true);
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ function Cards() {
   const [showPassword, setShowPassword] = useState(false);
   const { setLoading } = useLoadingContext();
   const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
+  const [invalidPasswordError,setInvalidPasswordError] = useState(false);
 
   const handleAnonymousLogin = () => {
     // Implement your anonymous login logic here
@@ -45,7 +46,6 @@ function Cards() {
         // validatePassword(value);
     }
 }
-
 const handleSubmit = async () => {
     setLoginError(false);
     try {
@@ -59,7 +59,11 @@ const handleSubmit = async () => {
         setLoading(true);
         const response = await loginUserHelper(email, password);
         setLoading(false);
-        if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
+        if(!response.id){
+          setInvalidPasswordError(true);
+        }
+        else
+        {if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
             localStorage.setItem('userId', response.id);
             localStorage.setItem('isUser', true);
             console.log(localStorage.getItem('redirectUrl'));
@@ -81,7 +85,7 @@ const handleSubmit = async () => {
         }
         else {
             setLoginError(true);
-        }
+        }}
     }
     catch (error) {
         setError(true);
@@ -132,6 +136,9 @@ const handleSubmit = async () => {
               </div>):(
                   <div className='mobile-number-container'>
                   <div>
+                    {invalidPasswordError?(<div style={{color:'red'}}>
+                      Username or Password is incorrect!
+                    </div>):(<></>)}
                     <input className='email-input' id = 'email' placeholder='E-mail' value={email} onChange={(e) => handleInputChange(e)}/>
                     <div className='password-input-field'>
                       <input className='password-input' id='password' type={showPassword ? "text" : "password"} placeholder='Password' value={password}

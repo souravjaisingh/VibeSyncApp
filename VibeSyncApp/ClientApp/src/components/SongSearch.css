@@ -127,12 +127,12 @@ html body {
 
     .song-search-event-name{
         font-size: 1rem;
-        line-height: 1.5rem; 
+        line-height: 1.2rem; 
         font-weight: 700;
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
+        -webkit-line-clamp: 3;
     }
     
 /* Style for the custom toggle bar */
@@ -186,7 +186,7 @@ html body {
 .songs-row{
    
     display: flex;
-    background: linear-gradient(to right,#39125C,#f8f9ff 50%);
+    background: linear-gradient(155deg,#39125C -46%,#f8f9ff 42%, #f8f9ff 70%,#39125C 144%);
     border-radius: 15px;
     overflow: hidden;
     margin-top:0.5rem;

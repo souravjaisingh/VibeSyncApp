@@ -44,7 +44,7 @@ function PaymentIndex() {
   const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(""); // New state for mic announcement message
   const [localError, setLocalError] = useState("");
   const gstRate = 0.18;
-  const gstAmount = Math.round(amount * gstRate);
+  const gstAmount = Math.round(rowData.minimumBid * gstRate);
   const totalAmountWithGst = amount + gstAmount;
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showGoogleLogin, setShowGoogleLogin] = useState(false);
@@ -602,7 +602,7 @@ function PaymentIndex() {
                 alt="Album Image"
               />
               <div className="song-details-text">
-                <p className="song-name">{rowData.name}</p>
+                <p className="song-name-payment">{rowData.name}</p>
                 <p className="artist-name">
                   {rowData.artists.primary
                     .map((artist) => artist.name)
@@ -626,6 +626,10 @@ function PaymentIndex() {
               <div>Groove Amount</div>
               <div className="minimum-bid-value">₹{rowData.minimumBid}</div>
             </p>
+            <div className="gst-info">
+              <div>GST (18%)</div>
+              <div>₹{gstAmount}</div>
+            </div>
 
             <div className="bid-buttons">
               {bidAmounts.map((bid, index) => (
@@ -686,19 +690,16 @@ function PaymentIndex() {
               </div>
             </div>
             <br></br>
-            <div className="gst-info">
-              <div>GST (18%)</div>
-              <div>₹{gstAmount}</div>
-            </div>
-            <br></br>
             <div className="promocode">
               <span>Promocode</span>
+              <div className="apply-button-login-promo">
               <input
                 type="text"
                 className="value"
                 placeholder="Login to apply"
               />
               <button className="apply-btn">Apply</button>
+              </div>
             </div>
           </div>
           <div className="tip-info">

@@ -668,30 +668,30 @@ function PaymentIndex() {
                                     <>
                                         {loginMethod === 'mobile' ? (
                                             <>
-                                                <div className="input-container">
-                                                    <img src="images/user_image.png" alt="Placeholder" className="input-icon" />
-                                                    <input type="text" placeholder="Mobile Number*" className="input-field" />
+                                                <div className="payment-page-input-container">
+                                                    <img src="images/user_image.png" alt="Placeholder" className="payment-page-input-icon" />
+                                                    <input type="text" placeholder="Mobile Number*" className="payment-page-input-field" />
                                                 </div>
                                                 <button className="get-otp-button" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
                                             </>
                                         ) : (
                                             <>
-                                                <div className="email">
+                                                <div className="payment-page-email">
                                                             {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
                                                             {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : null}
-                                                    <div className="input-container">
+                                                            <div className="payment-page-input-container">
                                                         {!emailFocused && !email && (
-                                                            <img src="images/emailIcon.png" alt="Email" className="input-icon" />
+                                                                    <img src="images/emailIcon.png" alt="Email" className="payment-page-input-icon" />
                                                         )}
-                                                        <input required type="email" id="email" className='input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
+                                                                <input required type="email" id="email" className='payment-page-input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
                                                     </div>
-                                                    <div className="input-container">
+                                                            <div className="payment-page-input-container">
                                                         {!passwordFocused && !password && (
-                                                            <img src="images/password_lock.png" alt="Password" className="input-icon" />
+                                                                    <img src="images/password_lock.png" alt="Password" className="payment-page-input-icon " />
                                                         )}
-                                                        <input required type="password" id="password" className='input-field' value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
+                                                                <input required type="password"   className='payment-page-input-field' style={{ width: "70 %" } } value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
                                                     </div>
-                                                            <button onClick={handleLogin} type="submit" className="btn btn--primary btn--medium" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Login</button>
+                                                            <button onClick={handleLogin} type="submit" className="get-otp-btn" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" ,paddingBottom:"11px"}}>Login</button>
                                                             
                                                                 <div className='forgot-password-container'>
                                                                     <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
@@ -715,7 +715,7 @@ function PaymentIndex() {
                                                 />
                                             )}
                                             <div className='btn-mobile' onClick={handleEmailIconClick}>
-                                                <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="email-icon" alt="Toggle login method" />
+                                                    <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="payment-page-email-icon" alt="Toggle login method" />
                                             </div>
                                             </div>
                                             { /*<div className="footer-links">

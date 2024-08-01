@@ -294,16 +294,16 @@ function PaymentIndex() {
     let albumName = "";
     let albumImage = "";
 
-    if (rowData.artists && rowData.artists[0]) {
-      artistId = rowData.artists[0].id;
-      artistName = rowData.artists[0].name;
+    if (rowData.artists && rowData.artists.primary && rowData.artists.primary[0]) {
+      artistId = rowData.artists.primary[0].id;
+      artistName = rowData.artists.primary[0].name;
     }
 
     if (rowData.album) {
       albumName = rowData.album.name;
-      if (rowData.album.images && rowData.album.images[0]) {
-        albumImage = rowData.album.images[0].url;
-      }
+    }
+    if (rowData.image && rowData.image[0]) {
+      albumImage = rowData.image[0].url;
     }
 
     const obj = {

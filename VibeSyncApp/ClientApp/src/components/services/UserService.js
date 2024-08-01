@@ -1,6 +1,7 @@
 import * as Constants from '../Constants';
 import { useLoadingContext } from '../LoadingProvider';
 
+
 export async function handleAPIRequest(url, method, data) {
     const currentUrl = window.location.href;
     const baseUri = currentUrl.includes('azurewebsites') ? Constants.baseUriAzure : Constants.baseUriVibeSync;
@@ -32,7 +33,7 @@ export async function handleAPIRequest(url, method, data) {
     try {
         const response = await fetch(baseUri + url, requestOptions);
 
-        handleAPIError(response);
+        handleAPIError(response,url);
 
         if (response.status === 204) {
             return null; // No content
@@ -103,11 +104,17 @@ export async function getUserRequestHistoryData(userid, selectedFilter = null) {
     return handleAPIRequest(url, 'GET');
 }
 
-export function handleAPIError(response) {
+export function handleAPIError(response,url) {
     if (!response.ok) {
         switch (response.status) {
             case 400:
-                throw new Error("Houston, we have a problem. Your request is as clear as mud. Enter correct data and we shall let you pass.");
+                if(url.includes('Login')){
+                    return response
+                }
+                else{
+                    throw new Error("Houston, we have a problem. Your request is as clear as mud. Enter correct data and we shall let you pass.");
+                }
+                
             case 403:
                 throw new Error("Access denied. You've stumbled into the secret garden. Unfortunately, you're not on the guest list.");
             case 404:
@@ -117,7 +124,12 @@ export function handleAPIError(response) {
             case 503:
                 throw new Error("Hold on tight! Our team of highly trained monkeys is fixing the issue.");
             case 401:
-                throw new Error("Invalid Password");
+                    if(url.includes('Login')){
+                        return response
+                    }
+                    else{
+                        throw new Error("Invalid Password");
+                    }
             case 409:
                 throw new Error("Double trouble! That email's already taken. Please choose a unique one. If you still think it's unique, probably our server has gone crazy.");
             default:

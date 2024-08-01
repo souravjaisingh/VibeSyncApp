@@ -106,7 +106,9 @@ function App() {
                 </MyContext.Provider>
                 {loading && (
                 <div className="loading-overlay">
-                    <div className="loading-spinner"></div>
+                    <div className="loading-spinner">
+                        <img className='loading-favicon-logo' src="favicon.png"/>
+                    </div>
                 </div>
             )}
             <Footer />

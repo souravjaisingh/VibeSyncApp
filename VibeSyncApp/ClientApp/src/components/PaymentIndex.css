@@ -663,25 +663,24 @@
     padding:0px;
 }
 
-.input-field {
+.payment-page-input-field {
     all: unset;
     width: 70%;
     height: 20px;
     padding: 8px;
-    padding-left:0px;
+    padding-left: 0px;
     margin-top: 5px;
     margin-bottom: 10px;
     border-radius: 5px;
     background-color: #D3D3D3;
     font-weight: 600;
-    
 }
 
-.input-container {
+.payment-page-input-container {
     position: relative;
 }
 
-.input-icon {
+.payment-page-input-icon {
     position: absolute;
     left: 55px;
     top: 50%;
@@ -722,7 +721,7 @@
         font-weight:600;
     }
 
-.email-icon{
+.payment-page-email-icon{
     width:60px;
     height:50px;
     margin: 10px;

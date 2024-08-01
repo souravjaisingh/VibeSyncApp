@@ -93,7 +93,7 @@ export default function DjList() {
                     <option value="all">All</option>
                     <option value="live">Live</option> 
                 </select>
-                <div className='down-arrow'>&#11167;</div>
+                <div className='down-arrow'><img style={{width:'10px'}} src="/images/arrow-down-sign-to-navigate.png" /></div>
             </div>
 
 

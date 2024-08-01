@@ -3,6 +3,7 @@ import { MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import { GetTransactionHistory } from './services/PaymentService';
 import './TransactionHistory.css';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 
 function TransactionHistory() {
     const { error, setError } = useContext(MyContext);
@@ -11,6 +12,7 @@ function TransactionHistory() {
     const [filteredTransactionHistory, setFilteredTransactionHistory] = useState([]);
     const [distinctEventNames, setDistinctEventNames] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState('');
+    const { setLoading } = useLoadingContext();
 
     const formatDate = (datetime) => {
         const date = new Date(datetime);
@@ -29,6 +31,7 @@ function TransactionHistory() {
 
 
     useEffect(async () => {
+        setLoading(true);
         try {
             // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to fetch transaction history
             var res = await GetTransactionHistory(localStorage.getItem('userId'));
@@ -45,6 +48,7 @@ function TransactionHistory() {
             setError(true); // Assuming setError is a state variable to manage errors
             setErrorMessage(error.message); // Assuming setErrorMessage is a state variable to set error messages
         }
+        setLoading(false);
     }, []);
 
     useEffect(() => {

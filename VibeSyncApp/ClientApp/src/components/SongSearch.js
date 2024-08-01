@@ -86,6 +86,7 @@ function SongSearch() {
 
     useEffect(() => {
         const fetchPlaylistsAndSongs = async () => {
+            setLoading(true);
             try {
                 const playlists = await GetPlaylistList();
                 if (playlists && playlists.length > 0) {
@@ -109,6 +110,7 @@ function SongSearch() {
             } catch (error) {
                 console.error('Error fetching playlists or songs:', error);
             }
+            setLoading(false);
         };
 
         fetchPlaylistsAndSongs();

@@ -99,7 +99,6 @@ export default function DjLiveSongs() {
 
             async function fetchData() {
                 try {
-                    setLoading(true);
                     const res = await GetSongsByEventId(rowData.id != null ? rowData.id : localStorage.getItem('eventId'));
 
                     // Separate songs and announcements
@@ -134,9 +133,7 @@ export default function DjLiveSongs() {
 
                     setUserHistory(combinedRequests);
                     console.log(combinedRequests);
-                    setLoading(false);
                 } catch (error) {
-                    setLoading(false);
                     setError(true);
                     setErrorMessage(error.message);
                     console.error('Error fetching user request history:', error);

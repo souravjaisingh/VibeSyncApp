@@ -123,7 +123,53 @@ Button{
 }
 
 
+.sent-otp-text{
+  color: #39125C;
+  text-align: center;
+  display: flex;
+  margin: auto;
+  gap: 5px;
+  justify-content: center;
+  padding: 5px;
+}
 
+.mobile-no-text{
+  font-weight: 700;
+}
+
+.otp-verify-section{
+  width:90%;
+  margin: auto;
+}
+
+.otp-field{
+  width: 37px;
+  margin: 6px;
+  text-align: center;
+  border: #000000 2px solid;
+}
+
+.resend-otp-button :disabled{
+  color: #fff;
+}
+
+.verify-resend-btn-group{
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr)); 
+}
+
+.resend-otp-button{
+  background-color: transparent;
+  border: none;
+  border-radius: 15px;
+  color: #39125C;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+#timer{
+  font-size: 0.8rem;
+}
 
 
 @media only screen and (max-width: 1000px){

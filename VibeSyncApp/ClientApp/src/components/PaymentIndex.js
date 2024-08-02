@@ -633,7 +633,7 @@ function PaymentIndex() {
                 alt="Album Image"
               />
               <div className="song-details-text">
-                <p className="song-name">{rowData.name}</p>
+                <p className="song-name-payment">{rowData.name}</p>
                 <p className="artist-name">
                   {rowData.artists.primary
                     .map((artist) => artist.name)
@@ -657,6 +657,10 @@ function PaymentIndex() {
               <div>Groove Amount</div>
               <div className="minimum-bid-value"> ₹{rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid}</div>
             </p>
+            <div className="gst-info">
+              <div>GST (18%)</div>
+              <div>₹{gstAmount}</div>
+            </div>
 
             <div className="bid-buttons">
               {bidAmounts.map((bid, index) => (
@@ -712,13 +716,9 @@ function PaymentIndex() {
               </div>
             </div>
             <br></br>
-            <div className="gst-info">
-              <div>GST (18%)</div>
-              <div>₹{gstAmount}</div>
-            </div>
-            <br></br>
             <div className="promocode">
               <span>Promocode</span>
+              <div className="apply-button-login-promo">
               <input
                 type="text"
                 className="value"
@@ -726,6 +726,7 @@ function PaymentIndex() {
                 disabled
               />
               <button className="apply-btn">Apply</button>
+              </div>
             </div>
           </div>
           <div className="tip-info">
@@ -802,179 +803,70 @@ function PaymentIndex() {
           <p>Login & Get 50% off instantly!</p>
         </div>
 
-        {showLoginModal && (
-          <div className="modal-overlay" onClick={handleClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <span className="modal-title">Login</span>
-              </div>
-              <div className="modal-body">
-                {successMessage ? (
-                  <div className="success-message">{successMessage}</div>
-                ) : (
-                  <>
-                    {loginMethod === "mobile" ? (
-                      <>
-                        <div className="input-container">
-                          <img
-                            src="images/user_image.png"
-                            alt="Placeholder"
-                            className="input-icon"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Mobile Number*"
-                            className="input-field"
-                          />
-                        </div>
-                        <button
-                          className="get-otp-button"
-                          style={{
-                            width: "37%",
-                            height: "19px",
-                            boxShadow: "none",
-                            padding: "8px",
-                            fontWeight: "700",
-                          }}
-                        >
-                          Get OTP
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div className="email">
-                          {loginError ? (
-                            <span className="password-warning">
-                              Incorrect Email Id/Password.
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {errorMessage === "Invalid Password" ? (
-                            <p
-                              style={{
-                                color: "red",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                              }}
-                            >
-                              {errorMessage}
-                            </p>
-                          ) : null}
-                          <div className="input-container">
-                            {!emailFocused && !email && (
-                              <img
-                                src="images/emailIcon.png"
-                                alt="Email"
-                                className="input-icon"
-                              />
-                            )}
-                            <input
-                              required
-                              type="email"
-                              id="email"
-                              className="input-field"
-                              value={email}
-                              onChange={(e) => handleInputChange(e)}
-                              onFocus={() => setEmailFocused(true)}
-                              onBlur={() => setEmailFocused(false)}
-                              placeholder="Email"
-                            />
-                          </div>
-                          <div className="input-container">
-                            {!passwordFocused && !password && (
-                              <img
-                                src="images/password_lock.png"
-                                alt="Password"
-                                className="input-icon"
-                              />
-                            )}
-                            <input
-                              required
-                              type="password"
-                              id="password"
-                              className="input-field"
-                              value={password}
-                              onChange={(e) => handleInputChange(e)}
-                              onFocus={() => setPasswordFocused(true)}
-                              onBlur={() => setPasswordFocused(false)}
-                              placeholder="Password"
-                            />
-                          </div>
-                          <button
-                            onClick={handleLogin}
-                            type="submit"
-                            className="btn btn--primary btn--medium"
-                            style={{
-                              width: "37%",
-                              height: "19px",
-                              boxShadow: "none",
-                              padding: "8px",
-                              fontWeight: "700",
-                            }}
-                          >
-                            Login
-                          </button>
-
-                          <div className="forgot-password-container">
-                            <div onClick={handleForgotPasswordClick}>
-                              Forgot Password?
+                {showLoginModal && (
+                    <div className="modal-overlay" onClick={handleClose}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <span className="modal-title">Login</span>
                             </div>
-                            {showInfoBox ? (
-                              <div id="forgot-password-tip">
-                                Please send an email to vibesyncdj@gmail.com
-                                with your Email/Phone Number. We're here at your
-                                disposal.
-                              </div>
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    <div
-                      className="text-center "
-                      style={{
-                        color: "#39125C",
-                        fontWeight: "600",
-                        marginTop: "5px",
-                        marginBottom: "3px",
-                      }}
-                    >
-                      Or Login with
-                    </div>
-                    <div className="auth-buttons">
-                      <div>
-                        <img
-                          src="images/g.png"
-                          className="g-icon"
-                          onClick={handleImageClick}
-                        />
-                      </div>
-                      {showGoogleLogin && (
-                        <GoogleLogin
-                          isUser={{ isUser: true }}
-                          triggerLogin={(login) => login()}
-                          showButton={false}
-                        />
-                      )}
-                      <div
-                        className="btn-mobile"
-                        onClick={handleEmailIconClick}
-                      >
-                        <img
-                          src={
-                            loginMethod === "email"
-                              ? "images/user_image.png"
-                              : "images/emailIcon.png"
-                          }
-                          className="email-icon"
-                          alt="Toggle login method"
-                        />
-                      </div>
-                    </div>
-                    {/*<div className="footer-links">
+                            <div className="modal-body">
+                                {successMessage ? (
+                                    <div className="success-message">{successMessage}</div>
+                                ) : (
+                                    <>
+                                        {loginMethod === 'mobile' ? (
+                                            <>
+                                                <div className="payment-page-input-container">
+                                                    <img src="images/user_image.png" alt="Placeholder" className="payment-page-input-icon" />
+                                                    <input type="text" placeholder="Mobile Number*" className="payment-page-input-field" />
+                                                </div>
+                                                <button className="get-otp-button" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="payment-page-email">
+                                                            {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
+                                                            {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : null}
+                                                            <div className="payment-page-input-container">
+                                                        {!emailFocused && !email && (
+                                                                    <img src="images/emailIcon.png" alt="Email" className="payment-page-input-icon" />
+                                                        )}
+                                                                <input required type="email" id="email" className='payment-page-input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
+                                                    </div>
+                                                            <div className="payment-page-input-container">
+                                                        {!passwordFocused && !password && (
+                                                                    <img src="images/password_lock.png" alt="Password" className="payment-page-input-icon " />
+                                                        )}
+                                                                <input required type="password"   className='payment-page-input-field' style={{ width: "70 %" } } value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
+                                                    </div>
+                                                            <button onClick={handleLogin} type="submit" className="get-otp-btn" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" ,paddingBottom:"11px"}}>Login</button>
+                                                            
+                                                                <div className='forgot-password-container'>
+                                                                    <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
+                                                                    {showInfoBox ? (<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
+                                                                        We're here at your disposal.</div>) : (<></>)}
+                                                                </div>
+                                                            
+                                                        </div>
+                                            </>
+                                        )}
+                                        <div className="text-center " style={{ color: "#39125C", fontWeight: "600", marginTop: "5px", marginBottom: "3px" }}>Or Login with</div>
+                                        <div className="auth-buttons">
+                                            <div>
+                                                <img src="images/g.png" className="g-icon" onClick={handleImageClick} />
+                                            </div>
+                                            {showGoogleLogin && (
+                                                <GoogleLogin
+                                                    isUser={{ isUser: true }}
+                                                    triggerLogin={(login) => login()}
+                                                    showButton={false}
+                                                />
+                                            )}
+                                            <div className='btn-mobile' onClick={handleEmailIconClick}>
+                                                    <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="payment-page-email-icon" alt="Toggle login method" />
+                                            </div>
+                                            </div>
+                                            { /*<div className="footer-links">
                                                    <a style={{ color: "#39125C" }} onClick={handleClose}>Create Account</a>
                                                    <a style={{ color: "#39125C" } } onClick={handleClose}>Forgot Password?</a>
                                               </div> */}

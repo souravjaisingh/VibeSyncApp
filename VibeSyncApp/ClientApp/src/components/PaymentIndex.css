@@ -11,8 +11,12 @@
 .song-details-container{
     display:flex;
     padding:20px;
-
+    gap:10px;   
+    justify-content: left;
+    max-width: 34rem;
+    margin: auto;
 }
+
 
 .song-details-text{
     color:#39125C;
@@ -31,18 +35,22 @@
 }
 
 .song-details-container img{
-    width:40%;
     height:auto;
     border-radius: 20px;
+    width: 8rem;
 }
 
-.song-name {
+.song-name-payment {
     margin-top: 8px;
     /* color: #fff; */
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     line-height: 1.5rem;
-    font-weight: 700;
+    font-weight: 800;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 .event-name {
@@ -76,6 +84,7 @@
     margin: auto;
     align-items: center;
     padding-bottom: 2px;
+    max-width: 24rem;
 }
 
 .subheading-payment img{
@@ -146,7 +155,7 @@
 
 .bid-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin-bottom: 20px;
 }
 
@@ -215,6 +224,9 @@
 
 .center-form {
     text-align: center;
+    width:90%;
+    margin:auto;
+    max-width: 32rem;
 }
 
 @keyframes slideUp {
@@ -416,7 +428,7 @@
     background-color: #ede8e8;
     width:5rem;
     border-radius: 5px;
-    text-align: left;
+    text-align: center;
     padding:2px 10px;
     color: #777;
 }
@@ -545,14 +557,15 @@
 }
 
 .gst-info {
-    margin-top : -11px;
     display: flex;
     align-items: center;
-    justify-content: space-around; 
+    justify-content: space-between; 
     color: #39125C;
     font-size: 15px;
     font-weight: 700;
-    margin-left: -28px;
+    margin-right: 28px;
+    margin-top: 5px;
+    padding-left: 3px;
 }
 
 .gst-info div:nth-child(2) {
@@ -567,10 +580,10 @@
     font-size: 15px;
     font-weight: 700;
     margin-top: -14px;
+    justify-content: space-between;
 }
 
     .promocode span {
-        margin-right: 10px;
         margin-left : 4px;/* Adjust spacing between "Promocode" and input */
     }
 
@@ -649,25 +662,24 @@
     padding:0px;
 }
 
-.input-field {
+.payment-page-input-field {
     all: unset;
     width: 70%;
     height: 20px;
     padding: 8px;
-    padding-left:0px;
+    padding-left: 0px;
     margin-top: 5px;
     margin-bottom: 10px;
     border-radius: 5px;
     background-color: #D3D3D3;
     font-weight: 600;
-    
 }
 
-.input-container {
+.payment-page-input-container {
     position: relative;
 }
 
-.input-icon {
+.payment-page-input-icon {
     position: absolute;
     left: 55px;
     top: 50%;
@@ -708,7 +720,7 @@
         font-weight:600;
     }
 
-.email-icon{
+.payment-page-email-icon{
     width:60px;
     height:50px;
     margin: 10px;

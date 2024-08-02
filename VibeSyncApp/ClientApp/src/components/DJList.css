@@ -50,7 +50,7 @@
 
 
 .filter-dropdown {
-    padding: 12px; /* Adjust padding to suit your design */
+    padding: 12px 14px; /* Adjust padding to suit your design */
     border-radius: 15px;
     border: 1px solid #ddd;
     appearance: none;
@@ -63,6 +63,7 @@
     color: white;
     font-weight :bold;
     width: auto;
+    text-align: center;
 
 }
 

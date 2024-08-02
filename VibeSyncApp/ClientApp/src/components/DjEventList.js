@@ -65,9 +65,12 @@ export default function DjEventList() {
 
     async function getEventsData() {
         try {
+            setLoading(true);
             const res = await GetDjEvents(localStorage.getItem('userId'));
             setEvents(res);
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             setError(true);
             setErrorMessage(error.message);
             console.error('Error in getEventsData:', error);

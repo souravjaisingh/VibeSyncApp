@@ -8,6 +8,7 @@ import { GetEventByEventId } from './services/EventsService';
 import StickyBar from './StickyBar';
 import { messages } from './Constants';
 import defaultPhoto from '../Resources/defaultDj.jpg';
+import { useLoadingContext } from './LoadingProvider';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
@@ -24,7 +25,7 @@ function SongSearch() {
     const [enqueuedSongs, setEnqueuedSongs] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [currentPage, setCurrentPage] = useState(1); // Set initial page to 1
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoadingState] = useState(false);
     const [isListOpen, setListOpen] = useState(false);
     const tableRef = useRef(null);
     const [eventData, setEventData] = useState(null);
@@ -36,6 +37,7 @@ function SongSearch() {
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
     const [NoSongsFound,setNoSongsFound] = useState(false);
+    const { setLoading } = useLoadingContext();
     
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
@@ -84,6 +86,7 @@ function SongSearch() {
 
     useEffect(() => {
         const fetchPlaylistsAndSongs = async () => {
+            setLoading(true);
             try {
                 const playlists = await GetPlaylistList();
                 if (playlists && playlists.length > 0) {
@@ -107,6 +110,7 @@ function SongSearch() {
             } catch (error) {
                 console.error('Error fetching playlists or songs:', error);
             }
+            setLoading(false);
         };
 
         fetchPlaylistsAndSongs();
@@ -206,12 +210,12 @@ function SongSearch() {
     }, [qrcodeParam]);
 
     const fetchData = async () => {
-        setLoading(true);
+        setLoadingState(true);
         try {
             let newData;
             if (activePlaylistId) {
                 //newData = await GetSongsList(activePlaylistId, (currentPage - 1) * 20, 20);
-                setLoading(false);
+                setLoadingState(false);
             } else {
                 newData = await GetSongsUsingSearchTerm(searchQuery, currentPage, 20);
                 setResults((prevData) => [...prevData, ...newData]);
@@ -222,7 +226,7 @@ function SongSearch() {
             setErrorMessage(error.message);
             console.error('Error fetching data:', error);
         }
-        setLoading(false);
+        setLoadingState(false);
     };
 
     useEffect(() => {
@@ -263,6 +267,7 @@ function SongSearch() {
 
     const fetchResultsFromAPI = async (query) => {
         try {
+            setLoading(true);
             setResults([]); // Clear previous results
             setCurrentPage(1); // Reset current page
             const res = await GetSongsUsingSearchTerm(query, 1, 20);
@@ -271,7 +276,9 @@ function SongSearch() {
                 setNoSongsFound(true);
             }
             setCurrentPage(2); // Set the next page to fetch
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             setError(true);
             setErrorMessage(error.message);
             console.error('Error in fetchResultsFromAPI:', error);

@@ -9,6 +9,7 @@ import { MyContext } from '../App';
 import StickyBar from './StickyBar';
 import { reviews } from './Constants';
 import LiveDjList from './LiveDjList'
+import { useLoadingContext } from './LoadingProvider';
 
 export default function DjList() {
     const { error, setError } = useContext(MyContext);
@@ -19,7 +20,7 @@ export default function DjList() {
     const [selectedRow, setSelectedRow] = useState(null);
     const [showLiveEvents, setShowLiveEvents] = useState('all'); // Set default filter to "all"
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
-
+    const { setLoading } = useLoadingContext();
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -52,10 +53,13 @@ export default function DjList() {
 
     async function getEventsData() {
         try {
+            setLoading(true);
             const res = await GetEventsWithDjInfo();
             setEvents(res);
+            setLoading(false);
         } catch (error) {
             setError(true);
+            setLoading(false);
             setErrorMessage(error.message);
             console.error('Error in getEventsData:', error);
         }
@@ -93,7 +97,7 @@ export default function DjList() {
                     <option value="all">All</option>
                     <option value="live">Live</option> 
                 </select>
-                <div className='down-arrow'>&#11167;</div>
+                <div className='down-arrow'><img style={{width:'10px'}} src="/images/arrow-down-sign-to-navigate.png" /></div>
             </div>
 
 

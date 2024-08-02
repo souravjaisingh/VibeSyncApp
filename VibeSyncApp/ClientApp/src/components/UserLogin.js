@@ -24,6 +24,10 @@ function Cards(props) {
   const { setLoading } = useLoadingContext();
   const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
   const [invalidPasswordError,setInvalidPasswordError] = useState(false);
+  const [mobileNo,setMobileNo] = useState(null);
+  const [otp, setOtp] = useState(new Array(4).fill(""));
+  let timer;
+  let countdown = 30;
 
   const handleAnonymousLogin = () => {
     // Implement your anonymous login logic here
@@ -33,6 +37,50 @@ function Cards(props) {
     navigate('/userhome')
 
   };
+
+  
+
+  function startResendTimer() {
+    document.getElementById('resendOtp').style.opacity = 0.6;
+    document.getElementById('resendOtp').disabled = true;
+
+    timer = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+    const timerElement = document.getElementById('timer');
+    
+    if (countdown > 0) {
+        timerElement.textContent = `(${countdown})`;
+        countdown--;
+    } else {
+        document.getElementById('resendOtp').style.opacity = 1;
+        document.getElementById('resendOtp').disabled = false;
+        timerElement.textContent = '';
+        
+        countdown = 30;
+        
+        clearInterval(timer);
+    }
+}
+
+  const handleGetOtp = () => {
+    if(document.getElementById('mobile-no').value.length != 10 || document.getElementById('mobile-no').value.includes('.')){
+      document.getElementById('mobile-no').style.border = 'solid';
+      document.getElementById('mobile-no').style.borderColor = 'red'; 
+      document.getElementById('mobile-no').style.borderWidth = '3px'; 
+    }
+    else{
+      timer = setInterval(updateTimer, 1000);
+      setTimeout(()=>{document.getElementById('resendOtp').style.opacity = 0.6;},1000)
+      setTimeout(()=>{document.getElementById('resendOtp').disabled = true;},1000)
+      setMobileNo(document.getElementById('mobile-no').value)
+    }
+  }
+
+  const handleVerifyOtp = () => {
+    console.log(otp);
+  }
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -46,6 +94,18 @@ function Cards(props) {
         // validatePassword(value);
     }
 }
+
+const handleOtpChange = (element, index) => {
+  if (isNaN(element.value)) return false;
+
+  setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+  //Focus next input
+  if (element.nextSibling) {
+      element.nextSibling.focus();
+  }
+};
+
 const handleSubmit = async () => {
     setLoginError(false);
     try {
@@ -127,13 +187,38 @@ const handleSubmit = async () => {
                   (<><span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img dj-button-img' ><span>DJ</span></span>
                     <span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img checked-dj-user user-button-img'><span>User</span></span></>)}
               </div>
-              {isMobileLogin?(<div className='mobile-number-container'>
-                <div>
-                  <img className='user-image-icon-lander' src = "images/user_image_lander.png"/>
-                  <input className='mobile-number-input' placeholder='Mobile Number' />
-                </div>
-                <button className='get-otp-button-lander'>Get OTP</button>
-              </div>):(
+              {isMobileLogin?(<>
+                {mobileNo===null?(<div className='mobile-number-container'>
+                  <div>
+                    <img className='user-image-icon-lander' src = "images/user_image_lander.png"/>
+                    <input id = "mobile-no" type='number' className='mobile-number-input' placeholder='Mobile Number' />
+                  </div>
+                  <button onClick={handleGetOtp} className='get-otp-button-lander'>Send OTP</button>
+                </div>):(<div className='otp-verify-section'>
+                    <div className='sent-otp-text'>OTP sent at: <div className='mobile-no-text'>+91-{mobileNo}</div></div>
+                    {otp.map((data, index) => {
+                        return (
+                            <input
+                                className="otp-field"
+                                type="text"
+                                name="otp"
+                                maxLength="1"
+                                key={index}
+                                value={data}
+                                onChange={e => handleOtpChange(e.target, index)}
+                                onFocus={e => e.target.select()}
+                            />
+                        );
+                    })}
+                    <div className='verify-resend-btn-group'>
+                      <button onClick={handleVerifyOtp} className='get-otp-button-lander'>Verify OTP</button>
+                      <button id='resendOtp' onClick={startResendTimer} className='resend-otp-button'>Resend OTP <span id="timer"></span></button>
+                    </div>
+                </div>)
+                    
+                }
+                </>
+              ):(
                   <div className='mobile-number-container'>
                   <div>
                     {invalidPasswordError?(<div style={{color:'red'}}>

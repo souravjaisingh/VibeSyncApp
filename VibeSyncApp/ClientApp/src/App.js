@@ -107,7 +107,7 @@ function App() {
                 {loading && (
                 <div className="loading-overlay">
                     <div className="loading-spinner">
-                        <img className='loading-favicon-logo' src="favicon.png"/>
+                        <img className='loading-favicon-logo' src="/images/Vibe.png"/>
                     </div>
                 </div>
             )}

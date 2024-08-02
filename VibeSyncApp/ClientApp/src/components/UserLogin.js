@@ -65,7 +65,7 @@ function updateTimer() {
 }
 
   const handleGetOtp = () => {
-    if(document.getElementById('mobile-no').value.length != 10 || document.getElementById('mobile-no').value.includes('.')){
+    if( phoneRegex.test(document.getElementById('mobile-no').value) || document.getElementById('mobile-no').value.length != 10){
       document.getElementById('mobile-no').style.border = 'solid';
       document.getElementById('mobile-no').style.borderColor = 'red'; 
       document.getElementById('mobile-no').style.borderWidth = '3px'; 

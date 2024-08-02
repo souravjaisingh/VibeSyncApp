@@ -26,6 +26,7 @@ function Cards(props) {
   const [invalidPasswordError,setInvalidPasswordError] = useState(false);
   const [mobileNo,setMobileNo] = useState(null);
   const [otp, setOtp] = useState(new Array(4).fill(""));
+  const [otpReturnMessage,setOtpReturnMessage] = useState(''); 
   let timer;
   let countdown = 30;
 
@@ -43,11 +44,17 @@ function Cards(props) {
   function startResendTimer() {
     document.getElementById('resendOtp').style.opacity = 0.6;
     document.getElementById('resendOtp').disabled = true;
-
+    window.retryOtp(
+      '11', // channel value mandatory
+      (data) => console.log('resend data: ', data), // optional
+      (error) => console.log(error), // optional
+      otpReturnMessage // optional
+    );
     timer = setInterval(updateTimer, 1000);
 }
 
 function updateTimer() {
+  try{
     const timerElement = document.getElementById('timer');
     
     if (countdown > 0) {
@@ -62,24 +69,61 @@ function updateTimer() {
         
         clearInterval(timer);
     }
+  }
+  catch{
+
+  }
 }
 
   const handleGetOtp = () => {
-    if( phoneRegex.test(document.getElementById('mobile-no').value) || document.getElementById('mobile-no').value.length != 10){
+    if( !phoneRegex.test(document.getElementById('mobile-no').value) || document.getElementById('mobile-no').value.length != 10){
       document.getElementById('mobile-no').style.border = 'solid';
       document.getElementById('mobile-no').style.borderColor = 'red'; 
       document.getElementById('mobile-no').style.borderWidth = '3px'; 
     }
     else{
-      timer = setInterval(updateTimer, 1000);
-      setTimeout(()=>{document.getElementById('resendOtp').style.opacity = 0.6;},1000)
-      setTimeout(()=>{document.getElementById('resendOtp').disabled = true;},1000)
-      setMobileNo(document.getElementById('mobile-no').value)
+      window.sendOtp(
+        '91'+document.getElementById('mobile-no').value, // mandatory
+        (data) => {console.log(data);
+          setOtpReturnMessage(data.message);
+          timer = setInterval(updateTimer, 1000);
+          setTimeout(()=>{document.getElementById('resendOtp').style.opacity = 0.6;},1000)
+          setTimeout(()=>{document.getElementById('resendOtp').disabled = true;},1000)
+          setMobileNo(document.getElementById('mobile-no').value)
+        },
+        (error) =>{ console.log(error)
+          document.getElementById('mobile-no').style.border = 'solid';
+          document.getElementById('mobile-no').style.borderColor = 'red'; 
+          document.getElementById('mobile-no').style.borderWidth = '3px';
+        }
+      );
     }
   }
 
   const handleVerifyOtp = () => {
-    console.log(otp);
+    console.log(otp.join(""));
+
+    window.verifyOtp(
+      otp.join(""), // OTP value
+      (data) => {console.log('OTP verified: ', data)
+        handleOtpVerificationSuccessful();
+      }, // optional
+      (error) => {console.log(error)
+        handleOtpVerificationRejected();
+      }, // optional
+      otpReturnMessage // optional
+    );
+  }
+
+  const handleOtpVerificationSuccessful = async () => {
+    window.alert('Verified')
+  }
+
+  const handleOtpVerificationRejected = async () => {
+    const otpButtons = document.getElementsByClassName('otp-field');
+    for (let i = 0; i < otpButtons.length; i++) {
+      otpButtons[i].style.borderColor = 'red';
+    }
   }
 
   const handleInputChange = (e) => {
@@ -250,7 +294,7 @@ const handleSubmit = async () => {
               </div>
               <div className='google-email-login-container'>
                 <GoogleLogin isUser={!isUser} showButton={true}/>
-                <div onClick={()=>setIsMobileLogin(!isMobileLogin)} className='btn-mobile'>
+                <div onClick={()=>{setIsMobileLogin(!isMobileLogin);setMobileNo(null);clearInterval(timer)}} className='btn-mobile'>
                   {isMobileLogin?(<img src='images/emailIcon.png' className='email-icon' />):
                   (<img src='images/phone-call.png' className='phone-call-icon'/>)}
                   

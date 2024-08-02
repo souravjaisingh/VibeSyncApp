@@ -39,4 +39,23 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script type="text/javascript">
+    var configuration = {
+      widgetId: "346862734542373230313836",
+      tokenAuth: "427527TjyKxfYJKB666ad326cP1",
+      identifier: "<enter mobile number/email here> (optional)",
+      exposeMethods: true,
+      captchaRenderId: '', // id(must be unique) of html element where to render captcha, only works if there is exposedMethod is true,.
+      success: (data) => {
+          // get verified token in response
+          console.log('success response', data);
+      },
+      failure: (error) => {
+          // handle error
+          console.log('failure reason', error);
+      },
+  
+  };
+  </script>
+   <script type="text/javascript" onload="initSendOTP(configuration)" src="https://control.msg91.com/app/assets/otp-provider/otp-provider.js"></script>
 </html>

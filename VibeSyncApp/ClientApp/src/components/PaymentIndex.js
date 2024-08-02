@@ -204,11 +204,14 @@ function PaymentIndex() {
         setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBidForSpecialRequest * 1.5) : rowData.minimumBid);
     }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest]);
 
+
     useEffect(() => {
-        const gst = Math.round(amount * 0.18); // Calculate GST as 18% of the amount and round to nearest integer
+        const minimumBid = isSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid;
+        const gst = Math.round(minimumBid * 0.18); // Calculate GST as 18% of the minimum bid and round to nearest integer
         setGstAmount(gst);
         setTotalAmountWithGst(Math.round(amount + gst)); // Update total amount including GST and round to nearest integer
-    }, [amount]);
+    }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest, amount]);
+
 
 
 

@@ -42,13 +42,7 @@ namespace VibeSyncApp.Controllers
         {
             _mediator = mediator;
             _logger = logger;
-            Account account = new Account(
-                configuration["Cloudinary:CloudName"],
-                configuration["Cloudinary:ApiKey"],
-                configuration["Cloudinary:ApiSecret"]
-
-            );
-            _cloudinary = new Cloudinary(account);
+            
         }
         /// <summary>
         /// Gets all events.
@@ -81,12 +75,10 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromForm] EventsDetails request, IFormFile uploadImg)
+        public async Task<IActionResult> CreateEvent([FromBody] EventsDetails request)
         {
             // Log the request parameter as JSON
             _logger.LogInformation($"Entered: {typeof(EventsController)}, API: {typeof(EventsController).GetMethod("CreateEvent")}, Request: {JsonConvert.SerializeObject(request)}");
-            if (uploadImg != null && uploadImg.Length > 0)
-                request.DjPhoto = await UploadToCloudinary(uploadImg);
 
             var res = await _mediator.Send(request).ConfigureAwait(false);
 
@@ -96,12 +88,10 @@ namespace VibeSyncApp.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateEvent([FromForm] EventsDetails request, IFormFile uploadImg)
+        public async Task<IActionResult> UpdateEvent([FromBody] EventsDetails request)
         {
             // Log the request parameter as JSON
             _logger.LogInformation($"Entered: {typeof(EventsController)}, API: {typeof(EventsController).GetMethod("UpdateEvent")}, Request: {JsonConvert.SerializeObject(request)}");
-            if (uploadImg != null && uploadImg.Length > 0)
-                request.DjPhoto = await UploadToCloudinary(uploadImg);
 
             await _mediator.Publish(request);
 
@@ -163,19 +153,6 @@ namespace VibeSyncApp.Controllers
             return Ok(res);
         }
 
-        private async Task<string> UploadToCloudinary(IFormFile file)
-        {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(file.FileName, file.OpenReadStream())
-            };
-
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
-
-            if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
-                return uploadResult.SecureUrl.ToString();
-            else
-                throw new CustomException(uploadResult.Error.Message);
-        }
+        
     }
 }

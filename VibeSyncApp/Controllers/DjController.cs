@@ -5,6 +5,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VibeSyncModels.Request_ResponseModels;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Configuration;
+using CloudinaryDotNet.Actions;
+using VibeSyncModels;
 
 namespace VibeSyncApp.Controllers
 {
@@ -14,19 +18,28 @@ namespace VibeSyncApp.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<DjController> _logger;
+        private readonly Cloudinary _cloudinary;
 
-        public DjController(IMediator mediator, ILogger<DjController> logger)
+        public DjController(IMediator mediator, ILogger<DjController> logger, IConfiguration configuration)
         {
             _mediator = mediator;
             _logger = logger; // Initialize ILogger
+            Account account = new Account(
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
+
+            );
+            _cloudinary = new Cloudinary(account);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateDjProfile([FromBody] UpdateDjCommandModel request)
+        public async Task<IActionResult> UpdateDjProfile([FromForm] UpdateDjCommandModel request, IFormFile uploadImg)
         {
             // Log the request parameter as JSON
             _logger.LogInformation($"Entered: {typeof(DjController)}, API: {typeof(DjController).GetMethod("UpdateDjProfile")}, Request: {JsonConvert.SerializeObject(request)}");
-
+            if (uploadImg != null && uploadImg.Length > 0)
+                request.DjPhoto = await UploadToCloudinary(uploadImg);
             await _mediator.Send(request);
 
             // Log the response
@@ -69,6 +82,20 @@ namespace VibeSyncApp.Controllers
 
             _logger.LogInformation($"{typeof(DjController).GetMethod("CreateReview")}'s response: {JsonConvert.SerializeObject(res)}");
             return Ok(res);
+        }
+        private async Task<string> UploadToCloudinary(IFormFile file)
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(file.FileName, file.OpenReadStream())
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
+
+            if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+                return uploadResult.SecureUrl.ToString();
+            else
+                throw new CustomException(uploadResult.Error.Message);
         }
     }
 }

@@ -109,7 +109,6 @@ const handleOtpChange = (element, index) => {
 const handleSubmit = async () => {
     setLoginError(false);
     try {
-        console.log(email, password);
         if (email == null || email == '' || email == undefined) {
             setLoginError(true);
         }

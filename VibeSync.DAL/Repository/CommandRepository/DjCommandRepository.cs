@@ -43,19 +43,25 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var djEntity = _context.Djs.Where(x => x.Id == request.Id).FirstOrDefault();
             if (djEntity != null)
             {
-                // Update the properties of djEntity with values from the request
-                djEntity.DjName = request.DjName;
-                djEntity.ArtistName = request.ArtistName;
-                djEntity.DjGenre = request.DjGenre;
-                djEntity.DjDescription = request.DjDescription;
-                djEntity.DjPhoto = request.DjPhoto;
-                djEntity.BankName = request.BankName;
-                djEntity.BankAccountNumber = request.BankAccountNumber;
-                djEntity.BranchName = request.BranchName;
-                djEntity.Ifsccode = request.Ifsccode;
-                djEntity.SocialLinks = request.SocialLinks;
+                // Function to return null if value is "null" or null, otherwise the value itself
+                string HandleNullOrValue(string value) => value == "null" ? null : value;
+
+                // Update properties
+                djEntity.DjName = HandleNullOrValue(request.DjName);
+                djEntity.ArtistName = HandleNullOrValue(request.ArtistName);
+                djEntity.DjGenre = HandleNullOrValue(request.DjGenre);
+                djEntity.DjDescription = HandleNullOrValue(request.DjDescription);
+                djEntity.DjPhoto = HandleNullOrValue(request.DjPhoto);
+                djEntity.BankName = HandleNullOrValue(request.BankName);
+                djEntity.BankAccountNumber = !string.IsNullOrEmpty(request.BankAccountNumber) && request.BankAccountNumber != "null"
+                    ? int.TryParse(request.BankAccountNumber, out int accountNumber) ? accountNumber : (int?)null
+                    : null;
+                djEntity.BranchName = HandleNullOrValue(request.BranchName);
+                djEntity.Ifsccode = HandleNullOrValue(request.Ifsccode);
+                djEntity.SocialLinks = HandleNullOrValue(request.SocialLinks);
                 djEntity.ModifiedOn = DateTime.Now;
                 djEntity.ModifiedBy = request.ModifiedBy;
+
                 // Save changes to the database
                 var response = await _context.SaveChangesAsync();
 

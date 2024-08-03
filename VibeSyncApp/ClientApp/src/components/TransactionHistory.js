@@ -121,11 +121,11 @@ function TransactionHistory() {
             <div className='bg-music-background'>
             <div className = 'main-heading'>
             <h2>Transaction History</h2>
-            <div className="filter-container">
+                    <div className="transaction-page-filter-container">
                 {/*<label htmlFor="eventFilter">Filter by Event:</label>*/}
                 <select
                     id="eventFilter"
-                    className="event-filter-select"
+                            className="transaction-event-filter-select"
                     value={selectedEvent}
                     onChange={handleEventFilterChange}
                 >

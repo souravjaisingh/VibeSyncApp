@@ -1,8 +1,7 @@
 import * as Constants from '../Constants';
 import { useLoadingContext } from '../LoadingProvider';
 
-
-export async function handleAPIRequest(url, method, data) {
+export async function handleAPIRequest(url, method, data, isFormData = false) {
     const currentUrl = window.location.href;
     const baseUri = currentUrl.includes('azurewebsites') ? Constants.baseUriAzure : Constants.baseUriVibeSync;
 

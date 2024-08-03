@@ -3,113 +3,123 @@ import './DjProfile.css';
 import { UpdateDjDetails, GetDjProfile } from './services/DjService';
 import { MyContext } from '../App';
 import { useLoadingContext } from './LoadingProvider';
+import { useNavigate } from 'react-router-dom';
 
 const DjProfile = () => {
   const { error, setError } = useContext(MyContext);
-    const {errorMessage, setErrorMessage} = useContext(MyContext);
+  const { errorMessage, setErrorMessage } = useContext(MyContext);
   const [id, setId] = useState('');
   const [userid, setUserId] = useState('');
   const [djName, setDjName] = useState('');
-  const [artistName, setArtistName] = useState(''); 
+  const [artistName, setArtistName] = useState('');
   const [djGenre, setDjGenre] = useState('');
   const [djDescription, setDjDescription] = useState('');
-  const [djPhoto, setDjPhoto] = useState(null);  
+  const [djPhoto, setDjPhoto] = useState('');
+  const [uploadImg, setUploadImg] = useState(null);
+
   const [bankName, setBankName] = useState('');
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [branchName, setBranchName] = useState('');
   const [ifscCode, setIfscCode] = useState('');
   const [socialLinks, setSocialLinks] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); 
-  const [profileErrorMessage, setProfileErrorMessage] = useState(''); 
+  const [successMessage, setSuccessMessage] = useState('');
+  const [profileErrorMessage, setProfileErrorMessage] = useState('');
   const { setLoading } = useLoadingContext();
+  const navigate = useNavigate();
+
+
+  const handleFileChange = (e) => {
+    setUploadImg(e.target.files[0]); // Store the file object
+  };
+
 
   const handleSubmit = async () => {
     setLoading(true);
     setProfileErrorMessage('');
     setSuccessMessage('');
-      console.log(djPhoto);
-    // Validation: Check if any input field is empty
-    if (!djName || !userid) { // Add required fields here  
-      setProfileErrorMessage('All required fields must be filled in.'); // Set error message
-      return; // Don't proceed with the API call
+
+    // Validation: Check if required fields are filled in
+    if (!djName || !userid) {
+      setProfileErrorMessage('All required fields must be filled in.');
+      return;
     }
 
-    // Validation: Check the data type of bankAccountNumber
+    // Validation: Check if the bank account number is a number
     if (bankAccountNumber && isNaN(parseInt(bankAccountNumber))) {
-      setProfileErrorMessage('Bank Account Number must be a number.'); // Set error message
-      return; // Don't proceed with the API call
+      setProfileErrorMessage('Bank Account Number must be a number.');
+      return;
     }
 
-
-      // Create a FormData object
-      const formData = new FormData();
-      formData.append('DjName', djName);
-      formData.append('ArtistName', artistName);
-      formData.append('DjGenre', djGenre);
-      formData.append('DjDescription', djDescription);
-      if (djPhoto) {
-          formData.append('DjPhoto', djPhoto); // Append the file
-      }
-      formData.append('BankName', bankName);
-      formData.append('BankAccountNumber', bankAccountNumber);
-      formData.append('BranchName', branchName);
-      formData.append('IFSCCode', ifscCode);
-      formData.append('SocialLinks', socialLinks);
-      formData.append('Id', id);
-      formData.append('UserId', userid);
-      formData.append('ModifiedBy', localStorage.getItem('userId'));
-
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append('DjName', djName);
+    formData.append('ArtistName', artistName);
+    formData.append('DjGenre', djGenre);
+    formData.append('DjDescription', djDescription);
+    if (uploadImg) {
+      formData.append('uploadImg', uploadImg); // Append the file if selected
+    }
+    formData.append('BankName', bankName);
+    formData.append('BankAccountNumber', bankAccountNumber);
+    formData.append('BranchName', branchName);
+    formData.append('IFSCCode', ifscCode);
+    formData.append('SocialLinks', socialLinks);
+    formData.append('Id', id);
+    formData.append('UserId', userid);
+    formData.append('ModifiedBy', localStorage.getItem('userId'));
 
     // Call the UpdateDjDetails function to save the DJ profile
     try {
       const response = await UpdateDjDetails(formData);
-      if(response.errors != null){
+      if (response.errors) {
         console.error('Error saving DJ profile:', response.errors);
-        setProfileErrorMessage('Error saving DJ profile. Please try again'); 
-      }
-      else{
+        setProfileErrorMessage('Error saving DJ profile. Please try again.');
+      } else {
         console.log('DJ profile saved successfully:', response.data);
-        setSuccessMessage('DJ profile saved successfully');
+        setSuccessMessage('DJ profile saved successfully. Redirecting to home page.');
+        // Set a timeout to navigate after 3-4 seconds
+        setTimeout(() => {
+          navigate('/djhome');
+        }, 2000); // 3000 milliseconds = 3 seconds
+
       }
     } catch (error) {
       setError(true);
       setErrorMessage(error.message);
-      // Handle network or other errors
       console.error('Error saving DJ profile:', error);
-      setProfileErrorMessage('Error saving DJ profile. Please try again.'); 
+      setProfileErrorMessage('Error saving DJ profile. Please try again.');
     }
     setLoading(false);
   };
+
   const handleBankAccountNumberChange = (e) => {
     const input = e.target.value;
-    // Use a regular expression to allow only numeric characters
-    const numericInput = input.replace(/[^0-9]/g, '');
+    const numericInput = input.replace(/[^0-9]/g, ''); // Allow only numeric characters
     setBankAccountNumber(numericInput);
   };
-  
+
   // Fetch DJ profile data when the component mounts
   useEffect(() => {
     async function getDjProfile() {
       setLoading(true);
       try {
         const res = await GetDjProfile(localStorage.getItem('userId'));
-        // Populate the form fields with fetched data
         setDjName(res.djName);
         setArtistName(res.artistName);
         setDjGenre(res.djGenre);
         setDjDescription(res.djDescription);
-        setDjPhoto(null); 
+        setDjPhoto(res.djPhoto); // Set djPhoto to null if no URL is present
         setBankName(res.bankName);
         setBankAccountNumber(res.bankAccountNumber);
         setBranchName(res.branchName);
         setIfscCode(res.ifsccode);
         setSocialLinks(res.socialLinks);
         setId(res.id);
-        setUserId(res.userId)
+        setUserId(res.userId);
+        setUploadImg(null); // Initialize uploadImg to null
       } catch (error) {
         setError(true);
         setErrorMessage(error.message);
-        // Handle network or other errors
         console.error('Error fetching DJ profile:', error);
       }
       setLoading(false);
@@ -120,9 +130,9 @@ const DjProfile = () => {
   return (
     <div className="dj-profile">
       <form className="profile-form">
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      {profileErrorMessage && <p className="error-message">{profileErrorMessage}</p>} 
-      <p className="dj-profile-heading">DJ Profile</p>
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        {profileErrorMessage && <p className="error-message">{profileErrorMessage}</p>}
+        <p className="dj-profile-heading">DJ Profile</p>
         <div className="input-group">
           <label htmlFor="djNameInput">Name</label>
           <input
@@ -134,7 +144,7 @@ const DjProfile = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="artistNameInput">Artist Name</label> {/* Added Artist Name */}
+          <label htmlFor="artistNameInput">Artist Name</label>
           <input
             type="text"
             id="artistNameInput"
@@ -166,10 +176,9 @@ const DjProfile = () => {
         <div className="input-group">
           <label htmlFor="djPhotoInput">Photo</label>
           <input
-            type="file" 
+            type="file"
             id="djPhotoInput"
-            placeholder="Photo URL"
-            onChange={(e) => setDjPhoto(e.target.files[0])} 
+            onChange={handleFileChange}
             accept="image/*"
           />
         </div>
@@ -180,7 +189,7 @@ const DjProfile = () => {
             id="bankAccountNumberInput"
             placeholder="Account Number"
             value={bankAccountNumber}
-            onChange={handleBankAccountNumberChange} // Use the custom change handler
+            onChange={handleBankAccountNumberChange}
           />
         </div>
         <div className="input-group">
@@ -213,7 +222,7 @@ const DjProfile = () => {
             onChange={(e) => setSocialLinks(e.target.value)}
           />
         </div>
-        
+
         <button
           onClick={handleSubmit}
           type="button"

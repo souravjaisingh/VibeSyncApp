@@ -53,6 +53,7 @@
    }
 
     .input-group label {
+        white-space: nowrap;
         flex: 1;
         margin-right: 10px !important;
         text-align: left; 

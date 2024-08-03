@@ -299,7 +299,9 @@ const AddressTypeahead = () => {
                     </div>
             </div>
                 <div className="input-group">
-                    <label htmlFor="eventNameInput">Event Name</label>
+                        <label htmlFor="eventNameInput">
+                            Event Name <span style={{ color: 'red' }}>*</span>
+                        </label>
                     <input
                         type="text"
                         id="eventNameInput"
@@ -311,7 +313,9 @@ const AddressTypeahead = () => {
                 </div>
                 
                 <div className="input-group">
-                    <label htmlFor="venueNameInput">Name of the venue</label>
+                        <label htmlFor="venueNameInput">
+                        Name of the venue <span style={{ color: 'red' }}>*</span>
+                        </label>
                     <input
                         type="text"
                         id="venueNameInput"
@@ -322,7 +326,9 @@ const AddressTypeahead = () => {
                     />
                 </div>
                 <div className="input-group">
-                    <label htmlFor="eventStartTimeInput">Event Start timings</label>
+                        <label htmlFor="eventStartTimeInput">
+                        Event Start timings<span style={{ color: 'red' }}>*</span>
+                        </label>
                     <input
                         type="datetime-local"
                         id="eventStartTimeInput"
@@ -333,7 +339,9 @@ const AddressTypeahead = () => {
                     />
                 </div>
                 <div className="input-group">
-                    <label htmlFor="eventEndTimeInput">Event end timings</label>
+                        <label htmlFor="eventEndTimeInput">
+                        Event end timings<span style={{ color: 'red' }}>*</span>
+                        </label>
                     <input
                         type="datetime-local"
                         id="eventEndTimeInput"
@@ -346,7 +354,9 @@ const AddressTypeahead = () => {
                         && <span className="error-message">End date time must be greater than start date time</span>}
                 </div>
                 <div className="input-group">
-                    <label htmlFor="eventDescriptionInput">Event description</label>
+                        <label htmlFor="eventDescriptionInput">
+                        Event description<span style={{ color: 'red' }}>*</span>
+                        </label>
                     <input
                         type="text"
                         id="eventDescriptionInput"
@@ -357,7 +367,9 @@ const AddressTypeahead = () => {
                     />
                 </div>
                 <div className="input-group">
-                    <label htmlFor="minimumBidInput">Minimum bid</label>
+                        <label htmlFor="minimumBidInput">
+                         Minimum bid<span style={{ color: 'red' }}>*</span>
+                        </label>
                     <input
                         type="text"
                         id="minimumBidInput"
@@ -390,10 +402,10 @@ const AddressTypeahead = () => {
                     />
                     <label htmlFor="displayRequests">Display Requests on Screen</label>
 
-                </div>
+                </div> 
                 {(acceptingRequests || displayRequests) && (
-                    <div className="input-group">
-                        <label htmlFor="minimumBidForSpecialRequestInput">Minimum Bid for Special Request<span style={{ color: 'red' }}>*</span></label>
+                        <div className="input-group">
+                            <label htmlFor="minimumBidForSpecialRequestInput" style={{ whiteSpace: "unset" }}>Minimum Bid for Special Request<span style={{ color: 'red' }}>*</span></label>
                         <input
                             type="number"
                             id="minimumBidForSpecialRequestInput"

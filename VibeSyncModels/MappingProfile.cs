@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Collections.Generic;
 using System.Linq;
 using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
@@ -20,8 +21,11 @@ namespace VibeSyncModels
             CreateMap<EventsDetails, Event>().ReverseMap();
             CreateMap<UpdateDjCommandModel, Dj>().ReverseMap();
             CreateMap<Dj, DjProfileResponseModel>().ReverseMap();
-            CreateMap<SongDetails, Track>().ReverseMap();
+            CreateMap<Track, SongDetails>()
+                .ForMember(dest => dest.Artists, opt => opt.MapFrom(src => new Artists { Primary = src.artists }))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src =>new List<Image> { src.Album.Images.FirstOrDefault()})).ReverseMap();
             CreateMap<Settlement, SettlementResponse>().ReverseMap();
+            CreateMap<ReviewDetails, Review>().ReverseMap();
             CreateMap<PersistSongHistoryPaymentRequest, SongHistory>()
                 .ForMember(dest => dest.Image, src => src.MapFrom(prop => prop.AlbumImage));
         }

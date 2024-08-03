@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.CommandRepository;
@@ -7,7 +9,10 @@ using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Handler
 {
-    public class DjHandler : IRequestHandler<UpdateDjCommandModel, string>, IRequestHandler<GetDjProfileRequestModel, DjProfileResponseModel>
+    public class DjHandler : IRequestHandler<UpdateDjCommandModel, string>, 
+        IRequestHandler<GetDjProfileRequestModel, DjProfileResponseModel>,
+        IRequestHandler<GetReviewRequestModel, IEnumerable<GetReviewResponseModel>>,
+        IRequestHandler<ReviewDetails,bool>
     {
         /// <summary>
         /// The dj command repository
@@ -44,6 +49,15 @@ namespace VibeSync.DAL.Handler
         public async Task<DjProfileResponseModel> Handle(GetDjProfileRequestModel request, CancellationToken cancellationToken)
         {
             return await Task.Run(() => _djQueryRepository.GetDjProfileByUserId(request));
+        }
+        public Task<IEnumerable<GetReviewResponseModel>> Handle(GetReviewRequestModel request, CancellationToken cancellationToken)
+        {
+            return _djQueryRepository.GetReviews(request);
+        }
+
+        public async Task<bool> Handle(ReviewDetails request, CancellationToken cancellationToken)
+        {
+            return await _djCommandRepository.CreateReview(request);
         }
     }
 }

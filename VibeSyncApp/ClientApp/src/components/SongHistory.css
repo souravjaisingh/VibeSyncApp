@@ -2,10 +2,12 @@
 
 /* Styling for the container div */
 .song--history--container {
-    background-color: #f7f7f7; /* Lighter background color */
+    background-color: #f7f7f7;
+    /* Lighter background color */
     border-radius: 5px;
     padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Add a subtle box shadow */
 }
 
 /* Styling for the table */
@@ -14,45 +16,57 @@
     font-size: small;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
-    border-collapse: collapse; /* Collapse table borders */
+    border-collapse: collapse;
+    /* Collapse table borders */
     border-radius: 5px;
-    overflow: hidden; /* Hide overflowing content */
+    overflow: hidden;
+    /* Hide overflowing content */
 }
 
 /* Styling for table header cells */
 .song--history--header--cell {
     font-weight: bold;
     text-align: center;
-    padding: 10px; /* Add padding for better spacing */
-    white-space: nowrap; /* Prevent text wrapping */
-    overflow: hidden; /* Hide overflow text */
-    text-overflow: ellipsis; /* Show ellipsis for long text */
-    border-bottom: 1px solid #e0e0e0; /* Add bottom border for separation */
+    padding: 10px;
+    /* Add padding for better spacing */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    overflow: hidden;
+    /* Hide overflow text */
+    text-overflow: ellipsis;
+    /* Show ellipsis for long text */
+    border-bottom: 1px solid #e0e0e0;
+    /* Add bottom border for separation */
 }
 
 /* Styling for table body rows */
 .song--history--body--row {
-    cursor: pointer; /* Change cursor on hover */
+    cursor: pointer;
+    /* Change cursor on hover */
 }
 
 /* Styling for even rows */
 .song--history--body--row:nth-child(odd) {
-    background-color: #f2f2f2; /* Alternate background color */
+    background-color: #f2f2f2;
+    /* Alternate background color */
 }
 
 /* Styling for album cover images */
 .album--cover--image {
     width: 45px;
     height: 45px;
-    border-radius: 50%; /* Make the images circular */
+    border-radius: 50%;
+    /* Make the images circular */
 }
 
 /* Styling for song details */
 .song--details {
     display: flex;
     align-items: center;
-    gap: 10px; /* Add gap between elements */
-    padding: 10px; /* Add padding for better spacing */
+    gap: 10px;
+    /* Add gap between elements */
+    padding: 10px;
+    /* Add padding for better spacing */
 }
 
 /* Styling for song name */
@@ -62,7 +76,8 @@
 
 /* Styling for artist name */
 .artist--name {
-    color: #555; /* Darker text color for artist name */
+    color: #555;
+    /* Darker text color for artist name */
 }
 
 
@@ -72,29 +87,179 @@
 
 .filter-container {
     margin-bottom: 20px;
-  }
-  
-  .filter-label {
-    font-weight: bold;
-  }
-  
-  .filter-select {
-    padding: 5px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-label {
+    font-size: 1.5rem !important;
+    color: #39125C !important;
+    margin-bottom: 0;
+}
+
+.filter-select-song-history {
+    padding:5px 12px; /* Adjust padding to suit your design */
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size */
+    max-width: 150px; /* Add a max-width to the dropdown */
+    background-color: #39125C;
+    color: white;
+    font-weight :bold;
+    width: auto;
+    text-align: center;
+
+}
+
+.filter-select-song-history option {
+        background-color: #39125C; 
+        color: white; 
+        font-size: 16px; 
+}
+
+.filter-select {
+    padding: 5px;
     border-radius: 3px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     cursor: pointer;
-    font-size: smaller; 
-  }
-  
-  .filter-select:hover {
+    font-size: smaller;
+}
+
+.filter-select:hover {
     background-color: #e9e9e9;
-  }
-  
-  .filter-select:focus {
+}
+
+.filter-select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
-  }
-  
-  
+}
+
+.reject-message{
+    color: gray;
+    font-weight: bold;
+}
+
+.song-history-container{
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background-attachment: fixed;
+    background-size: screen;
+    padding: 0px !important;
+}
+
+.song-inner-container{
+    padding: 20px;
+    max-width: 48rem;
+    margin: auto;
+}
+
+.song-row-history-page{
+    border-radius: 15px;
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+    color: #39125C;
+    background: linear-gradient(to right, white 30%, #D7DEFE, white 70%);
+}
+
+.bg-music-song-history{
+    
+    background-image: url("/images/BGMusic.png");
+    background-size: 100%;
+}
+
+.history-page-left-content{
+    width:35%;
+    font-weight: 700;
+    padding: 8px;
+}
+.history-page-middle-content{
+    display: flex;
+    width:40%;
+    gap:5px;
+    border-radius: 15px;
+    color: white;
+    background-color: #39125C;
+    padding: 10px 15px;
+    align-items: center;
+    margin: 5px 0px;
+}
+.history-page-right-content{
+    width:25%;
+    font-size: 0.75rem;
+    justify-content: center;
+}
+.time-paymentid-block{
+    font-size:0.4rem;
+    
+}
+.btn-right-content{
+    padding: 5px 10px;
+    border-radius: 15px;
+    color:#39125C;
+    margin: auto;
+    width:90%;
+    text-align: center;
+    font-weight: 700;
+}
+.date-time-payment{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+.song-row-song-name{
+    font-size: 1rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 0.9rem;
+}
+.song-row-artist-name{
+    font-size: 0.75rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    padding-top: 2px;
+}
+.song-row-amount-paid{
+    font-weight: 700;
+    padding-right:5px;
+}
+.bg-music-song-history{
+    background: url("/images/BGMusic.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+.btn-payment-red {
+    background-color: #F7795D;
+}
+.btn-payment-green {
+    background-color: #5AC6A4;
+}
+.btn-payment-yellow {
+    background-color: #FFDE79;
+}
+.btn-payment-lightgreen {
+    background-color: #aff2c3;
+}
+.mic-announcement-message {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3em; /* Adjust this value based on the desired height */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to display */
+    -webkit-box-orient: vertical;
+}

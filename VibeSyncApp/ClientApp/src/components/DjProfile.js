@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import './DjProfile.css';
 import { UpdateDjDetails, GetDjProfile } from './services/DjService';
 import { MyContext } from '../App';
+import { useLoadingContext } from './LoadingProvider';
 
 const DjProfile = () => {
   const { error, setError } = useContext(MyContext);
@@ -20,8 +21,10 @@ const DjProfile = () => {
   const [socialLinks, setSocialLinks] = useState('');
   const [successMessage, setSuccessMessage] = useState(''); 
   const [profileErrorMessage, setProfileErrorMessage] = useState(''); 
+  const { setLoading } = useLoadingContext();
 
   const handleSubmit = async () => {
+    setLoading(true);
     setProfileErrorMessage('');
     setSuccessMessage('');
       console.log(djPhoto);
@@ -75,6 +78,7 @@ const DjProfile = () => {
       console.error('Error saving DJ profile:', error);
       setProfileErrorMessage('Error saving DJ profile. Please try again.'); 
     }
+    setLoading(false);
   };
   const handleBankAccountNumberChange = (e) => {
     const input = e.target.value;
@@ -86,6 +90,7 @@ const DjProfile = () => {
   // Fetch DJ profile data when the component mounts
   useEffect(() => {
     async function getDjProfile() {
+      setLoading(true);
       try {
         const res = await GetDjProfile(localStorage.getItem('userId'));
         // Populate the form fields with fetched data
@@ -107,8 +112,8 @@ const DjProfile = () => {
         // Handle network or other errors
         console.error('Error fetching DJ profile:', error);
       }
+      setLoading(false);
     }
-
     getDjProfile();
   }, []);
 

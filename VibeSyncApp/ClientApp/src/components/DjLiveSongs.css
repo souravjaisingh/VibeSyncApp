@@ -1,27 +1,25 @@
 /* CSS for SongHistoryWithActions Component */
 .song-history-container {
-    background-color: aliceblue;
+    
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
     padding: 20px;
 }
 
 .song-history-table {
-    max-height: 400px;
     overflow: auto;
-    background-color: #ffffff;
     border: 1px solid #e0e0e0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .song-history-table th,
 .song-history-table td {
     text-align: left;
-    padding: 10px;
 }
 
-.song-history-table th {
-    background-color: #f0f0f0;
-}
 
 /* Accepted Requests Section */
 .accepted-requests {
@@ -78,19 +76,12 @@
 
 /* Updated button style for "Mark as Played" */
 .btn-primary-mark-as-played {
-    padding: 5px 2px;
-    margin-right: 5px;
-    cursor: pointer;
-    border: 1px solid #007bff;
-    /* Add a border */
-    background-color: transparent;
-    /* Transparent background */
-    color: #007bff;
-    /* Blue text color */
-    font-size: 10px;
-    /* Adjust the size as needed */
-    transition: background-color 0.3s, color 0.3s;
-    /* Add a transition for smooth hover effect */
+    font-weight: 700;
+    background-color: rgb(201, 201, 43);
+    border-radius: 15px;
+    font-size: 0.5rem;
+    padding: 0px 6px;
+    border: none;
 }
 
 /* Style for the button in the :hover state */
@@ -113,6 +104,7 @@
     align-items: center;
     gap: 5px;
     width: max-content;
+    padding-right: 8px;
     /* Adjust the gap between buttons as needed */
 }
 
@@ -130,8 +122,16 @@
 .toggle-container {
     display: flex;
     align-items: center;
-    margin-top: 10px;
-    justify-content: flex-end;
+    justify-content: center;
+    font-size: 0.8rem;
+    margin-top: 0;
+}
+
+.toggle-container label{
+    margin: 0;
+    color: #39125C;
+    font-weight: 600;
+    font-size: 1rem;
 }
 
 .toggle-slider {
@@ -163,12 +163,138 @@
     transform: translateX(26px);
 }
 
-.toggle-container label {
-    margin-right: 10px;
-    color: #f73737;
-    font-weight: bold;
-}
 .money{
     font-weight: bold;
     text-align: center;
+}
+
+.bg-music-dj-side{
+    background: url('/images/BGMusic.png');
+    /* background-repeat: no-repeat; */
+    background-size: 100%;
+    z-index: 2;
+}
+
+.edit-profile-link{
+    color: #fff;
+    background-color: #39125C;
+    border-radius: 15px;
+    padding: 5px 10px;
+}
+
+
+.img-song-req-dj-side{
+    border-radius: 15px;
+    margin: 5px;
+    height: 60px;
+    width: 60px;
+}
+
+.dj-side-song-req-header{
+    padding: 10px;
+    margin: 0px 10px;
+    align-items: center;
+}
+
+.update-event-live-link{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px auto;
+    align-items: center;
+    max-width: 36rem;
+}
+
+.song-announcement-request-container{
+    margin:10px 20px;
+    border-radius: 15px;
+    position: relative;
+    background: linear-gradient(160deg,#fff 10%,#D7DEFE 40%,#fff 90%);
+    max-width: 24rem;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 2px rgb(0 0 0 / 0.2);
+    
+}
+
+.song-announcement-request-container-red{
+    margin:10px 20px;
+    border-radius: 15px;
+    position: relative;
+    background: linear-gradient(150deg,#FF9999 10%,#fff 40%, #fff 50%,#FF9999 100%);
+    max-width: 24rem;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.song-announcement-request-container-yellow{
+    margin:10px 20px;
+    border-radius: 15px;
+    position: relative;
+    background: linear-gradient(150deg,#FFDE79 10%,#fff 40%, #fff 60%,#FFDE79 100%);
+    max-width: 24rem;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.request-announcement-amount{
+    position: absolute;
+    top:-10px;
+    left: -10px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #39125C;
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+.close-button-X{
+    border-radius: 100%;
+    color: #fff;
+    background-color: #d9534f;
+    border: none;
+    height: 25px;
+    width: 25px;
+}
+
+.accept-button-yes{
+    border-radius: 100%;
+    color: #fff;
+    background-color: #5cb85c;
+    border: none;
+    height: 25px;
+    width: 25px;
+}
+
+.dj-side-song-req-title{
+    color: #39125C;
+    margin: 0;
+    font-size: 0.8rem !important;
+    font-weight: 700;
+}
+
+.dj-side-song-req-text{
+    color: #39125C;
+    margin: 0;
+    font-size: 0.6rem;
+    font-weight: 600;
+}
+
+.dj-side-img-text{
+    display: flex;
+    gap:10px;
+    align-items: center;
+}
+
+.label-song-requests{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #39125C;
 }

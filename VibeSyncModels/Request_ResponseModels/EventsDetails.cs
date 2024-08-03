@@ -27,5 +27,11 @@ namespace VibeSyncModels.Request_ResponseModels
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? DistanceFromCurrLoc { get; set; }
+        public bool AcceptingRequests { get; set; }
+        public bool DisplayRequests { get; set; }
+        public bool HidePlaylist { get; set; }
+        public int? MinimumBidForSpecialRequest { get; set; }
+        public string Playlists { get; set; }
+
     }
 }

@@ -1,0 +1,69 @@
+.sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0; 
+    width: 100%;
+    background-color: #0d1238;
+    color: white;
+    text-align: left;
+    padding: 2px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center; 
+    z-index: 1000; 
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px; 
+    margin: 0 auto;
+}
+
+.review-image {
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%;
+    margin-right: 8px; 
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stars {
+    font-size: 0.8rem; 
+    color: gold;
+    line-height: 1;
+}
+
+.review-text {
+    margin: 3px 0; 
+    font-size: 0.8rem; 
+}
+
+.author {
+    font-size: 0.7rem; 
+    font-style: italic;
+}
+
+.bid-message {
+    font-size: 0.8rem; 
+    margin: 0;
+    color: white;
+    text-align : center;
+    padding : 9px;
+}
+
+.close-button {
+    position: absolute;
+    top: 0px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    margin-top: 0px;
+}

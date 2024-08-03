@@ -5,13 +5,17 @@ import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
+import StickyBar from './StickyBar';
+import { messages } from './Constants';
+import defaultPhoto from '../Resources/defaultDj.jpg';
+import { useLoadingContext } from './LoadingProvider';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const location = useLocation();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.search);
     const rowDataString = searchParams.get('data');
     const qrcodeParam = searchParams.get('qrcode');
     const urlEventId = searchParams.get('eventId');
@@ -21,13 +25,52 @@ function SongSearch() {
     const [enqueuedSongs, setEnqueuedSongs] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [currentPage, setCurrentPage] = useState(1); // Set initial page to 1
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoadingState] = useState(false);
     const [isListOpen, setListOpen] = useState(false);
     const tableRef = useRef(null);
     const [eventData, setEventData] = useState(null);
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [listOfPlaylists, setListOfPlaylists] = useState(null);
     const [activePlaylistId, setActivePlaylistId] = useState(null);
+    const [minAmount, setMinAmount] = useState(Math.floor(Math.random() * (100 - 60 + 1)) + 60);
+    const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
+    const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
+    const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+    const [NoSongsFound,setNoSongsFound] = useState(false);
+    const { setLoading } = useLoadingContext();
+    
+    const handleSearchBarClick = (e) => {
+        e.stopPropagation();
+        setIsSearchBarActive(true);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = () => {
+            setIsSearchBarActive(false);
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        const uri = JSON.parse(decodeURIComponent(rowDataString));
+        if(qrcodeParam == null){
+            const Amount = parseFloat(uri["minimumBid"]);
+            setMinAmount(Amount)
+        }
+    });
+
+    // useEffect(() => {
+    //     const uri = JSON.parse(decodeURIComponent(rowDataString));
+    //     if(qrcodeParam == null){
+    //         const Amount = parseFloat(uri["minimumBid"]);
+    //         setMinAmount(Amount)
+    //     }
+    // });
 
     useEffect(() => {
         if (shouldRefresh) {
@@ -43,11 +86,22 @@ function SongSearch() {
 
     useEffect(() => {
         const fetchPlaylistsAndSongs = async () => {
+            setLoading(true);
             try {
                 const playlists = await GetPlaylistList();
                 if (playlists && playlists.length > 0) {
                     setListOfPlaylists(playlists);
-                    const firstPlaylistId = playlists[0].id;
+
+                    let firstPlaylistId;
+                    if (selectedPlaylistIds.length > 0) {
+                        // Find the first playlist ID from selectedPlaylistIds
+                        const foundPlaylist = playlists.find(playlist => selectedPlaylistIds.includes(playlist.id));
+                        firstPlaylistId = foundPlaylist ? foundPlaylist.id : playlists[0].id;
+                    } else {
+                        // Fallback to the first playlist in the fetched list
+                        firstPlaylistId = playlists[0].id;
+                    }
+
                     setActivePlaylistId(firstPlaylistId);
                     const songs = await GetSongsList(firstPlaylistId, 0, 50);
                     setResults(songs);
@@ -56,10 +110,11 @@ function SongSearch() {
             } catch (error) {
                 console.error('Error fetching playlists or songs:', error);
             }
+            setLoading(false);
         };
 
         fetchPlaylistsAndSongs();
-    }, []);
+    }, [eventData]); 
 
     const handlePlaylistClick = async (playlistId) => {
         try {
@@ -69,7 +124,7 @@ function SongSearch() {
             const songs = await GetSongsList(playlistId, 0, 50);
             setResults(songs);
             setCurrentPage(2); // Set the next page to fetch
-            
+
             const selectedPlaylist = listOfPlaylists.find(playlist => playlist.id === playlistId);
             if (selectedPlaylist) {
                 const playlistName = selectedPlaylist.name.toLowerCase();
@@ -79,7 +134,6 @@ function SongSearch() {
                     showCheers(); // Show cheers animation
                 }
             }
-
         } catch (error) {
             console.error('Error fetching songs:', error);
         }
@@ -90,7 +144,7 @@ function SongSearch() {
         for (let i = 0; i < numHearts; i++) {
             createHeart();
         }
-    
+
         // Set a timeout to remove the hearts after 2-3 seconds
         setTimeout(() => {
             const hearts = document.querySelectorAll('.heart');
@@ -102,7 +156,7 @@ function SongSearch() {
             });
         }, 3000); // Wait for 3 seconds before removing the hearts
     };
-    
+
 
     const createHeart = () => {
         const heart = document.createElement('div');
@@ -134,7 +188,7 @@ function SongSearch() {
             cheer.remove();
         }, 5000); // Remove the cheer after the animation is complete
     };
-    
+
     useEffect(() => {
         var uri = JSON.parse(decodeURIComponent(rowDataString));
         if (uri && uri.id) {
@@ -147,6 +201,8 @@ function SongSearch() {
                 localStorage.setItem('userId', 0); // 0 id means it's Anonymous.
                 localStorage.setItem('isUser', true);
                 localStorage.setItem('qrEventId', urlEventId);
+                // const Amount = parseFloat(uri["minimumBid"]);
+                // setMinAmount(Amount);
                 setShouldRefresh(true);
             }
             return;
@@ -154,14 +210,14 @@ function SongSearch() {
     }, [qrcodeParam]);
 
     const fetchData = async () => {
-        setLoading(true);
+        setLoadingState(true);
         try {
             let newData;
             if (activePlaylistId) {
                 //newData = await GetSongsList(activePlaylistId, (currentPage - 1) * 20, 20);
-                setLoading(false);
+                setLoadingState(false);
             } else {
-                newData = await GetSongsUsingSearchTerm(searchQuery, (currentPage - 1) * 20 + 1, 20);
+                newData = await GetSongsUsingSearchTerm(searchQuery, currentPage, 20);
                 setResults((prevData) => [...prevData, ...newData]);
                 setCurrentPage((prevPage) => prevPage + 1);
             }
@@ -170,7 +226,7 @@ function SongSearch() {
             setErrorMessage(error.message);
             console.error('Error fetching data:', error);
         }
-        setLoading(false);
+        setLoadingState(false);
     };
 
     useEffect(() => {
@@ -195,6 +251,7 @@ function SongSearch() {
 
     const handleSearchChange = (event) => {
         setActivePlaylistId(null);
+        setNoSongsFound(false);
         const newQuery = event.target.value;
         setSearchQuery(newQuery);
         clearTimeout(typingTimeout);
@@ -210,12 +267,18 @@ function SongSearch() {
 
     const fetchResultsFromAPI = async (query) => {
         try {
+            setLoading(true);
             setResults([]); // Clear previous results
             setCurrentPage(1); // Reset current page
-            const res = await GetSongsUsingSearchTerm(query, 0, 20);
+            const res = await GetSongsUsingSearchTerm(query, 1, 20);
             setResults(res);
+            if(res === null){
+                setNoSongsFound(true);
+            }
             setCurrentPage(2); // Set the next page to fetch
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             setError(true);
             setErrorMessage(error.message);
             console.error('Error in fetchResultsFromAPI:', error);
@@ -223,6 +286,7 @@ function SongSearch() {
     };
 
     useEffect(async () => {
+
         async function fetchEnqSongs(eventId) {
             try {
                 const response = await GetSongsByEventId(eventId, localStorage.getItem('isUser') === 'true');
@@ -237,7 +301,9 @@ function SongSearch() {
         if (qrcodeParam === 'true' && !eventData) {
             try {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
+                console.log('Fetched Event Data:', response); // Debug log
                 setEventData(response);
+                //setMinAmount(eventData.minimumBid);
                 if (response != null) {
                     localStorage.setItem('venue', response.venue);
                     fetchEnqSongs(response.id);
@@ -262,11 +328,12 @@ function SongSearch() {
             data.songId = data.id;
             delete data.id;
 
+            data.IsSpecialAnnouncement = false;
             const concatenatedJson = { ...eventData, ...data };
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
             localStorage.removeItem('redirectUrl');
-            navigate(`/paymentIndex?data=${rowDataString}`);
+            navigate(`/paymentIndex`,{state:{rowData:"?data="+rowDataString}});
         }
     };
 
@@ -274,79 +341,181 @@ function SongSearch() {
         setListOpen(!isListOpen);
     };
 
+    const MakeSpecialAnnouncementHandler = () => {
+        if (eventData.acceptingRequests == false && eventData.displayRequests == false) {
+            setShowAnnouncementModal(true);
+        }
+
+        else if (eventData) {
+            const eventDataCopy = { ...eventData };
+            eventDataCopy.eventId = eventData.id;
+            delete eventDataCopy.id;
+
+            // Set the IsSpecialAnnouncement flag
+            eventDataCopy.IsSpecialAnnouncement = true;
+
+            const concatenatedJson = { ...eventDataCopy };
+            const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
+
+            console.log("Event data copy : ", eventDataCopy);
+            navigate(`/paymentIndex`,{state:{rowData:"?data="+rowDataString}});
+        }
+    };
+
+    const handleAnnouncementModalClose = () => {
+        setShowAnnouncementModal(false);
+    };
+
+
+    const selectedPlaylistIds = eventData && eventData.playlists ? eventData.playlists.split(',') : [];
+   // console.log('selectedPlaylistIds:', selectedPlaylistIds);
+
+   
+    if (!listOfPlaylists) {
+        return null; // or show a loading indicator
+    }
+
+    // Filter playlists based on selectedPlaylistIds
+    const filteredPlaylists = listOfPlaylists.filter(playlist =>
+        selectedPlaylistIds.includes(playlist.id)
+    );
+    // console.log('selectedPlaylists:', selectedPlaylists);
+
+
     return (
-        <div className='song-search'>
-            {eventData && (
-                <div className="search-container">
-                    <div className="left-content">
-                        <img
-                            src={eventData.djPhoto}
-                            alt="DJ Image"
-                            style={{ width: '200px', height: 'auto' }}
-                            className='dj-image'
+        <>
+            <div className='song-search'>
+                {eventData && (
+                    <div className="search-container">
+                        <div className="left-content">
+                            <img
+                                src={eventData.djPhoto || defaultPhoto} // Use default photo if djPhoto is null
+                                alt="DJ Image"
+                                className='dj-image'
+                            />
+                            <div className='left-content-text'><p className='song-search-event-name'>{eventData.eventName}</p>
+                                <p className='dj-name'>{eventData.djName}</p></div>
+                        </div>
+                        <img className='music-icon-image' src="/images/Music icon.png" />
+                        <div className="right-content">
+                            <div className='special-announcements right-content-button-container' onClick={MakeSpecialAnnouncementHandler}>
+                                <div class="right-content-button-text">
+                                    <p>Make <strong>Special</strong></p>
+                                    <p><b>Announcements</b> for Special Occasions!</p>
+                                </div>
+                                <div class="right-content-button-icon">
+                                    <img src="images/mic.png" alt="Microphone Icon" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <span className='event-desc'><b>
+                            <img style={{ width: '15px' }} src="/images/disclaimerIcon.png" />
+                            {eventData.eventDescription}</b></span>
+                    </div>
+
+                )}
+
+
+
+                <div className="search-page">
+                <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Search your song"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            onClick={handleSearchBarClick}  
                         />
+                        <img src="/images/SearchButton1.png" className="search-icon-song-search" />
                     </div>
-                    <div className="right-content">
-                        <p className='dj-name'>{eventData.djName}</p>
-                        <p className='text-muted event-name'>{eventData.eventName}</p>
-                        <p className='text-muted event-desc'><b>{eventData.eventDescription}</b></p>
-                    </div>
-                </div>
-            )}
 
-            <div className="search-page">
-                <div className="search-bar">
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="Search your song here..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                    />
-                </div>
+                    {NoSongsFound?(<div className='no-songs-found'>No Songs Found!</div>):(<></>)}
 
-                <div className="playlist-buttons">
-                    {listOfPlaylists && listOfPlaylists.map((playlist) => (
-                        <button
-                            key={playlist.id}
-                            className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
-                            onClick={() => handlePlaylistClick(playlist.id)}
-                        >
-                            {playlist.name}
-                        </button>
-                    ))}
-                </div>
+                    {eventData && eventData.hidePlaylist !== true && (
+                        <>
+                            <div className="choose-from-collections-text">
+                                <p>OR</p>
+                                <p>CHOOSE FROM OUR COLLECTIONS</p>
+                            </div>
 
-                <div className='container-for-table' style={{ maxHeight: '400px', overflow: 'auto' }} ref={tableRef}>
-                    <MDBTable align='middle' responsive hover>
-                        <MDBTableBody>
+                            <div>
+                                {filteredPlaylists.length > 0 ? (
+                                    <div className="playlist-buttons">
+                                        {filteredPlaylists.map(playlist => (
+                                            <button
+                                                key={playlist.id}
+                                                className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                                onClick={() => handlePlaylistClick(playlist.id)}
+                                            >
+                                                {playlist.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="playlist-buttons">
+                                        {listOfPlaylists.map(playlist => (
+                                            <button
+                                                key={playlist.id}
+                                                className={`playlist-button ${playlist.id === activePlaylistId ? 'active' : ''}`}
+                                                onClick={() => handlePlaylistClick(playlist.id)}
+                                            >
+                                                {playlist.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
+
+
+                    {(searchQuery.trim() !== '' || !(eventData && eventData.hidePlaylist) || isSearchBarActive) && (
+                        <div className="container-for-table" style={{ maxHeight: '500px', overflow: 'auto', fontFamily: 'Poppins, sans-serif' }} ref={tableRef}>
                             {results && results.map((result, index) => (
-                                <tr key={index} className='songs-row' onClick={(e) => { handleRowClick(result) }}>
-                                    <td className='custom-td'>
+                                <div key={index} className="songs-row" onClick={() => handleRowClick(result)}>
+                                    <div>
                                         <img
-                                            src={result.album.images[result.album.images.length - 1].url}
+                                            src={result.image[result.image.length - 1].url}
                                             alt={`Album Cover for ${result.album.name}`}
-                                            style={{ width: '50px', height: '50px' }}
-                                            className='rounded-circle'
                                         />
-                                    </td>
-                                    <td className='custom-td'>
-                                        <p className='fw-bold mb-1'>{result.name}</p>
-                                    </td>
-                                    <td className='custom-td'>
-                                        <p className='text-muted mb-0'>
-                                            {result.artists.map((artist) => artist.name).join(', ')}
-                                        </p>
-                                    </td>
-                                </tr>
+                                    </div>
+                                    <div className="song-card-text">
+                                        <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700"}}>{result.name}</span>
+                                        <span className="song-artists">
+                                            {result.artists.primary.map((artist) => artist.name).join(', ')}
+                                        </span>
+                                    </div>
+                                </div>
                             ))}
-                        </MDBTableBody>
-                    </MDBTable>
+                            {loading && <p>Loading...</p>}
+                        </div>
+                    )}
+                </div>
 
-                    {loading && <p>Loading...</p>}
+            </div>
+
+
+            {/* Announcement Modal */}
+
+            <div className="modal" style={{ display: showAnnouncementModal ? 'block' : 'none' }}>
+                <div className="modal-content">
+                    <h2>Announcement Disabled</h2>
+                    <p>This club/DJ is not taking announcements currently</p>
+                    <button onClick={handleAnnouncementModalClose}>Close</button>
                 </div>
             </div>
-        </div>
+
+            <div>
+                {/* Other content */}
+                <StickyBar type="bid" data={messages}
+                    minAmount={minAmount}
+                    onClose={() => { setIsStickyBarVisible(false); }}
+                    isVisible={isStickyBarVisible}
+                />
+            </div>
+        </>
     );
 }
 

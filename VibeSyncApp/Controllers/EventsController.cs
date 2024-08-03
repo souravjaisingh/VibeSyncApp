@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -7,6 +10,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
+using Coordinates = VibeSyncModels.Request_ResponseModels.Coordinates;
+using VibeSyncModels;
+using Microsoft.Extensions.Configuration;
 
 namespace VibeSyncApp.Controllers
 {
@@ -26,15 +32,17 @@ namespace VibeSyncApp.Controllers
         /// Logger
         /// </summary>
         private readonly ILogger<EventsController> _logger;
+        private readonly Cloudinary _cloudinary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
-        public EventsController(IMediator mediator, ILogger<EventsController> logger)
+        public EventsController(IMediator mediator, ILogger<EventsController> logger, IConfiguration configuration)
         {
             _mediator = mediator;
             _logger = logger;
+            
         }
         /// <summary>
         /// Gets all events.
@@ -144,5 +152,7 @@ namespace VibeSyncApp.Controllers
             _logger.LogInformation($"{typeof(EventsController).GetMethod("CreateEvent")}'s response: {JsonConvert.SerializeObject(res)}");
             return Ok(res);
         }
+
+        
     }
 }

@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import '../'
 import { useState, useEffect } from "react";
@@ -88,58 +89,59 @@ export default function LoginForm() {
             setLoading(false);
         }
     }
-    const handleForgotPasswordClick = (e) => {
-        e.preventDefault(); // Prevent the default behavior of anchor tag
-        setShowInfoBox(prev => !prev); // Toggle visibility of info box
+        const handleForgotPasswordClick = (e) => {
+            e.preventDefault(); // Prevent the default behavior of anchor tag
+            setShowInfoBox(prev => !prev); // Toggle visibility of info box
+        }
+
+        return (
+            <div className="form col-10">
+                <div className="form-body">
+                    {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
+                    {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : <></>}
+                    <div className="email">
+                        <label className="form__label" for="email">Email* </label>
+                        <input required type="email" id="email" className='form__input' value={email} onChange={(e) => handleInputChange(e)} placeholder="Email" />
+                    </div>
+
+                    <div className="password-container">
+                        <div className="password">
+                            <label className="form__label" htmlFor="password">
+                                Password*
+                            </label>
+                            <input
+                                required
+                                className="form__input"
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                value={password}
+                                onChange={(e) => handleInputChange(e)}
+                                placeholder="Password"
+                            />
+                        </div>
+                        <div className="show--password">
+                            <label htmlFor="check">Show Password &nbsp;</label>
+                            <input
+                                id="check"
+                                type="checkbox"
+                                value={showPassword}
+                                onChange={() => setShowPassword((prev) => !prev)}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="footer">
+                    <button onClick={() => handleSubmit()} type="submit" className="btn btn--primary btn--medium">Login</button>
+                    {/* Add onClick event to handleForgotPasswordClick */}
+                    <br></br><br></br>
+                    <a href="#" onClick={handleForgotPasswordClick} >Forgot Password?</a>
+                    {showInfoBox && (
+                        <div className="info-box">
+                            <p><i>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number. <br></br>We're here at your disposal.</i></p>
+                        </div>
+                    )}
+                </div>
+
+            </div>
+        )
     }
-
-    return (
-        <div className="form col-10">
-            <div className="form-body">
-                {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
-                <div className="email">
-                    <label className="form__label" for="email">Email* </label>
-                    <input required type="email" id="email" className='form__input' value={email} onChange={(e) => handleInputChange(e)} placeholder="Email" />
-                </div>
-
-                <div className="password-container">
-                    <div className="password">
-                        <label className="form__label" htmlFor="password">
-                            Password*
-                        </label>
-                        <input
-                            required
-                            className="form__input"
-                            type={showPassword ? "text" : "password"}
-                            id="password"
-                            value={password}
-                            onChange={(e) => handleInputChange(e)}
-                            placeholder="Password"
-                        />
-                    </div>
-                    <div className="show--password">
-                        <label htmlFor="check">Show Password &nbsp;</label>
-                        <input
-                            id="check"
-                            type="checkbox"
-                            value={showPassword}
-                            onChange={() => setShowPassword((prev) => !prev)}
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="footer">
-                <button onClick={() => handleSubmit()} type="submit" className="btn btn--primary btn--medium">Login</button>
-                {/* Add onClick event to handleForgotPasswordClick */}
-                <br></br><br></br>
-                <a href="#" onClick={handleForgotPasswordClick} >Forgot Password?</a>
-                {showInfoBox && (
-                    <div className="info-box">
-                        <p><i>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number. <br></br>We're here at your disposal.</i></p>
-                    </div>
-                )}
-            </div>
-
-        </div>
-    )
-}

@@ -91,14 +91,9 @@ namespace VibeSync.DAL.Handler
         /// Initializes a new instance of the <see cref="SongsHandler"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository)
+        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository, IConfiguration configuration)
         {
             _httpClient = client;
-
-            var builder = new ConfigurationBuilder().
-                SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json");
-            var configuration = builder.Build();
             AccessTokenUrl = configuration["SpotifyApi:AccessTokenUrl"];
             ClientSecret = configuration["SpotifyApi:ClientSecret"];
             ClientId = configuration["SpotifyApi:ClientId"];
@@ -120,15 +115,34 @@ namespace VibeSync.DAL.Handler
         public async Task<List<SongDetails>> Handle(GetSongRequestModel request, CancellationToken cancellationToken)
         {
             string queryParameters = string.Format(JioSaavanQueryParameters, request.SongName, request.limit, request.Offset);
-
-            var response = await _httpClient.GetAsync($"{JioSaavanBaseUrl}{queryParameters}");
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var jsonObject = JObject.Parse(responseContent);
-            var items = jsonObject["data"]["results"].ToString();
-            var songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
-            var language = new List<string> { "english", "hindi", "punjabi" };
-            songDetails = songDetails.Where(x=> language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000).ToList();
+            List<SongDetails> songDetails = null;
+            int maxRetryAttempts = 2;
+            int retryAttempt = 0;
+        
+            while (retryAttempt <= maxRetryAttempts)
+            {
+                try
+                {
+                    var response = await _httpClient.GetAsync($"{JioSaavanBaseUrl}{queryParameters}");
+                    response.EnsureSuccessStatusCode();
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var jsonObject = JObject.Parse(responseContent);
+                    var items = jsonObject["data"]["results"].ToString();
+                    songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
+                    var language = new List<string> { "english", "hindi", "punjabi" };
+                    songDetails = songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000).ToList();
+                    break; // Break out of the loop if successful
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode != System.Net.HttpStatusCode.OK && ex.StatusCode != System.Net.HttpStatusCode.NoContent)
+                {
+                    retryAttempt++;
+                    if (retryAttempt > maxRetryAttempts)
+                    {
+                        throw; // Rethrow the exception if the max retry attempts are exceeded
+                    }
+                }
+            }
+        
             return songDetails;
         }
         private List<SongDetails> FilterSongsByLanguage(List<SongDetails> songs, string language)

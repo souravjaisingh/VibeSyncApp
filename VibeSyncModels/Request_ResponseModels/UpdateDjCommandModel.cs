@@ -17,7 +17,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public string DjDescription { get; set; }
         public string DjPhoto { get; set; }
         public string BankName { get; set; }
-        public int? BankAccountNumber { get; set; }
+        public string BankAccountNumber { get; set; }
         public string BranchName { get; set; }
         public string Ifsccode { get; set; }
         public string SocialLinks { get; set; }

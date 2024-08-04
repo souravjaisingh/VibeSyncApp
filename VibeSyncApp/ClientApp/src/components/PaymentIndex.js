@@ -43,9 +43,6 @@ function PaymentIndex() {
   const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
   const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(""); // New state for mic announcement message
   const [localError, setLocalError] = useState("");
-  const gstRate = 0.18;
-  const gstAmount = Math.round(rowData.minimumBid * gstRate);
-  const totalAmountWithGst = amount + gstAmount;
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showGoogleLogin, setShowGoogleLogin] = useState(false);
   const [loginMethod, setLoginMethod] = useState("mobile"); // State to track the login method
@@ -57,6 +54,9 @@ function PaymentIndex() {
   const { setLoading } = useLoadingContext();
   const [successMessage, setSuccessMessage] = useState("");
   const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
+
+  const [gstAmount, setGstAmount] = useState(0);
+  const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
 
   const handleImageClick = () => {
     setShowGoogleLogin((prevState) => !prevState); // Toggle Google login visibility
@@ -182,7 +182,38 @@ function PaymentIndex() {
       script.onload = resolve;
       script.onerror = reject;
     });
-  };
+    };
+
+    const handleTipChange = (newAmount) => {
+        if (newAmount >= 0) {
+            setAmount(newAmount);
+        }
+    };
+
+    const handleDecreaseTip = () => {
+        const currentTip = amount - (isSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid);
+        const newTipAmount = Math.max(0, currentTip - 10); // Ensure the tip amount does not go below zero
+        setAmount(newTipAmount + (isSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid));
+    };
+
+    const handleIncreaseTip = () => {
+        setAmount(amount + 10);
+    };
+
+    useEffect(() => {
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBidForSpecialRequest * 1.5) : rowData.minimumBid);
+    }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest]);
+
+
+    useEffect(() => {
+        const minimumBid = isSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid;
+        const gst = Math.round(minimumBid * 0.18); // Calculate GST as 18% of the minimum bid and round to nearest integer
+        setGstAmount(gst);
+        setTotalAmountWithGst(Math.round(amount + gst)); // Update total amount including GST and round to nearest integer
+    }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest, amount]);
+
+
+
 
   useEffect(() => {
     if (rowData.eventStatus !== "Live") {
@@ -218,11 +249,11 @@ function PaymentIndex() {
     });
   }
   useEffect(() => {
-    setAmount(
-      isSpecialAnnouncement
-        ? Math.round(rowData.minimumBid * 1.1)
-        : rowData.minimumBid
-    );
+    //setAmount(
+    //  isSpecialAnnouncement
+    //    ? Math.round(rowData.minimumBid * 1.1)
+    //    : rowData.minimumBid
+    //);
 
     if (rowData && rowData.IsSpecialAnnouncement !== undefined) {
       setIsSpecialAnnouncement(rowData.IsSpecialAnnouncement);
@@ -624,7 +655,7 @@ function PaymentIndex() {
           <div className="amount-selection-division">
             <p className="minimum-bid-container">
               <div>Groove Amount</div>
-              <div className="minimum-bid-value">₹{rowData.minimumBid}</div>
+              <div className="minimum-bid-value"> ₹{rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid}</div>
             </p>
             <div className="gst-info">
               <div>GST (18%)</div>
@@ -636,7 +667,7 @@ function PaymentIndex() {
                 <div key={index} className="bid-button-container">
                   <button
                     type="button"
-                    onClick={() => setAmount(bid.amount + rowData.minimumBid)}
+                          onClick={() => handleTipChange(bid.amount + (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid))}
                     className="btn-bid"
                   >
                     ₹{bid.amount}
@@ -649,11 +680,7 @@ function PaymentIndex() {
               <div className="choose-tip-label">Choose the Tip</div>
               <div className="tip-amount-input-btns">
                 <div
-                  onClick={() => {
-                    if (amount - rowData.minimumBid > 0) {
-                      setAmount(amount - 10);
-                    }
-                  }}
+                  onClick={handleDecreaseTip}
                   className="decrease-tip-button"
                 >
                   -
@@ -662,7 +689,7 @@ function PaymentIndex() {
                   className="amount-inputfield"
                   type="number"
                   placeholder="Enter amount in rupees"
-                  value={amount - rowData.minimumBid}
+                  value={Math.max(0, amount - (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid))}
                   onChange={(e) => {
                     const value = e.target.value;
                     // Regular expression to check if the value is an integer
@@ -670,19 +697,18 @@ function PaymentIndex() {
 
                     if (integerRegex.test(value)) {
                       // If value is an integer, update the amount state
-                      setAmount(
-                        value === ""
-                          ? rowData.minimumBid
-                          : Number(value) + rowData.minimumBid
-                      );
+                        const newTipAmount = value === "" ? 0 : Number(value);
+                        const newTotalAmount = newTipAmount + (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid);
+
+                        if (newTipAmount >= 0) {
+                            setAmount(newTotalAmount);
+                        }
                     }
                   }}
                   required
                 />
                 <div
-                  onClick={() => {
-                    setAmount(amount + 10);
-                  }}
+                  onClick={handleIncreaseTip}
                   className="increase-tip-button"
                 >
                   +
@@ -697,6 +723,7 @@ function PaymentIndex() {
                 type="text"
                 className="value"
                 placeholder="Login to apply"
+                disabled
               />
               <button className="apply-btn">Apply</button>
               </div>
@@ -726,20 +753,20 @@ function PaymentIndex() {
           )}
           <div>
             <button
-              className={`btnPayment btn--primaryPayment btn--mediumPayment ${
-                rowData.eventStatus !== "Live" ||
-                amount < rowData.minimumBid ||
-                (!isPromoAvailable && isPromoApplied)
-                  ? "disabledButton"
-                  : ""
-              }`}
+            className={`btnPayment btn--primaryPayment btn--mediumPayment ${
+              rowData.eventStatus !== "Live" ||
+              amount < (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid) ||
+              (!isPromoAvailable && isPromoApplied)
+              ? "disabledButton"
+              : ""
+              }`}  
               id="rzp-button1"
               onClick={handlePayButtonClick}
-              disabled={
+                disabled={
                 rowData.eventStatus !== "Live" ||
-                amount < rowData.minimumBid ||
+                amount < (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid) ||
                 (!isPromoAvailable && isPromoApplied)
-              }
+  }
             >
               <div className="payment-btn-text">
                 <img className="payment-icon" src="images/payment.png" />
@@ -776,179 +803,70 @@ function PaymentIndex() {
           <p>Login & Get 50% off instantly!</p>
         </div>
 
-        {showLoginModal && (
-          <div className="modal-overlay" onClick={handleClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <span className="modal-title">Login</span>
-              </div>
-              <div className="modal-body">
-                {successMessage ? (
-                  <div className="success-message">{successMessage}</div>
-                ) : (
-                  <>
-                    {loginMethod === "mobile" ? (
-                      <>
-                        <div className="input-container">
-                          <img
-                            src="images/user_image.png"
-                            alt="Placeholder"
-                            className="input-icon"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Mobile Number*"
-                            className="input-field"
-                          />
-                        </div>
-                        <button
-                          className="get-otp-button"
-                          style={{
-                            width: "37%",
-                            height: "19px",
-                            boxShadow: "none",
-                            padding: "8px",
-                            fontWeight: "700",
-                          }}
-                        >
-                          Get OTP
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div className="email">
-                          {loginError ? (
-                            <span className="password-warning">
-                              Incorrect Email Id/Password.
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {errorMessage === "Invalid Password" ? (
-                            <p
-                              style={{
-                                color: "red",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                              }}
-                            >
-                              {errorMessage}
-                            </p>
-                          ) : null}
-                          <div className="input-container">
-                            {!emailFocused && !email && (
-                              <img
-                                src="images/emailIcon.png"
-                                alt="Email"
-                                className="input-icon"
-                              />
-                            )}
-                            <input
-                              required
-                              type="email"
-                              id="email"
-                              className="input-field"
-                              value={email}
-                              onChange={(e) => handleInputChange(e)}
-                              onFocus={() => setEmailFocused(true)}
-                              onBlur={() => setEmailFocused(false)}
-                              placeholder="Email"
-                            />
-                          </div>
-                          <div className="input-container">
-                            {!passwordFocused && !password && (
-                              <img
-                                src="images/password_lock.png"
-                                alt="Password"
-                                className="input-icon"
-                              />
-                            )}
-                            <input
-                              required
-                              type="password"
-                              id="password"
-                              className="input-field"
-                              value={password}
-                              onChange={(e) => handleInputChange(e)}
-                              onFocus={() => setPasswordFocused(true)}
-                              onBlur={() => setPasswordFocused(false)}
-                              placeholder="Password"
-                            />
-                          </div>
-                          <button
-                            onClick={handleLogin}
-                            type="submit"
-                            className="btn btn--primary btn--medium"
-                            style={{
-                              width: "37%",
-                              height: "19px",
-                              boxShadow: "none",
-                              padding: "8px",
-                              fontWeight: "700",
-                            }}
-                          >
-                            Login
-                          </button>
-
-                          <div className="forgot-password-container">
-                            <div onClick={handleForgotPasswordClick}>
-                              Forgot Password?
+                {showLoginModal && (
+                    <div className="modal-overlay" onClick={handleClose}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <span className="modal-title">Login</span>
                             </div>
-                            {showInfoBox ? (
-                              <div id="forgot-password-tip">
-                                Please send an email to vibesyncdj@gmail.com
-                                with your Email/Phone Number. We're here at your
-                                disposal.
-                              </div>
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    <div
-                      className="text-center "
-                      style={{
-                        color: "#39125C",
-                        fontWeight: "600",
-                        marginTop: "5px",
-                        marginBottom: "3px",
-                      }}
-                    >
-                      Or Login with
-                    </div>
-                    <div className="auth-buttons">
-                      <div>
-                        <img
-                          src="images/g.png"
-                          className="g-icon"
-                          onClick={handleImageClick}
-                        />
-                      </div>
-                      {showGoogleLogin && (
-                        <GoogleLogin
-                          isUser={{ isUser: true }}
-                          triggerLogin={(login) => login()}
-                          showButton={false}
-                        />
-                      )}
-                      <div
-                        className="btn-mobile"
-                        onClick={handleEmailIconClick}
-                      >
-                        <img
-                          src={
-                            loginMethod === "email"
-                              ? "images/user_image.png"
-                              : "images/emailIcon.png"
-                          }
-                          className="email-icon"
-                          alt="Toggle login method"
-                        />
-                      </div>
-                    </div>
-                    {/*<div className="footer-links">
+                            <div className="modal-body">
+                                {successMessage ? (
+                                    <div className="success-message">{successMessage}</div>
+                                ) : (
+                                    <>
+                                        {loginMethod === 'mobile' ? (
+                                            <>
+                                                <div className="payment-page-input-container">
+                                                    <img src="images/user_image.png" alt="Placeholder" className="payment-page-input-icon" />
+                                                    <input type="text" placeholder="Mobile Number*" className="payment-page-input-field" />
+                                                </div>
+                                                <button className="get-otp-button" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="payment-page-email">
+                                                            {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
+                                                            {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : null}
+                                                            <div className="payment-page-input-container">
+                                                        {!emailFocused && !email && (
+                                                                    <img src="images/emailIcon.png" alt="Email" className="payment-page-input-icon" />
+                                                        )}
+                                                                <input required type="email" id="email" className='payment-page-input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
+                                                    </div>
+                                                            <div className="payment-page-input-container">
+                                                        {!passwordFocused && !password && (
+                                                                    <img src="images/password_lock.png" alt="Password" className="payment-page-input-icon " />
+                                                        )}
+                                                                <input required type="password"   className='payment-page-input-field' style={{ width: "70 %" } } value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
+                                                    </div>
+                                                            <button onClick={handleLogin} type="submit" className="get-otp-btn" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" ,paddingBottom:"11px"}}>Login</button>
+                                                            
+                                                                <div className='forgot-password-container'>
+                                                                    <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
+                                                                    {showInfoBox ? (<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
+                                                                        We're here at your disposal.</div>) : (<></>)}
+                                                                </div>
+                                                            
+                                                        </div>
+                                            </>
+                                        )}
+                                        <div className="text-center " style={{ color: "#39125C", fontWeight: "600", marginTop: "5px", marginBottom: "3px" }}>Or Login with</div>
+                                        <div className="auth-buttons">
+                                            <div>
+                                                <img src="images/g.png" className="g-icon" onClick={handleImageClick} />
+                                            </div>
+                                            {showGoogleLogin && (
+                                                <GoogleLogin
+                                                    isUser={{ isUser: true }}
+                                                    triggerLogin={(login) => login()}
+                                                    showButton={false}
+                                                />
+                                            )}
+                                            <div className='btn-mobile' onClick={handleEmailIconClick}>
+                                                    <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="payment-page-email-icon" alt="Toggle login method" />
+                                            </div>
+                                            </div>
+                                            { /*<div className="footer-links">
                                                    <a style={{ color: "#39125C" }} onClick={handleClose}>Create Account</a>
                                                    <a style={{ color: "#39125C" } } onClick={handleClose}>Forgot Password?</a>
                                               </div> */}

@@ -64,11 +64,35 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// <returns></returns>
         public async Task<LoginDetails> CreateUser(User user)
         {
-            var getUser = _context.Users.Where(x => x.Email == user.Email).FirstOrDefault();
+            VibeSyncModels.EntityModels.User getUser = null;
+
+            // Check if login is with Mobile OTP
+            if (user.Email.EndsWith("@otp.com"))
+            {
+                // Find the user by phone number
+                getUser = _context.Users.FirstOrDefault(x => x.PhoneNumber == user.PhoneNumber);
+
+                if (getUser != null)
+                {
+                    // Handle as SSO login if user found by phone number
+                    var loginresponse = _mapper.Map<LoginDetails>(getUser);
+                    var token = await GenerateToken(getUser);
+                    loginresponse.Token = token.Token;
+                    loginresponse.RefreshToken = token.RefreshToken;
+                    return loginresponse;
+                }
+            }
+            else
+            {
+                // Find the user by email for regular login or SSO login
+                getUser = _context.Users.FirstOrDefault(x => x.Email == user.Email);
+            }
+
+            // Handle case when user is not found or SSO login
             if (getUser != null && !user.IsSsologin)
+            {
                 throw new CustomException(Constants.UserAlreadyExists);
-            //else if (user.IsSsologin && getUser != null && getUser.UserOrDj != user.UserOrDj)
-            //    throw new CustomException(Constants.Impersonating);
+            }
             else if (user.IsSsologin && getUser != null)
             {
                 var loginresponse = _mapper.Map<LoginDetails>(getUser);
@@ -79,17 +103,20 @@ namespace VibeSync.DAL.Repository.CommandRepository
             }
             else
             {
+                // Register the user if not found
                 user.CreatedOn = DateTime.Now;
                 user.CreatedBy = user.Email;
                 user.IsActive = true;
                 user.Gender = user.Gender != null ? char.ToUpper(user.Gender[0]).ToString() : null;
                 user.Password = user.IsSsologin ? Guid.NewGuid().ToString() : user.Password;
+
                 var userEntity = _mapper.Map<VibeSyncModels.EntityModels.User>(user);
                 _context.Users.Add(userEntity);
                 var response = await _context.SaveChangesAsync();
+
                 if (response > 0 && user.UserOrDj.Equals("dj", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    //create an insertion in dj table
+                    // Create an entry in the DJ table
                     var djEntity = new Dj
                     {
                         UserId = userEntity.Id,
@@ -100,6 +127,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     _context.Djs.Add(djEntity);
                     await _context.SaveChangesAsync();
                 }
+
                 if (response > 0)
                 {
                     var loginresponse = _mapper.Map<LoginDetails>(userEntity);
@@ -109,7 +137,9 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     return loginresponse;
                 }
                 else
+                {
                     throw new CustomException(Constants.DbOperationFailed);
+                }
             }
         }
 

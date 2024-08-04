@@ -1,11 +1,11 @@
-import React, { useState,useContext,useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './UserLogin.css';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLogin from './GoogleLogin';
 import Switch from './LoginToggleButton';
 import { MyContext } from '../App';
 import { useLoadingContext } from './LoadingProvider';
-import { loginUserHelper } from '../Helpers/UserHelper';
+import { loginUserHelper, loginWithOTPHelper } from '../Helpers/UserHelper';
 import loadOTPScript from './Msg91OTP';
 
 const errorCssClass = 'input_error';
@@ -24,10 +24,10 @@ function Cards(props) {
   const [showPassword, setShowPassword] = useState(false);
   const { setLoading } = useLoadingContext();
   const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
-  const [invalidPasswordError,setInvalidPasswordError] = useState(false);
-  const [mobileNo,setMobileNo] = useState(null);
+  const [invalidPasswordError, setInvalidPasswordError] = useState(false);
+  const [mobileNo, setMobileNo] = useState(null);
   const [otp, setOtp] = useState(new Array(4).fill(""));
-  const [otpReturnMessage,setOtpReturnMessage] = useState(''); 
+  const [otpReturnMessage, setOtpReturnMessage] = useState('');
   let timer;
   let countdown = 30;
 
@@ -40,10 +40,10 @@ function Cards(props) {
 
   };
 
-    useEffect(()=>{
-      loadOTPScript();
-    },[])
-  
+  useEffect(() => {
+    loadOTPScript();
+  }, [])
+
 
   function startResendTimer() {
     document.getElementById('resendOtp').style.opacity = 0.6;
@@ -55,49 +55,51 @@ function Cards(props) {
       otpReturnMessage // optional
     );
     timer = setInterval(updateTimer, 1000);
-}
+  }
 
-function updateTimer() {
-  try{
-    const timerElement = document.getElementById('timer');
-    
-    if (countdown > 0) {
+  function updateTimer() {
+    try {
+      const timerElement = document.getElementById('timer');
+
+      if (countdown > 0) {
         timerElement.textContent = `(${countdown})`;
         countdown--;
-    } else {
+      } else {
         document.getElementById('resendOtp').style.opacity = 1;
         document.getElementById('resendOtp').disabled = false;
         timerElement.textContent = '';
-        
-        countdown = 30;
-        
+
+        countdown = 45;
+
         clearInterval(timer);
+      }
+    }
+    catch {
+
     }
   }
-  catch{
-
-  }
-}
 
   const handleGetOtp = () => {
-    if( !phoneRegex.test(document.getElementById('mobile-no').value) || document.getElementById('mobile-no').value.length != 10){
+    if (!phoneRegex.test(document.getElementById('mobile-no').value) || document.getElementById('mobile-no').value.length != 10) {
       document.getElementById('mobile-no').style.border = 'solid';
-      document.getElementById('mobile-no').style.borderColor = 'red'; 
-      document.getElementById('mobile-no').style.borderWidth = '3px'; 
+      document.getElementById('mobile-no').style.borderColor = 'red';
+      document.getElementById('mobile-no').style.borderWidth = '3px';
     }
-    else{
+    else {
       window.sendOtp(
-        '91'+document.getElementById('mobile-no').value, // mandatory
-        (data) => {console.log(data);
+        '91' + document.getElementById('mobile-no').value, // mandatory
+        (data) => {
+          console.log(data);
           setOtpReturnMessage(data.message);
           timer = setInterval(updateTimer, 1000);
-          setTimeout(()=>{document.getElementById('resendOtp').style.opacity = 0.6;},1000)
-          setTimeout(()=>{document.getElementById('resendOtp').disabled = true;},1000)
+          setTimeout(() => { document.getElementById('resendOtp').style.opacity = 0.6; }, 1000)
+          // setTimeout(() => { document.getElementById('resendOtp').disabled = true; }, 1000)
           setMobileNo(document.getElementById('mobile-no').value)
         },
-        (error) =>{ console.log(error)
+        (error) => {
+          console.log(error)
           document.getElementById('mobile-no').style.border = 'solid';
-          document.getElementById('mobile-no').style.borderColor = 'red'; 
+          document.getElementById('mobile-no').style.borderColor = 'red';
           document.getElementById('mobile-no').style.borderWidth = '3px';
         }
       );
@@ -109,10 +111,12 @@ function updateTimer() {
 
     window.verifyOtp(
       otp.join(""), // OTP value
-      (data) => {console.log('OTP verified: ', data)
+      (data) => {
+        console.log('OTP verified: ', data)
         handleOtpVerificationSuccessful();
       }, // optional
-      (error) => {console.log(error)
+      (error) => {
+        console.log(error)
         handleOtpVerificationRejected();
       }, // optional
       otpReturnMessage // optional
@@ -120,7 +124,37 @@ function updateTimer() {
   }
 
   const handleOtpVerificationSuccessful = async () => {
-    window.alert('Verified')
+    console.log(mobileNo);
+    setLoading(true);
+    var response = await loginWithOTPHelper(mobileNo);
+    setLoading(false);
+    if (!response.error) {
+      console.log("Load new page after following response:")
+      console.log(response);
+      if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
+        localStorage.setItem('userId', response.id);
+        localStorage.setItem('isUser', true);
+        console.log(localStorage.getItem('redirectUrl'));
+        setTimeout(() => {
+          const redirectUrl = localStorage.getItem('redirectUrl');
+          console.log(redirectUrl);
+          navigate(redirectUrl);
+        }, 0);
+      }
+      else if (response && response.isUser == true) {
+        localStorage.setItem('userId', response.id);
+        localStorage.setItem('isUser', true);
+        navigate('/userhome')
+      }
+      else if (response && response.isUser == false) {
+        localStorage.setItem('userId', response.id);
+        localStorage.setItem('isUser', false);
+        navigate('/djhome')
+      }
+    }
+    else {
+      //setShowErrorMessage(true);
+    }
   }
 
   const handleOtpVerificationRejected = async () => {
@@ -133,78 +167,79 @@ function updateTimer() {
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     if (id === "email") {
-        setEmail(value);
-        // validateEmail(value);
+      setEmail(value);
+      // validateEmail(value);
     }
     if (id === "password") {
-        setPassword(value);
-        // setpasswordError(false);
-        // validatePassword(value);
+      setPassword(value);
+      // setpasswordError(false);
+      // validatePassword(value);
     }
-}
-
-const handleOtpChange = (element, index) => {
-  if (isNaN(element.value)) return false;
-
-  setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
-
-  //Focus next input
-  if (element.nextSibling) {
-      element.nextSibling.focus();
   }
-};
 
-const handleSubmit = async () => {
+  const handleOtpChange = (element, index) => {
+    if (isNaN(element.value)) return false;
+
+    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+    //Focus next input
+    if (element.nextSibling) {
+      element.nextSibling.focus();
+    }
+  };
+
+  const handleSubmit = async () => {
     setLoginError(false);
     try {
-        if (email == null || email == '' || email == undefined) {
-            setLoginError(true);
-        }
-        if (password == null || password == '' || password == undefined) {
-            setLoginError(true);
-        }
-        setLoading(true);
-        const response = await loginUserHelper(email, password);
-        setLoading(false);
-        if(!response.id){
-          setInvalidPasswordError(true);
-        }
-        else
-        {if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
-            localStorage.setItem('userId', response.id);
-            localStorage.setItem('isUser', true);
-            console.log(localStorage.getItem('redirectUrl'));
-            setTimeout(() => {
-                const redirectUrl = localStorage.getItem('redirectUrl');
-                console.log(redirectUrl);
-                navigate(redirectUrl);
-            }, 0);
+      if (email == null || email == '' || email == undefined) {
+        setLoginError(true);
+      }
+      if (password == null || password == '' || password == undefined) {
+        setLoginError(true);
+      }
+      setLoading(true);
+      const response = await loginUserHelper(email, password);
+      setLoading(false);
+      if (!response.id) {
+        setInvalidPasswordError(true);
+      }
+      else {
+        if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
+          localStorage.setItem('userId', response.id);
+          localStorage.setItem('isUser', true);
+          console.log(localStorage.getItem('redirectUrl'));
+          setTimeout(() => {
+            const redirectUrl = localStorage.getItem('redirectUrl');
+            console.log(redirectUrl);
+            navigate(redirectUrl);
+          }, 0);
         }
         else if (response && response.isUser == true) {
-            localStorage.setItem('userId', response.id);
-            localStorage.setItem('isUser', true);
-            navigate('/userhome')
+          localStorage.setItem('userId', response.id);
+          localStorage.setItem('isUser', true);
+          navigate('/userhome')
         }
         else if (response && response.isUser == false) {
-            localStorage.setItem('userId', response.id);
-            localStorage.setItem('isUser', false);
-            navigate('/djhome')
+          localStorage.setItem('userId', response.id);
+          localStorage.setItem('isUser', false);
+          navigate('/djhome')
         }
         else {
-            setLoginError(true);
-        }}
+          setLoginError(true);
+        }
+      }
     }
     catch (error) {
-        setError(true);
-        setErrorMessage(error.message);
-        setLoading(false);
+      setError(true);
+      setErrorMessage(error.message);
+      setLoading(false);
     }
-}
+  }
 
-    const handleForgotPasswordClick = () => {
-        setShowInfoBox(!showInfoBox);
+  const handleForgotPasswordClick = () => {
+    setShowInfoBox(!showInfoBox);
 
-    }
+  }
 
 
   return (
@@ -234,78 +269,75 @@ const handleSubmit = async () => {
                   (<><span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img dj-button-img' ><span>DJ</span></span>
                     <span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img checked-dj-user user-button-img'><span>User</span></span></>)}
               </div>
-              {isMobileLogin?(<>
-                {mobileNo===null?(<div className='mobile-number-container'>
+              {isMobileLogin ? (<>
+                {mobileNo === null ? (<div className='mobile-number-container'>
                   <div>
-                    <img className='user-image-icon-lander' src = "images/user_image_lander.png"/>
-                    <input id = "mobile-no" type='number' className='mobile-number-input' placeholder='Mobile Number' />
+                    <img className='user-image-icon-lander' src="images/user_image_lander.png" />
+                    <input id="mobile-no" type='number' className='mobile-number-input' placeholder='Mobile Number' />
                   </div>
                   <button onClick={handleGetOtp} className='get-otp-button-lander'>Send OTP</button>
-                </div>):(<div className='otp-verify-section'>
-                    <div className='sent-otp-text'>OTP sent at: <div className='mobile-no-text'>+91-{mobileNo}</div></div>
-                    {otp.map((data, index) => {
-                        return (
-                            <input
-                                className="otp-field"
-                                type="text"
-                                name="otp"
-                                maxLength="1"
-                                key={index}
-                                value={data}
-                                onChange={e => handleOtpChange(e.target, index)}
-                                onFocus={e => e.target.select()}
-                            />
-                        );
-                    })}
-                    <div className='verify-resend-btn-group'>
-                      <button onClick={handleVerifyOtp} className='get-otp-button-lander'>Verify OTP</button>
-                      <button id='resendOtp' onClick={startResendTimer} className='resend-otp-button'>Resend OTP <span id="timer"></span></button>
-                    </div>
+                </div>) : (<div className='otp-verify-section'>
+                  <div className='sent-otp-text'>OTP sent at: <div className='mobile-no-text'>+91-{mobileNo}</div></div>
+                  {otp.map((data, index) => {
+                    return (
+                      <input
+                        className="otp-field"
+                        type="text"
+                        name="otp"
+                        maxLength="1"
+                        key={index}
+                        value={data}
+                        onChange={e => handleOtpChange(e.target, index)}
+                        onFocus={e => e.target.select()}
+                      />
+                    );
+                  })}
+                  <div className='verify-resend-btn-group'>
+                    <button onClick={handleVerifyOtp} className='get-otp-button-lander'>Verify OTP</button>
+                    <button id='resendOtp' onClick={startResendTimer} className='resend-otp-button'>Resend OTP <span id="timer"></span></button>
+                  </div>
                 </div>)
-                    
+
                 }
-                </>
-              ):(
-                  <div className='mobile-number-container'>
+              </>
+              ) : (
+                <div className='mobile-number-container'>
                   <div>
-                    {invalidPasswordError?(<div style={{color:'red'}}>
+                    {invalidPasswordError ? (<div style={{ color: 'red' }}>
                       Username or Password is incorrect!
-                    </div>):(<></>)}
-                    <input className='email-input' id = 'email' placeholder='E-mail' value={email} onChange={(e) => handleInputChange(e)}/>
+                    </div>) : (<></>)}
+                    <input className='email-input' id='email' placeholder='E-mail' value={email} onChange={(e) => handleInputChange(e)} />
                     <div className='password-input-field'>
                       <input className='password-input' id='password' type={showPassword ? "text" : "password"} placeholder='Password' value={password}
-                                onChange={(e) => handleInputChange(e)}/>
-                      {showPassword?(<><img src = "images/hidden-eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)}/></>):
-                      (<><img src = "images/eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)}/></>)}
-                  </div></div>
+                        onChange={(e) => handleInputChange(e)} />
+                      {showPassword ? (<><img src="images/hidden-eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)} /></>) :
+                        (<><img src="images/eye-password.png" className='eye-password-click' onClick={() => setShowPassword((prev) => !prev)} /></>)}
+                    </div></div>
                   <button className='get-otp-button-lander' onClick={() => handleSubmit()}>Login</button>
 
-                  {isMobileLogin?(<></>):(
+                  {isMobileLogin ? (<></>) : (
                     <div className='forgot-password-container'>
                       <div onClick={handleForgotPasswordClick}>Forgot Password?</div>
-                      {showInfoBox?(<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
-                      We're here at your disposal.</div>):(<></>)}
+                      {showInfoBox ? (<div id='forgot-password-tip'>Please send an email to vibesyncdj@gmail.com with your Email/Phone Number.
+                        We're here at your disposal.</div>) : (<></>)}
                     </div>
                   )}
                 </div>
 
               )}
 
-              
+
               <div>
                 <p>Or login with</p>
               </div>
               <div className='google-email-login-container'>
-                <GoogleLogin isUser={!isUser} showButton={true}/>
-                <div onClick={()=>{setIsMobileLogin(!isMobileLogin);setMobileNo(null);clearInterval(timer)}} className='btn-mobile'>
-                  {isMobileLogin?(<img src='images/emailIcon.png' className='email-icon' />):
-                  (<img src='images/phone-call.png' className='phone-call-icon'/>)}
-                  
+                <GoogleLogin isUser={!isUser} showButton={true} />
+                <div onClick={() => { setIsMobileLogin(!isMobileLogin); setMobileNo(null); clearInterval(timer) }} className='btn-mobile'>
+                  {isMobileLogin ? (<img src='images/emailIcon.png' className='email-icon' />) :
+                    (<img src='images/phone-call.png' className='phone-call-icon' />)}
+
                 </div>
               </div>
-
-             
-
               <div className='create-forgot-creds-container'>
                 <div>NEW HERE?</div>
 

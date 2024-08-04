@@ -1,6 +1,6 @@
 var configuration = {
-    widgetId: "346862734542373230313836",
-    tokenAuth: "427527TjyKxfYJKB666ad326cP1", //This should be hidden
+    widgetId: "346862665a30323832373633",
+    tokenAuth: "427449TRxqa5zhmw66ac85f4P1", //This should be hidden
     identifier: "<enter mobile number/email here> (optional)",
     exposeMethods: true,
     captchaRenderId: '', 

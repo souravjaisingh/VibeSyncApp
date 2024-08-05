@@ -83,7 +83,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public List<SongHistoryModel> GetSongHistoryByUserId(long eventId, long userId, string songStatus, bool isAllRequest)
+        public PaginatedSongHistoryResponse GetSongHistoryByUserId(long eventId, long userId, string songStatus, bool isAllRequest, int offset, int limit)
         {
             var query = _context.SongHistories.Join(
             _context.Payments,
@@ -124,7 +124,21 @@ namespace VibeSync.DAL.Repository.QueryRepository
                 query = query.Where(x => x.EventId == eventId);
             }
 
-            return query.ToList();
+            //return query.ToList();
+
+            var totalCount = query.Count(); // Get the total count
+
+            var songHistories = query
+            .OrderBy(x => x.CreatedOn) // or any other ordering criteria
+            .Skip(offset)
+            .Take(limit)
+            .ToList(); // Apply pagination
+
+             return new PaginatedSongHistoryResponse
+              {
+                 SongHistories = songHistories,
+                 TotalCount = totalCount
+              };
 
         }
         /// <summary>

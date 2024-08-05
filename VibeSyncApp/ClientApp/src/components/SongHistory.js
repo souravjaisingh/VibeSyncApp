@@ -11,18 +11,24 @@ export default function SongHistory() {
     const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState('All');
     const { setLoading } = useLoadingContext();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    async function fetchData(selectedFilter) {
+    const pageSize = 20;
+
+    async function fetchData(selectedFilter,page) {
         if (localStorage.getItem('userId') !== null) {
             try {
                 setLoading(true);
-                let res;
+                //let res;
+                const res = await getUserRequestHistoryData(localStorage.getItem('userId'), selectedFilter, page, pageSize);
                 if (selectedFilter === 'All') {
                     res = await getUserRequestHistoryData(localStorage.getItem('userId'));
                 } else {
                     res = await getUserRequestHistoryData(localStorage.getItem('userId'), selectedFilter);
                 }
-                setUserHistory(res);
+                setUserHistory(res.data);
+                setTotalPages(res.totalPages);
                 const sortedData = sortUserHistory(res);
                 setUserHistory(sortedData);
                 setLoading(false);
@@ -48,10 +54,10 @@ export default function SongHistory() {
     };
 
     useEffect(() => {
-        fetchData(filter);
+        fetchData(filter,currentPage);
 
 
-    }, [filter]);
+    }, [filter,currentPage]);
 
 
 
@@ -90,6 +96,10 @@ export default function SongHistory() {
         } catch (error) {
             console.error('Error downloading invoice:', error);
         }
+    };
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
     };
 
     return (
@@ -170,7 +180,21 @@ export default function SongHistory() {
                                         </div>
                                     )
                                 })}
-
+                                    <div className="pagination-container">
+                                    <button
+                                        onClick={() => handlePageChange(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Previous
+                                    </button>
+                                    <span>Page {currentPage} of {totalPages}</span>
+                                    <button
+                                        onClick={() => handlePageChange(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
                             </>
                         )}
                     </div>

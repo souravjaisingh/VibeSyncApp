@@ -22,7 +22,7 @@ namespace VibeSync.DAL.Handler
     /// </summary>
     /// <seealso cref="MediatR.IRequestHandler&lt;VibeSyncModels.Request_ResponseModels.GetSongRequestModel, VibeSyncModels.Request_ResponseModels.SongDetails&gt;" />
     public class SongsHandler : IRequestHandler<GetSongRequestModel, List<SongDetails>>,
-        IRequestHandler<GetSongHistoryRequestModel, List<SongHistoryModel>>, 
+        IRequestHandler<GetSongHistoryRequestModel, PaginatedSongHistoryResponse>, 
         IRequestHandler<SongHistoryModel, string>, 
         IRequestHandler<GetPlaylistList, List<GetPlaylistList>>, 
         IRequestHandler<GetPlaylistTracks, List<SongDetails>>
@@ -131,22 +131,22 @@ namespace VibeSync.DAL.Handler
             return songs.Where(song => song.Language.Equals(language, StringComparison.OrdinalIgnoreCase)).ToList();
         }
         /// Commenting spotify code as shifting from spotify to Jio Saavn
-/*        public async Task<List<SongDetails>> Handle(GetSongRequestModel request, CancellationToken cancellationToken)
-        {
-            var accessToken = await GetSpotifyAccessToken();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        /*        public async Task<List<SongDetails>> Handle(GetSongRequestModel request, CancellationToken cancellationToken)
+                {
+                    var accessToken = await GetSpotifyAccessToken();
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            string queryParameters = string.Format(QueryParameters, request.SongName, request.Offset, request.limit);
+                    string queryParameters = string.Format(QueryParameters, request.SongName, request.Offset, request.limit);
 
-            var response = await _httpClient.GetAsync($"{SpotifyBaseUrl}{queryParameters}");
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var jsonObject = JObject.Parse(responseContent);
-            var items = jsonObject["tracks"]["items"].ToString();
-            var songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
-            return songDetails;
-        }
-*/
+                    var response = await _httpClient.GetAsync($"{SpotifyBaseUrl}{queryParameters}");
+                    response.EnsureSuccessStatusCode();
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var jsonObject = JObject.Parse(responseContent);
+                    var items = jsonObject["tracks"]["items"].ToString();
+                    var songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
+                    return songDetails;
+                }
+        */
         /// <summary>
         /// Handles a request
         /// </summary>
@@ -155,18 +155,43 @@ namespace VibeSync.DAL.Handler
         /// <returns>
         /// Response from the request
         /// </returns>
-        public async Task<List<SongHistoryModel>> Handle(GetSongHistoryRequestModel request, CancellationToken cancellationToken)
+
+        //public async Task<List<SongHistoryModel>> Handle(GetSongHistoryRequestModel request, CancellationToken cancellationToken)
+        //{
+        //    if (request.EventId > 0 && !request.IsAllRequest)
+        //    {
+        //        var songHistory = _songQueryRepository.GetSongHistoryByEventId(request.EventId, request.IsUser);
+        //        return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
+        //    }
+        //    else
+        //    {
+        //        return _songQueryRepository.GetSongHistoryByUserId(request.EventId, request.UserId, request.SongStatus, request.IsAllRequest);
+        //    }
+
+        //}
+        public async Task<PaginatedSongHistoryResponse> Handle(GetSongHistoryRequestModel request, CancellationToken cancellationToken)
         {
+            List<SongHistoryModel> songHistories;
+            int totalCount;
+
             if (request.EventId > 0 && !request.IsAllRequest)
             {
-                var songHistory = _songQueryRepository.GetSongHistoryByEventId(request.EventId, request.IsUser);
-                return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
+                var result = _songQueryRepository.GetSongHistoryByEventId(request.EventId, request.IsUser);
+                songHistories = _mapper.Map<List<SongHistoryModel>>(result);
+                totalCount = result.Count(); // You might need to adjust this if count isn't available
             }
             else
             {
-                return _songQueryRepository.GetSongHistoryByUserId(request.EventId, request.UserId, request.SongStatus, request.IsAllRequest);
+                var result = _songQueryRepository.GetSongHistoryByUserId(request.EventId, request.UserId, request.SongStatus, request.IsAllRequest, request.Offset, request.Limit);
+                songHistories = result.SongHistories;
+                totalCount = result.TotalCount;
             }
 
+            return new PaginatedSongHistoryResponse
+            {
+                SongHistories = songHistories,
+                TotalCount = totalCount
+            };
         }
 
         public async Task<string> Handle(SongHistoryModel request, CancellationToken cancellationToken)

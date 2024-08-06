@@ -139,11 +139,10 @@ function NavbarComponent() {
                 )}
             </div>
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
-               
                 {(location.pathname.startsWith('/djhome') ||
                     location.pathname.startsWith('/djlivesongs') ||
                     location.pathname.startsWith('/showtransactions') ||
-                    location.pathname.startsWith('/paymentIndex')  ||
+                    //location.pathname.startsWith('/paymentIndex')  ||
                     location.pathname.startsWith('/djprofile') ||
                     location.pathname.startsWith('/eventdetails')) && (
                         <Button

@@ -93,6 +93,7 @@ function NavbarComponent() {
                 <div className="home-container">
                     <div className="home-img" onClick={handleLogoClick}>
                         <img src={homeIcon} alt="App Logo" />
+                        <div onClick={()=>{navigate(-1)}} style={{fontSize:'0.8rem'}}>{'<<'}Back</div>
                     </div>
                 </div>
             )}

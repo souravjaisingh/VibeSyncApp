@@ -26,10 +26,14 @@ const DjProfile = () => {
   const [profileErrorMessage, setProfileErrorMessage] = useState('');
   const { setLoading } = useLoadingContext();
   const navigate = useNavigate();
-
+   const [fileName, setFileName] = useState('');
 
   const handleFileChange = (e) => {
-    setUploadImg(e.target.files[0]); // Store the file object
+      setUploadImg(e.target.files[0]); // Store the file object
+      const file = e.target.files[0];
+      if (file) {
+          setFileName(file.name);
+      }
   };
 
 
@@ -128,95 +132,116 @@ const DjProfile = () => {
   }, []);
 
   return (
-    <div className="dj-profile">
+      <div className="dj-profile">
+          <img src="/images/BGMusic.png" alt="Background" className= "profile-page-bg-image" style={{ top: '85px', position: 'absolute', height: '156px', width: '100%' }} />
+          <p className="dj-profile-heading" style={{ fontWeight: '700', color: '#39125C', fontSize: '32px', marginTop: '23px', marginBottom: '10px' }}>DJ Profile</p>
       <form className="profile-form">
         {successMessage && <p className="success-message">{successMessage}</p>}
         {profileErrorMessage && <p className="error-message">{profileErrorMessage}</p>}
-        <p className="dj-profile-heading">DJ Profile</p>
-        <div className="input-group">
+             
+        <div className="profile-input-group">
           <label htmlFor="djNameInput">Name</label>
           <input
             type="text"
             id="djNameInput"
+            classNamesName ="profile-input-fields"
             placeholder="Name"
             value={djName}
             onChange={(e) => setDjName(e.target.value)}
           />
         </div>
-        <div className="input-group">
+              <div className="profile-input-group">
           <label htmlFor="artistNameInput">Artist Name</label>
           <input
             type="text"
             id="artistNameInput"
+            classNamesName="profile-input-fields"
             placeholder="Artist Name"
             value={artistName}
             onChange={(e) => setArtistName(e.target.value)}
           />
         </div>
-        <div className="input-group">
+              <div className="profile-input-group">
           <label htmlFor="djGenreInput">Genre</label>
           <input
             type="text"
             id="djGenreInput"
+            classNamesName="profile-input-fields"
             placeholder="Genre"
             value={djGenre}
             onChange={(e) => setDjGenre(e.target.value)}
           />
         </div>
-        <div className="input-group">
+              <div className="profile-input-group">
           <label htmlFor="djDescriptionInput">Description</label>
-          <textarea
+          <input
             id="djDescriptionInput"
+            classNamesName="profile-input-fields"
             placeholder="Description"
             value={djDescription}
             onChange={(e) => setDjDescription(e.target.value)}
             maxLength={200}
           />
         </div>
-        <div className="input-group">
-          <label htmlFor="djPhotoInput">Photo</label>
-          <input
-            type="file"
-            id="djPhotoInput"
-            onChange={handleFileChange}
-            accept="image/*"
-          />
+              <div className="profile-input-group">
+                  <label htmlFor="djPhotoInput">Photo</label>
+                  <div
+                      className="profile-upload-container"
+                      onClick={() =>
+                          document.getElementById("djPhotoInput").click()
+                      }
+                  >
+                      <div className="profile-upload-icon">&#128190;</div>
+                      <div className="profile-upload-text"> {fileName && fileName.length > 0 ? fileName : 'Upload File'}</div>
+                      <input type="file" id="djPhotoInput" classNamesName="profile-input-fields" onChange={handleFileChange} accept="image/*" />
+                  </div>
+          {/*<input*/}
+          {/*  type="file"*/}
+          {/*  id="djPhotoInput"*/}
+          {/*  classNamesName="profile-input-fields"*/}
+          {/*  onChange={handleFileChange}*/}
+          {/*  accept="image/*"*/}
+          {/*/>*/}
         </div>
-        <div className="input-group">
-          <label htmlFor="bankAccountNumberInput">Account Number</label>
+              <div className="profile-input-group">
+          <label htmlFor="bankAccountNumberInput">Account No.</label>
           <input
             type="text"
             id="bankAccountNumberInput"
-            placeholder="Account Number"
+            classNamesName="profile-input-fields"
+            placeholder="Account No."
             value={bankAccountNumber}
             onChange={handleBankAccountNumberChange}
           />
         </div>
-        <div className="input-group">
+              <div className="profile-input-group">
           <label htmlFor="branchNameInput">Branch Name</label>
           <input
             type="text"
             id="branchNameInput"
+            classNamesName="profile-input-fields"
             placeholder="Branch Name"
             value={branchName}
             onChange={(e) => setBranchName(e.target.value)}
           />
         </div>
-        <div className="input-group">
+              <div className="profile-input-group">
           <label htmlFor="ifscCodeInput">IFSC Code</label>
           <input
             type="text"
             id="ifscCodeInput"
+            classNamesName="profile-input-fields"
             placeholder="IFSC Code"
             value={ifscCode}
             onChange={(e) => setIfscCode(e.target.value)}
           />
         </div>
-        <div className="input-group">
+              <div className="profile-input-group">
           <label htmlFor="socialLinksInput">Social Links</label>
           <input
             type="text"
             id="socialLinksInput"
+            classNamesName="profile-input-fields"
             placeholder="Social Links"
             value={socialLinks}
             onChange={(e) => setSocialLinks(e.target.value)}

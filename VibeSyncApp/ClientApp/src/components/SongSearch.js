@@ -499,8 +499,8 @@ function SongSearch() {
 
             {/* Announcement Modal */}
 
-            <div className="modal" style={{ display: showAnnouncementModal ? 'block' : 'none' }}>
-                <div className="modal-content">
+            <div className="song-search-page-modal" style={{ display: showAnnouncementModal ? 'block' : 'none' }}>
+                <div className="song-search-modal-content">
                     <h2>Announcement Disabled</h2>
                     <p>This club/DJ is not taking announcements currently</p>
                     <button onClick={handleAnnouncementModalClose}>Close</button>

@@ -507,7 +507,7 @@ html body {
         height: auto;
     }
 
-.modal {
+.song-search-page-modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -518,10 +518,9 @@ html body {
     overflow: auto;
     background-color: rgba(0,0,0,0.5);
     padding-top: 150px;
-   
 }
 
-.modal-content {
+.song-search-modal-content {
     background-image: linear-gradient(to bottom right, #FFFFFF, #D7DEFE);
     margin: 5% auto;
     padding: 20px;
@@ -530,15 +529,15 @@ html body {
     border-radius: 20px;
 }
 
-.modal-content p{
-    font-size: 14px;
-}
+    .song-search-modal-content p {
+        font-size: 14px;
+    }
 
-.modal-content h2{
-    font-size: 22px;
-}
+    .song-search-modal-content h2 {
+        font-size: 22px;
+    }
 
-    .modal-content button {
+    .song-search-modal-content button {
         all: unset;
         width: 100%;
         height: auto;

@@ -34,8 +34,15 @@ function PaymentIndex() {
   const [showPromoInput, setShowPromoInput] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [isPromoValid, setIsPromoValid] = useState(false);
-  const searchParams = new URLSearchParams(location.state.rowData);
-  const rowDataString = searchParams.get("data");
+  let searchParams;
+  let rowDataString;
+  try{
+    searchParams = new URLSearchParams(location.state.rowData);
+  }
+  catch{
+    window.location = '/userhome';
+  }
+  rowDataString = searchParams.get("data");
   const rowData = JSON.parse(decodeURIComponent(rowDataString));
   const [isPromoApplied, setIsPromoApplied] = useState(false);
   const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
@@ -284,6 +291,7 @@ function PaymentIndex() {
 
   // Function to handle Pay button click
   const handlePayButtonClick = async () => {
+    setLoading(true);
     setLocalError("");
 
     // Check if mic announcement message is empty
@@ -410,6 +418,7 @@ function PaymentIndex() {
       setLocalError(error.message);
       console.error(error);
     }
+    setLoading(false);
   };
 
   //async function upsertPaymentDetails(orderId, payId) {
@@ -481,10 +490,10 @@ function PaymentIndex() {
   };
 
   const bidAmounts = [
-    { amount: rowData.minimumBid + 200, text: "5 Min" },
-    { amount: rowData.minimumBid + 150, text: "5-10 Min" },
-    { amount: rowData.minimumBid + 100, text: "5-30 Min" },
-    { amount: rowData.minimumBid + 50, text: "5-40 Min" },
+    { amount: 19, text: "5-40 Min" },
+    { amount: 49, text: "5-30 Min" },
+    { amount: 79, text: "5-10 Min" },
+    { amount: 99, text: "5 Min" },
   ];
 
   return (
@@ -654,7 +663,7 @@ function PaymentIndex() {
         <form onSubmit={handleSubmit} className="center-form">
           <div className="amount-selection-division">
             <p className="minimum-bid-container">
-              <div>Groove Amount</div>
+              <div>Request Amount</div>
               <div className="minimum-bid-value"> ₹{rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid}</div>
             </p>
             <div className="gst-info">
@@ -662,22 +671,9 @@ function PaymentIndex() {
               <div>₹{gstAmount}</div>
             </div>
 
-            <div className="bid-buttons">
-              {bidAmounts.map((bid, index) => (
-                <div key={index} className="bid-button-container">
-                  <button
-                    type="button"
-                          onClick={() => handleTipChange(bid.amount + (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid))}
-                    className="btn-bid"
-                  >
-                    ₹{bid.amount}
-                  </button>
-                </div>
-              ))}
-            </div>
 
             <div className="tip-amount-section">
-              <div className="choose-tip-label">Choose the Tip</div>
+              <div className="choose-tip-label">Tip the Dj</div>
               <div className="tip-amount-input-btns">
                 <div
                   onClick={handleDecreaseTip}
@@ -715,6 +711,19 @@ function PaymentIndex() {
                 </div>
               </div>
             </div>
+            <div className="bid-buttons">
+              {bidAmounts.map((bid, index) => (
+                <div key={index} className="bid-button-container">
+                  <button
+                    type="button"
+                          onClick={() => handleTipChange(bid.amount + (rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid))}
+                    className="btn-bid"
+                  >
+                    ₹{bid.amount}
+                  </button>
+                </div>
+              ))}
+            </div>
             <br></br>
             <div className="promocode">
               <span>Promocode</span>
@@ -739,8 +748,17 @@ function PaymentIndex() {
               </p>
             </div>
           </div>
+                  {rowData.eventStatus !== "Live" && (
+                    <div style={{ textAlign: "center",marginTop:'5px' }}>
+                      <div className="tip-info-live">
+                        <div className="tip-info-content">
+                          <i>&#9888;Event is not live right now!</i>
+                          </div>
+                        </div>  
+                    </div>
+                  )}
           {/* <Promocode onApply={handlePromoApply} /> */}
-          <br></br>
+          
           {/* Display the text below the Apply button */}
           {/* <div className="promo-instruction">
                 Use <b>Vibe50</b> to get 50% off upto Rs. 250
@@ -773,15 +791,11 @@ function PaymentIndex() {
                 <div>Pay | ₹{totalAmountWithGst}</div>
               </div>
             </button>
+            <p style={{fontSize:'0.7rem',marginTop:'15px'}}>By clicking Pay you are agreeing to our <a href="termsofservice">Terms of service.</a></p>
             {isPromoApplied && isPromoAvailable && (
               <span>
                 Yayy! You will only pay {Math.max(amount / 2, amount - 250)}
               </span>
-            )}
-            {rowData.eventStatus !== "Live" && (
-              <p style={{ textAlign: "center" }}>
-                <i>DJ is not accepting requests right now.</i>
-              </p>
             )}
           </div>
         </form>
@@ -798,10 +812,10 @@ function PaymentIndex() {
             isVisible={isStickyBarVisible}
           />
         </div>
-        <div className="login-proposal" onClick={handleShow}>
+        {(localStorage.getItem('userId') == null || localStorage.getItem('userId') == 0)?(<div className="login-proposal" onClick={handleShow}>
           <img className="login-img" src="images/log_in.png" />
           <p>Login & Get 50% off instantly!</p>
-        </div>
+        </div>):(<></>)}
 
                 {showLoginModal && (
                     <div className="modal-overlay" onClick={handleClose}>

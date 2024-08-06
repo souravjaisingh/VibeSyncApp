@@ -264,10 +264,10 @@ function Cards(props) {
               <p>OR</p>
               <p className='choose-login-label'>CHOOSE LOGIN TYPE</p>
               <div className='user-dj-toggle'>
-                {isUser ? (<><span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img checked-dj-user dj-button-img'><span>DJ</span></span>
-                  <span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img user-button-img'><span>User</span></span></>) :
-                  (<><span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img dj-button-img' ><span>DJ</span></span>
-                    <span onClick={() => setIsUser(!isUser)} className='dj-user-toggle-img checked-dj-user user-button-img'><span>User</span></span></>)}
+                {isUser ? (<><span onClick={() => setIsUser(true)} className='dj-user-toggle-img checked-dj-user dj-button-img'><span>DJ</span></span>
+                  <span onClick={() => setIsUser(false)} className='dj-user-toggle-img user-button-img'><span>User</span></span></>) :
+                  (<><span onClick={() => setIsUser(true)} className='dj-user-toggle-img dj-button-img' ><span>DJ</span></span>
+                    <span onClick={() => setIsUser(false)} className='dj-user-toggle-img checked-dj-user user-button-img'><span>User</span></span></>)}
               </div>
               {isMobileLogin ? (<>
                 {mobileNo === null ? (<div className='mobile-number-container'>

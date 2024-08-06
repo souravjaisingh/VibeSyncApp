@@ -75,12 +75,12 @@
     padding-top : 3px;
     margin-bottom: 0px;
     text-align: center;
-    font-size:0.7rem;
+    font-size:0.9rem;
     font-weight:600;
     color: #39125C;
     border-radius: 15px;
     background-color: #ef9a9a;
-    width:60%;
+    width:75%;
     margin: auto;
     align-items: center;
     padding-bottom: 2px;
@@ -88,7 +88,7 @@
 }
 
 .subheading-payment img{
-    width: 13px;
+    width: 16px;
     margin-right:4px;
 }
 
@@ -117,11 +117,13 @@
 }
 
 .amount-inputfield {
-    width : 100px;
+    width : 150px;
     border: 2px solid #59b0ef; 
     border-radius: 15px;
     padding: 3px 5px; /* Adjust padding as needed */
     width: 6rem;
+    height: 30px;
+    transform: translateX(20px);
     /* width: 30%; Adjust width as needed */
     /* margin-right: 10px; Adjust margin as needed */
 }
@@ -140,9 +142,23 @@
 }
 
 .btn--primaryPayment {
-    background-color: #39125C;
+    background-color: #3ed83e;
     color: #242424;
     border: ridge;
+    box-shadow: 5px 6px 8px;
+}
+
+.tip-info-live{
+    background-color: #ffc107d4;
+    display: flex;
+    font-size: 0.9rem;
+    color: #39125C;
+    font-weight: 700;
+    margin: 10px auto;
+    border-radius: 15px;
+    padding: 2px 2px;
+    align-items: center;
+    max-width: 32rem;
 }
 
 .btn--outline {
@@ -157,6 +173,7 @@
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 20px;
+    font-size: 0.8rem;
 }
 
 .bid-button-container {
@@ -172,6 +189,7 @@
     padding: 5px 10px; 
     cursor: pointer;
     border-radius: 5px;
+    margin-top: 10px;
 }
 
 .bid-text {
@@ -430,7 +448,7 @@
     border-radius: 5px;
     text-align: center;
     padding:2px 10px;
-    color: #777;
+    color: #39125c;
 }
 
 .tip-amount-section{
@@ -439,8 +457,9 @@
     align-items: center;
     justify-content: space-between;
     color: #39125C;
-    font-size: 1.4rem;
+    font-size: 1rem;
     font-weight: 700;
+    margin-top: 10px;
 }
 
 .tip-amount-section input{
@@ -452,7 +471,7 @@
 
 .tip-info{
     display: flex;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     margin: 10px auto;
     border-radius: 15px;
     background-color: #ef9a9a;
@@ -476,8 +495,8 @@
 }
 
 .tip-info img{
-    width:15px;
-    height: 15px;
+    width:18px;
+    height: 18px;
     padding: 2px;
     margin: auto;
 }
@@ -534,13 +553,15 @@
 
 .increase-tip-button{
     position: relative;
-    left:-25px;
+    left:-15px;
+    width: 30px;
 }
 
 .decrease-tip-button{
     position: relative;
-    left:20px;
+    left:55px;
     z-index: 1;
+    width: 30px;
 }
 
 .check-box{
@@ -552,8 +573,8 @@
     align-items : center;
 }
 .choose-tip-label{
-    width:11rem;
     margin-right :10px;
+    padding-left: 2px;
 }
 
 .gst-info {

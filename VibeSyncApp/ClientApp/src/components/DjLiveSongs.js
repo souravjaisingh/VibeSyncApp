@@ -21,7 +21,13 @@ export default function DjLiveSongs() {
     const [acceptedHistory, setAcceptedHistory] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.state.rowData);
+    let searchParams;
+    try{
+      searchParams = new URLSearchParams(location.state.rowData);
+    }
+    catch{
+      window.location = '/userhome';
+    }
     const rowDataString = searchParams.get('data');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const rowData = JSON.parse(decodeURIComponent(rowDataString)) || {};

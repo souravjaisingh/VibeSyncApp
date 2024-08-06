@@ -142,14 +142,14 @@
 }
 
 .btn--primaryPayment {
-    background-color: #3ed83e;
+    background-color: #4dc54d;
     color: #242424;
     border: ridge;
     box-shadow: 5px 6px 8px;
 }
 
 .tip-info-live{
-    background-color: #ffc107d4;
+    background-color: #f9d052d4;
     display: flex;
     font-size: 0.9rem;
     color: #39125C;

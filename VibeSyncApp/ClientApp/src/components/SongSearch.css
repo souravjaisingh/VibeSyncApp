@@ -400,14 +400,21 @@ html body {
     background-color: #ef9a9a;
     border-radius:10px;
     margin:10px;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     padding: 5px 10px;
     width:90%;
     text-align:left;
+    animation: blinker 3s linear infinite; 
+    display: flex;
 }
+
+
 .event-desc img {
     margin-right: 5px; /* Adjust the margin-right as needed */
     vertical-align: middle; /* Aligns image vertically with text */
+    height: 17px;
+    width: 20px;
+    margin-top: 3px;
     }
 
 .right-content:hover{
@@ -560,3 +567,19 @@ html body {
         color: rgb(209, 59, 33);
         text-align: center;
     }
+
+
+
+      
+      @keyframes blinker {
+        15%{
+            opacity: 1;
+        }
+        20% {
+          opacity: 0;
+        }
+        25%{
+            opacity: 1;
+        }
+      }
+      

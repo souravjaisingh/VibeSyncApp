@@ -59,8 +59,13 @@ function SongSearch() {
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
         if(qrcodeParam == null){
-            const Amount = parseFloat(uri["minimumBid"]);
-            setMinAmount(Amount)
+            try{
+                const Amount = parseFloat(uri["minimumBid"]);
+                setMinAmount(Amount)
+            }
+            catch{
+                window.location = 'userhome'
+            }
         }
     });
 
@@ -409,9 +414,9 @@ function SongSearch() {
                             </div>
 
                         </div>
-                        <span className='event-desc'><b>
+                        <span className='event-desc'>
                             <img style={{ width: '15px' }} src="/images/disclaimerIcon.png" />
-                            {eventData.eventDescription}</b></span>
+                            <b><div>{eventData.eventDescription}</div></b></span>
                     </div>
 
                 )}

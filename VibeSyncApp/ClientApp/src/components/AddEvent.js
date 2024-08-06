@@ -158,9 +158,9 @@ const AddressTypeahead = () => {
         // Validation: Check if any input field is empty
         setAddress('12.12345,14.345678');
         if (!theme || !venueName || !eventDesc
-            || !eventStartTime || !eventEndTime || minimumBid < 0) {
+            || !eventStartTime || !eventEndTime || minimumBid <= 0) {
             // Display an error message or handle validation error as needed
-            console.error('All fields are mandatory');
+            console.error('All fields are mandatory and Minimum Bid should be greater than 0');
             if (eventStartTime > eventEndTime) {
                 // Display an error message or handle the validation error as needed
                 console.error('Event end time cannot be earlier than event start time');

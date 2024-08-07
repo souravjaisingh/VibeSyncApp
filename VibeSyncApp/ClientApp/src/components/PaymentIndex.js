@@ -223,10 +223,14 @@ function PaymentIndex() {
 
     useEffect(()=>{
       if(localStorage.getItem('userId')!==null && localStorage.getItem('userId')!==0){
-          
+        try{
           let rowData_to_change = rowData;
           rowData_to_change.minimumBid = Math.round(rowData.minimumBid/2)
           setRowData(rowData_to_change)
+        }
+        catch{
+          
+        }
           
         }
     },[])

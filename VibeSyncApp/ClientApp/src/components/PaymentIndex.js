@@ -43,7 +43,7 @@ function PaymentIndex() {
     window.location = '/userhome';
   }
   rowDataString = searchParams.get("data");
-  const rowData = JSON.parse(decodeURIComponent(rowDataString));
+  const [rowData,setRowData] = useState(JSON.parse(decodeURIComponent(rowDataString)));
   const [isPromoApplied, setIsPromoApplied] = useState(false);
   const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
   const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
@@ -212,6 +212,7 @@ function PaymentIndex() {
     }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest]);
 
 
+
     useEffect(() => {
         const minimumBid = isSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid;
         const gst = Math.round(minimumBid * 0.18); // Calculate GST as 18% of the minimum bid and round to nearest integer
@@ -220,7 +221,15 @@ function PaymentIndex() {
     }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest, amount]);
 
 
-
+    useEffect(()=>{
+      if(localStorage.getItem('userId')!==null && localStorage.getItem('userId')!==0){
+          
+          let rowData_to_change = rowData;
+          rowData_to_change.minimumBid = Math.round(rowData.minimumBid/2)
+          setRowData(rowData_to_change)
+          
+        }
+    },[])
 
   useEffect(() => {
     if (rowData.eventStatus !== "Live") {

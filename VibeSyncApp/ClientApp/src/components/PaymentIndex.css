@@ -34,6 +34,23 @@
     background-size: 100%;
 }
 
+.back-button-payment-index{
+    color: #fff;
+    border-radius: 15px;
+    padding: 5px 10px;
+    background-color: #39125C;
+    margin-bottom: 5px;
+    position: absolute;
+    left: 10px;
+}
+
+@media only screen and (max-width: 800px){
+    .back-button-payment-index{
+        position: inherit;
+        margin-left: 20px;
+    }
+}
+
 .song-details-container img{
     height:auto;
     border-radius: 20px;

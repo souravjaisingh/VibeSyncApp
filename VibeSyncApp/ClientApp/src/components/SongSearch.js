@@ -118,7 +118,10 @@ function SongSearch() {
             setLoading(false);
         };
 
-        fetchPlaylistsAndSongs();
+        // Fetch playlists and songs only if eventData is set
+        if (eventData) {
+            fetchPlaylistsAndSongs();
+        }
     }, [eventData]); 
 
     const handlePlaylistClick = async (playlistId) => {

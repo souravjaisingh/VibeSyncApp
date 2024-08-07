@@ -390,7 +390,7 @@ function SongSearch() {
     return (
         <>
             <div className='song-search'>
-            <button className="back-button-songsearch" onClick={()=>navigate(-1)}>{'<<'}Back</button>
+            {/* <button className="back-button-songsearch" onClick={()=>navigate(-1)}>{'<<'}Back</button> */}
                 {eventData && (
                     <div className="search-container">
                         <div className="left-content">

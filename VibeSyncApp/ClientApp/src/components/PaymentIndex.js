@@ -502,7 +502,7 @@ function PaymentIndex() {
 
       <div className="bg-music-background">
         {/* Conditionally render HTML or Album Image */}
-        <button className="back-button-payment-index" onClick={()=>navigate(-1)}>{'<<'}Back</button>
+        {/* <button className="back-button-payment-index" onClick={()=>navigate(-1)}>{'<<'}Back</button> */}
 
 
         {isSpecialAnnouncement ? (

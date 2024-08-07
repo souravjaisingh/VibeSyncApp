@@ -780,7 +780,7 @@ function PaymentIndex() {
                     <div className="modal-overlay" onClick={handleClose}>
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                             <div className="modal-header">
-                                <span className="modal-title">Login</span>
+                                <span className="payment-page-modal-title">Login</span>
                             </div>
                             <div className="modal-body">
                                 {successMessage ? (
@@ -793,7 +793,7 @@ function PaymentIndex() {
                                                     <img src="images/user_image.png" alt="Placeholder" className="payment-page-input-icon" />
                                                     <input type="text" placeholder="Mobile Number*" className="payment-page-input-field" />
                                                 </div>
-                                                <button className="get-otp-button" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
+                                                <button className="pop-up-btn" style={{ width: "37%", height: "39px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
                                             </>
                                         ) : (
                                             <>
@@ -812,7 +812,7 @@ function PaymentIndex() {
                                                         )}
                                                                 <input required type="password"   className='payment-page-input-field' style={{ width: "70 %" } } value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
                                                     </div>
-                                                            <button onClick={handleLogin} type="submit" className="get-otp-btn" style={{ width: "37%", height: "19px", boxShadow: "none", padding: "8px", fontWeight: "700" ,paddingBottom:"11px"}}>Login</button>
+                                                          <button onClick={handleLogin} type="submit" className="pop-up-btn" style={{ width: "37%", height: "39px", boxShadow: "none", padding: "8px", fontWeight: "700" ,paddingBottom:"11px"}}>Login</button>
                                                             
                                                                 <div className='forgot-password-container'>
                                                                     <div onClick={handleForgotPasswordClick}>Forgot Password?</div>

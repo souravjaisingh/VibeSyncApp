@@ -123,12 +123,22 @@ export default function SongHistory() {
                                 {userHistory.map((result, index) => {
                                     return (
                                         <div key={index} className='song-row-history-page'>
+                                            {result.micAnnouncement && (
+                                            <div className='song-history-page-mic-icon-container'>
+                                                <img src="/images/micDark.png" alt="Mic" className='song-history-page-mic-icon' />
+                                            </div>
+                                            )}
+
                                             <div className='history-page-left-content'>
                                                 {result.micAnnouncement ? (
-                                                    <div style={{ overflowWrap: 'break-word', overflow: 'hidden' }}>
-                                                        {result.micAnnouncement}
-                                                    </div>
+                                                    <>
+                                                        
+                                                        <div style={{ overflowWrap: 'break-word', overflow: 'hidden' }}>
+                                                            {result.micAnnouncement}
+                                                        </div>
+                                                    </>
                                                 ) : (
+
                                                     <>
                                                         <div classname='song-row-song-name'>{result.songName}</div>
                                                         <div classname='song-row-artist-name'>{result.artistName}</div>

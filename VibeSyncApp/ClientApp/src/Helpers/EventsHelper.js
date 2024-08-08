@@ -9,7 +9,7 @@ export default async function getLiveEventsHelper(lat, lng) {
     return res;
 }
 
-export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, venue, starttime, endtime, lat, lng, minbid, isUpdate, minBidForSpecialRequest, acceptingRequests = false, displayRequests = false, hidePlaylist = false, playlists, eventid = 0, eventstatus = 'Not live', genre = 'default'){
+export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, venue, starttime, endtime, lat, lng, minbid, isUpdate, minBidForSpecialRequest, acceptingRequests = false, displayRequests = false, hidePlaylist = false, playlists, disableSongSearch = false, eventid = 0, eventstatus = 'Not live', genre = 'default', ){
     var model = {
         id : eventid,
         userId : userid,
@@ -24,11 +24,11 @@ export async function eventDetailsUpsertHelper(userid, eventname, eventdesc, ven
         displayRequests: displayRequests,
         hidePlaylist: hidePlaylist,
         playlists: playlists, // Send the playlist IDs here
+        disableSongSearch : disableSongSearch,
         latitude : lat,
         longitude : lng,
         eventGenre : genre,
         eventStatus: eventstatus
-       
        
     }
 

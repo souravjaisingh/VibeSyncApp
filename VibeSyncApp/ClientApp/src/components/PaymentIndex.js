@@ -34,6 +34,7 @@ function PaymentIndex() {
   const [showPromoInput, setShowPromoInput] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [isPromoValid, setIsPromoValid] = useState(false);
+  const [loginDiscount,setLoginDiscount] = useState(false);
   let searchParams;
   let rowDataString;
   try{
@@ -43,7 +44,7 @@ function PaymentIndex() {
     window.location = '/userhome';
   }
   rowDataString = searchParams.get("data");
-  const rowData = JSON.parse(decodeURIComponent(rowDataString));
+  const [rowData,setRowData] = useState(JSON.parse(decodeURIComponent(rowDataString)));
   const [isPromoApplied, setIsPromoApplied] = useState(false);
   const [isPromoAvailable, setIsPromoAvailable] = useState(false); // New state variable
   const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
@@ -225,6 +226,12 @@ function PaymentIndex() {
   useEffect(() => {
     if (rowData.eventStatus !== "Live") {
       requestNotificationPermission();
+    }
+    if(localStorage.getItem('userId')!=null && localStorage.getItem('userId')!=0){
+      setLoginDiscount(true);
+      let rowData_to_change = rowData;
+      rowData_to_change.minimumBid = Math.round(rowData.minimumBid/2)
+      setRowData(rowData_to_change)
     }
   }, []);
 
@@ -666,8 +673,12 @@ function PaymentIndex() {
           <div className="amount-selection-division">
             <p className="minimum-bid-container">
               <div>Request Amount</div>
-              <div className="minimum-bid-value"> ₹{rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid}</div>
+              <div className="minimum-bid-value"> ₹{loginDiscount?(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest*2 : rowData.minimumBid*2):(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid)}</div>
             </p>
+            {loginDiscount&&(<div className="gst-info">
+              <div>Login Off</div>
+              <div>₹{rowData.minimumBid}</div>
+            </div>)}
             <div className="gst-info">
               <div>GST (18%)</div>
               <div>₹{gstAmount}</div>

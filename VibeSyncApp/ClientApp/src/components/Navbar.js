@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VSlogo3.png';
 import home from '../Resources/home.png';
-import homeIcon from '../Resources/homeIcon.png'
+import backIcon from '../Resources/back.png'
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logout } from './services/UserService';
@@ -89,10 +89,12 @@ function NavbarComponent() {
 
     return (
         <div className="navbar">
-            {localStorage.getItem('userId') != null && (
+            {localStorage.getItem('userId') != null &&
+            (!location.pathname.startsWith('/djhome')
+            && !location.pathname.startsWith('/userhome')) &&(
                 <div className="home-container">
-                    <div className="home-img" onClick={handleLogoClick}>
-                        <img src={homeIcon} alt="App Logo" />
+                    <div className="home-img" onClick={()=>navigate(-1)}>
+                        <img src={backIcon} alt="App Logo" />
                     </div>
                 </div>
             )}

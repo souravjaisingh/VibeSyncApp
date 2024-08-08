@@ -101,8 +101,9 @@ export async function setLocalstorageExpiry() {
     localStorage.setItem('expiry', newDatetime);
 }
 
-export async function getUserRequestHistoryData(userid, selectedFilter = null) {
-    let url = `Songs/GetSongHistory?userId=${userid}&eventId=${localStorage.getItem('qrEventId')}&isAllRequest=${true}`;
+export async function getUserRequestHistoryData(userid, selectedFilter = null, page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    let url = `Songs/GetSongHistory?userId=${userid}&eventId=${localStorage.getItem('qrEventId')}&isAllRequest=${true}&offset=${offset}&limit=${limit}`;
     if (selectedFilter !== null) {
         url += `&songStatus=${selectedFilter}`;
     }

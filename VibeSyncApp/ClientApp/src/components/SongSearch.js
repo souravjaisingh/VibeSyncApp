@@ -38,6 +38,9 @@ function SongSearch() {
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
     const [NoSongsFound,setNoSongsFound] = useState(false);
     const { setLoading } = useLoadingContext();
+    const [disableSongSearch, setDisableSongSearch] = useState(false);
+
+
     
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
@@ -67,6 +70,7 @@ function SongSearch() {
                 window.location = 'userhome'
             }
         }
+        setDisableSongSearch(uri.disableSongSearch || false);
     });
 
     // useEffect(() => {
@@ -424,24 +428,26 @@ function SongSearch() {
 
 
                 <div className="search-page">
-                <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
-                        <input
-                            type="text"
-                            className="search-input"
-                            placeholder="Search your song"
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            onClick={handleSearchBarClick}  
-                        />
-                        <img src="/images/SearchButton1.png" className="search-icon-song-search" />
-                    </div>
+                    {!disableSongSearch && (
+                        <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
+                            <input
+                                type="text"
+                                className="search-input"
+                                placeholder="Search your song"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                onClick={handleSearchBarClick}
+                            />
+                            <img src="/images/SearchButton1.png" className="search-icon-song-search" />
+                        </div>
+                    )}
 
                     {NoSongsFound?(<div className='no-songs-found'>No Songs Found!</div>):(<></>)}
 
                     {eventData && eventData.hidePlaylist !== true && (
                         <>
                             <div className="choose-from-collections-text">
-                                <p>OR</p>
+                                {!disableSongSearch && <p>OR</p>}
                                 <p>CHOOSE FROM OUR COLLECTIONS</p>
                             </div>
 

@@ -105,7 +105,7 @@ namespace VibeSync.DAL.DBContext
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.DisplayRequests).HasColumnName("DisplayRequests ");
+                entity.Property(e => e.DisableSongSearch).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EventDescription).HasMaxLength(100);
 
@@ -260,7 +260,7 @@ namespace VibeSync.DAL.DBContext
                     .WithMany(p => p.Settlements)
                     .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Settlemen__Event__3D2915A8");
+                    .HasConstraintName("FK__Settlemen__Event__40F9A68C");
             });
 
             modelBuilder.Entity<SongHistory>(entity =>
@@ -389,9 +389,6 @@ namespace VibeSync.DAL.DBContext
 
             OnModelCreatingPartial(modelBuilder);
         }
-
-
-
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

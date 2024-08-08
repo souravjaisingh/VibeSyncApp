@@ -121,6 +121,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 eventEntity.HidePlaylist = request.HidePlaylist;
                 eventEntity.MinimumBidForSpecialRequest = request.MinimumBidForSpecialRequest;
                 eventEntity.Playlists = request.Playlists;
+                eventEntity.DisableSongSearch = request.DisableSongSearch;
                 _context.Events.Update(eventEntity);
                 // Save changes to the database
                 var response = await _context.SaveChangesAsync();

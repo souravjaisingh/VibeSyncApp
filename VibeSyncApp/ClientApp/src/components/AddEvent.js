@@ -41,6 +41,7 @@ const AddressTypeahead = () => {
 
     const [playlists, setPlaylists] = useState([]);
     const [checkedPlaylists, setCheckedPlaylists] = useState([]);
+    const [disableSongSearch, setDisableSongSearch] = useState(false);
     const [showMinBidError, setShowMinBidError] = useState(false);
 
 
@@ -192,8 +193,9 @@ const AddressTypeahead = () => {
                     displayRequests,
                     hidePlaylist,
                     playlists,
+                    disableSongSearch,
                     eventId: rowDataString ? rowData.id : 0,
-                    eventStatus: isLive ? 'Live' : 'Not live'
+                    eventStatus: isLive ? 'Live' : 'Not live',
 
                 };
 
@@ -217,6 +219,7 @@ const AddressTypeahead = () => {
                     , displayRequests
                     , hidePlaylist
                     , playlists
+                    , disableSongSearch
                     , rowDataString ? rowData.id : 0
                     , isLive ? 'Live' : 'Not live'
 
@@ -268,6 +271,7 @@ const AddressTypeahead = () => {
             if (rowData.playlists) {
                 setCheckedPlaylists(rowData.playlists.split(','));
             }
+            setDisableSongSearch(rowData.disableSongSearch);
         } else {
             // Reset input fields when rowData becomes null
             setVenueName('');
@@ -281,6 +285,7 @@ const AddressTypeahead = () => {
             setHidePlaylist(false);
             setMinimumBidForSpecialRequest(null); // Updated field
             setCheckedPlaylists([]);
+            setDisableSongSearch(false);
         }
     }, []);
 
@@ -445,6 +450,17 @@ const AddressTypeahead = () => {
                             onChange={(event) => setHidePlaylist(event.target.checked)}
                         />
                         <label htmlFor="hidePlaylist">Hide Available Playlists</label>
+                    </div>
+
+                    <div className="request">
+                        <input
+                            style={{ width: "13px" }}
+                            type="checkbox"
+                            id="disableSongSearch"
+                            checked={disableSongSearch}
+                            onChange={(event) => setDisableSongSearch(event.target.checked)}
+                        />
+                        <label htmlFor="disableSongSearch">Disable Song Search</label>
                     </div>
 
                     {!hidePlaylist && (

@@ -58,7 +58,7 @@ const DjProfile = () => {
     const formData = new FormData();
     formData.append('DjName', djName);
     formData.append('ArtistName', artistName);
-    formData.append('DjGenre', djGenre);
+    formData.append('DjGenre', 'Club');
     formData.append('DjDescription', djDescription);
     if (uploadImg) {
       formData.append('uploadImg', uploadImg); // Append the file if selected
@@ -159,17 +159,6 @@ const DjProfile = () => {
             placeholder="Artist Name"
             value={artistName}
             onChange={(e) => setArtistName(e.target.value)}
-          />
-        </div>
-              <div className="profile-input-group">
-          <label htmlFor="djGenreInput">Genre</label>
-          <input
-            type="text"
-            id="djGenreInput"
-            classNamesName="profile-input-fields"
-            placeholder="Genre"
-            value={djGenre}
-            onChange={(e) => setDjGenre(e.target.value)}
           />
         </div>
               <div className="profile-input-group">

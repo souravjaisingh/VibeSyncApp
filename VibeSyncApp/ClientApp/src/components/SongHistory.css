@@ -159,7 +159,8 @@
     margin: auto;
 }
 
-.song-row-history-page{
+.song-row-history-page {
+    position: relative;
     border-radius: 15px;
     align-items: center;
     display: flex;
@@ -262,4 +263,18 @@
     display: -webkit-box;
     -webkit-line-clamp: 3; /* Number of lines to display */
     -webkit-box-orient: vertical;
+}
+
+.song-history-page-mic-icon-container {
+    position: absolute;
+    top: -16px;
+    left: -11px;
+    color: #fff;
+   
+}
+
+.song-history-page-mic-icon {
+    width: 30px; 
+    height: 30px; 
+    border-radius: 20px;
 }

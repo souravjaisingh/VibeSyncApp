@@ -363,6 +363,53 @@ export default function DjLiveSongs() {
         const remainingTime = Math.max(0, (endTime - currentTime) / 1000 / 60); // Convert to minutes
         return remainingTime > 0 ? remainingTime.toFixed(0) : null; // Return null when remaining time is 0 or less
     };
+    function newNotification(remainingTime) {
+        let message;
+        let title;
+
+        switch (remainingTime) {
+            case "15":
+                title = '15 Minutes Left';
+                message = 'Only 15 minutes left for your request!';
+                break;
+            case "10":
+                title = '10 Minutes Left';
+                message = 'Only 10 minutes left for your request!';
+                break;
+            case "5":
+                title = '5 Minutes Left';
+                message = 'Only 5 minutes left for your request!';
+                break;
+            default:
+                return; // Exit if remainingTime does not match 15, 10, or 5
+        }
+
+        addNotification({
+            title: title,
+            subtitle: 'Reminder',
+            message: message,
+            theme: 'darkblue',
+            duration: 6000
+        });
+    }
+
+    useEffect(() => {
+        const checkNotificationTimes = () => {
+            userHistory.forEach((result) => {
+                const remainingTime = calculateRemainingTime(result.paymentDateTime);
+
+                // Call newNotification only for 15, 10, or 5 minutes
+                if (["15", "10", "5"].includes(remainingTime)) {
+                    newNotification(remainingTime);
+                }
+            });
+        };
+
+        const intervalId = setInterval(checkNotificationTimes, 60000); // Check every minute
+
+        return () => clearInterval(intervalId); // Cleanup the interval on unmount
+    }, [userHistory]);
+
     return (
         <div className='song-history-container'>
             <div className='bg-music-dj-side'>

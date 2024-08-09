@@ -1051,10 +1051,10 @@ function PaymentIndex() {
                                             </div>
                                             {showGoogleLogin && (
                                                 <GoogleLogin
-                                                    isUser={{ isUser: true }}
-                                                    triggerLogin={(login) => login()}
-                                                    showButton={false}
-                                                      onSuccess={(response) => setShowLoginModal(false)}
+                                                      isUser={{ isUser: true }}
+                                                      triggerLogin={(login) => login()}
+                                                      showButton={false}
+                                                      setShowLoginModal={setShowLoginModal}
                                                 />
                                             )}
                                             <div className='btn-mobile' onClick={handleEmailIconClick}>

@@ -9,7 +9,7 @@ import { MyContext } from '../App';
 import { useLoadingContext } from './LoadingProvider';
 
 
-export default function GoogleLogin({ isUser, triggerLogin, showButton }){
+export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowLoginModal }){
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
@@ -24,9 +24,15 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton }){
     const login = useGoogleLogin({
         onSuccess: async (codeResponse) => {
             setUser(codeResponse);
-            // Close the window if it's a popup
-            if (window.opener) {
+
+           // Close the window if it's a popup
+           if (window.opener) {
                 window.close();
+            }
+
+            // Close the modal if the login is successful
+            if (setShowLoginModal) {
+                setShowLoginModal(false);
             }
         },
         onError: (error) => console.log('Login Failed:', error)

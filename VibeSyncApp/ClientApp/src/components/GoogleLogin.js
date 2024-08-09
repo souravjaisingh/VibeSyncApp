@@ -25,15 +25,15 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
         onSuccess: async (codeResponse) => {
             setUser(codeResponse);
 
-           // Close the window if it's a popup
-           if (window.opener) {
+            // Close the window if it's a popup
+            if (window.opener) {
                 window.close();
             }
 
-            // Close the modal if the login is successful
-            if (setShowLoginModal) {
-                setShowLoginModal(false);
-            }
+            //// Close the modal if the login is successful
+            //if (setShowLoginModal) {
+            //    setShowLoginModal(false);
+            //}
         },
         onError: (error) => console.log('Login Failed:', error)
     });
@@ -71,6 +71,9 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
                         // Check if the user is on the payments page
                         if (currentUrl === '/paymentIndex') {
                             console.log('Staying on the payments page');
+                            setTimeout(() => {
+                                setShowLoginModal(false);
+                            }, 1000);
                             // User stays on the payments page, no redirection
                         }
                          else if(response && response.isUser == true && localStorage.getItem('redirectUrl')){

@@ -26,7 +26,13 @@ const DjProfile = () => {
   const [profileErrorMessage, setProfileErrorMessage] = useState('');
   const { setLoading } = useLoadingContext();
   const navigate = useNavigate();
-   const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [djNameError, setDjNameError] = useState('');
+  const [djDescriptionError, setDjDescriptionError] = useState('');
+  const [bankAccountNumberError, setBankAccountNumberError] = useState('');
+  const [branchNameError, setBranchNameError] = useState('');
+  const [ifscCodeError, setIfscCodeError] = useState('');
+  const [socialLinksError, setSocialLinksError] = useState('');
 
   const handleFileChange = (e) => {
       setUploadImg(e.target.files[0]); // Store the file object
@@ -34,6 +40,68 @@ const DjProfile = () => {
       if (file) {
           setFileName(file.name);
       }
+  };
+
+  const handleDjNameChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 100) {
+      setDjNameError('Max char allowed: 100');
+    } else {
+      setDjNameError('');
+    }
+    setDjName(value);
+  };
+
+  const handleDjDescriptionChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 2000) {
+      setDjDescriptionError('Max char allowed: 2000');
+    } else {
+      setDjDescriptionError('');
+    }
+    setDjDescription(value);
+  };
+
+  const handleBankAccountNumberChange = (e) => {
+    
+    const input = e.target.value;
+    const numericInput = input.replace(/[^0-9]/g, '');
+    if (numericInput.length > 20) {
+      setBankAccountNumberError('Max char allowed: 20');
+    } else {
+      setBankAccountNumberError('');
+    }
+    setBankAccountNumber(numericInput);
+  };
+
+  const handleBranchNameChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 100) {
+      setBranchNameError('Max char allowed: 100');
+    } else {
+      setBranchNameError('');
+    }
+    setBranchName(value);
+  };
+
+  const handleIfscCodeChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 40) {
+      setIfscCodeError('Max char allowed: 40');
+    } else {
+      setIfscCodeError('');
+    }
+    setIfscCode(value);
+  };
+
+  const handleSocialLinksChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 200) {
+      setSocialLinksError('Max char allowed: 200');
+    } else {
+      setSocialLinksError('');
+    }
+    setSocialLinks(value);
   };
 
 
@@ -45,12 +113,13 @@ const DjProfile = () => {
     // Validation: Check if required fields are filled in
     if (!djName || !userid) {
       setProfileErrorMessage('All required fields must be filled in.');
+      setLoading(false);
       return;
     }
 
-    // Validation: Check if the bank account number is a number
-    if (bankAccountNumber && isNaN(parseInt(bankAccountNumber))) {
-      setProfileErrorMessage('Bank Account Number must be a number.');
+    if (djNameError || djDescriptionError || bankAccountNumberError || branchNameError || ifscCodeError || socialLinksError) {
+      setProfileErrorMessage('Please fix the validation errors before submitting.');
+      setLoading(false);
       return;
     }
 
@@ -96,11 +165,11 @@ const DjProfile = () => {
     setLoading(false);
   };
 
-  const handleBankAccountNumberChange = (e) => {
-    const input = e.target.value;
-    const numericInput = input.replace(/[^0-9]/g, ''); // Allow only numeric characters
-    setBankAccountNumber(numericInput);
-  };
+  //const handleBankAccountNumberChange = (e) => {
+  // const input = e.target.value;
+  //  const numericInput = input.replace(/[^0-9]/g, ''); // Allow only numeric characters
+  //  setBankAccountNumber(numericInput);
+  //};
 
   // Fetch DJ profile data when the component mounts
   useEffect(() => {
@@ -137,9 +206,8 @@ const DjProfile = () => {
           <p className="dj-profile-heading" style={{ fontWeight: '700', color: '#39125C', fontSize: '32px', marginTop: '23px', marginBottom: '10px' }}>DJ Profile</p>
       <form className="profile-form">
         {successMessage && <p className="success-message">{successMessage}</p>}
-        {profileErrorMessage && <p className="error-message">{profileErrorMessage}</p>}
-             
-        <div className="profile-input-group">
+        {profileErrorMessage && <p className="dj-profile-error-message">{profileErrorMessage}</p>}
+          <div className="profile-input-group">
           <label htmlFor="djNameInput">Name</label>
           <input
             type="text"
@@ -147,8 +215,9 @@ const DjProfile = () => {
             classNamesName ="profile-input-fields"
             placeholder="Name"
             value={djName}
-            onChange={(e) => setDjName(e.target.value)}
+            onChange= {handleDjNameChange}
           />
+          {djNameError && <p className="dj-profile-error-message">{djNameError}</p>}
         </div>
               <div className="profile-input-group">
           <label htmlFor="artistNameInput">Artist Name</label>
@@ -162,15 +231,17 @@ const DjProfile = () => {
           />
         </div>
               <div className="profile-input-group">
+          
           <label htmlFor="djDescriptionInput">Description</label>
           <input
             id="djDescriptionInput"
             classNamesName="profile-input-fields"
             placeholder="Description"
             value={djDescription}
-            onChange={(e) => setDjDescription(e.target.value)}
-            maxLength={200}
+            onChange= {handleDjDescriptionChange}
+            maxLength={2000}
           />
+          {djDescriptionError && <p className="dj-profile-error-message">{djDescriptionError}</p>}
         </div>
               <div className="profile-input-group">
                   <label htmlFor="djPhotoInput">Photo</label>
@@ -202,6 +273,7 @@ const DjProfile = () => {
             value={bankAccountNumber}
             onChange={handleBankAccountNumberChange}
           />
+          {bankAccountNumberError && <p className="dj-profile-error-message">{bankAccountNumberError}</p>}
         </div>
               <div className="profile-input-group">
           <label htmlFor="branchNameInput">Branch Name</label>
@@ -211,8 +283,9 @@ const DjProfile = () => {
             classNamesName="profile-input-fields"
             placeholder="Branch Name"
             value={branchName}
-            onChange={(e) => setBranchName(e.target.value)}
+            onChange= {handleBranchNameChange}
           />
+          {branchNameError && <p className="dj-profile-error-message">{branchNameError}</p>}
         </div>
               <div className="profile-input-group">
           <label htmlFor="ifscCodeInput">IFSC Code</label>
@@ -222,8 +295,9 @@ const DjProfile = () => {
             classNamesName="profile-input-fields"
             placeholder="IFSC Code"
             value={ifscCode}
-            onChange={(e) => setIfscCode(e.target.value)}
+            onChange= {handleIfscCodeChange}
           />
+          {ifscCodeError && <p className="dj-profile-error-message">{ifscCodeError}</p>}
         </div>
               <div className="profile-input-group">
           <label htmlFor="socialLinksInput">Social Links</label>
@@ -233,8 +307,9 @@ const DjProfile = () => {
             classNamesName="profile-input-fields"
             placeholder="Social Links"
             value={socialLinks}
-            onChange={(e) => setSocialLinks(e.target.value)}
+            onChange= {handleSocialLinksChange}
           />
+          {socialLinksError && <p className="dj-profile-error-message">{socialLinksError}</p>}
         </div>
 
         <button

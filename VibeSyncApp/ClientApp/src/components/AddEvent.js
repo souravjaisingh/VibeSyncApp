@@ -42,6 +42,7 @@ const AddressTypeahead = () => {
     const [playlists, setPlaylists] = useState([]);
     const [checkedPlaylists, setCheckedPlaylists] = useState([]);
     const [disableSongSearch, setDisableSongSearch] = useState(false);
+    const [showMinBidError, setShowMinBidError] = useState(false);
 
 
     const twoHoursBeforeCurrentTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
@@ -82,6 +83,10 @@ const AddressTypeahead = () => {
         // Ensure that only numbers are allowed for minimum bid
         const input = event.target.value;
         if (/^\d*\.?\d*$/.test(input)) {
+            const inputInt = parseInt(input, 10);
+            // Show error if inputInt is 0 or less
+            setShowMinBidError(inputInt <= 0);
+            // Set the minimum bid if the input is valid
             setMinimumBid(input);
         }
     };
@@ -394,6 +399,9 @@ const AddressTypeahead = () => {
                             value={minimumBid}
                             onChange={handleMinimumBidChange}
                         />
+                        {showMinBidError && (
+                    <span className="error-message">Minimum bid should be greater than 0</span>
+                )}
                     </div>
 
                     {/*accepting reuests or not*/}

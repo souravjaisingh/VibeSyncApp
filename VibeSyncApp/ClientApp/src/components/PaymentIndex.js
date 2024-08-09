@@ -19,6 +19,9 @@ import { loginUserHelper } from "../Helpers/UserHelper";
 
 import StickyBar from "./StickyBar";
 import { messages } from "./Constants";
+import {  loginWithOTPHelper } from '../Helpers/UserHelper';
+import loadOTPScript from './Msg91OTP';
+
 
 function PaymentIndex() {
   const { error, setError } = useContext(MyContext);
@@ -64,7 +67,142 @@ function PaymentIndex() {
   const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
 
   const [gstAmount, setGstAmount] = useState(0);
-  const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
+    const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
+
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const [mobileNo, setMobileNo] = useState(null);
+    const [otp, setOtp] = useState(new Array(4).fill(""));
+    const [otpReturnMessage, setOtpReturnMessage] = useState('');
+    let timer;
+    let countdown = 30;
+
+    useEffect(() => {
+        loadOTPScript();
+    }, [])
+
+    const handleGetOtp = () => {
+        if (!phoneRegex.test(document.getElementById('mobile-no').value) || document.getElementById('mobile-no').value.length != 10) {
+            document.getElementById('mobile-no').style.border = 'solid';
+            document.getElementById('mobile-no').style.borderColor = 'red';
+            document.getElementById('mobile-no').style.borderWidth = '3px';
+        }
+        else {
+            window.sendOtp(
+                '91' + document.getElementById('mobile-no').value, // mandatory
+                (data) => {
+                    console.log(data);
+                    setOtpReturnMessage(data.message);
+                    timer = setInterval(updateTimer, 1000);
+                    setTimeout(() => { document.getElementById('resendOtp').style.opacity = 0.6; }, 1000)
+                    // setTimeout(() => { document.getElementById('resendOtp').disabled = true; }, 1000)
+                    setMobileNo(document.getElementById('mobile-no').value)
+                },
+                (error) => {
+                    console.log(error)
+                    document.getElementById('mobile-no').style.border = 'solid';
+                    document.getElementById('mobile-no').style.borderColor = 'red';
+                    document.getElementById('mobile-no').style.borderWidth = '3px';
+                }
+            );
+        }
+    };
+
+    const handleOtpChange = (element, index) => {
+        if (isNaN(element.value)) return false;
+
+        setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+        //Focus next input
+        if (element.nextSibling) {
+            element.nextSibling.focus();
+        }
+    };
+
+    const handleVerifyOtp = () => {
+        console.log(otp.join(""));
+
+        window.verifyOtp(
+            otp.join(""), // OTP value
+            (data) => {
+                console.log('OTP verified: ', data)
+                handleOtpVerificationSuccessful();
+            }, // optional
+            (error) => {
+                console.log(error)
+                handleOtpVerificationRejected();
+            }, // optional
+            otpReturnMessage // optional
+        );
+    }
+
+    function startResendTimer() {
+        document.getElementById('resendOtp').style.opacity = 0.6;
+        document.getElementById('resendOtp').disabled = true;
+        window.retryOtp(
+            '11', // channel value mandatory
+            (data) => console.log('resend data: ', data), // optional
+            (error) => console.log(error), // optional
+            otpReturnMessage // optional
+        );
+        timer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+        try {
+            const timerElement = document.getElementById('timer');
+
+            if (countdown > 0) {
+                timerElement.textContent = `(${countdown})`;
+                countdown--;
+            } else {
+                document.getElementById('resendOtp').style.opacity = 1;
+                document.getElementById('resendOtp').disabled = false;
+                timerElement.textContent = '';
+
+                countdown = 45;
+
+                clearInterval(timer);
+            }
+        }
+        catch {
+
+        }
+    }
+
+    const handleOtpVerificationSuccessful = async () => {
+        console.log(mobileNo);
+        setLoading(true);
+        var response = await loginWithOTPHelper(mobileNo);
+        setLoading(false);
+        if (!response.error) {
+            console.log("OTP verification successful. User stays on the current page.")
+            console.log(response);
+
+            // Update local storage
+            localStorage.setItem('userId', response.id);
+            localStorage.setItem('isUser', response.isUser);
+
+            // Close the popup
+            setShowLoginModal(false);
+
+            // Show success message
+            setSuccessMessage('OTP verification successful!');
+            
+            setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000); // Message will be cleared after 3 seconds
+        }
+        else {
+            //setShowErrorMessage(true);
+        }
+    }
+
+    const handleOtpVerificationRejected = async () => {
+        const otpButtons = document.getElementsByClassName('otp-field');
+        for (let i = 0; i < otpButtons.length; i++) {
+            otpButtons[i].style.borderColor = 'red';
+        }
+    }
 
   const handleImageClick = () => {
     setShowGoogleLogin((prevState) => !prevState); // Toggle Google login visibility
@@ -89,7 +227,7 @@ function PaymentIndex() {
   };
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
+      const { id, value } = e.target;
     if (id === "email") {
       setEmail(value);
     }
@@ -844,29 +982,56 @@ function PaymentIndex() {
                                 ) : (
                                     <>
                                         {loginMethod === 'mobile' ? (
-                                            <>
-                                                <div className="payment-page-input-container">
-                                                    <img src="images/user_image.png" alt="Placeholder" className="payment-page-input-icon" />
-                                                    <input type="text" placeholder="Mobile Number*" className="payment-page-input-field" />
-                                                </div>
-                                                <button className="pop-up-btn" style={{ width: "37%", height: "39px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Get OTP</button>
-                                            </>
+                                              <>
+                                                  {mobileNo === null ? (<div className='mobile-number-container'>
+                                                      <div>
+                                                          <img className='user-image-icon-lander' src="images/user_image_lander.png" />
+                                                          <input id="mobile-no" type='number' className='mobile-number-input' placeholder='Mobile Number' />
+                                                      </div>
+                                                      <button onClick={handleGetOtp} className='get-otp-button-payments' style={{ width: "37%",borderRadius: "5px", marginTop: "12px", height: "39px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Send OTP</button>
+                                                  </div>) : (<div className='otp-verify-section'>
+                                                      <div className='sent-otp-text'>OTP sent at: <div className='mobile-no-text'>+91-{mobileNo}</div></div>
+                                                      {otp.map((data, index) => {
+                                                          return (
+                                                              <input
+                                                                  className="otp-field"
+                                                                  type="text"
+                                                                  name="otp"
+                                                                  maxLength="1"
+                                                                  key={index}
+                                                                  value={data}
+                                                                  onChange={e => handleOtpChange(e.target, index)}
+                                                                  onFocus={e => e.target.select()}
+                                                              />
+                                                          );
+                                                      })}
+                                                      <div className='verify-resend-btn-group'>
+                                                          <button onClick={handleVerifyOtp} className='get-otp-button-lander'>Verify OTP</button>
+                                                          <button id='resendOtp' onClick={startResendTimer} className='resend-otp-button'>Resend OTP <span id="timer"></span></button>
+                                                      </div>
+                                                  </div>)
+
+                                                  }
+
+                                                 
+
+                                              </>
                                         ) : (
                                             <>
                                                 <div className="payment-page-email">
                                                             {loginError ? <span className='password-warning'>Incorrect Email Id/Password.</span> : ''}
                                                             {errorMessage === "Invalid Password" ? <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>{errorMessage}</p> : null}
                                                             <div className="payment-page-input-container">
-                                                        {!emailFocused && !email && (
-                                                                    <img src="images/emailIcon.png" alt="Email" className="payment-page-input-icon" />
-                                                        )}
+                                                        
+                                                                   {/* <img src="images/emailIcon.png" alt="Email" className="payment-page-input-icon" />*/}
+                                                        
                                                                 <input required type="email" id="email" className='payment-page-input-field' value={email} onChange={(e) => handleInputChange(e)} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} placeholder="Email" />
                                                     </div>
                                                             <div className="payment-page-input-container">
-                                                        {!passwordFocused && !password && (
-                                                                    <img src="images/password_lock.png" alt="Password" className="payment-page-input-icon " />
-                                                        )}
-                                                                <input required type="password"   className='payment-page-input-field' style={{ width: "70 %" } } value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
+                                                       
+                                                                    {/*<img src="images/password_lock.png" width="20px" height = "20px" alt="Password" className="payment-page-input-icon " />*/}
+                                                        
+                                                                <input required type="password"  id="password" className='payment-page-input-field' style={{ width: "200px", marginLeft: "0px" } } value={password} onChange={(e) => handleInputChange(e)} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} placeholder="Password" />
                                                     </div>
                                                           <button onClick={handleLogin} type="submit" className="pop-up-btn" style={{ width: "37%", height: "39px", boxShadow: "none", padding: "8px", fontWeight: "700" ,paddingBottom:"11px"}}>Login</button>
                                                             
@@ -889,6 +1054,7 @@ function PaymentIndex() {
                                                     isUser={{ isUser: true }}
                                                     triggerLogin={(login) => login()}
                                                     showButton={false}
+                                                      onSuccess={(response) => setShowLoginModal(false)}
                                                 />
                                             )}
                                             <div className='btn-mobile' onClick={handleEmailIconClick}>

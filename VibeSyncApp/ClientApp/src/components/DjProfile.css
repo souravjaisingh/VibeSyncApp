@@ -36,7 +36,8 @@
 .profile-input-group {
     display: flex ;
     align-items: center ;
-    margin-bottom: 15px ;
+    margin-bottom: 30px ;
+    position: relative;
 }
 
 .profile-input-group label {
@@ -93,8 +94,22 @@
     color: red;
     margin-top: 5px;
 }
-  
-  .btn-save {
+
+/* New CSS class for error message specific to DjProfile page */
+.dj-profile-error-message {
+    color: red;
+    margin-top: 5px;
+    font-size: 12px;
+    position: absolute;
+    bottom: -17px;
+    left: 34px; /* Adjust this value to move it slight right */
+    width: 100%; /* Adjust if needed to ensure correct width */
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.btn-save {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -102,7 +117,7 @@
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-  }
+}
 
 /* Styles for desktop view */
 @media (min-width: 768px) {

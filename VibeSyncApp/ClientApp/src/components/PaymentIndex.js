@@ -65,6 +65,8 @@ function PaymentIndex() {
   const { setLoading } = useLoadingContext();
   const [successMessage, setSuccessMessage] = useState("");
   const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+
 
   const [gstAmount, setGstAmount] = useState(0);
     const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
@@ -255,6 +257,7 @@ function PaymentIndex() {
       if (response && response.isUser === true) {
         localStorage.setItem("userId", response.id);
         localStorage.setItem("isUser", true);
+        setUserId(localStorage.getItem('userId'));
         setSuccessMessage("Login successful");
 
         const currentUrl = window.location.pathname;
@@ -262,6 +265,7 @@ function PaymentIndex() {
 
         if (currentUrl === "/paymentIndex") {
           console.log("Staying on the payments page");
+          
           setTimeout(() => {
             setShowLoginModal(false);
             setSuccessMessage("");
@@ -359,7 +363,10 @@ function PaymentIndex() {
     }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest, amount]);
 
 
-
+    const handleLoginSuccess = () => {
+      console.log("handle login success called");
+      setUserId(localStorage.getItem('userId'));
+  };
 
   useEffect(() => {
     if (rowData.eventStatus !== "Live") {
@@ -371,7 +378,7 @@ function PaymentIndex() {
       rowData_to_change.minimumBid = Math.round(rowData.minimumBid/2)
       setRowData(rowData_to_change)
     }
-  }, []);
+  }, [userId]);
 
   function requestNotificationPermission() {
     if (!("Notification" in window)) {
@@ -815,7 +822,7 @@ function PaymentIndex() {
             </p>
             {loginDiscount&&(<div className="gst-info">
               <div>Login Off</div>
-              <div>₹{rowData.minimumBid}</div>
+              <div>- ₹{rowData.minimumBid}</div>
             </div>)}
             <div className="gst-info">
               <div>GST (18%)</div>
@@ -1054,7 +1061,8 @@ function PaymentIndex() {
                                                       isUser={{ isUser: true }}
                                                       triggerLogin={(login) => login()}
                                                       showButton={false}
-                                                      setShowLoginModal={setShowLoginModal}
+                                                      onLoginSuccess={handleLoginSuccess} // Pass the success handler
+                                                      //setShowLoginModal={setShowLoginModal}
                                                 />
                                             )}
                                             <div className='btn-mobile' onClick={handleEmailIconClick}>

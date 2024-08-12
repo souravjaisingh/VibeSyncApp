@@ -9,7 +9,7 @@ import { MyContext } from '../App';
 import { useLoadingContext } from './LoadingProvider';
 
 
-export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowLoginModal }){
+export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowLoginModal, onLoginSuccess }){
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
@@ -74,6 +74,8 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
                             setTimeout(() => {
                                 setShowLoginModal(false);
                             }, 1000);
+                            onLoginSuccess();
+                            return;
                             // User stays on the payments page, no redirection
                         }
                          else if(response && response.isUser == true && localStorage.getItem('redirectUrl')){

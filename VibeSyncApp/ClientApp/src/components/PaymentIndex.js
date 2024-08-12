@@ -1062,7 +1062,7 @@ function PaymentIndex() {
                                                       triggerLogin={(login) => login()}
                                                       showButton={false}
                                                       onLoginSuccess={handleLoginSuccess} // Pass the success handler
-                                                      //setShowLoginModal={setShowLoginModal}
+                                                      setShowLoginModal={setShowLoginModal}
                                                 />
                                             )}
                                             <div className='btn-mobile' onClick={handleEmailIconClick}>

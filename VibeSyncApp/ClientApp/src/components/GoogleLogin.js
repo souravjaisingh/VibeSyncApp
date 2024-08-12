@@ -31,9 +31,9 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
             }
 
             //// Close the modal if the login is successful
-            //if (setShowLoginModal) {
-            //    setShowLoginModal(false);
-            //}
+            if (setShowLoginModal) {
+                setShowLoginModal(false);
+            }
         },
         onError: (error) => console.log('Login Failed:', error)
     });
@@ -42,7 +42,7 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
         if (triggerLogin) {
             triggerLogin(login);
         }
-    }, [triggerLogin]);
+    }, []);
 
     useEffect(
     () => {
@@ -71,9 +71,7 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
                         // Check if the user is on the payments page
                         if (currentUrl === '/paymentIndex') {
                             console.log('Staying on the payments page');
-                            setTimeout(() => {
-                                setShowLoginModal(false);
-                            }, 1000);
+                            
                             onLoginSuccess();
                             return;
                             // User stays on the payments page, no redirection

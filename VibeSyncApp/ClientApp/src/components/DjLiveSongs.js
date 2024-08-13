@@ -399,6 +399,7 @@ export default function DjLiveSongs() {
 
         // Desktop notification if permission is granted
         if (Notification.permission === 'granted' && !isMobile) {
+            console.log("Desktop notification")
             new Notification(title, {
                 body: message,
             });
@@ -406,15 +407,11 @@ export default function DjLiveSongs() {
     }
 
     useEffect(() => {
-        console.log("useEffect triggered with userHistoryUpdated:", userHistoryUpdated);
         if (userHistoryUpdated) {
-            console.log("Inside useEffect with userHistoryUpdated true");
-
             const checkNotificationTimes = () => {
                 console.log("Checking notification times...");
                 userHistory.forEach((result) => {
                     const remainingTime = calculateRemainingTime(result.paymentDateTime);
-                    console.log("Remaining Time:", remainingTime);
 
                     if (remainingTime && ["10", "5", "2"].includes(remainingTime)) {
                         sendReminderNotification(remainingTime);

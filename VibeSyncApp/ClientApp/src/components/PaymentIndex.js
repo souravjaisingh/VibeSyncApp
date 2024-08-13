@@ -883,18 +883,18 @@ function PaymentIndex() {
               ))}
             </div>
             <br></br>
-            <div className="promocode">
-              <span>Promocode</span>
-              <div className="apply-button-login-promo">
-              <input
-                type="text"
-                className="value"
-                placeholder="Login to apply"
-                disabled
-              />
-              <button className="apply-btn">Apply</button>
-              </div>
-            </div>
+            {/*<div className="promocode">*/}
+            {/*  <span>Promocode</span>*/}
+            {/*  <div className="apply-button-login-promo">*/}
+            {/*  <input*/}
+            {/*    type="text"*/}
+            {/*    className="value"*/}
+            {/*    placeholder="Login to apply"*/}
+            {/*    disabled*/}
+            {/*  />*/}
+            {/*  <button className="apply-btn">Apply</button>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </div>
           <div className="tip-info">
             <div className="tip-info-content">

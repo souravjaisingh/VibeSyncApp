@@ -362,10 +362,12 @@ export default function DjLiveSongs() {
         const paymentTime = new Date(paymentDateTime);
         const endTime = new Date(paymentTime.getTime() + 30 * 60 * 1000); // Add 30 minutes
         const remainingTime = Math.max(0, (endTime - currentTime) / 1000 / 60); // Convert to minutes
+        //console.log(`Remaining time for request: ${remainingTime} minutes`);
         return remainingTime > 0 ? remainingTime.toFixed(0) : null; // Return null when remaining time is 0 or less
     };
+    
     function sendReminderNotification(remainingTime) {
-        console.log("Inside notification func")
+        console.log("Inside notification func");
         let message;
         let title;
 
@@ -383,9 +385,10 @@ export default function DjLiveSongs() {
                 message = 'Only 2 minutes left for your request!';
                 break;
             default:
-                return; // Exit if remainingTime does not match 15, 10, or 5
+                return; // Exit if remainingTime does not match 10, 5, or 2
         }
 
+        // In-page notification
         addNotification({
             title: title,
             subtitle: 'Reminder',
@@ -393,12 +396,20 @@ export default function DjLiveSongs() {
             theme: 'darkblue',
             duration: 6000
         });
+
+        // Desktop notification if permission is granted
+        if (Notification.permission === 'granted' && !isMobile) {
+            console.log("Desktop notification")
+            new Notification(title, {
+                body: message,
+            });
+        }
     }
 
     useEffect(() => {
         if (userHistoryUpdated) {
-            console.log(userHistory);
             const checkNotificationTimes = () => {
+                console.log("Checking notification times...");
                 userHistory.forEach((result) => {
                     const remainingTime = calculateRemainingTime(result.paymentDateTime);
 
@@ -409,11 +420,9 @@ export default function DjLiveSongs() {
             };
 
             const intervalId = setInterval(checkNotificationTimes, 60000); // Check every minute
-
             return () => clearInterval(intervalId); // Cleanup on component unmount
         }
     }, [userHistoryUpdated]);
-
     return (
         <div className='song-history-container'>
             <div className='bg-music-dj-side'>

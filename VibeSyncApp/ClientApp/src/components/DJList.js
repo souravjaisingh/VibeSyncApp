@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody, MDBInput } from 'mdb-react-ui-kit';
 import { GetEventsWithDjInfo } from './services/EventsService';
+import { CreateReviews } from './services/DjService';
 import { useNavigate } from 'react-router-dom';
 import './DJList.css'
 import defaultPhoto from '../Resources/defaultDj.jpg';
@@ -21,6 +22,13 @@ export default function DjList() {
     const [showLiveEvents, setShowLiveEvents] = useState('all'); // Set default filter to "all"
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const { setLoading } = useLoadingContext();
+    const [isReviewPopupVisible, setIsReviewPopupVisible] = useState(false);
+    const [reviewStars, setReviewStars] = useState(0);
+    const [reviewMessage, setReviewMessage] = useState('');
+    const [selectedDjId, setSelectedDjId] = useState(null);
+    const [selectedEventId, setSelectedEventId] = useState(null);
+    const [currentUserId, setCurrentUserId] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -46,8 +54,56 @@ export default function DjList() {
         //navigate('/SongSearch');
     };
 
-    const handleRatingClick = (rowData) => {
-        //TODO: add logic to add rating to a particular event
+    const handleRatingClick = (item) => {
+        // console.log(item);
+
+        const selectedDjId = item.djId;
+        const selectedEventId = item.id;
+        const currentUserId = item.userId.toString(); 
+        
+        setSelectedDjId(selectedDjId);
+        setSelectedEventId(selectedEventId);
+        setCurrentUserId(currentUserId);
+
+        // Reset the form fields
+        setReviewStars(0);
+        setReviewMessage('');
+
+        setIsReviewPopupVisible(true);
+    };
+
+
+
+    const handleReviewSubmit = async () => {
+        try {
+            setIsSubmitting(true); 
+
+            // Preparing the data to be sent to the backend
+            const reviewData = {
+                djId: selectedDjId,
+                eventId: selectedEventId,
+                review1: reviewMessage,
+                star: reviewStars,
+                createdBy: currentUserId, 
+            };
+
+            console.log("Review data being sent to the backend:", reviewData);
+
+            // Sending data to the backend
+            await CreateReviews(reviewData);
+
+            // Reset the form fields
+            setReviewStars(0);
+            setReviewMessage('');
+
+            // Close the popup after submission
+            setIsReviewPopupVisible(false);
+            console.log('Review submitted successfully!');
+        } catch (error) {
+            console.error('Error submitting the review:', error);
+        } finally {
+            setIsSubmitting(false); 
+        }
     };
 
 
@@ -106,17 +162,11 @@ export default function DjList() {
                 <LiveDjList />
             ) : (
             <div className='event-list'>
-                {/* <div className='events-search'>
-                    <input type="text"
-                        className='search-bar-dj-list'
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        placeholder="Search your vibe" />
-                </div> */}
+                
                 {
                     filteredData.map(item =>
                         <>
-                            <div onClick={(e) => { handleRowClick(item) }}>
+                            <div key={item.id} onClick={(e) => { handleRowClick(item) }}>
                                 <div className='event-card-outer'>
                                     <img
                                         src={item.djPhoto ? item.djPhoto : defaultPhoto} //use default photo if dj photo is null
@@ -129,14 +179,19 @@ export default function DjList() {
 
 
                                             <div className='event-card-rating'>
-                                                <img onClick={(e) => { handleRatingClick(item) }} className='rating-image' src='/images/Ratingbutton.png' />
+                                                <img
+                                                    onClick={(e) => { e.stopPropagation(); handleRatingClick(item); }}
+                                                    className='rating-image'
+                                                    src='/images/Ratingbutton.png'
+                                                />
+
                                             </div></div>
                                         <div className='rating'>
                                             <div>{Array.from({ length: item.rating?item.rating:4 }, (_, index) => (
-                                                <span>&#9733;</span>
+                                                <span key={index}>&#9733;</span>
                                             ))}
                                             {Array.from({ length: 5-(item.rating?item.rating:4) }, (_, index) => (
-                                                <span>&#9734;</span>
+                                                <span key={index}>&#9734;</span>
                                             ))}</div>
                                             {item.eventStatus === 'Not live' ? '' : <img  className='live-image' src='/images/live.png' />
                                             }</div>
@@ -150,7 +205,36 @@ export default function DjList() {
             </div>
             )}
 
-            
+                {isReviewPopupVisible && (
+                    <div className="review-popup">
+                        <div className="review-popup-content">
+                            <span className="close-review-popup" onClick={() => setIsReviewPopupVisible(false)}>&times;</span>
+                            <h3 className="Rate-DJ">Rate this DJ</h3>
+                            <div className="review-stars-rating">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <span
+                                        key={star}
+                                        className={`star ${star <= reviewStars ? 'filled' : ''}`}
+                                        onClick={() => setReviewStars(star)}
+                                    >
+                                        &#9733;
+                                    </span>
+                                ))}
+                            </div>
+                            <textarea
+                                placeholder="Write a review..."
+                                value={reviewMessage}
+                                onChange={(e) => setReviewMessage(e.target.value)}
+                            />
+                            <div className="review-popup-buttons" >
+                                <button onClick={handleReviewSubmit} disabled={reviewStars === 0 || isSubmitting} className="btn btn--primary btn--medium btn-save" style={{ marginTop: "0px", padding: "6px 20px"} }>
+                                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
             <StickyBar
                 type="review"

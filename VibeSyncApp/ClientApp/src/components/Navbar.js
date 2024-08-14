@@ -45,6 +45,11 @@ function NavbarComponent() {
         setMenuOpen(false);
         navigate('/settlementshistory');
     }
+    useEffect(()=>{
+        document.addEventListener('click',function(){
+                setMenuOpen(false);
+    })
+    },[])
 
     async function handleLogoutClick() {
         try {
@@ -104,7 +109,7 @@ function NavbarComponent() {
                 </div>
             </div>
             {localStorage.getItem('userId') != null && (
-                <div className="menu-icon" onClick={handleMenuToggle}>
+                <div className="menu-icon" onClick={(event)=>{handleMenuToggle();event.stopPropagation();}}>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>

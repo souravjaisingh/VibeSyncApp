@@ -38,7 +38,8 @@ export default function DjLiveSongs() {
     const [rejectedRecords, setRejectedRecords] = useState([]);
     const [isNewRequest, setIsNewRequest] = useState(false); // State to track new requests
     const lastHighestRecordIdRef = useRef(0);
-    const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA'))? true:false);
+    const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA')) ? true : false);
+    const [userHistoryUpdated, setUserHistoryUpdated] = useState(false); // New state for flag
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -136,8 +137,8 @@ export default function DjLiveSongs() {
                         newNotification();  //in-page notification
                     }
                     lastHighestRecordIdRef.current = highestIdInResponse;
-
                     setUserHistory(combinedRequests);
+                    setUserHistoryUpdated(true);
                     console.log(combinedRequests);
                 } catch (error) {
                     setError(true);
@@ -361,8 +362,67 @@ export default function DjLiveSongs() {
         const paymentTime = new Date(paymentDateTime);
         const endTime = new Date(paymentTime.getTime() + 30 * 60 * 1000); // Add 30 minutes
         const remainingTime = Math.max(0, (endTime - currentTime) / 1000 / 60); // Convert to minutes
+        //console.log(`Remaining time for request: ${remainingTime} minutes`);
         return remainingTime > 0 ? remainingTime.toFixed(0) : null; // Return null when remaining time is 0 or less
     };
+    
+    function sendReminderNotification(remainingTime) {
+        console.log("Inside notification func");
+        let message;
+        let title;
+
+        switch (remainingTime) {
+            case "10":
+                title = '10 Minutes Left';
+                message = 'Only 10 minutes left for your request!';
+                break;
+            case "5":
+                title = '5 Minutes Left';
+                message = 'Only 5 minutes left for your request!';
+                break;
+            case "2":
+                title = '2 Minutes Left';
+                message = 'Only 2 minutes left for your request!';
+                break;
+            default:
+                return; // Exit if remainingTime does not match 10, 5, or 2
+        }
+
+        // In-page notification
+        addNotification({
+            title: title,
+            subtitle: 'Reminder',
+            message: message,
+            theme: 'darkblue',
+            duration: 6000
+        });
+
+        // Desktop notification if permission is granted
+        if (Notification.permission === 'granted' && !isMobile) {
+            console.log("Desktop notification")
+            new Notification(title, {
+                body: message,
+            });
+        }
+    }
+
+    useEffect(() => {
+        if (userHistoryUpdated) {
+            const checkNotificationTimes = () => {
+                console.log("Checking notification times...");
+                userHistory.forEach((result) => {
+                    const remainingTime = calculateRemainingTime(result.paymentDateTime);
+
+                    if (remainingTime && ["10", "5", "2"].includes(remainingTime)) {
+                        sendReminderNotification(remainingTime);
+                    }
+                });
+            };
+
+            const intervalId = setInterval(checkNotificationTimes, 60000); // Check every minute
+            return () => clearInterval(intervalId); // Cleanup on component unmount
+        }
+    }, [userHistoryUpdated]);
     return (
         <div className='song-history-container'>
             <div className='bg-music-dj-side'>

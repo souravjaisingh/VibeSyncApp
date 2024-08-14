@@ -9,7 +9,7 @@ import { MyContext } from '../App';
 import { useLoadingContext } from './LoadingProvider';
 
 
-export default function GoogleLogin({ isUser, triggerLogin, showButton }){
+export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowLoginModal, onLoginSuccess }){
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const navigate = useNavigate();
@@ -22,7 +22,19 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton }){
     const [ profile, setProfile ] = useState([]);
     var baseUri = 'http'
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
+        onSuccess: async (codeResponse) => {
+            setUser(codeResponse);
+
+            // Close the window if it's a popup
+            if (window.opener) {
+                window.close();
+            }
+
+            //// Close the modal if the login is successful
+            if (setShowLoginModal) {
+                setShowLoginModal(false);
+            }
+        },
         onError: (error) => console.log('Login Failed:', error)
     });
 
@@ -30,7 +42,7 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton }){
         if (triggerLogin) {
             triggerLogin(login);
         }
-    }, [triggerLogin]);
+    }, []);
 
     useEffect(
     () => {
@@ -51,9 +63,21 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton }){
                     if (!response.error) {
                         console.log("Load new page after following response:")
                         console.log(response);
-                        if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
-                            localStorage.setItem('userId', response.id);
-                            localStorage.setItem('isUser', true);
+                        localStorage.setItem('userId', response.id);
+                        localStorage.setItem('isUser', true);
+
+                        const currentUrl = window.location.pathname;
+
+                        // Check if the user is on the payments page
+                        if (currentUrl === '/paymentIndex') {
+                            console.log('Staying on the payments page');
+                            
+                            onLoginSuccess();
+                            return;
+                            // User stays on the payments page, no redirection
+                        }
+                         else if(response && response.isUser == true && localStorage.getItem('redirectUrl')){
+                            
                             console.log(localStorage.getItem('redirectUrl'));
                             setTimeout(() => {
                                 const redirectUrl = localStorage.getItem('redirectUrl');

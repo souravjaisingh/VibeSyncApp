@@ -685,7 +685,7 @@
     font-weight: bold;
     color: #39125C;
     margin-bottom: 5px;
-    margin-top: 10px
+    margin-top: 15px
 }
 
 .close-button {
@@ -702,26 +702,26 @@
 }
 
 .payment-page-input-field {
-    all: unset;
-    width: 70%;
-    height: 20px;
-    padding: 8px;
-    padding-left: 0px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #D3D3D3;
-    font-weight: 600;
+    width: 200px;
+    margin: auto;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    
+    opacity: 0.7;
+    border: none;
+    transform: translateX(-10px);
 }
 
 .payment-page-input-container {
     position: relative;
+    left: 9px;
 }
 
 .payment-page-input-icon {
     position: absolute;
-    left: 55px;
-    top: 50%;
+    left: 79px;
+    top: 60%;
     transform: translateY(-50%);
     width: 30px;
     height: 30px; /* Adjust size according to your image */
@@ -771,4 +771,16 @@
     width:50px;
     height:50px;
     margin: 10px;
+}
+
+.get-otp-button-payments {
+    background-color: #39125C;
+    color: #fff;
+    width: 30%;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 5px;
+    border: none;
+    padding: 5px 15px;
+    font-weight: 600;
 }

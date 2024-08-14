@@ -1,61 +1,162 @@
 import * as Constants from '../Constants';
 import { useLoadingContext } from '../LoadingProvider';
 
-export async function handleAPIRequest(url, method, data, isFormData = false) {
+export async function handleAPIRequest(url, method, data, isFormData = false, isLoginRequest = false) {
     const currentUrl = window.location.href;
     const baseUri = currentUrl.includes('azurewebsites') ? Constants.baseUriAzure : Constants.baseUriVibeSync;
 
-    const requestOptions = {
-        method: method,
-        headers: {
-            //'Content-Type': 'application/json',
+
+    // Function to refresh the access token
+    async function refreshAccessToken() {
+        const refreshToken = localStorage.getItem('refreshToken'); // Get refresh token from localStorage
+
+        if (!refreshToken) {
+            throw new Error('No refresh token available');
         }
-    };
 
-    // Retrieve the JWT token from localStorage
-    const token = localStorage.getItem('jwt');
+        const response = await fetch(baseUri + '/User/Refresh', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ refreshToken })
+        });
 
-    if (token) {
-        requestOptions.headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    if (method === 'POST' || method === 'PUT') {
-        //requestOptions.body = JSON.stringify(data);
-        if (isFormData) {
-            requestOptions.body = data;
+        if (response.ok) {
+            const { accessToken, refreshToken: newRefreshToken } = await response.json();
+            localStorage.setItem('jwt', accessToken);
+            localStorage.setItem('refreshToken', newRefreshToken);
+            return accessToken;
         } else {
-            requestOptions.headers['Content-Type'] = 'application/json';
-            requestOptions.body = JSON.stringify(data);
+            throw new Error('Failed to refresh token');
         }
     }
 
-    if (data === 'logout') {
-        localStorage.removeItem('userId');
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('expiry');
-    }
+    // Function to make the API request
+    async function makeRequest(accessToken) {
+        const requestOptions = {
+            method: method,
+            headers: {}
+        };
 
-    try {
-        const response = await fetch(baseUri + url, requestOptions);
-
-        handleAPIError(response,url);
-
-        if (response.status === 204) {
-            return null; // No content
+        if (accessToken) {
+            requestOptions.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
-        // Check the content type of the response
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-            return await response.json(); // Parse JSON response
-        } else {
-            return await response.text(); // Return text response
+        if (method === 'POST' || method === 'PUT') {
+            if (isFormData) {
+                requestOptions.body = data;
+            } else {
+                requestOptions.headers['Content-Type'] = 'application/json';
+                requestOptions.body = JSON.stringify(data);
+            }
         }
-    } catch (error) {
-        console.error('Error in API request:', error);
-        throw error;
+
+        if (data === 'logout') {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('refreshToken'); // Also remove refresh token on logout
+            localStorage.removeItem('expiry');
+        }
+
+        try {
+            const response = await fetch(baseUri + url, requestOptions);
+
+            // Ensure that we only parse the body once
+            const contentType = response.headers.get('content-type');
+            let responseData = contentType && contentType.includes('application/json') ? await response.json() : await response.text();
+
+            if (response.status === 401 && !isLoginRequest) { // Check for token expiration or invalid credentials
+                if (responseData.message && responseData.message.includes('Username or password is incorrect')) {
+                    // If the error message indicates invalid credentials, do not retry
+                    handleAPIError(response, url);
+                } else {
+                    try {
+                        const newToken = await refreshAccessToken();
+                        // Retry the request with the new token
+                        return await makeRequest(newToken);
+                    } catch (refreshError) {
+                        // If refreshing the token fails, handle the error (e.g., log the user out)
+                        console.error('Token refresh failed:', refreshError);
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                }
+            }
+
+            if (!response.ok) {
+                handleAPIError(response, url);
+            }
+
+            if (response.status === 204) {
+                return null; // No content
+            }
+
+            return responseData;
+        } catch (error) {
+            console.error('Error in API request:', error);
+            throw error;
+        }
     }
+
+    // Retrieve the JWT token from localStorage and make the initial request
+    const accessToken = localStorage.getItem('jwt');
+    return makeRequest(accessToken);
 }
+
+
+    //const requestOptions = {
+    //    method: method,
+    //    headers: {
+    //        //'Content-Type': 'application/json',
+    //    }
+    //};
+
+
+//    // Retrieve the JWT token from localStorage
+//    const token = localStorage.getItem('jwt');
+
+//    if (token) {
+//        requestOptions.headers['Authorization'] = `Bearer ${token}`;
+//    }
+
+//    if (method === 'POST' || method === 'PUT') {
+//        //requestOptions.body = JSON.stringify(data);
+//        if (isFormData) {
+//            requestOptions.body = data;
+//        } else {
+//            requestOptions.headers['Content-Type'] = 'application/json';
+//            requestOptions.body = JSON.stringify(data);
+//        }
+//    }
+
+//    if (data === 'logout') {
+//        localStorage.removeItem('userId');
+//        localStorage.removeItem('jwt');
+//        localStorage.removeItem('refreshToken');
+//        localStorage.removeItem('expiry');
+//    }
+
+//    try {
+//        const response = await fetch(baseUri + url, requestOptions);
+
+//        handleAPIError(response,url);
+
+//        if (response.status === 204) {
+//            return null; // No content
+//        }
+
+//        // Check the content type of the response
+//        const contentType = response.headers.get('content-type');
+//        if (contentType && contentType.includes('application/json')) {
+//            return await response.json(); // Parse JSON response
+//        } else {
+//            return await response.text(); // Return text response
+//        }
+//    } catch (error) {
+//        console.error('Error in API request:', error);
+//        throw error;
+//    }
+//}
 
 
 
@@ -64,6 +165,7 @@ export default async function RegisterUser(data) {
     if (response && response.token) {
         // Store the JWT token in localStorage
         localStorage.setItem('jwt', response.token);
+        localStorage.setItem('refreshToken', response.refreshToken);
         setLocalstorageExpiry();
     }
     return response;
@@ -80,10 +182,11 @@ export async function GetUserById(id) {
 }
 
 export async function LoginUser(data) {
-    const response = await handleAPIRequest('User/LoginUser', 'POST', data);
+    const response = await handleAPIRequest('User/LoginUser', 'POST', data, false, true);
     if (response && response.token) {
         // Store the JWT token in localStorage
         localStorage.setItem('jwt', response.token);
+        localStorage.setItem('refreshToken', response.refreshToken);
         setLocalstorageExpiry();
     }
     return response;

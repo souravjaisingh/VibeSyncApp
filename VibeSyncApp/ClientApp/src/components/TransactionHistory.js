@@ -118,7 +118,7 @@ function TransactionHistory() {
 
     return (
         <div className="transaction-history-container" >
-            <div className='bg-music-background'>
+            <div className='bg-music-background-ts-history'>
             <div className = 'main-heading'>
             <h2>Transaction History</h2>
                     <div className="transaction-page-filter-container">

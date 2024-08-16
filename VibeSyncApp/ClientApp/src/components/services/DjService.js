@@ -13,3 +13,6 @@ export async function GetDjProfile(id) {
 export async function CreateReviews(data) {
     return handleAPIRequest('Dj/CreateReview', 'POST', data);
 }
+export async function GetReviews() {
+    return handleAPIRequest('Dj/GetReviews', 'GET');
+}

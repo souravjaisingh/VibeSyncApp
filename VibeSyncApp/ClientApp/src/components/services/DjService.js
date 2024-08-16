@@ -9,3 +9,7 @@ export async function UpdateDjDetails(data) {
 export async function GetDjProfile(id) {
     return handleAPIRequest(`Dj/GetDjProfile?UserId=${id}`, 'GET');
 }
+
+export async function CreateReviews(data) {
+    return handleAPIRequest('Dj/CreateReview', 'POST', data);
+}

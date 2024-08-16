@@ -23,7 +23,7 @@ const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {
                     setLoading(true);
                     const fetchedReviews = await GetReviews(); // Fetch reviews from backend
                     setReviews(fetchedReviews);
-                    console.log(fetchedReviews);
+                    //console.log(fetchedReviews);
                 } catch (err) {
                     setError('Failed to fetch reviews.');
                 } finally {
@@ -55,9 +55,14 @@ const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {
                 <>
                     <img src={currentItem.image} alt={currentItem.author} className="review-image" />  {/*displaying already existing images*/}
                     <div className="text-content">
-                        <span className="stars">{'★'.repeat(review.star || Math.floor(Math.random() * 2) + 4)}</span>
-                        <p className="review-text">{review.review1 || currentItem.text}</p>  {/*displaying reviews from API only if they are present */}
-                        <p className="author">- {currentItem.author}</p>   {/*displaying already existing author names*/}
+                        <span className="stars">{'★'.repeat(Math.floor(Math.random() * 2) + 4)}</span>
+                        <p className="review-text">{currentItem.text}</p>
+                        <p className="author">- {currentItem.author}</p>
+
+                        {/*<span className="stars">{'★'.repeat(review.star || Math.floor(Math.random() * 2) + 4)}</span>*/}
+                        {/*<p className="review-text">{review.review1 || currentItem.text}</p>  */}{/*displaying reviews from API only if they are present */}
+                        {/*<p className="author">- {currentItem.author}</p>   */}{/*displaying already existing author names*/}
+
                     </div>
                 </>
             );

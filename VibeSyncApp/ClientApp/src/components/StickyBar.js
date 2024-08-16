@@ -16,7 +16,7 @@ const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
+    {/* useEffect(() => {
         if (type === 'review') {
             const fetchReviews = async () => {
                 try {
@@ -33,7 +33,7 @@ const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {
 
             fetchReviews();
         }
-    }, [type]);
+    }, [type]); */}
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -44,13 +44,13 @@ const StickyBar = ({ type, data, minAmount, isVisible, onClose }) => {
     }, [data]);
 
     const renderContent = () => {
-        if (loading && type === 'review') return <p>Loading...</p>;
+       {/* if (loading && type === 'review') return <p>Loading...</p>;
         if (error && type === 'review') return <p>{error}</p>;
-        if (!currentItem) return null;
+        if (!currentItem) return null; */}
 
         if (type === 'review') {
 
-            const review = reviews[getRandomIndex(reviews)] || {};
+            // const review = reviews[getRandomIndex(reviews)] || {};
             return (
                 <>
                     <img src={currentItem.image} alt={currentItem.author} className="review-image" />  {/*displaying already existing images*/}

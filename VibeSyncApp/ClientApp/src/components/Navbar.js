@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import './Navbar.css';
 import vibeSyncLogo from '../Resources/VSlogo3.png';
 import home from '../Resources/home.png';
-import backIcon from '../Resources/back.png'
+import backIcon from '../Resources/backnavigate.png';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logout } from './services/UserService';

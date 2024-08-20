@@ -821,7 +821,7 @@ function PaymentIndex() {
               <div className="minimum-bid-value"> ₹{loginDiscount?(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest*2 : rowData.minimumBid*2):(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid)}</div>
             </p>
             {loginDiscount&&(<div className="gst-info">
-              <div>Login Off</div>
+              <div>Discount</div>
               <div>- ₹{rowData.minimumBid}</div>
             </div>)}
             <div className="gst-info">
@@ -993,7 +993,7 @@ function PaymentIndex() {
                                                   {mobileNo === null ? (<div className='mobile-number-container'>
                                                       <div>
                                                           <img className='user-image-icon-lander' src="images/user_image_lander.png" />
-                                                          <input id="mobile-no" type='number' className='mobile-number-input' placeholder='Mobile Number' />
+                                                          <input id="mobile-no" type="tel" pattern="[0-9]*" inputMode="numeric" className='mobile-number-input' placeholder='Mobile Number' />
                                                       </div>
                                                       <button onClick={handleGetOtp} className='get-otp-button-payments' style={{ width: "37%",borderRadius: "5px", marginTop: "12px", height: "39px", boxShadow: "none", padding: "8px", fontWeight: "700" }}>Send OTP</button>
                                                   </div>) : (<div className='otp-verify-section'>
@@ -1002,7 +1002,9 @@ function PaymentIndex() {
                                                           return (
                                                               <input
                                                                   className="otp-field"
-                                                                  type="text"
+                                                                  type="tel"
+                                                                  pattern="[0-9]*"
+                                                                  inputMode="numeric" 
                                                                   name="otp"
                                                                   maxLength="1"
                                                                   key={index}

@@ -183,6 +183,7 @@ function PaymentIndex() {
             // Update local storage
             localStorage.setItem('userId', response.id);
             localStorage.setItem('isUser', response.isUser);
+            setUserId(localStorage.getItem('userId'));
 
             // Close the popup
             setShowLoginModal(false);

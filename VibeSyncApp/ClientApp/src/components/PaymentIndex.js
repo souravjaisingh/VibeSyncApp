@@ -70,6 +70,7 @@ function PaymentIndex() {
 
   const [gstAmount, setGstAmount] = useState(0);
     const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
+    const [originalBid, setoriginalBid] = useState(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid);
 
     const phoneRegex = /^[6-9]\d{9}$/;
     const [mobileNo, setMobileNo] = useState(null);
@@ -819,7 +820,7 @@ function PaymentIndex() {
           <div className="amount-selection-division">
             <p className="minimum-bid-container">
               <div>Request Amount</div>
-              <div className="minimum-bid-value"> ₹{loginDiscount?(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest*2 : rowData.minimumBid*2):(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid)}</div>
+                          <div className="minimum-bid-value"> ₹{ originalBid}</div>
             </p>
             {loginDiscount&&(<div className="gst-info">
               <div>Discount</div>

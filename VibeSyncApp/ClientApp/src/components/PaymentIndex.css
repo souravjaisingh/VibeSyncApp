@@ -4,11 +4,6 @@
     align-items: center;
     background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
     background-attachment: fixed;
-    background: -webkit-linear-gradient(160deg, #D7DEFE 70%, #4C526C); /* Safari */
-    background: -moz-linear-gradient(160deg, #D7DEFE 70%, #4C526C); /* Firefox */
-    background: -o-linear-gradient(160deg, #D7DEFE 70%, #4C526C); /* Opera */
-    background-size: cover;
-    min-height: 100vh;
 }
 
 

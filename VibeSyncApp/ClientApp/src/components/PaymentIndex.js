@@ -375,7 +375,7 @@ function PaymentIndex() {
     if(localStorage.getItem('userId')!=null && localStorage.getItem('userId')!=0){
       setLoginDiscount(true);
       let rowData_to_change = rowData;
-      rowData_to_change.minimumBid = Math.round(rowData.minimumBid/2)
+        rowData_to_change.minimumBid = Math.floor(rowData.minimumBid / 2);
       setRowData(rowData_to_change)
     }
   }, [userId]);

@@ -94,7 +94,7 @@ function NavbarComponent() {
 
     return (
         <div className="navbar">
-            {localStorage.getItem('userId') != null &&
+            {location.pathname !== '/' &&
             (!location.pathname.startsWith('/djhome')
             && !location.pathname.startsWith('/userhome')) &&(
                 <div className="home-container">
@@ -108,7 +108,7 @@ function NavbarComponent() {
                     <img src={vibeSyncLogo} alt="App Logo" />
                 </div>
             </div>
-            {localStorage.getItem('userId') != null && (
+            {location.pathname !== '/' && (
                 <div className="menu-icon" onClick={(event)=>{handleMenuToggle();event.stopPropagation();}}>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>

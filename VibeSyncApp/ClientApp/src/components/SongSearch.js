@@ -61,7 +61,8 @@ function SongSearch() {
 
     useEffect(() => {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
-        if(qrcodeParam == null){
+        if (qrcodeParam == null) {
+            setDisableSongSearch(uri.disableSongSearch || false);
             try{
                 const Amount = parseFloat(uri["minimumBid"]);
                 setMinAmount(Amount)
@@ -70,7 +71,7 @@ function SongSearch() {
                 window.location = 'userhome'
             }
         }
-        setDisableSongSearch(uri.disableSongSearch || false);
+
     });
 
     // useEffect(() => {
@@ -313,8 +314,9 @@ function SongSearch() {
         if (qrcodeParam === 'true' && !eventData) {
             try {
                 const response = await GetEventByEventId(urlEventId, urlUserId);
-                console.log('Fetched Event Data:', response); // Debug log
+               // console.log('Fetched Event Data:', response); // Debug log
                 setEventData(response);
+                setDisableSongSearch(response.disableSongSearch || false);
                 //setMinAmount(eventData.minimumBid);
                 if (response != null) {
                     localStorage.setItem('venue', response.venue);

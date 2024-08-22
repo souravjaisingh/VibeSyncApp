@@ -1,24 +1,10 @@
 .song-details {
-    position: relative;
-    z-index: 1; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #fff; /* Fallback background color */
+    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background-attachment: fixed;
 }
-
-    .song-details::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
-        background-attachment: fixed;
-        background-size: cover;
-        z-index: -1; 
-    }
 
 
 

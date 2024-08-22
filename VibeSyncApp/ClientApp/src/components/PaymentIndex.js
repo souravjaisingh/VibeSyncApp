@@ -377,7 +377,14 @@ function PaymentIndex() {
     if(localStorage.getItem('userId')!=null && localStorage.getItem('userId')!=0){
       setLoginDiscount(true);
       let rowData_to_change = rowData;
-        rowData_to_change.minimumBid = Math.floor(rowData.minimumBid / 2);
+        /* rowData_to_change.minimumBid = Math.floor(rowData.minimumBid / 2);*/
+
+        // Check if it's a special announcement
+        if (rowData.IsSpecialAnnouncement) {
+            rowData_to_change.minimumBidForSpecialRequest = Math.floor(rowData.minimumBidForSpecialRequest / 2);
+        } else {
+            rowData_to_change.minimumBid = Math.floor(rowData.minimumBid / 2);
+        }
       setRowData(rowData_to_change)
     }
   }, [userId]);
@@ -825,7 +832,10 @@ function PaymentIndex() {
             </p>
             {loginDiscount&&(<div className="gst-info">
               <div>Discount</div>
-              <div>- ₹{rowData.minimumBid}</div>
+               <div>- ₹{isSpecialAnnouncement
+                        ? Math.max(1, rowData.minimumBidForSpecialRequest)
+                        : Math.max(1, rowData.minimumBid)
+               }</div>
             </div>)}
             <div className="gst-info">
               <div>GST (18%)</div>

@@ -262,21 +262,35 @@ function SongSearch() {
         };
     }, [currentPage, loading, searchQuery, activePlaylistId]);
 
-    const handleSearchChange = (event) => {
-        setActivePlaylistId(null);
-        setNoSongsFound(false);
-        const newQuery = event.target.value;
-        setSearchQuery(newQuery);
-        clearTimeout(typingTimeout);
-        if (newQuery.trim() !== '') {
-            const newTypingTimeout = setTimeout(() => {
-                fetchResultsFromAPI(newQuery);
-            }, 400);
-            setTypingTimeout(newTypingTimeout);
-        } else {
-            setResults([]);
+   const handleSearchChange = (event) => {
+    setActivePlaylistId(null);
+    setNoSongsFound(false);
+    const newQuery = event.target.value;
+    setSearchQuery(newQuery);
+    clearTimeout(typingTimeout);
+
+    if (newQuery.trim() !== '') {
+        // User is typing, fetch search results
+        const newTypingTimeout = setTimeout(() => {
+            fetchResultsFromAPI(newQuery);
+        }, 400);
+        setTypingTimeout(newTypingTimeout);
+    }
+    else {
+        setResults([]);// Clear search results
+        console.log('clear the search songs');
+
+        if (filteredPlaylists.length > 0) {
+            // Select the first playlist from filtered playlists
+            setActivePlaylistId(filteredPlaylists[0].id);
+            handlePlaylistClick(filteredPlaylists[0].id);
+        } else if (listOfPlaylists.length > 0) {
+            // Select the first playlist from the original list
+            setActivePlaylistId(listOfPlaylists[0].id);
+            handlePlaylistClick(listOfPlaylists[0].id);
         }
-    };
+    }
+};
 
     const fetchResultsFromAPI = async (query) => {
         try {
@@ -285,6 +299,7 @@ function SongSearch() {
             setCurrentPage(1); // Reset current page
             const res = await GetSongsUsingSearchTerm(query, 1, 20);
             setResults(res);
+            console.log("give suggestion songs");
             if(res === null){
                 setNoSongsFound(true);
             }

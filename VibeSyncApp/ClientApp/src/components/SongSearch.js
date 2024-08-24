@@ -76,17 +76,38 @@ function SongSearch() {
 
     useEffect(() => {
         console.log(eventData);
-        if (eventData && new Date() < new Date(eventData.eventStartDateTime) && eventData.eventStatus != 'Live') {
-            // Extract the time part from eventStartDateTime
-            const eventTime = new Date(eventData.eventStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+        if (eventData && eventData.eventStatus !== 'Live') {
+            // Get current local time and extract time part
+            const currentTime = new Date();
+            const currentHour = currentTime.getHours();
+            const currentMinute = currentTime.getMinutes();
     
-            Swal.fire({
-                title: "Hang tight.",
-                text: `DJ will start taking requests after ${eventTime}`,
-                icon: "warning",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "Okay"
-            });
+            // Extract event start time part
+            const eventDateTime = new Date(eventData.eventStartDateTime);
+            const eventHour = eventDateTime.getHours();
+            const eventMinute = eventDateTime.getMinutes();
+    
+            // Compare current time with event start time
+            if (currentHour < eventHour || (currentHour === eventHour && currentMinute < eventMinute)) {
+                // Extract event time in 12-hour format
+                const eventTime = eventDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                
+                Swal.fire({
+                    title: "Hang tight.",
+                    text: `DJ will start taking requests after ${eventTime}`,
+                    icon: "warning",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Okay"
+                });
+            } else {
+                Swal.fire({
+                    title: "Hang tight.",
+                    text: "DJ will start taking requests soon.",
+                    icon: "warning",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Okay"
+                });
+            }
         }
     }, [eventData]);
 

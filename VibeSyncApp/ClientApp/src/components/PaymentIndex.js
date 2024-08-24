@@ -923,7 +923,14 @@ function PaymentIndex() {
                     <div style={{ textAlign: "center",marginTop:'5px' }}>
                       <div className="tip-info-live">
                         <div className="tip-info-content">
-                          <i>&#9888;DJ will start taking requests after {new Date(rowData.eventStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}!</i>
+                          
+                        <svg width="20" height="20" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle" viewBox="0 0 24 24">
+    <path d="M10.29 3.86L1.71 19.14a1 1 0 0 0 .87 1.44h20.75a1 1 0 0 0 .87-1.44L13.71 3.86a1 1 0 0 0-1.42-.44l-.01.01a1 1 0 0 0-.69.44zM12 9v4M12 17h.01"></path>
+</svg>
+
+
+                          <i>
+                          &nbsp;DJ will start taking requests after {new Date(rowData.eventStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}!</i>
                           </div>
                         </div>  
                     </div>

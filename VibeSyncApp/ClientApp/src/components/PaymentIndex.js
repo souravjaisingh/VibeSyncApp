@@ -924,11 +924,10 @@ function PaymentIndex() {
                       <div className="tip-info-live">
                         <div className="tip-info-content">
                           
-                        <svg width="20" height="20" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle" viewBox="0 0 24 24">
-    <path d="M10.29 3.86L1.71 19.14a1 1 0 0 0 .87 1.44h20.75a1 1 0 0 0 .87-1.44L13.71 3.86a1 1 0 0 0-1.42-.44l-.01.01a1 1 0 0 0-.69.44zM12 9v4M12 17h.01"></path>
-</svg>
-
-
+                        <svg width="20" height="20" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                          <path d="M12 2L2 22h20L12 2z" fill="none" stroke="black" stroke-width="2" />
+                          <path d="M12 10v4M12 18h.08" stroke="black" stroke-width="2" />
+                        </svg>
                           <i>
                           &nbsp;DJ will start taking requests after {new Date(rowData.eventStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}!</i>
                           </div>

@@ -96,7 +96,9 @@ export default function DjLiveSongs() {
         let live_toggle_rowData = rowData;
         live_toggle_rowData.eventStatus = !isLive?'Live':'Not live';
         setIsLive(!isLive);
+        setLoading(true);
         await UpdateEventDetails(live_toggle_rowData);
+        setLoading(false);
         navigate('/djhome')
     };
 

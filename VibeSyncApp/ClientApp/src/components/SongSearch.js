@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GetPlaylistList, GetSongsByEventId, GetSongsList, GetSongsUsingSearchTerm } from './services/SongsService';
-import { MDBTable, MDBTableBody } from 'mdb-react-ui-kit';
 import './SongSearch.css';
 import { MyContext } from '../App';
 import { GetEventByEventId } from './services/EventsService';
@@ -9,13 +8,15 @@ import StickyBar from './StickyBar';
 import { messages } from './Constants';
 import defaultPhoto from '../Resources/defaultDj.jpg';
 import { useLoadingContext } from './LoadingProvider';
+import Swal from 'sweetalert2';
+import { event } from 'jquery';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const location = useLocation();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.state?location.state.rowData:location.search);
+    const searchParams = new URLSearchParams(location.state ? location.state.rowData : location.search);
     const rowDataString = searchParams.get('data');
     const qrcodeParam = searchParams.get('qrcode');
     const urlEventId = searchParams.get('eventId');
@@ -36,12 +37,12 @@ function SongSearch() {
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(true);
     const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);  // Modal state
     const [isSearchBarActive, setIsSearchBarActive] = useState(false);
-    const [NoSongsFound,setNoSongsFound] = useState(false);
+    const [NoSongsFound, setNoSongsFound] = useState(false);
     const { setLoading } = useLoadingContext();
     const [disableSongSearch, setDisableSongSearch] = useState(false);
 
 
-    
+
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
         setIsSearchBarActive(true);
@@ -63,16 +64,32 @@ function SongSearch() {
         const uri = JSON.parse(decodeURIComponent(rowDataString));
         if (qrcodeParam == null) {
             setDisableSongSearch(uri.disableSongSearch || false);
-            try{
+            try {
                 const Amount = parseFloat(uri["minimumBid"]);
                 setMinAmount(Amount)
             }
-            catch{
+            catch {
                 window.location = 'userhome'
             }
         }
 
     });
+
+    useEffect(() => {
+        console.log(eventData);
+        if (eventData && new Date() < new Date(eventData.eventStartDateTime) && eventData.eventStatus != 'Live') {
+            // Extract the time part from eventStartDateTime
+            const eventTime = new Date(eventData.eventStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    
+            Swal.fire({
+                title: "Hang tight.",
+                text: `DJ will start taking requests after ${eventTime}`,
+                icon: "warning",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Okay"
+            });
+        }
+    }, [eventData]);
 
     // useEffect(() => {
     //     const uri = JSON.parse(decodeURIComponent(rowDataString));
@@ -127,7 +144,7 @@ function SongSearch() {
         if (eventData) {
             fetchPlaylistsAndSongs();
         }
-    }, [eventData]); 
+    }, [eventData]);
 
     const handlePlaylistClick = async (playlistId) => {
         try {
@@ -285,7 +302,7 @@ function SongSearch() {
             setCurrentPage(1); // Reset current page
             const res = await GetSongsUsingSearchTerm(query, 1, 20);
             setResults(res);
-            if(res === null){
+            if (res === null) {
                 setNoSongsFound(true);
             }
             setCurrentPage(2); // Set the next page to fetch
@@ -313,25 +330,32 @@ function SongSearch() {
 
         if (qrcodeParam === 'true' && !eventData) {
             try {
+                setLoading(true);
                 const response = await GetEventByEventId(urlEventId, urlUserId);
-               // console.log('Fetched Event Data:', response); // Debug log
+                // console.log('Fetched Event Data:', response); // Debug log
                 setEventData(response);
                 setDisableSongSearch(response.disableSongSearch || false);
                 //setMinAmount(eventData.minimumBid);
                 if (response != null) {
                     localStorage.setItem('venue', response.venue);
-                    fetchEnqSongs(response.id);
+                    //fetchEnqSongs(response.id);
                 }
+                setLoading(false);
             } catch (error) {
                 setError(true);
                 setErrorMessage(error.message);
+                setLoading(falase);
                 console.error('Error fetching data:', error);
             }
         } else if (!eventData) {
             setEventData(JSON.parse(decodeURIComponent(rowDataString)));
-        } else if (enqueuedSongs == null) {
-            fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
-        }
+        } 
+        //Commenting this because it was making an extra call to fetch enqueued songs for an event, but we're not using it anywhere.
+        //Might need to revisit if something breaks
+        //~Sourav
+        // else if (enqueuedSongs == null) {
+        //     fetchEnqSongs(eventData.eventId != null ? eventData.eventId : eventData.id);
+        // }
     }, [qrcodeParam, urlEventId, urlUserId, eventData]);
 
     const handleRowClick = (data) => {
@@ -347,7 +371,7 @@ function SongSearch() {
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
             localStorage.removeItem('redirectUrl');
-            navigate(`/paymentIndex`,{state:{rowData:"?data="+rowDataString}});
+            navigate(`/paymentIndex`, { state: { rowData: "?data=" + rowDataString } });
         }
     };
 
@@ -372,7 +396,7 @@ function SongSearch() {
             const rowDataString = encodeURIComponent(JSON.stringify(concatenatedJson));
 
             console.log("Event data copy : ", eventDataCopy);
-            navigate(`/paymentIndex`,{state:{rowData:"?data="+rowDataString}});
+            navigate(`/paymentIndex`, { state: { rowData: "?data=" + rowDataString } });
         }
     };
 
@@ -382,9 +406,9 @@ function SongSearch() {
 
 
     const selectedPlaylistIds = eventData && eventData.playlists ? eventData.playlists.split(',') : [];
-   // console.log('selectedPlaylistIds:', selectedPlaylistIds);
+    // console.log('selectedPlaylistIds:', selectedPlaylistIds);
 
-   
+
     if (!listOfPlaylists) {
         return null; // or show a loading indicator
     }
@@ -399,7 +423,7 @@ function SongSearch() {
     return (
         <>
             <div className='song-search'>
-            {/* <button className="back-button-songsearch" onClick={()=>navigate(-1)}>{'<<'}Back</button> */}
+                {/* <button className="back-button-songsearch" onClick={()=>navigate(-1)}>{'<<'}Back</button> */}
                 {eventData && (
                     <div className="search-container">
                         <div className="left-content">
@@ -448,7 +472,7 @@ function SongSearch() {
                         </div>
                     )}
 
-                    {NoSongsFound?(<div className='no-songs-found'>No Songs Found!</div>):(<></>)}
+                    {NoSongsFound ? (<div className='no-songs-found'>No Songs Found!</div>) : (<></>)}
 
                     {eventData && eventData.hidePlaylist !== true && (
                         <>
@@ -499,7 +523,7 @@ function SongSearch() {
                                         />
                                     </div>
                                     <div className="song-card-text">
-                                        <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700"}}>{result.name}</span>
+                                        <span className="song-name" style={{ fontSize: "1.1rem", lineHeight: "1.3rem", fontWeight: "700" }}>{result.name}</span>
                                         <span className="song-artists">
                                             {result.artists.primary.map((artist) => artist.name).join(', ')}
                                         </span>

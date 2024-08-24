@@ -923,7 +923,7 @@ function PaymentIndex() {
                     <div style={{ textAlign: "center",marginTop:'5px' }}>
                       <div className="tip-info-live">
                         <div className="tip-info-content">
-                          <i>&#9888;Event is not live right now!</i>
+                          <i>&#9888;DJ will start taking requests after {new Date(rowData.eventStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}!</i>
                           </div>
                         </div>  
                     </div>

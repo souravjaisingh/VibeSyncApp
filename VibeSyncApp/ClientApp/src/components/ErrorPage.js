@@ -3,16 +3,11 @@ import { MyContext } from '../App';
 import "./ErrorPage.css";
 import Login from './pages/Login';
 import UserLogin from '../components/UserLogin'
-import { useNavigate } from 'react-router-dom';
+import Home from './pages/Home';
 
 export default function ErrorPage(props) {
     const { errorMessage } = useContext(MyContext);
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (errorMessage === "500") {
-            navigate('/');
-        }
-    }, [errorMessage, navigate]);
+
     if (errorMessage === "Invalid Password") {
         const currentUrl = window.location.href;
         if (!currentUrl.includes('/Login')) {
@@ -21,7 +16,9 @@ export default function ErrorPage(props) {
             return <UserLogin />  /* token expired */
         }
     }
-
+    else if (errorMessage === "500") {
+        return <Home />
+    }
     else {
         return (
             <div className={"error-page"}>

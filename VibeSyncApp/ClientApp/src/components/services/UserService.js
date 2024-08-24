@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import * as Constants from '../Constants';
 import { useLoadingContext } from '../LoadingProvider';
 
@@ -228,7 +229,7 @@ export function handleAPIError(response, url) {
             case 404:
                 throw new Error("Oops! This page is as lost as you are on a Monday morning.");
             case 500:
-                throw new Error("Looks like we've hit a snag. Our engineers are on it faster than you can say 'bug'.");
+                throw new Error("500");
             case 503:
                 throw new Error("Hold on tight! Our team of highly trained monkeys is fixing the issue.");
             case 401:

@@ -21,10 +21,7 @@ export default function ErrorPage(props) {
             return <UserLogin />  /* token expired */
         }
     }
-    else if (errorMessage === "500"){
-        // Returning null to avoid rendering anything while the redirect happens
-        return null;
-    }
+
     else {
         return (
             <div className={"error-page"}>

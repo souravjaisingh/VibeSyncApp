@@ -9,7 +9,6 @@ import { messages } from './Constants';
 import defaultPhoto from '../Resources/defaultDj.jpg';
 import { useLoadingContext } from './LoadingProvider';
 import Swal from 'sweetalert2';
-import { event } from 'jquery';
 
 function SongSearch() {
     const { error, setError } = useContext(MyContext);
@@ -344,7 +343,7 @@ function SongSearch() {
             } catch (error) {
                 setError(true);
                 setErrorMessage(error.message);
-                setLoading(falase);
+                setLoading(false);
                 console.error('Error fetching data:', error);
             }
         } else if (!eventData) {

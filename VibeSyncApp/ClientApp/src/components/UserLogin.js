@@ -42,6 +42,7 @@ function Cards(props) {
 
   useEffect(() => {
     loadOTPScript();
+    localStorage.clear();
   }, [])
 
 

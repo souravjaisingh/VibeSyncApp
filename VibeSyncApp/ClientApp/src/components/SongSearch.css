@@ -8,7 +8,8 @@ html body {
 
 /* CSS Styles */
 .song-search {
-    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background: url('/images/gradient_background.png');
+    background-size: cover;
     background-attachment: fixed;
 }
     .search-container {

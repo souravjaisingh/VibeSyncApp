@@ -229,7 +229,7 @@ export function handleAPIError(response, url) {
             case 404:
                 throw new Error("Oops! This page is as lost as you are on a Monday morning.");
             case 500:
-                throw new Error("500");
+                throw new Error("Yikes! Our server is having a tantrum. Please try again.");
             case 503:
                 throw new Error("Hold on tight! Our team of highly trained monkeys is fixing the issue.");
             case 401:

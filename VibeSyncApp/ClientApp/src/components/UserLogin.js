@@ -241,7 +241,14 @@ function Cards(props) {
     setShowInfoBox(!showInfoBox);
 
   }
+  const handleFocus = (event) => {
+    event.preventDefault();
+    event.target.removeAttribute('readonly');
+  };
 
+  const handleTouchStart = (event) => {
+    event.target.removeAttribute('readonly');
+  };
 
   return (
     <div className={`cards `}>
@@ -274,7 +281,20 @@ function Cards(props) {
                 {mobileNo === null ? (<div className='mobile-number-container'>
                   <div>
                     <img className='user-image-icon-lander' src="images/user_image_lander.png" />
-                      <input id="mobile-no" type="tel" pattern="[0-9]*" inputMode="numeric" className='mobile-number-input' placeholder='Mobile Number' autocomplete="new-password" name="mobile-no-random" readOnly onfocus="this.removeAttribute('readonly');"/>
+                    <input 
+                        id="mobile-no" 
+                        type="tel" 
+                        pattern="[0-9]*" 
+                        inputMode="numeric" 
+                        className='mobile-number-input' 
+                        placeholder='Mobile Number' 
+                        autocomplete="new-password" 
+                        name="mobile-no-random" 
+                        readOnly 
+                        onFocus={handleFocus}
+                        onTouchStart={handleTouchStart}
+                      />
+
                   </div>
                   <button onClick={handleGetOtp} className='get-otp-button-lander'>Send OTP</button>
                 </div>) : (<div className='otp-verify-section'>

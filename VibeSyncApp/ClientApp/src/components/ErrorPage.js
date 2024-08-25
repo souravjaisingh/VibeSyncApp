@@ -30,12 +30,12 @@ export default function ErrorPage(props) {
             return <UserLogin />  /* token expired */
         }
     }
-    else if (errorMessage === "500") {
-        // Clear local storage and redirect immediately
-        localStorage.clear();
-        navigate('/');
-        return null; // Avoid rendering anything else
-    }
+    // else if (errorMessage === "500") {
+    //     // Clear local storage and redirect immediately
+    //     localStorage.clear();
+    //     navigate('/');
+    //     return null; // Avoid rendering anything else
+    // }
     else {
         return (
             <div className={"error-page"}>

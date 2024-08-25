@@ -566,6 +566,17 @@ html body {
         color: rgb(209, 59, 33);
         text-align: center;
     }
+    .time-disclaimer{
+        background-color: #ffc107db;
+        border-radius: 10px;
+        margin: 0px;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        width: 90%;
+        text-align: left;
+        animation: blinker 3s linear infinite;
+        display: flex;
+    }
 
 
 

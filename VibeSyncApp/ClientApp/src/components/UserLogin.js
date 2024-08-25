@@ -274,7 +274,7 @@ function Cards(props) {
                 {mobileNo === null ? (<div className='mobile-number-container'>
                   <div>
                     <img className='user-image-icon-lander' src="images/user_image_lander.png" />
-                                      <input id="mobile-no" type="tel" pattern="[0-9]*" inputMode="numeric" className='mobile-number-input' placeholder='Mobile Number' />
+                      <input id="mobile-no" type="tel" pattern="[0-9]*" inputMode="numeric" className='mobile-number-input' placeholder='Mobile Number'  autocomplete="tel" />
                   </div>
                   <button onClick={handleGetOtp} className='get-otp-button-lander'>Send OTP</button>
                 </div>) : (<div className='otp-verify-section'>

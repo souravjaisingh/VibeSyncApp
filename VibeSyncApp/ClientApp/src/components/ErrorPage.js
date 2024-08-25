@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function ErrorPage(props) {
     const { errorMessage } = useContext(MyContext);
-    const [handleHomeRedirection, setHandleHomeRedirection] = useState();
     const navigate = useNavigate();
 
     const handleRetry = () => {
@@ -23,12 +22,6 @@ export default function ErrorPage(props) {
         // Redirect to the Home component
         navigate('/');
     };
-
-    useEffect(()=>{
-        if(handleHomeRedirection == 'home'){
-            navigate('/');
-        }
-    }, [handleHomeRedirection])
     if (errorMessage === "Invalid Password") {
         const currentUrl = window.location.href;
         if (!currentUrl.includes('/Login')) {
@@ -38,8 +31,10 @@ export default function ErrorPage(props) {
         }
     }
     else if (errorMessage === "500") {
+        // Clear local storage and redirect immediately
         localStorage.clear();
-        setHandleHomeRedirection('home');
+        navigate('/');
+        return null; // Avoid rendering anything else
     }
     else {
         return (

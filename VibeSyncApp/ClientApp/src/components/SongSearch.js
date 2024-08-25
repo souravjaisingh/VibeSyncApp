@@ -39,6 +39,7 @@ function SongSearch() {
     const [NoSongsFound, setNoSongsFound] = useState(false);
     const { setLoading } = useLoadingContext();
     const [disableSongSearch, setDisableSongSearch] = useState(false);
+    const [timeDisclaimer, setTimeDisclaimer] =useState();
 
 
 
@@ -91,7 +92,7 @@ function SongSearch() {
             if (currentHour < eventHour || (currentHour === eventHour && currentMinute < eventMinute)) {
                 // Extract event time in 12-hour format
                 const eventTime = eventDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                
+                setTimeDisclaimer("DJ will start taking requests after "+ eventTime);
                 Swal.fire({
                     title: "Hang tight.",
                     text: `DJ will start taking requests after ${eventTime}`,
@@ -100,6 +101,7 @@ function SongSearch() {
                     confirmButtonText: "Okay"
                 });
             } else {
+                setTimeDisclaimer("DJ will start taking requests soon");
                 Swal.fire({
                     title: "Hang tight.",
                     text: "DJ will start taking requests soon.",
@@ -470,7 +472,15 @@ function SongSearch() {
                         </div>
                         <span className='event-desc'>
                             <img style={{ width: '15px' }} src="/images/disclaimerIcon.png" />
-                            <b><div>{eventData.eventDescription}</div></b></span>
+                            <b><div>{eventData.eventDescription}</div></b>
+                        </span>
+                        <span className='time-disclaimer'>
+                        <svg width="20" height="20" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                          <path d="M12 2L2 22h20L12 2z" fill="none" stroke="black" stroke-width="2" />
+                          <path d="M12 10v4M12 18h.08" stroke="black" stroke-width="2" />
+                        </svg>
+                            <b><div>&nbsp;{timeDisclaimer}</div></b>
+                        </span>
                     </div>
 
                 )}

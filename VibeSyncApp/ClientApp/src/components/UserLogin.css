@@ -1,6 +1,6 @@
 .cards {
     background: #fff;
-    background: linear-gradient(160deg, #d7defe 70%, #4C526C);
+    background: url('/images/gradient_background.png');
     background-attachment: fixed;
     background-size: cover;
     text-align: center;

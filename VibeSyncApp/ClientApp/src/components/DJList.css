@@ -217,8 +217,9 @@
 
 .dj-lists-wrapper{
     padding-top:1rem;
-    background: linear-gradient(160deg, #d7defe 70%, #4C526C);
+    background: url('/images/gradient_background.png');
     background-attachment: fixed;
+    background-size: cover;
     padding-bottom: 1rem;
 
 }

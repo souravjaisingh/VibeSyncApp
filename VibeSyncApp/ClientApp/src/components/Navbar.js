@@ -46,9 +46,13 @@ function NavbarComponent() {
         navigate('/settlementshistory');
     }
     useEffect(()=>{
-        document.addEventListener('click',function(){
-                setMenuOpen(false);
-    })
+        const handleClickOutside = () => setMenuOpen(false);
+
+        document.addEventListener('click', handleClickOutside);
+    
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
     },[])
 
     async function handleLogoutClick() {

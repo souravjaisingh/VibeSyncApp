@@ -22,11 +22,10 @@ function TransactionHistory() {
         return `${day} ${month} ${year}`;
     };
 
-    const formatMonthYear = (datetime) => {
+    const formatMonth = (datetime) => {
         const date = new Date(datetime);
         const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
-        const year = date.getFullYear();
-        return `${month} ${year}`;
+        return month;
     };
 
     const groupedTransactions = filteredTransactionHistory.reduce((acc, transaction) => {
@@ -37,12 +36,12 @@ function TransactionHistory() {
     }, {});
 
  const monthlyTotals = Object.entries(groupedTransactions).reduce((acc, [date, transactions]) => {
-        const monthYear = formatMonthYear(transactions[0].modifiedOn);
+        const month = formatMonth(transactions[0].modifiedOn);
         const totalAmount = transactions.reduce((total, transaction) => {
             return transaction.songStatus === 'Played' ? total + parseFloat(transaction.totalAmount) : total;
         }, 0);
-        if (!acc[monthYear]) acc[monthYear] = 0;
-        acc[monthYear] += totalAmount;
+        if (!acc[month]) acc[month] = 0;
+        acc[month] += totalAmount;
         return acc;
     }, {});
 
@@ -70,7 +69,20 @@ function TransactionHistory() {
 
     useEffect(() => {
         // Filter records based on the selected event
-        if (selectedEvent !== '' && selectedEvent !== null && selectedEvent !== 'All') {
+        if (selectedEvent === 'Today') {
+            const today = new Date();
+            const filteredRecords = transactionHistory.filter((transaction) => {
+                const transactionDate = new Date(transaction.modifiedOn);
+                return (
+                    transactionDate.getDate() === today.getDate() &&
+                    transactionDate.getMonth() === today.getMonth() &&
+                    transactionDate.getFullYear() === today.getFullYear()
+                );
+            });
+            filteredRecords.sort((a, b) => b.id - a.id);
+            setFilteredTransactionHistory(filteredRecords);
+
+        } else if (selectedEvent !== '' && selectedEvent !== null && selectedEvent !== 'All') {
             const filteredRecords = transactionHistory.filter((transaction) => transaction.eventName === selectedEvent);
             filteredRecords.sort((a, b) => b.id - a.id);
             setFilteredTransactionHistory(filteredRecords);
@@ -146,7 +158,8 @@ function TransactionHistory() {
                     value={selectedEvent}
                     onChange={handleEventFilterChange}
                 >
-                    <option value="All">All</option>
+                            <option value="All">All</option>
+                            <option value="Today">Today</option>
                     {/* Populate dropdown with distinct event names */}
                     {distinctEventNames.map((eventName) => (
                         <option key={eventName} value={eventName}>
@@ -164,13 +177,13 @@ function TransactionHistory() {
                 {/*</div>*/}
                 <div className="transaction-cards">
                     {Object.entries(groupedTransactions).map(([date, transactions], index) => {
-                        const monthYear = formatMonthYear(transactions[0].modifiedOn);
-                        const isFirstTransactionOfMonth = index === 0 || formatMonthYear(transactions[0].modifiedOn) !== formatMonthYear(Object.values(groupedTransactions)[index - 1][0].modifiedOn);
+                        const month = formatMonth(transactions[0].modifiedOn);
+                        const isFirstTransactionOfMonth = index === 0 || formatMonth(transactions[0].modifiedOn) !== formatMonth(Object.values(groupedTransactions)[index - 1][0].modifiedOn);
                         return (
                             <div key={date} className="date-group">
                                 {isFirstTransactionOfMonth && (
                                     <div className="monthly-total-label">
-                                        Earnings for {monthYear}: ₹{monthlyTotals[monthYear]}
+                                        Earnings for {month}: ₹{monthlyTotals[month]}
                                     </div>
                                 )}
                                 <h3 className="date-heading">{date}</h3>

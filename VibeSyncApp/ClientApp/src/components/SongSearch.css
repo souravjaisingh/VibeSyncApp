@@ -297,12 +297,12 @@ html body {
 
 
 .playlist-buttons {
+    justify-content: center ;
     margin-top: 10px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    font-weight:600;
-
+    font-weight: 600;
 }
 
 .playlist-button {

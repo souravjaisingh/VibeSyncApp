@@ -244,3 +244,30 @@
         background-color: lightgreen;
         color: black;
     }
+
+.monthly-total-label {
+    margin-right : 11px;
+    display: flex;
+    white-space: nowrap;
+    font-size: 14px;
+    margin-bottom: -18px;
+    color: #39125C;
+    font-weight: 600;
+    justify-content: flex-end;
+}
+
+@media (min-width: 900px) { /* Adjust this breakpoint as needed */
+    .monthly-total-label {
+        margin-right : 40px; /* Align it tightly for bigger screens */
+        text-align: right; /* Ensure it's aligned to the left */
+    }
+}
+
+@media (max-width: 365px){
+    .monthly-total-label {
+        margin-right: 2px;   
+    }
+    .date-heading {
+        padding-left:11px;
+    }
+    }

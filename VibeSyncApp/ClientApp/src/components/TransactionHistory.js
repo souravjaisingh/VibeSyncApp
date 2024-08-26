@@ -22,12 +22,29 @@ function TransactionHistory() {
         return `${day} ${month} ${year}`;
     };
 
+    const formatMonthYear = (datetime) => {
+        const date = new Date(datetime);
+        const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+        const year = date.getFullYear();
+        return `${month} ${year}`;
+    };
+
     const groupedTransactions = filteredTransactionHistory.reduce((acc, transaction) => {
   const date = formatDate(transaction.modifiedOn);
   if (!acc[date]) acc[date] = [];
   acc[date].push(transaction);
   return acc;
-}, {});
+    }, {});
+
+ const monthlyTotals = Object.entries(groupedTransactions).reduce((acc, [date, transactions]) => {
+        const monthYear = formatMonthYear(transactions[0].modifiedOn);
+        const totalAmount = transactions.reduce((total, transaction) => {
+            return transaction.songStatus === 'Played' ? total + parseFloat(transaction.totalAmount) : total;
+        }, 0);
+        if (!acc[monthYear]) acc[monthYear] = 0;
+        acc[monthYear] += totalAmount;
+        return acc;
+    }, {});
 
 
     useEffect(async () => {
@@ -146,64 +163,66 @@ function TransactionHistory() {
                 {/*    </div>*/}
                 {/*</div>*/}
                 <div className="transaction-cards">
-                    {Object.entries(groupedTransactions).map(([date, transactions]) => (
-                        <div key={date} className="date-group">
-                            <h3 className="date-heading">{date}</h3>
-                            {transactions.map((transaction, index) => (
-                                <div key={index} className="transaction-card">
-
-                                    <div className='transaction-page-left-content'>
-                                         <div className="transaction-event-name">
-                                             {transaction.eventName}
-                                         </div>
-                                         <div className="transaction-song-name">
-                                             {transaction.songName}
-                                         </div>
+                    {Object.entries(groupedTransactions).map(([date, transactions], index) => {
+                        const monthYear = formatMonthYear(transactions[0].modifiedOn);
+                        const isFirstTransactionOfMonth = index === 0 || formatMonthYear(transactions[0].modifiedOn) !== formatMonthYear(Object.values(groupedTransactions)[index - 1][0].modifiedOn);
+                        return (
+                            <div key={date} className="date-group">
+                                {isFirstTransactionOfMonth && (
+                                    <div className="monthly-total-label">
+                                        Earnings for {monthYear}: ₹{monthlyTotals[monthYear]}
                                     </div>
-
-                                    <div className='transaction-page-middle-content'>
-                                        <div className="transaction-amount-paid">
-                                            ₹{transaction.totalAmount}
+                                )}
+                                <h3 className="date-heading">{date}</h3>
+                                {transactions.map((transaction, index) => (
+                                    <div key={index} className="transaction-card">
+                                        <div className='transaction-page-left-content'>
+                                            <div className="transaction-event-name">
+                                                {transaction.eventName}  
+                                            </div>
+                                            <div className="transaction-song-name">
+                                                {transaction.songName}
+                                            </div>
                                         </div>
-                                        <div className='time-payid-block'>
-                                            <div className="date-time-payment"><DateTimeDisplay datetimeString={transaction.paymentDateTime || transaction.createdOn} /></div>
+                                        <div className='transaction-page-middle-content'>
+                                            <div className="transaction-amount-paid">
+                                                ₹{transaction.totalAmount}
+                                            </div>
+                                            <div className='time-payid-block'>
+                                                <div className="date-time-payment"><DateTimeDisplay datetimeString={transaction.paymentDateTime || transaction.createdOn} /></div>
                                                 {/*<div className="transaction-date-time-details">*/}
                                                 {/*   {formatDateTime(transaction.modifiedOn)}*/}
                                                 {/*</div>*/}
-                                            <div >Txn ID: {transaction.paymentId}</div>
-                                       </div>
-                                    </div>
-
-                                    <div className='transaction-page-right-content'>
-                                    
-                                        {transaction.songStatus === 'Played' ?
+                                                <div >Txn ID: {transaction.paymentId}</div>
+                                            </div>
+                                        </div>
+                                        <div className='transaction-page-right-content'>
+                                            {transaction.songStatus === 'Played' ?
                                                 (<div className='btn-right-content btn-payment-green'>
-                                                {transaction.songStatus}
+                                                    {transaction.songStatus}
                                                 </div>)
                                                 :
-                                            transaction.songStatus === 'Refunded' ?
+                                                transaction.songStatus === 'Refunded' ?
                                                     (<div className='btn-right-content btn-payment-yellow'>
-                                                    {transaction.songStatus}
-                                                    </div>)
-                                                : transaction.songStatus === 'Rejected' ?
-                                                        (<div className='btn-right-content btn-payment-red'>
                                                         {transaction.songStatus}
                                                     </div>)
-                                                    : transaction.songStatus === 'Pending' ?
-                                                        (<div className='btn-right-content btn-payment-yellow'>
+                                                    : transaction.songStatus === 'Rejected' ?
+                                                        (<div className='btn-right-content btn-payment-red'>
                                                             {transaction.songStatus}
                                                         </div>)
-                                                           : ''
+                                                        : transaction.songStatus === 'Pending' ?
+                                                            (<div className='btn-right-content btn-payment-yellow'>
+                                                                {transaction.songStatus}
+                                                            </div>)
+                                                            : ''
                                             }
-                                        
                                         </div>
                                     </div>
-                                
-                            ))}
-                        </div>
-                    ))}
+                                ))}
+                            </div>
+                        );
+                    })}
                 </div>
-
             </div>
         </div>
     );

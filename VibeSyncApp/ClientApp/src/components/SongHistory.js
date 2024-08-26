@@ -19,6 +19,15 @@ export default function SongHistory() {
                 let res;
                 if (selectedFilter === 'All') {
                     res = await getUserRequestHistoryData(localStorage.getItem('userId'));
+                } else if (selectedFilter === 'Today') {
+                    const today = new Date();
+                    const todayDateString = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+                    res = await getUserRequestHistoryData(localStorage.getItem('userId'));
+                    res = res.filter(transaction => {
+                        const transactionDate = new Date(transaction.paymentDateTime || transaction.createdOn).toISOString().split('T')[0];
+                        return transactionDate === todayDateString;
+                    });
                 } else {
                     res = await getUserRequestHistoryData(localStorage.getItem('userId'), selectedFilter);
                 }
@@ -106,6 +115,7 @@ export default function SongHistory() {
                                 onChange={(e) => setFilter(e.target.value)}
                             >
                                 <option value="All">All</option>
+                                <option value="Today">Today</option> 
                                 <option value="Played">Played</option>
                                 <option value="Pending">Pending</option>
                                 <option value="Accepted">Accepted</option>

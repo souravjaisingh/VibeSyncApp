@@ -8,7 +8,8 @@ html body {
 
 /* CSS Styles */
 .song-search {
-    background: linear-gradient(160deg, #D7DEFE 70%, #4C526C);
+    background: url('/images/gradient_background.png');
+    background-size: cover;
     background-attachment: fixed;
 }
     .search-container {
@@ -565,6 +566,17 @@ html body {
         padding: 4px;
         color: rgb(209, 59, 33);
         text-align: center;
+    }
+    .time-disclaimer{
+        background-color: #ffc107db;
+        border-radius: 10px;
+        margin: 0px;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        width: 90%;
+        text-align: left;
+        animation: blinker 3s linear infinite;
+        display: flex;
     }
 
 

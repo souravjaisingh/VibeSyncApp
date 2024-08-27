@@ -227,7 +227,6 @@
 .image-bg {
     background-image: url("/images/BGMusic.png");
     background-repeat: no-repeat;
-    background-size: 60%; /* 50% width and auto height */
     /*background-size: cover;*/
     background-position: center;
     background-attachment: fixed;

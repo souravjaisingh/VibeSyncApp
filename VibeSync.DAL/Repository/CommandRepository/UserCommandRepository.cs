@@ -174,7 +174,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(8),
+                Expires = DateTime.Now.AddMinutes(2),
                 SigningCredentials = creds
             };
 

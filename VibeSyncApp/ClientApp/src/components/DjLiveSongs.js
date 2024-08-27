@@ -40,7 +40,6 @@ export default function DjLiveSongs() {
     const lastHighestRecordIdRef = useRef(0);
     const [isLive, setIsLive] = useState((rowData && (rowData.eventStatus === "Live" || rowData.eventStatus === 'Live-NA')) ? true : false);
     const [userHistoryUpdated, setUserHistoryUpdated] = useState(false); // New state for flag
-    const [isAppleDevice, setisAppleDevice] = useState(false);
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -55,15 +54,8 @@ export default function DjLiveSongs() {
     };
 
     useEffect(() => {
-        const checkAppleDevice = () => {
-            return /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
-        };
-        setisAppleDevice(checkAppleDevice())
-        if (!isAppleDevice) {
-            // If not an Apple device, request notification permission
-            if (Notification.permission === 'granted') {
-                Notification.requestPermission();
-            }
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
         }
     }, []);
 
@@ -77,7 +69,9 @@ export default function DjLiveSongs() {
             //native: true // when using native, your OS will handle theming.
         });
     }
- 
+    function enableNotifs() {
+        notifyUser();
+    }
     console.log("eventId : " + eventId)
 
     console.log(rowData);
@@ -137,14 +131,12 @@ export default function DjLiveSongs() {
                     const highestIdInResponse = Math.max(...combinedRequests.map(request => request.id), 0);
                     const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
                     console.log(isNewRequest);
-                    if (!isAppleDevice) {
-                        if (isNewRequest === true && Notification.permission === 'granted') {
-                            if (!isMobile) {
-                                console.log('inside !isMobile if clause');
-                                notifyUser(); //desktop notification
-                            }
-                            newNotification();  //in-page notification
+                    if (isNewRequest === true && Notification.permission === 'granted') {
+                        if (!isMobile) {
+                            console.log('inside !isMobile if clause');
+                            notifyUser(); //desktop notification
                         }
+                        newNotification();  //in-page notification
                     }
                     lastHighestRecordIdRef.current = highestIdInResponse;
                     setUserHistory(combinedRequests);
@@ -422,11 +414,9 @@ export default function DjLiveSongs() {
                 console.log("Checking notification times...");
                 userHistory.forEach((result) => {
                     const remainingTime = calculateRemainingTime(result.paymentDateTime);
-                    if (!isAppleDevice) {
 
-                        if (remainingTime && ["10", "5", "2"].includes(remainingTime)) {
-                            sendReminderNotification(remainingTime);
-                        }
+                    if (remainingTime && ["10", "5", "2"].includes(remainingTime)) {
+                        sendReminderNotification(remainingTime);
                     }
                 });
             };

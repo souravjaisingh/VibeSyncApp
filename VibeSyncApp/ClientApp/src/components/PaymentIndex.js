@@ -1087,7 +1087,7 @@ function PaymentIndex() {
                                                 />
                                             )}
                                             <div className='btn-mobile' onClick={handleEmailIconClick}>
-                                                    <img src={loginMethod === 'email' ? "images/user_image.png" : "images/emailIcon.png"} className="payment-page-email-icon" alt="Toggle login method" />
+                                                  <img src={loginMethod === 'email' ? "images/user_image.png" : "images/e-icon.png"} className="email-icon" style={{padding: "5px"}} alt="Toggle login method" />
                                             </div>
                                             </div>
                                             { /*<div className="footer-links">

@@ -356,7 +356,7 @@ function Cards(props) {
               <div className='google-email-login-container'>
                 <GoogleLogin isUser={!isUser} showButton={true} />
                 <div onClick={() => { setIsMobileLogin(!isMobileLogin); setMobileNo(null); clearInterval(timer) }} className='btn-mobile'>
-                  {isMobileLogin ? (<img src='images/emailIcon.png' className='email-icon' />) :
+                  {isMobileLogin ? (<img src='images/e-icon.png' className='email-icon' />) :
                     (<img src='images/phone-call.png' className='phone-call-icon' />)}
 
                 </div>

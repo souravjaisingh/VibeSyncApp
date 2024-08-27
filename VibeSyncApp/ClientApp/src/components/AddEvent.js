@@ -84,8 +84,10 @@ const AddressTypeahead = () => {
         const input = event.target.value;
         if (/^\d*\.?\d*$/.test(input)) {
             const inputInt = parseInt(input, 10);
+
             // Show error if inputInt is 0 or less
             setShowMinBidError(inputInt <= 0);
+
             // Set the minimum bid if the input is valid
             setMinimumBid(input);
         }
@@ -105,7 +107,6 @@ const AddressTypeahead = () => {
     const handleAcceptingRequestsChange = (event) => {
         const isChecked = event.target.checked;
         setAcceptingRequests(isChecked);
-        // console.log(event.target.checked);
 
         // Clear minimumBidForSpecialRequest if both acceptingRequests and displayRequests are false
         if (!isChecked && !displayRequests) {
@@ -116,7 +117,6 @@ const AddressTypeahead = () => {
     const handleDisplayRequestsChange = (event) => {
         const isChecked = event.target.checked;
         setDisplayRequests(isChecked);
-       // console.log(event.target.checked);
 
         if (!acceptingRequests && !isChecked) {
             setMinimumBidForSpecialRequest(null);
@@ -127,17 +127,16 @@ const AddressTypeahead = () => {
         try {
             const playlists = await GetPlaylistList();
             setPlaylists(playlists);
-           // console.log("inside fetch playlists: ", rowData.playlists);
-
+           
             if (rowData.playlists) {
                 const initialCheckedPlaylists = rowData.playlists.split(',');
                 setCheckedPlaylists(initialCheckedPlaylists);
-               // console.log("Checked playlists after setting: ", initialCheckedPlaylists);
+              
             } else {
                 // If no playlists in rowData, check all by default
                 const allPlaylistIds = playlists.map(playlist => playlist.id);
                 setCheckedPlaylists(allPlaylistIds);
-               // console.log("All playlists checked by default: ", allPlaylistIds);
+               
             }
         } catch (error) {
             console.error('Error fetching playlists:', error);
@@ -257,7 +256,7 @@ const AddressTypeahead = () => {
     };
 
     useEffect(() => {
-       // console.log("Rowdata is : ", rowData);
+       
         if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)

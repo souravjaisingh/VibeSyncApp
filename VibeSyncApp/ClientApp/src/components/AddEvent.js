@@ -228,7 +228,9 @@ const AddressTypeahead = () => {
                 setLoading(false);
                 if (res != null) {
                     console.log(res);
-                    navigate('/djhome');
+                    const userId = localStorage.getItem('userId');
+                    const navigateTo = userId === '10077' ? '/userhome' : '/djhome'; // Redirect based on userId
+                    navigate(navigateTo);
                 }
             } catch (error) {
                 setError(true);
@@ -295,7 +297,7 @@ const AddressTypeahead = () => {
         <div className="address-typeahead-container">
             <div className="address-typeahead">
                 <h2 style={{ fontWeight: '700', color: '#39125C', fontSize: '32px', marginTop: '23px', marginBottom: '10px' }}>{rowDataString ? "Update Event" : "Add Event"}</h2>
-                <img src="/images/BGMusic.png" alt="Background" className="background-image" style={{ top: '127px', position: 'absolute', height: '156px' }} />
+                <img src="/images/BGMusic.png" alt="Background" className="background-image" style={{ top: '90px', position: 'absolute',width:'100%' }} />
                 <form className='event-form'>
                     <div className="header-container">
                         <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>

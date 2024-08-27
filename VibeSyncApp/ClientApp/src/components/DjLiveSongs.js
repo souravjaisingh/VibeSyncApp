@@ -53,11 +53,22 @@ export default function DjLiveSongs() {
         setEventId(eventId);
     };
 
-    useEffect(() => {
+const isAppleDevice = () => {
+    return /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+};
+
+const isInStandaloneMode = () => {
+    return (window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
+};
+
+useEffect(() => {
+    console.log('first use Effect, isappledevice ' + isAppleDevice() + 'isPWA ' + isInStandaloneMode())
+    if (!isAppleDevice() || isInStandaloneMode()) {
         if (Notification.permission !== 'granted') {
             Notification.requestPermission();
         }
-    }, []);
+    }
+}, []);
 
     function newNotification() {
         addNotification({
@@ -69,12 +80,9 @@ export default function DjLiveSongs() {
             //native: true // when using native, your OS will handle theming.
         });
     }
-    function enableNotifs() {
-        notifyUser();
-    }
-    console.log("eventId : " + eventId)
+    //console.log("eventId : " + eventId)
 
-    console.log(rowData);
+    //console.log(rowData);
 
     function notifyUser(notificationText = "Hey, New song request just popped up!") {
         console.log("yep");
@@ -130,13 +138,17 @@ export default function DjLiveSongs() {
 
                     const highestIdInResponse = Math.max(...combinedRequests.map(request => request.id), 0);
                     const isNewRequest = highestIdInResponse > lastHighestRecordIdRef.current;
-                    console.log(isNewRequest);
-                    if (isNewRequest === true && Notification.permission === 'granted') {
-                        if (!isMobile) {
-                            console.log('inside !isMobile if clause');
-                            notifyUser(); //desktop notification
+                    //console.log(isNewRequest);
+                    console.log('inside second use Effect, isappledevice ' + isAppleDevice() + 'isPWA ' + isInStandaloneMode())
+                    if(!isAppleDevice() || isInStandaloneMode()){
+                        console.log('If clause, second use Effect, isappledevice' + isAppleDevice() + 'isPWA' + isInStandaloneMode())
+                        if (isNewRequest === true && Notification.permission === 'granted') {
+                            if (!isMobile) {
+                                console.log('inside !isMobile if clause');
+                                notifyUser(); //desktop notification
+                            }
+                            newNotification();  //in-page notification
                         }
-                        newNotification();  //in-page notification
                     }
                     lastHighestRecordIdRef.current = highestIdInResponse;
                     setUserHistory(combinedRequests);
@@ -414,9 +426,11 @@ export default function DjLiveSongs() {
                 console.log("Checking notification times...");
                 userHistory.forEach((result) => {
                     const remainingTime = calculateRemainingTime(result.paymentDateTime);
-
-                    if (remainingTime && ["10", "5", "2"].includes(remainingTime)) {
-                        sendReminderNotification(remainingTime);
+                    console.log('inside second use Effect, isappledevice' + isAppleDevice() + 'isPWA' + isInStandaloneMode());
+                    if(!isAppleDevice() || isInStandaloneMode()){
+                        if (remainingTime && ["10", "5", "2"].includes(remainingTime)) {
+                            sendReminderNotification(remainingTime);
+                        }
                     }
                 });
             };

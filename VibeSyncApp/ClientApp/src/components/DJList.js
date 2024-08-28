@@ -11,6 +11,7 @@ import StickyBar from './StickyBar';
 import { reviews } from './Constants';
 import LiveDjList from './LiveDjList'
 import { useLoadingContext } from './LoadingProvider';
+import { UpdateEventDetails } from './services/EventsService';
 
 export default function DjList() {
     const { error, setError } = useContext(MyContext);
@@ -29,7 +30,8 @@ export default function DjList() {
     const [selectedEventId, setSelectedEventId] = useState(null);
     const [currentUserId, setCurrentUserId] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [isAdmin, setIsAdmin] = useState(false);
+   
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
@@ -49,10 +51,15 @@ export default function DjList() {
         // Serialize the rowData object to a JSON string and encode it
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
 
-        // Navigate to the detail view with the serialized rowData as a parameter
-        navigate(`/SongSearch`,{state:{rowData:"?data="+rowDataString}});
-        //navigate('/SongSearch');
+        if (isAdmin) {
+            navigate(`/eventdetails`, { state: { rowData: '?data=' + rowDataString } });
+        }
+        else {
+            // Navigate to the detail view with the serialized rowData as a parameter
+            navigate(`/SongSearch`, { state: { rowData: "?data=" + rowDataString } });
+        }
     };
+
 
     const handleRatingClick = (item) => {
         // console.log(item);
@@ -136,6 +143,24 @@ export default function DjList() {
         return <div className="text-muted mb-0 event-date">{formattedDateTime}</div>;
     }
 
+    useEffect(() => {
+        const userId = localStorage.getItem("userId");
+        
+        if (userId === "10077") {
+            setIsAdmin(true);
+        }
+    }, []);
+
+    const handleLiveToggle = async (e, item) => {
+        e.stopPropagation();
+
+        item.eventStatus = item.eventStatus === 'Live' ? 'Not live' : 'Live';
+
+        setLoading(true);
+        await UpdateEventDetails(item);
+        setLoading(false);
+    };
+
     return (
         <div className='dj-lists-wrapper'>
             <div className = 'image-bg'>
@@ -166,25 +191,40 @@ export default function DjList() {
                 {
                     filteredData.map(item =>
                         <>
-                            <div key={item.id} onClick={(e) => { handleRowClick(item) }}>
+                            <div key={item.id} onClick={(e) => { handleRowClick(item) }} className ='all-event-wrapper'>
                                 <div className='event-card-outer'>
                                     <img
                                         src={item.djPhoto ? item.djPhoto : defaultPhoto} //use default photo if dj photo is null
                                         alt=''
                                         className='event-card-image' />
                                     <div className='event-card-text-block'>
-                                        <div className='event-card-text-rating'><div className='event-card-text'><span className='event-card-title'>{item.eventName}</span>
+                                        <div className='event-card-text-rating'><div className='event-card-text' style={isAdmin ? {width:"65%", minWidth : "65%" } : {}}><span className='event-card-title'>{item.eventName}</span>
                                             <span className='event-card-dj'>{item.djName}</span>
                                             <span className='event-card-venue'>{item.venue}</span></div>
 
 
-                                            <div className='event-card-rating'>
-                                                <img
-                                                    onClick={(e) => { e.stopPropagation(); handleRatingClick(item); }}
-                                                    className='rating-image'
-                                                    src='/images/Ratingbutton.png'
-                                                />
-
+                                            <div className='event-card-rating' style={isAdmin ? { marginTop : "10px", minWidth: "auto", width: "auto" } : {}}>
+                                                {isAdmin ? (
+                                                    // Toggle Button for Admin
+                                                    <div className="event-home-toggle-container">
+                                                       {/* <label htmlFor="liveToggle">LIVE</label>*/}
+                                                        <div
+                                                            className={`event-home-toggle-slider ${item.eventStatus == 'Live' ? 'active' : ''}`}
+                                                            onClick={(e) => handleLiveToggle(e, item)}
+                                                        >
+                                                            <div
+                                                                className={`event-home-slider-thumb ${item.eventStatus == 'Live' ? 'active' : ''}`}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    // Rating Button for Regular Users
+                                                    <img
+                                                        onClick={(e) => { e.stopPropagation(); handleRatingClick(item); }}
+                                                        className='rating-image'
+                                                        src='/images/Ratingbutton.png'
+                                                    />
+                                                )}
                                             </div></div>
                                         <div className='rating'>
                                             <div>{Array.from({ length: item.rating?item.rating:4 }, (_, index) => (

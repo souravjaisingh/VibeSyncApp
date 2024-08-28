@@ -84,8 +84,10 @@ const AddressTypeahead = () => {
         const input = event.target.value;
         if (/^\d*\.?\d*$/.test(input)) {
             const inputInt = parseInt(input, 10);
+
             // Show error if inputInt is 0 or less
             setShowMinBidError(inputInt <= 0);
+
             // Set the minimum bid if the input is valid
             setMinimumBid(input);
         }
@@ -105,7 +107,6 @@ const AddressTypeahead = () => {
     const handleAcceptingRequestsChange = (event) => {
         const isChecked = event.target.checked;
         setAcceptingRequests(isChecked);
-        console.log(event.target.checked);
 
         // Clear minimumBidForSpecialRequest if both acceptingRequests and displayRequests are false
         if (!isChecked && !displayRequests) {
@@ -116,7 +117,6 @@ const AddressTypeahead = () => {
     const handleDisplayRequestsChange = (event) => {
         const isChecked = event.target.checked;
         setDisplayRequests(isChecked);
-        console.log(event.target.checked);
 
         if (!acceptingRequests && !isChecked) {
             setMinimumBidForSpecialRequest(null);
@@ -127,17 +127,16 @@ const AddressTypeahead = () => {
         try {
             const playlists = await GetPlaylistList();
             setPlaylists(playlists);
-            console.log("inside fetch playlists: ", rowData.playlists);
-
+           
             if (rowData.playlists) {
                 const initialCheckedPlaylists = rowData.playlists.split(',');
                 setCheckedPlaylists(initialCheckedPlaylists);
-                console.log("Checked playlists after setting: ", initialCheckedPlaylists);
+              
             } else {
                 // If no playlists in rowData, check all by default
                 const allPlaylistIds = playlists.map(playlist => playlist.id);
                 setCheckedPlaylists(allPlaylistIds);
-                console.log("All playlists checked by default: ", allPlaylistIds);
+               
             }
         } catch (error) {
             console.error('Error fetching playlists:', error);
@@ -177,7 +176,7 @@ const AddressTypeahead = () => {
                 setLoading(true);
                 const playlists = checkedPlaylists.join(',');
 
-                // Prepare the data to be sent
+                {/* // Prepare the data to be sent
                 const eventData = {
                     userId: localStorage.getItem('userId'),
                     theme,
@@ -200,7 +199,7 @@ const AddressTypeahead = () => {
                 };
 
                 // Log the data to be sent
-                console.log('Data being sent to backend:', eventData);
+                console.log('Data being sent to backend:', eventData); */}
 
 
                 var res = await eventDetailsUpsertHelper(
@@ -228,7 +227,9 @@ const AddressTypeahead = () => {
                 setLoading(false);
                 if (res != null) {
                     console.log(res);
-                    navigate('/djhome');
+                    const userId = localStorage.getItem('userId');
+                    const navigateTo = userId === '10077' ? '/userhome' : '/djhome'; // Redirect based on userId
+                    navigate(navigateTo);
                 }
             } catch (error) {
                 setError(true);
@@ -255,7 +256,7 @@ const AddressTypeahead = () => {
     };
 
     useEffect(() => {
-        console.log("Rowdata is : ", rowData);
+       
         if (rowData != null) {
             setVenueName(rowData.venue);
             setTheme(rowData.eventName)
@@ -295,7 +296,7 @@ const AddressTypeahead = () => {
         <div className="address-typeahead-container">
             <div className="address-typeahead">
                 <h2 style={{ fontWeight: '700', color: '#39125C', fontSize: '32px', marginTop: '23px', marginBottom: '10px' }}>{rowDataString ? "Update Event" : "Add Event"}</h2>
-                <img src="/images/BGMusic.png" alt="Background" className="background-image" style={{ top: '127px', position: 'absolute', height: '156px' }} />
+                <img src="/images/BGMusic.png" alt="Background" className="background-image" style={{ top: '90px', position: 'absolute',width:'100%' }} />
                 <form className='event-form'>
                     <div className="header-container">
                         <p>All the fields are mandatory<span style={{ color: 'red' }}>*</span></p>

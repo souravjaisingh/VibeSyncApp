@@ -136,6 +136,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public DateTime? PaymentDateTime { get; set; }
         public string MicAnnouncement { get; set; }
         public string ScreenAnnouncement { get; set; }
+        public string EventName { get; set; }
 
     }
 }

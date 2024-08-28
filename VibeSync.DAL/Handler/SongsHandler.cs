@@ -197,6 +197,11 @@ namespace VibeSync.DAL.Handler
                 var songHistory = _songQueryRepository.GetSongHistoryByEventId(request.EventId, request.IsUser);
                 return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
             }
+            else if (request.EventId == 0 && request.IsAllRequest)
+            {
+                var songHistory = _songQueryRepository.GetLiveSongRequests_AllEvents(request.EventId, request.IsAllRequest);
+                return await Task.Run(() => _mapper.Map<List<SongHistoryModel>>(songHistory));
+            }
             else
             {
                 return _songQueryRepository.GetSongHistoryByUserId(request.EventId, request.UserId, request.SongStatus, request.IsAllRequest);

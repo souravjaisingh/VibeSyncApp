@@ -136,5 +136,51 @@ namespace VibeSync.DAL.Repository.QueryRepository
         {
             return _context.SongHistories.Where(x => x.OrderId == orderId).FirstOrDefault();
         }
+
+        public List<SongHistoryModel> GetLiveSongRequests_AllEvents(long eventId, bool isAllRequest)
+        {
+            var query = _context.SongHistories
+       .Join(
+           _context.Payments,
+           sh => sh.Id,
+           p => p.SongHistoryId,
+           (sh, p) => new { SongHistory = sh, Payment = p }
+       )
+       .Join(
+           _context.Events,
+           joined => joined.SongHistory.EventId,
+           e => e.Id,
+           (joined, e) => new { SongHistory = joined.SongHistory, Payment = joined.Payment, Event = e }
+       )
+       .Where(joined => joined.SongHistory.SongStatus != "Played" &&
+                        joined.SongHistory.SongStatus != "Rejected" &&
+                        joined.SongHistory.SongStatus != "Refunded" &&
+                        joined.SongHistory.SongStatus != "Unpaid" &&
+                        joined.Payment.PaymentStatus == "PaymentSucceeded")
+       .OrderBy(joined => joined.SongHistory.CreatedOn)
+       .Select(joined => new SongHistoryModel
+       {
+           Id = joined.SongHistory.Id,
+           UserId = joined.SongHistory.UserId,
+           EventId = joined.SongHistory.EventId,
+           DjId = joined.SongHistory.DjId,
+           SongName = joined.SongHistory.SongName,
+           SongId = joined.SongHistory.SongId,
+           SongStatus = joined.SongHistory.SongStatus,
+           CreatedOn = joined.SongHistory.CreatedOn,
+           CreatedBy = joined.SongHistory.CreatedBy,
+           ModifiedOn = joined.SongHistory.ModifiedOn,
+           ModifiedBy = joined.SongHistory.ModifiedBy,
+           Image = joined.SongHistory.Image,
+           ArtistId = joined.SongHistory.ArtistId,
+           ArtistName = joined.SongHistory.ArtistName,
+           AlbumName = joined.SongHistory.AlbumName,
+           MicAnnouncement = joined.SongHistory.MicAnnouncement,
+           ScreenAnnouncement = joined.SongHistory.ScreenAnnouncement,
+           EventName = joined.Event.EventName  
+       }).ToList();
+
+            return query;
+        }
     }
 }

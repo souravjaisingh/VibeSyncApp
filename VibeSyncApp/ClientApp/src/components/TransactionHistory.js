@@ -11,7 +11,7 @@ function TransactionHistory() {
     const [transactionHistory, setTransactionHistory] = useState([]);
     const [filteredTransactionHistory, setFilteredTransactionHistory] = useState([]);
     const [distinctEventNames, setDistinctEventNames] = useState([]);
-    const [selectedEvent, setSelectedEvent] = useState('');
+    const [selectedEvent, setSelectedEvent] = useState('Today');
     const { setLoading } = useLoadingContext();
 
     const formatDate = (datetime) => {

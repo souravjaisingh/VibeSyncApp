@@ -79,8 +79,8 @@
     font-weight: 700;
     background-color: rgb(201, 201, 43);
     border-radius: 15px;
-    font-size: 0.5rem;
-    padding: 0px 6px;
+    font-size: 0.6rem;
+    padding: 0px 7px;
     border: none;
 }
 
@@ -259,8 +259,8 @@
     color: #fff;
     background-color: #d9534f;
     border: none;
-    height: 25px;
-    width: 25px;
+    height: 31px;
+    width: 31px;
 }
 
 .accept-button-yes{
@@ -268,8 +268,8 @@
     color: #fff;
     background-color: #5cb85c;
     border: none;
-    height: 25px;
-    width: 25px;
+    height: 31px;
+    width: 31px;
 }
 
 .dj-side-song-req-title{

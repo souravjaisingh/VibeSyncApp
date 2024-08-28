@@ -9,7 +9,7 @@ export default function SongHistory() {
     const { errorMessage, setErrorMessage } = useContext(MyContext);
     const [userHistory, setUserHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [filter, setFilter] = useState('All');
+    const [filter, setFilter] = useState('Today');
     const { setLoading } = useLoadingContext();
 
     async function fetchData(selectedFilter) {

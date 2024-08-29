@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import './PrivacyPolicy.css';
+import { requestForToken } from './firebase';
 
 function PrivacyPolicy() {
+   requestForToken();
     useEffect(() => {
         document.documentElement.scrollTop = 0; // For modern browsers
         document.body.scrollTop = 0; // For older browsers

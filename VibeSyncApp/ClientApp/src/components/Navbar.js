@@ -135,10 +135,8 @@ function NavbarComponent() {
                         </Button>
                     )}
                 
-                {(localStorage.getItem('userId') == 10077 && ( //(10077)
-                    location.pathname.startsWith('/SongSearch') ||
-                    location.pathname.startsWith('/songsearch') ||
-                    location.pathname.startsWith('/paymentIndex'))) && (
+                {(localStorage.getItem('userId') == 10077 &&  //(10077)
+                    (location.pathname.startsWith('/eventdetails'))) && (
                         <Button
                             className="btn-navigation-bar"
                             onClick={(e) => handleSettlementsClick()}>
@@ -165,12 +163,13 @@ function NavbarComponent() {
                 )}
             </div>
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
-                {(location.pathname.startsWith('/djhome') ||
+                {(localStorage.getItem('userId') != 10077 &&
+                    (location.pathname.startsWith('/djhome') ||
                     location.pathname.startsWith('/djlivesongs') ||
                     location.pathname.startsWith('/showtransactions') ||
                     //location.pathname.startsWith('/paymentIndex')  ||
                     location.pathname.startsWith('/djprofile') ||
-                    location.pathname.startsWith('/eventdetails')) && (
+                    location.pathname.startsWith('/eventdetails'))) && (
                         <Button
                             className="btn-navigation-bar"
                             onClick={(e) => handleSetlementsHistoryClick()}>

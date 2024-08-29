@@ -41,7 +41,13 @@ function SongSearch() {
     const [disableSongSearch, setDisableSongSearch] = useState(false);
     const [timeDisclaimer, setTimeDisclaimer] =useState();
 
+    // Refs for elements to handle layout changes on keyboard open/close
+    const searchContainerRef = useRef(null);
+    const searchPageContainerRef = useRef(null);
 
+    // Inside your component
+    const searchPageContainerInitialStyles = useRef({});
+    const searchContainerInitialStyles = useRef({});
 
     const handleSearchBarClick = (e) => {
         e.stopPropagation();
@@ -301,35 +307,65 @@ function SongSearch() {
         };
     }, [currentPage, loading, searchQuery, activePlaylistId]);
 
-   const handleSearchChange = (event) => {
-    setActivePlaylistId(null);
-    setNoSongsFound(false);
-    const newQuery = event.target.value;
-    setSearchQuery(newQuery);
-    clearTimeout(typingTimeout);
 
-    if (newQuery.trim() !== '') {
-        // User is typing, fetch search results
-        const newTypingTimeout = setTimeout(() => {
-            fetchResultsFromAPI(newQuery);
-        }, 400);
-        setTypingTimeout(newTypingTimeout);
-    }
-    else {
-        setResults([]);// Clear search results
-        console.log('clear the search songs');
 
-        if (filteredPlaylists.length > 0) {
-            // Select the first playlist from filtered playlists
-            setActivePlaylistId(filteredPlaylists[0].id);
-            handlePlaylistClick(filteredPlaylists[0].id);
-        } else if (listOfPlaylists.length > 0) {
-            // Select the first playlist from the original list
-            setActivePlaylistId(listOfPlaylists[0].id);
-            handlePlaylistClick(listOfPlaylists[0].id);
+    useEffect(() => {
+        if (searchPageContainerRef.current) {
+            searchPageContainerInitialStyles.current = {
+                transform: searchPageContainerRef.current.style.transform,
+            };
         }
-    }
-};
+        if (searchContainerRef.current) {
+            searchContainerInitialStyles.current = {
+                display: searchContainerRef.current.style.display,
+            };
+        }
+    }, []);
+
+    const handleSearchChange = (event) => {
+        setActivePlaylistId(null);
+        setNoSongsFound(false);
+        const newQuery = event.target.value;
+        setSearchQuery(newQuery);
+        clearTimeout(typingTimeout);
+
+        // Check if the screen size is small
+        const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
+
+        if (isSmallScreen) {
+            // Apply keyboard state-based changes only for small screens
+            if (newQuery !== '') {
+                searchPageContainerRef.current.classList.add('search-page-container-small');
+                searchContainerRef.current.classList.add('search-container-small');
+
+                // User is typing, fetch search results
+                const newTypingTimeout = setTimeout(() => {
+                    fetchResultsFromAPI(newQuery);
+                }, 400);
+                setTypingTimeout(newTypingTimeout);
+            } else {
+                searchPageContainerRef.current.classList.remove('search-page-container-small');
+                searchContainerRef.current.classList.remove('search-container-small');
+
+                // Clear search results
+                setResults([]);
+                console.log('clear the search songs');
+
+                if (filteredPlaylists.length > 0) {
+                    // Select the first playlist from filtered playlists
+                    setActivePlaylistId(filteredPlaylists[0].id);
+                    handlePlaylistClick(filteredPlaylists[0].id);
+                } else if (listOfPlaylists.length > 0) {
+                    // Select the first playlist from the original list
+                    setActivePlaylistId(listOfPlaylists[0].id);
+                    handlePlaylistClick(listOfPlaylists[0].id);
+                }
+            }
+        } else {
+            // Handle changes for larger screens if necessary
+            // You might not need to change anything here, but this is a placeholder.
+        }
+    };
 
     const fetchResultsFromAPI = async (query) => {
         try {
@@ -459,7 +495,7 @@ function SongSearch() {
 
     return (
         <>
-            <div className='song-search'>
+            <div ref={searchPageContainerRef} className='song-search'>
                 {/* <button className="back-button-songsearch" onClick={()=>navigate(-1)}>{'<<'}Back</button> */}
                 {eventData && (
                     <div className="search-container">
@@ -505,7 +541,7 @@ function SongSearch() {
 
 
 
-                <div className="search-page">
+                <div ref={searchContainerRef} className="search-page">
                     {!disableSongSearch && (
                         <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
                             <input

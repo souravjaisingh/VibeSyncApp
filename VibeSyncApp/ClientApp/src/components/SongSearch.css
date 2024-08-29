@@ -610,4 +610,14 @@ left: 10px;
         margin-left: 30px;
     }
 }
-      
+
+
+@media (max-width: 767px) {
+    .search-page-container-small {
+        transform: translateY(-20vh) !important;
+    }
+
+    .search-container-small {
+        display: flex !important;
+    }
+}

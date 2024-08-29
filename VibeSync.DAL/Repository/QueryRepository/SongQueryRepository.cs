@@ -177,7 +177,10 @@ namespace VibeSync.DAL.Repository.QueryRepository
            AlbumName = joined.SongHistory.AlbumName,
            MicAnnouncement = joined.SongHistory.MicAnnouncement,
            ScreenAnnouncement = joined.SongHistory.ScreenAnnouncement,
-           EventName = joined.Event.EventName  
+           EventName = joined.Event.EventName,
+           TotalAmount = joined.Payment.TotalAmount,
+           PaymentDateTime = joined.Payment.ModifiedOn,
+           PaymentId = joined.Payment.PaymentId
        }).ToList();
 
             return query;

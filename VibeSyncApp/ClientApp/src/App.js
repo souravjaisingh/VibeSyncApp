@@ -33,6 +33,7 @@ import SongsTable from './components/SongsTable';
 import { Notifications } from 'react-push-notification';
 import Settlements from './components/Settlements';
 import SettlementComponent from './components/SettlementHistory';
+import LiveRequests from './components/LiveRequests';
 
 export const MyContext = createContext();
 
@@ -102,6 +103,7 @@ function App() {
                 <Route path="/acceptedRequests" element={<SongsTable />} />
                 <Route path="/settlements" element={<Settlements />} />
                 <Route path="/settlementshistory" element={<SettlementComponent />} />
+                <Route path="/liverequests" element={<LiveRequests /> } />
                 </Routes>}
                 </MyContext.Provider>
                 {loading && (

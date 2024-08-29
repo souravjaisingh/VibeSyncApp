@@ -10,6 +10,10 @@ export async function GetSongsByEventId(id, isUser = false) {
     return handleAPIRequest(`Songs/GetSongHistory?EventId=${id}&isUser=${isUser}`, 'GET');
 }
 
+export async function GetAllLiveRequests(id, isAllRequest = true) {
+    return handleAPIRequest(`Songs/GetSongHistory?EventId=${id}&isAllRequest=${isAllRequest}`, 'GET');
+}
+
 export async function ModifySongRequest(data) {
     return handleAPIRequest('Songs/UpdateSongHistory', 'PUT', data);
 }

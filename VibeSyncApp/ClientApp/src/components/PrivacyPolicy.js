@@ -1,13 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './PrivacyPolicy.css';
 import { requestForToken } from './firebase';
 
 function PrivacyPolicy() {
-   requestForToken();
+    const [fcmToken, setFcmToken] = useState(null);
+
     useEffect(() => {
+        const fetchToken = async () => {
+            try {
+                const token = await requestForToken(); // Wait for the token to be retrieved
+                setFcmToken(token); // Set the token in state
+            } catch (err) {
+                console.error('Failed to fetch FCM token:', err);
+            }
+        };
+
+        fetchToken(); // Call the async function
+
+        // Scroll to top on component mount
         document.documentElement.scrollTop = 0; // For modern browsers
         document.body.scrollTop = 0; // For older browsers
-    }, [])
+    }, []);
     return (
         <div className="privacy-policy-container">
             <h1>Privacy Policy</h1>
@@ -31,6 +44,8 @@ function PrivacyPolicy() {
 
             <h2>Contact Us</h2>
             <p>If you have any questions or concerns about our Privacy Policy, please contact us at <a href="mailto:vibesyncdj@gmail.com">vibesyncdj@gmail.com</a>.</p>
+
+            <p>{fcmToken ? `FCM Token: ${fcmToken}` : 'Loading FCM token...'}</p>
         </div>
     );
 }

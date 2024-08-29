@@ -41,6 +41,11 @@ function NavbarComponent() {
         setMenuOpen(false);
         navigate('/settlements');
     }
+
+    function handleLiveRequestsClick(){
+        setMenuOpen(false);
+        navigate('/liverequests');
+    }
     function handleSetlementsHistoryClick() {
         setMenuOpen(false);
         navigate('/settlementshistory');
@@ -130,7 +135,7 @@ function NavbarComponent() {
                         </Button>
                     )}
                 
-                {(localStorage.getItem('userId') == 10077 && (
+                {(localStorage.getItem('userId') == 10077 && ( //(10077)
                     location.pathname.startsWith('/SongSearch') ||
                     location.pathname.startsWith('/songsearch') ||
                     location.pathname.startsWith('/paymentIndex'))) && (
@@ -139,7 +144,17 @@ function NavbarComponent() {
                             onClick={(e) => handleSettlementsClick()}>
                             Settlements
                         </Button>
-                )}
+                    )}
+
+                {(localStorage.getItem('userId') == 10077 && ( //(10077)
+                    location.pathname.startsWith('/userhome'))) && (
+                        <Button
+                            className="btn-navigation-bar"
+                            onClick={(e) => handleLiveRequestsClick()}>
+                            Live Requests
+                        </Button>
+                    )}
+
                 {localStorage.getItem('userId') != null && (
                     <Button
                         className="btn-navigation-bar"

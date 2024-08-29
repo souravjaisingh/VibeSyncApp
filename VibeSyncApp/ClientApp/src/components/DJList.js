@@ -52,6 +52,8 @@ export default function DjList() {
         const rowDataString = encodeURIComponent(JSON.stringify(rowData));
 
         if (isAdmin) {
+            console.log(rowData);
+            localStorage.setItem('qrEventId', rowData.id);
             navigate(`/eventdetails`, { state: { rowData: '?data=' + rowDataString } });
         }
         else {

@@ -614,7 +614,7 @@ left: 10px;
 
 @media (max-width: 767px) {
     .search-page-container-small {
-        transform: translateY(-20vh) !important;
+        transform: translateY(-21vh) !important;
     }
 
     .search-container-small {

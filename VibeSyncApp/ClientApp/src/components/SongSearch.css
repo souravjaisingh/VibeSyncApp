@@ -83,7 +83,6 @@ html body {
 
 
 .search-input {
-    padding-left : 37px!important;
     width: 100%;
     padding: 7px 20px;
     margin-top: 15px;
@@ -609,7 +608,7 @@ left: 10px;
 
 .back-button-searchbar {
     position: absolute;
-    left: 38px; /* Adjust as needed */
+    left: 7px; /* Adjust as needed */
     top: 36%; /* Center vertically */
     transform: translateY(-50%); /* Center vertically */
     background: transparent;
@@ -633,12 +632,3 @@ left: 10px;
 }
 
 
-@media (max-width: 767px) {
-    .search-page-container-small {
-        transform: translateY(-150px) !important;
-    }
-
-    .search-container-small {
-        display: flex !important;
-    }
-}

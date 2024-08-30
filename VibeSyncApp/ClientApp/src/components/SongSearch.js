@@ -334,15 +334,21 @@ function SongSearch() {
         // Check if the screen size is small
         const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
 
+        const playlistButtons = document.querySelector('.playlist-buttons');
+        const chooseFromCollectionsText = document.querySelector('.choose-from-collections-text');
+        const eventDescElements = document.querySelectorAll('.event-desc');
+        const searchConatinerElements = document.querySelectorAll('.search-container');
+
         if (isSmallScreen) {
             // Apply keyboard state-based changes only for small screens
             if (newQuery !== '') {
                 setIsSearchActive(true);
-                searchPageContainerRef.current.classList.add('search-page-container-small');
-                searchContainerRef.current.classList.add('search-container-small');
+
                 // Hide other elements
-                document.querySelector('.playlist-buttons').style.display = 'none';
-                document.querySelector('.choose-from-collections-text').style.display = 'none';
+                if (playlistButtons) playlistButtons.style.display = 'none';
+                if (chooseFromCollectionsText) chooseFromCollectionsText.style.display = 'none';
+                if (eventDescElements) eventDescElements.forEach(element => element.style.display = 'none');
+                if (searchConatinerElements) searchConatinerElements.forEach(element => element.style.display = 'none');
 
                 // User is typing, fetch search results
                 const newTypingTimeout = setTimeout(() => {
@@ -351,11 +357,12 @@ function SongSearch() {
                 setTypingTimeout(newTypingTimeout);
             } else {
                 setIsSearchActive(false);
-                searchPageContainerRef.current.classList.remove('search-page-container-small');
-                searchContainerRef.current.classList.remove('search-container-small');
                 // Show other elements
-                document.querySelector('.playlist-buttons').style.display = 'flex';
-                document.querySelector('.choose-from-collections-text').style.display = 'block';
+                if (playlistButtons) playlistButtons.style.display = 'flex';
+                if (chooseFromCollectionsText) chooseFromCollectionsText.style.display = 'block';
+                if (eventDescElements) eventDescElements.forEach(element => element.style.display = 'flex');
+                if (searchConatinerElements) searchConatinerElements.forEach(element => element.style.display = 'flex');
+ 
                 // Clear search results
                 setResults([]);
                 console.log('clear the search songs');
@@ -371,10 +378,8 @@ function SongSearch() {
                 }
             }
         } else {
-            searchPageContainerRef.current.classList.remove('search-page-container-small');
-            searchContainerRef.current.classList.remove('search-container-small');
-            document.querySelector('.playlist-buttons').style.display = 'flex';
-            document.querySelector('.choose-from-collections-text').style.display = 'block';
+            if (playlistButtons) playlistButtons.style.display = 'flex';
+            if (chooseFromCollectionsText) chooseFromCollectionsText.style.display = 'block';
 
             if (newQuery !== '') {
                 // User is typing, fetch search results
@@ -526,6 +531,34 @@ function SongSearch() {
     );
     // console.log('selectedPlaylists:', selectedPlaylists);
 
+    const handleBackButtonClick = () => {
+        setIsSearchActive(false);
+        setSearchQuery('');
+        setResults([]);
+
+        // Get elements
+        const playlistButtons = document.querySelector('.playlist-buttons');
+        const chooseFromCollectionsText = document.querySelector('.choose-from-collections-text');
+        const eventDescElements = document.querySelectorAll('.event-desc');
+        const searchConatinerElements = document.querySelectorAll('.search-container');
+
+        // Show other elements if they exist
+        if (playlistButtons) playlistButtons.style.display = 'flex';
+        if (chooseFromCollectionsText) chooseFromCollectionsText.style.display = 'block';
+        if (eventDescElements) eventDescElements.forEach(element => element.style.display = 'flex');
+        if (searchConatinerElements) searchConatinerElements.forEach(element => element.style.display = 'flex');
+
+        // Handle playlist selection
+        if (filteredPlaylists.length > 0) {
+            // Select the first playlist from filtered playlists
+            setActivePlaylistId(filteredPlaylists[0].id);
+            handlePlaylistClick(filteredPlaylists[0].id);
+        } else if (listOfPlaylists.length > 0) {
+            // Select the first playlist from the original list
+            setActivePlaylistId(listOfPlaylists[0].id);
+            handlePlaylistClick(listOfPlaylists[0].id);
+        }
+    };
 
     return (
         <>
@@ -579,29 +612,10 @@ function SongSearch() {
                     {!disableSongSearch && (
                         <div className={`search-bar ${eventData && eventData.hidePlaylist ? 'hidden-content-margin' : ''}`}>
                             {/* Added Back Button */}
-                            <button className="back-button-searchbar" onClick={() => {
-                                setIsSearchActive(false);
-                                setSearchQuery('');
-                                setResults([]);
-                                searchPageContainerRef.current.classList.remove('search-page-container-small');
-                                searchContainerRef.current.classList.remove('search-container-small');
-                                // Show other elements
-                                document.querySelector('.playlist-buttons').style.display = 'flex';
-                                document.querySelector('.choose-from-collections-text').style.display = 'block';
-                                //navigate(-1);
-                                if (filteredPlaylists.length > 0) {
-                                    // Select the first playlist from filtered playlists
-                                    setActivePlaylistId(filteredPlaylists[0].id);
-                                    handlePlaylistClick(filteredPlaylists[0].id);
-                                } else if (listOfPlaylists.length > 0) {
-                                    // Select the first playlist from the original list
-                                    setActivePlaylistId(listOfPlaylists[0].id);
-                                    handlePlaylistClick(listOfPlaylists[0].id);
-                                }
-                            }}
+                            <button className="back-button-searchbar" onClick={ handleBackButtonClick}
                                 disabled={searchQuery.trim() === ''} 
                             >
-                                <img src="/images/back_arrow.png" alt="Back" />
+                                {searchQuery && <img src="/images/back_arrow.png" alt="Back" />}
                             </button>
                             <input
                                 type="text"

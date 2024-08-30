@@ -5,6 +5,16 @@ export const Live = 'Live';
 export const LiveButNotAcceptingRequests = 'Live-NA';
 export const PaidZeroUsingPromocode = 'PaidZeroUsingPromo';
 
+export const firebaseConfig = {
+    apiKey: "AIzaSyAWp-o6Eki3kX1jidSdNWOodisINdfoQrw",
+    authDomain: "vibesync-428906.firebaseapp.com",
+    projectId: "vibesync-428906",
+    storageBucket: "vibesync-428906.appspot.com",
+    messagingSenderId: "856720085870",
+    appId: "1:856720085870:web:e48b903204842ccd3f277f",
+    measurementId: "G-7R0FVYC3Q4"
+};
+
 export const reviews = [
     { id: 1, text: "DJ Fire lit up the night!", author: "DJ Fire", image: 'https://images.pexels.com/photos/417458/pexels-photo-417458.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
     { id: 2, text: "Best DJ set I've ever heard!", author: "MusicLover", image: 'https://images.pexels.com/photos/358129/pexels-photo-358129.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },

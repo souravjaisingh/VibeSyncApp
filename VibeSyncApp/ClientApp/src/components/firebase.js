@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { firebaseConfig } from './Constants';
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -9,15 +10,7 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: "AIzaSyAWp-o6Eki3kX1jidSdNWOodisINdfoQrw",
-    authDomain: "vibesync-428906.firebaseapp.com",
-    projectId: "vibesync-428906",
-    storageBucket: "vibesync-428906.appspot.com",
-    messagingSenderId: "856720085870",
-    appId: "1:856720085870:web:e48b903204842ccd3f277f",
-    measurementId: "G-7R0FVYC3Q4"
-};
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -50,3 +43,4 @@ export const onMessageListener = () =>
             resolve(payload);
         });
     });
+

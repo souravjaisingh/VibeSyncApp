@@ -1,7 +1,16 @@
 ﻿// Scripts for firebase and firebase messaging
 importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js');
-import { firebaseConfig } from './Constants';
+
+export const firebaseConfig = {
+    apiKey: "AIzaSyAWp-o6Eki3kX1jidSdNWOodisINdfoQrw",
+    authDomain: "vibesync-428906.firebaseapp.com",
+    projectId: "vibesync-428906",
+    storageBucket: "vibesync-428906.appspot.com",
+    messagingSenderId: "856720085870",
+    appId: "1:856720085870:web:e48b903204842ccd3f277f",
+    measurementId: "G-7R0FVYC3Q4"
+};
 
 firebase.initializeApp(firebaseConfig);
 

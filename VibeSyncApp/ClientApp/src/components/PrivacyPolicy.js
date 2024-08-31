@@ -45,7 +45,7 @@ function PrivacyPolicy() {
             <h2>Contact Us</h2>
             <p>If you have any questions or concerns about our Privacy Policy, please contact us at <a href="mailto:vibesyncdj@gmail.com">vibesyncdj@gmail.com</a>.</p>
 
-            <p>{fcmToken ? `FCM Token: ${localStorage.getItem('fcm')!= null ? localStorage.getItem('fcm')!= null : null}` : 'Loading FCM token...'}</p>
+            <p>{`FCM Token: ${localStorage.getItem('fcm')!= null ? localStorage.getItem('fcm'): null}`}</p>
         </div>
     );
 }

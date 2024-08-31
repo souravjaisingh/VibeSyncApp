@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using FirebaseAdmin.Messaging;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.Repository.CommandRepository;
@@ -14,15 +17,19 @@ namespace VibeSync.DAL.Handler
         private readonly IPaymentCommandRepository _paymentCommandRepository;
         private readonly ISongCommandRepository _songCommandRepository;
         private readonly ISongQueryRepository _songQueryRepository;
+        private readonly IDeviceManagementQueryRepository _deviceManagementQueryRepository;
+        private readonly ILogger<WebHooksHandler> _logger;
         public WebHooksHandler(IPaymentQueryRepository paymentQueryRepository
             , IPaymentCommandRepository paymentCommand
             , ISongCommandRepository songCommand
-            , ISongQueryRepository songQueryRepository)
+            , ISongQueryRepository songQueryRepository, IDeviceManagementQueryRepository deviceManagementQueryRepository, ILogger<WebHooksHandler> logger)
         {
+            _logger = logger;
             _paymentqueryRepository = paymentQueryRepository;
             _paymentCommandRepository = paymentCommand;
             _songCommandRepository = songCommand;
             _songQueryRepository = songQueryRepository;
+            _deviceManagementQueryRepository = deviceManagementQueryRepository;
         }
 
         public async Task<bool> Handle(RazorpayWebhookPayload request, CancellationToken cancellationToken)
@@ -40,6 +47,7 @@ namespace VibeSync.DAL.Handler
                         long paymentId = await _paymentCommandRepository.UpdatePaymentDetailsFromWebHook(request.payload.payment.entity.order_id, songHistoryId, request.payload.payment.entity.id, (request.payload.payment.entity.amount / 100), paymentEntity.contact);
                         if (paymentId > 0)
                         {
+                            _ = SendNotificationToDj(songHistoryId);
                             return true;
                         }
                     }
@@ -54,6 +62,27 @@ namespace VibeSync.DAL.Handler
             {
                 return false;
             }
+        }
+
+        private async Task SendNotificationToDj(long songHistoryId)
+        {
+            var djId = _songQueryRepository.GetSongHistoryById(songHistoryId).DjId;
+            var deviceManagement = _deviceManagementQueryRepository.GetDeviceManagementByDjId(djId);
+            var registrationTokens = new List<string>(){};
+            var message = new MulticastMessage()
+            {
+                Tokens = registrationTokens,
+                Data = new Dictionary<string, string>()
+                {
+                    { "score", "850" },
+                    { "time", "2:45" },
+                },
+            };
+
+            var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
+            // See the BatchResponse reference documentation
+            // for the contents of response.
+            _logger.LogInformation($"SendNotificationToDj - {response.SuccessCount} messages were sent successfully");
         }
     }
 }

@@ -9,6 +9,7 @@ namespace VibeSyncModels.EntityModels
     {
         public Dj()
         {
+            DeviceManagements = new HashSet<DeviceManagement>();
             Events = new HashSet<Event>();
             Reviews = new HashSet<Review>();
             SongHistories = new HashSet<SongHistory>();
@@ -32,6 +33,7 @@ namespace VibeSyncModels.EntityModels
         public string ArtistName { get; set; }
 
         public virtual User User { get; set; }
+        public virtual ICollection<DeviceManagement> DeviceManagements { get; set; }
         public virtual ICollection<Event> Events { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<SongHistory> SongHistories { get; set; }

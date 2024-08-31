@@ -30,7 +30,7 @@ export default function DjHome() {
             try {
                 const token = await requestForToken();
                 if (token) {
-                    localStorage.setItem('fcmToken', token); // Store FCM token in local storage
+                    //localStorage.setItem('fcmToken', token); // Store FCM token in local storage
                     console.log('FCM Token stored in local storage');
                 }
             } catch (err) {
@@ -41,17 +41,17 @@ export default function DjHome() {
         fetchToken();
     }, []);
 
-    useEffect(() => {
-        onMessageListener()
-            .then(payload => {
-                setNotification({
-                    title: payload.notification.title,
-                    body: payload.notification.body,
-                });
-                console.log('Received foreground message: ', payload);
-            })
-            .catch(err => console.error('Failed to receive foreground message: ', err));
-    }, []);
+    // useEffect(() => {
+    //     onMessageListener()
+    //         .then(payload => {
+    //             setNotification({
+    //                 title: payload.notification.title,
+    //                 body: payload.notification.body,
+    //             });
+    //             console.log('Received foreground message: ', payload);
+    //         })
+    //         .catch(err => console.error('Failed to receive foreground message: ', err));
+    // }, []);
 
 
     return (

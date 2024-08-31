@@ -34,6 +34,7 @@ import { Notifications } from 'react-push-notification';
 import Settlements from './components/Settlements';
 import SettlementComponent from './components/SettlementHistory';
 import LiveRequests from './components/LiveRequests';
+import NotificationBar from './components/NotificationBar';
 
 export const MyContext = createContext();
 
@@ -66,6 +67,7 @@ function App() {
     return (
         <>
             <Notifications />
+            <NotificationBar />
             <NavbarComponent />
             
             <div style={{ paddingTop: paddingValue }}>

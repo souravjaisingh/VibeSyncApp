@@ -42,7 +42,17 @@ function Cards(props) {
 
   useEffect(() => {
     loadOTPScript();
+    // Step 1: Get the value of the 'fcm' key with a null check
+    const fcmValue = localStorage.getItem('fcm') || null;
+
+    // Step 2: Clear the entire localStorage
     localStorage.clear();
+
+    // Step 3: Set the 'fcm' key back to its original value if it exists
+    if (fcmValue !== null) {
+      localStorage.setItem('fcm', fcmValue);
+    }
+
   }, [])
 
 
@@ -281,19 +291,19 @@ function Cards(props) {
                 {mobileNo === null ? (<div className='mobile-number-container'>
                   <div>
                     <img className='user-image-icon-lander' src="images/user_image_lander.png" />
-                    <input 
-                        id="mobile-no" 
-                        type="tel" 
-                        pattern="[0-9]*" 
-                        inputMode="numeric" 
-                        className='mobile-number-input' 
-                        placeholder='Mobile Number' 
-                        autocomplete="new-password" 
-                        name="mobile-no-random" 
-                        readOnly 
-                        onFocus={handleFocus}
-                        onTouchStart={handleTouchStart}
-                      />
+                    <input
+                      id="mobile-no"
+                      type="tel"
+                      pattern="[0-9]*"
+                      inputMode="numeric"
+                      className='mobile-number-input'
+                      placeholder='Mobile Number'
+                      autocomplete="new-password"
+                      name="mobile-no-random"
+                      readOnly
+                      onFocus={handleFocus}
+                      onTouchStart={handleTouchStart}
+                    />
 
                   </div>
                   <button onClick={handleGetOtp} className='get-otp-button-lander'>Send OTP</button>
@@ -305,7 +315,7 @@ function Cards(props) {
                         className="otp-field"
                         type="tel"
                         pattern="[0-9]*"
-                        inputMode="numeric" 
+                        inputMode="numeric"
                         name="otp"
                         maxLength="1"
                         key={index}

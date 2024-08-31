@@ -17,8 +17,18 @@ export default function ErrorPage(props) {
         }
 
         // Clear local storage
+        // Step 1: Get the value of the 'fcm' key with a null check
+        const fcmValue = localStorage.getItem('fcm') || null;
+
+        // Step 2: Clear the entire localStorage
         localStorage.clear();
-        
+
+        // Step 3: Set the 'fcm' key back to its original value if it exists
+        if (fcmValue !== null) {
+            localStorage.setItem('fcm', fcmValue);
+        }
+
+
         // Redirect to the Home component
         navigate('/');
     };

@@ -56,12 +56,12 @@ export default function DjHome() {
 
     return (
         <div className='DjHome'>
-            {notification.title && (
+            {/* {notification.title && (
                 <div className='notification'>
                     <h4>{notification.title}</h4>
                     <p>{notification.body}</p>
                 </div>
-            )}
+            )} */}
 
             <div className='center-button'>
                 <Link to='/djprofile' className='btn-medium left-button'>

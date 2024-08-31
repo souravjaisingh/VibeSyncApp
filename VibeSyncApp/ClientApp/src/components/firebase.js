@@ -36,10 +36,33 @@ export const requestForToken = () => {
         });
 };
 
+// Listen for token refresh
+// onTokenRefresh(() => {
+//     getToken(messaging, { vapidKey: 'BIZe19kreVsinHyUgkkzI_lozq48GprMV3zXifOD2GVL7uI6-VFRjR_cYYDtK_jUHC6ZB37ObeB5CALLs1qYtk4' })
+//         .then((refreshedToken) => {
+//             console.log('FCM token refreshed:', refreshedToken);
+//             // Send the new token to your server and update it in the user database
+//         })
+//         .catch((error) => {
+//             console.error('Unable to retrieve refreshed token ', error);
+//         });
+// });
+
 export const onMessageListener = () =>
     new Promise((resolve) => {
         onMessage(messaging, (payload) => {
             console.log("payload", payload)
+
+            // Show a notification using the Notification API
+            if (payload.notification) {
+                const { title, body, icon } = payload.notification;
+
+                new Notification(title, {
+                    body: body,
+                    icon: icon || 'default-icon.png',
+                });
+            }
+
             resolve(payload);
         });
     });

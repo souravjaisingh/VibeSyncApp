@@ -38,7 +38,9 @@ export default function DjHome() {
             }
         };
 
-        fetchToken();
+        if (!localStorage.getItem('fcm')) {
+            fetchToken(); // Fetch token only if it's not already in localStorage
+        }
     }, []);
 
     // useEffect(() => {
@@ -62,7 +64,7 @@ export default function DjHome() {
                     <p>{notification.body}</p>
                 </div>
             )} */}
-
+            <div id="notification-root"></div>
             <div className='center-button'>
                 <Link to='/djprofile' className='btn-medium left-button'>
                     <button className='toolbar-button'>

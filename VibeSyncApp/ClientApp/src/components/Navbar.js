@@ -26,15 +26,15 @@ function NavbarComponent() {
     }, [location]);
 
     function handleRequestsClick() {
-        setMenuOpen(false); 
+        setMenuOpen(false);
         navigate('/songhistory');
     }
     function handleAcceptedRequestsClick() {
-        setMenuOpen(false); 
+        setMenuOpen(false);
         navigate('/acceptedRequests');
     }
     function handlePlaylistsClick() {
-        setMenuOpen(false); 
+        setMenuOpen(false);
         navigate('/playlists');
     }
     function handleSettlementsClick() {
@@ -42,7 +42,7 @@ function NavbarComponent() {
         navigate('/settlements');
     }
 
-    function handleLiveRequestsClick(){
+    function handleLiveRequestsClick() {
         setMenuOpen(false);
         navigate('/liverequests');
     }
@@ -50,15 +50,15 @@ function NavbarComponent() {
         setMenuOpen(false);
         navigate('/settlementshistory');
     }
-    useEffect(()=>{
+    useEffect(() => {
         const handleClickOutside = () => setMenuOpen(false);
 
         document.addEventListener('click', handleClickOutside);
-    
+
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    },[])
+    }, [])
 
     async function handleLogoutClick() {
         try {
@@ -66,13 +66,23 @@ function NavbarComponent() {
             if (localStorage.getItem('userId') != 0) {
                 const res = await Logout();
                 setLoading(false);
-                setMenuOpen(false); 
+                setMenuOpen(false);
                 if (res) {
                     navigate('/');
                 }
             }
-            else{
+            else {
+                // Step 1: Get the value of the 'fcm' key with a null check
+                const fcmValue = localStorage.getItem('fcm') || null;
+
+                // Step 2: Clear the entire localStorage
                 localStorage.clear();
+
+                // Step 3: Set the 'fcm' key back to its original value if it exists
+                if (fcmValue !== null) {
+                    localStorage.setItem('fcm', fcmValue);
+                }
+
                 setLoading(false);
                 setMenuOpen(false);
                 navigate('/');
@@ -104,21 +114,21 @@ function NavbarComponent() {
     return (
         <div className="navbar">
             {location.pathname !== '/' &&
-            (!location.pathname.startsWith('/djhome')
-            && !location.pathname.startsWith('/userhome')) &&(
-                <div className="home-container">
-                    <div className="home-img" onClick={()=>navigate(-1)}>
-                        <img src={backIcon} alt="App Logo" />
+                (!location.pathname.startsWith('/djhome')
+                    && !location.pathname.startsWith('/userhome')) && (
+                    <div className="home-container">
+                        <div className="home-img" onClick={() => navigate(-1)}>
+                            <img src={backIcon} alt="App Logo" />
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
             <div className="logo-container">
                 <div className="logo" onClick={handleLogoClick}>
                     <img src={vibeSyncLogo} alt="App Logo" />
                 </div>
             </div>
             {location.pathname !== '/' && (
-                <div className="menu-icon" onClick={(event)=>{handleMenuToggle();event.stopPropagation();}}>
+                <div className="menu-icon" onClick={(event) => { handleMenuToggle(); event.stopPropagation(); }}>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
@@ -134,7 +144,7 @@ function NavbarComponent() {
                             {localStorage.getItem('userId') === '0' ? 'All Requests' : 'Your Requests'}
                         </Button>
                     )}
-                
+
                 {(localStorage.getItem('userId') == 10077 &&  //(10077)
                     (location.pathname.startsWith('/eventdetails'))) && (
                         <Button
@@ -165,11 +175,11 @@ function NavbarComponent() {
             <div className={`menu ${menuOpen ? 'open' : ''}`}>
                 {(localStorage.getItem('userId') != 10077 &&
                     (location.pathname.startsWith('/djhome') ||
-                    location.pathname.startsWith('/djlivesongs') ||
-                    location.pathname.startsWith('/showtransactions') ||
-                    //location.pathname.startsWith('/paymentIndex')  ||
-                    location.pathname.startsWith('/djprofile') ||
-                    location.pathname.startsWith('/eventdetails'))) && (
+                        location.pathname.startsWith('/djlivesongs') ||
+                        location.pathname.startsWith('/showtransactions') ||
+                        //location.pathname.startsWith('/paymentIndex')  ||
+                        location.pathname.startsWith('/djprofile') ||
+                        location.pathname.startsWith('/eventdetails'))) && (
                         <Button
                             className="btn-navigation-bar"
                             onClick={(e) => handleSetlementsHistoryClick()}>

@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/pages/Home';
@@ -42,7 +42,6 @@ function App() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const { loading } = useLoadingContext();
-
 
     const paddingValues = {
         mobileScreen: '50px',

@@ -2,7 +2,7 @@
 importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js');
 
-export const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyAWp-o6Eki3kX1jidSdNWOodisINdfoQrw",
     authDomain: "vibesync-428906.firebaseapp.com",
     projectId: "vibesync-428906",

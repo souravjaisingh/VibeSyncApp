@@ -65,13 +65,17 @@ namespace VibeSync.DAL.BackgroundServices
                             .Where(x => x.SongStatus == "Pending")
                             .ToListAsync();
 
+                        _logger.LogInformation("Number of records in Pending status: " + query.Count);
+
                         var currentTime = DateTime.Now;
 
                         foreach (var item in query)
                         {
+                            _logger.LogInformation("Cuurent Time: " + currentTime + "Record exists in Pending status: " + Newtonsoft.Json.JsonConvert.SerializeObject(item));
                             if (item.PaymentDateTime.HasValue)
                             {
                                 var timeDifference = currentTime - item.PaymentDateTime.Value;
+                                _logger.LogInformation("Time difference: " + timeDifference);
                                 if (timeDifference.TotalMinutes > 30)
                                 {
                                     _logger.LogInformation("Refunding for: " + Newtonsoft.Json.JsonConvert.SerializeObject(item));

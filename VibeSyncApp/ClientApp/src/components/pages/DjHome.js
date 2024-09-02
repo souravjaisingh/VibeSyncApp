@@ -30,7 +30,7 @@ export default function DjHome() {
             try {
                 const token = await requestForToken();
                 if (token) {
-                    localStorage.setItem('fcmToken', token); // Store FCM token in local storage
+                    //localStorage.setItem('fcmToken', token); // Store FCM token in local storage
                     console.log('FCM Token stored in local storage');
                 }
             } catch (err) {
@@ -38,31 +38,33 @@ export default function DjHome() {
             }
         };
 
-        fetchToken();
+        if (!localStorage.getItem('fcm')) {
+            fetchToken(); // Fetch token only if it's not already in localStorage
+        }
     }, []);
 
-    useEffect(() => {
-        onMessageListener()
-            .then(payload => {
-                setNotification({
-                    title: payload.notification.title,
-                    body: payload.notification.body,
-                });
-                console.log('Received foreground message: ', payload);
-            })
-            .catch(err => console.error('Failed to receive foreground message: ', err));
-    }, []);
+    // useEffect(() => {
+    //     onMessageListener()
+    //         .then(payload => {
+    //             setNotification({
+    //                 title: payload.notification.title,
+    //                 body: payload.notification.body,
+    //             });
+    //             console.log('Received foreground message: ', payload);
+    //         })
+    //         .catch(err => console.error('Failed to receive foreground message: ', err));
+    // }, []);
 
 
     return (
         <div className='DjHome'>
-            {notification.title && (
+            {/* {notification.title && (
                 <div className='notification'>
                     <h4>{notification.title}</h4>
                     <p>{notification.body}</p>
                 </div>
-            )}
-
+            )} */}
+            <div id="notification-root"></div>
             <div className='center-button'>
                 <Link to='/djprofile' className='btn-medium left-button'>
                     <button className='toolbar-button'>

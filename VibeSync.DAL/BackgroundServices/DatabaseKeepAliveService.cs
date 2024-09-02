@@ -27,7 +27,7 @@ namespace VibeSync.DAL.BackgroundServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Running database keep-alive/Refund job at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Running database keep-alive/Refund job at: {time}", Helpers.DateTimeHelper.GetISTDateTime());
 
                 using (var scope = _scopeFactory.CreateScope())
                 {
@@ -67,7 +67,7 @@ namespace VibeSync.DAL.BackgroundServices
 
                         _logger.LogInformation("Number of records in Pending status: " + query.Count);
 
-                        var currentTime = DateTime.Now;
+                        var currentTime = Helpers.DateTimeHelper.GetISTDateTime();
 
                         foreach (var item in query)
                         {

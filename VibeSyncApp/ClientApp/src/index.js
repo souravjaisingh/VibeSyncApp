@@ -14,7 +14,7 @@ const rootElement = document.getElementById('root');
 ReactDOM.render(
     <GoogleOAuthProvider clientId='1079194116900-ne6rek0mtie8c6vflmga1t4bfkc8i1ku.apps.googleusercontent.com'>
         <BrowserRouter basename={baseUrl}>
-            <ScrollToTop/>
+            <ScrollToTop />
             <LoadingProvider>
                 <App />
             </LoadingProvider>

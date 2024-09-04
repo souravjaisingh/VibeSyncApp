@@ -60,6 +60,7 @@ export default function LoginForm() {
             const response = await loginUserHelper(email, password);
             setLoading(false);
             if (response && response.isUser == true && localStorage.getItem('redirectUrl')) {
+                console.log('hello' + response.djId)
                 localStorage.setItem('userId', response.id);
                 localStorage.setItem('isUser', true);
                 console.log(localStorage.getItem('redirectUrl'));
@@ -70,12 +71,17 @@ export default function LoginForm() {
                 }, 0);
             }
             else if (response && response.isUser == true) {
+                console.log('hello' + response.djId)
                 localStorage.setItem('userId', response.id);
                 localStorage.setItem('isUser', true);
                 navigate('/userhome')
             }
             else if (response && response.isUser == false) {
                 localStorage.setItem('userId', response.id);
+                console.log('hello' + response.djId)
+                if (response.djId) {
+                    localStorage.setItem('DjId', response.DjId);
+                }
                 localStorage.setItem('isUser', false);
                 navigate('/djhome')
             }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
 
 namespace VibeSyncModels.EntityModels
 {
-    public partial class DeviceManagement
+    public partial class DeviceManagement : IRequest<string>
     {
         public long Id { get; set; }
         public long? DjId { get; set; }

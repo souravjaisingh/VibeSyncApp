@@ -3,7 +3,7 @@ import QRCode from 'qrcode.react';
 import './QrCodeDirect.css';
 
 export default function QrCodeDirect({eventId}) {
-    console.log(eventId);
+    //console.log(eventId);
     if(eventId == null){
         eventId = localStorage.getItem('eventId') != null ? localStorage.getItem('eventId') : null
     }

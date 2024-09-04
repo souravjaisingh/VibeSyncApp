@@ -93,6 +93,9 @@ export default function GoogleLogin({ isUser, triggerLogin, showButton, setShowL
                         else if (response && response.isUser == false) {
                             localStorage.setItem('userId', response.id);
                             localStorage.setItem('isUser', false);
+                            if (response.DjId) {
+                                localStorage.setItem('DjId', response.DjId);
+                            }
                             navigate('/djhome')
                         }
                     }

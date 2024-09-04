@@ -113,7 +113,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
                 var userEntity = _mapper.Map<VibeSyncModels.EntityModels.User>(user);
                 _context.Users.Add(userEntity);
                 var response = await _context.SaveChangesAsync();
-
+                long djId = 0;
                 if (response > 0 && user.UserOrDj.Equals("dj", StringComparison.CurrentCultureIgnoreCase))
                 {
                     // Create an entry in the DJ table
@@ -126,11 +126,15 @@ namespace VibeSync.DAL.Repository.CommandRepository
                     };
                     _context.Djs.Add(djEntity);
                     await _context.SaveChangesAsync();
-                }
 
+                    // Retrieve the Id of the newly inserted DJ record
+                    djId = djEntity.Id;
+                }
+               
                 if (response > 0)
                 {
                     var loginresponse = _mapper.Map<LoginDetails>(userEntity);
+                    loginresponse.DjId = djId == 0 ? null : djId;
                     var token = await GenerateToken(userEntity);
                     loginresponse.Token = token.Token;
                     loginresponse.RefreshToken = token.RefreshToken;

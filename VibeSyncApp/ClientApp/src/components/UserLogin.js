@@ -42,8 +42,8 @@ function Cards(props) {
 
   useEffect(() => {
     loadOTPScript();
-    // Step 1: Get the value of the 'fcm' key with a null check
     const fcmValue = localStorage.getItem('fcm') || null;
+    const deviceId = localStorage.getItem('deviceId') || null;
 
     // Step 2: Clear the entire localStorage
     localStorage.clear();
@@ -51,6 +51,11 @@ function Cards(props) {
     // Step 3: Set the 'fcm' key back to its original value if it exists
     if (fcmValue !== null) {
       localStorage.setItem('fcm', fcmValue);
+    }
+
+    // Step 4: Set the 'deviceId' key back to its original value if it exists
+    if (deviceId !== null) {
+      localStorage.setItem('deviceId', deviceId);
     }
 
   }, [])
@@ -160,6 +165,9 @@ function Cards(props) {
       else if (response && response.isUser == false) {
         localStorage.setItem('userId', response.id);
         localStorage.setItem('isUser', false);
+        if (response.DjId) {
+          localStorage.setItem('DjId', response.DjId);
+      }
         navigate('/djhome')
       }
     }
@@ -233,6 +241,9 @@ function Cards(props) {
         else if (response && response.isUser == false) {
           localStorage.setItem('userId', response.id);
           localStorage.setItem('isUser', false);
+          if (response.djId) {
+            localStorage.setItem('DjId', response.djId);
+          }
           navigate('/djhome')
         }
         else {

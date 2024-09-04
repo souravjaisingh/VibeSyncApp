@@ -73,11 +73,12 @@ namespace VibeSync.DAL.Repository.CommandRepository
             }
         }
 
-        public long UpdateSongHistoryFromWebHook(string orderId)
+        public long UpdateSongHistoryFromWebHook(string orderId, out string songName)
         {
             var songHistoryEntity = _context.SongHistories.Where(x => x.OrderId == orderId).FirstOrDefault();
             if (songHistoryEntity != null)
             {
+                songName = songHistoryEntity.SongName;
                 songHistoryEntity.SongStatus = Constants.SongStatusPending;
                 songHistoryEntity.ModifiedBy = "webhook";
                 songHistoryEntity.ModifiedOn = DateTime.Now;

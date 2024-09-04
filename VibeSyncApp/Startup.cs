@@ -79,6 +79,8 @@ namespace VibeSyncApp
             services.AddScoped<ISongCommandRepository, SongCommandRepository>();
             services.AddScoped<ISettlementsQueryRepository, SettlementsQueryRepository>();
             services.AddScoped<ISettlementsCommandRepository, SettlementsCommandRepository>();
+            services.AddScoped<IDeviceManagementCommandRepository, DeviceManagementCommandRepository>();
+            services.AddScoped<IDeviceManagementQueryRepository, DeviceManagementQueryRepository>();
             //services.AddScoped<IWeSocketQueryRepository, WebSocketQueryRepository>();
             //services.AddScoped<WebSocketHandler>();
 

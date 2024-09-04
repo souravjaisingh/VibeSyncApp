@@ -25,16 +25,16 @@ namespace VibeSyncApp.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public User GetUserById(int id)
-        {
-            // Log the request parameter
-            _logger.LogInformation($"Entered: {typeof(UserController)}, API: {typeof(UserController).GetMethod("GetUserById")}, Id: {id}");
+        //[HttpGet]
+        //public User GetUserById(int id)
+        //{
+        //    // Log the request parameter
+        //    _logger.LogInformation($"Entered: {typeof(UserController)}, API: {typeof(UserController).GetMethod("GetUserById")}, Id: {id}");
 
-            // You can add more logging as needed
+        //    // You can add more logging as needed
 
-            return new User();
-        }
+        //    return new User();
+        //}
 
         [HttpPost]
         [ExcludeTokenAuthentication]

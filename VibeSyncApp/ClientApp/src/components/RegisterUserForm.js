@@ -136,6 +136,9 @@ export default function RegisterUser(isUser) {
                     else if (response && response.isUser == false) {
                         localStorage.setItem('userId', response.id);
                         localStorage.setItem('isUser', false);
+                        if (response.djId) {
+                            localStorage.setItem('DjId', response.DjId);
+                        }
                         navigate('/djhome')
                     }
                 }

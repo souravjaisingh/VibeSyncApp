@@ -213,6 +213,10 @@ export async function getUserRequestHistoryData(userid, selectedFilter = null) {
     return handleAPIRequest(url, 'GET');
 }
 
+export async function insertDeviceForNotification(data){
+    return handleAPIRequest('DeviceManagement/InsertDeviceForNotification', 'POST', data);
+}
+
 export function handleAPIError(response, url) {
     if (!response.ok) {
         switch (response.status) {

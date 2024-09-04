@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { firebaseConfig } from './Constants';
+import { insertDeviceForNotification } from "./services/UserService";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -24,6 +25,21 @@ export const requestForToken = () => {
             if (currentToken) {
                 console.log('current token for client: ', currentToken);
                 localStorage.setItem('fcm', currentToken);
+
+                const deviceId = getOrCreateDeviceId();
+                const djId = localStorage.getItem('DjId'); // Assuming DjId is stored in localStorage
+                
+                if (djId) {
+                    const obj ={
+                        djId : djId,
+                        fcmToken : currentToken,
+                        deviceId : deviceId
+                    }
+                    insertDeviceForNotification(obj);
+                } else {
+                    console.error('DjId not found in localStorage');
+                }
+
                 return currentToken; // Return the token to the caller
             } else {
                 // Show permission request UI
@@ -36,6 +52,23 @@ export const requestForToken = () => {
         });
 };
 
+const getOrCreateDeviceId = () => {
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        deviceId = generateUUID(); // Generate a new UUID if not found
+        localStorage.setItem('deviceId', deviceId);
+    }
+    return deviceId;
+};
+
+// Function to generate a UUID (version 4)
+const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+};
 // Listen for token refresh
 // onTokenRefresh(() => {
 //     getToken(messaging, { vapidKey: 'BIZe19kreVsinHyUgkkzI_lozq48GprMV3zXifOD2GVL7uI6-VFRjR_cYYDtK_jUHC6ZB37ObeB5CALLs1qYtk4' })

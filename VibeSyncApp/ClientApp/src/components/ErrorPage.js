@@ -16,9 +16,8 @@ export default function ErrorPage(props) {
             props.resetErrorBoundary();
         }
 
-        // Clear local storage
-        // Step 1: Get the value of the 'fcm' key with a null check
         const fcmValue = localStorage.getItem('fcm') || null;
+        const deviceId = localStorage.getItem('deviceId') || null;
 
         // Step 2: Clear the entire localStorage
         localStorage.clear();
@@ -26,6 +25,11 @@ export default function ErrorPage(props) {
         // Step 3: Set the 'fcm' key back to its original value if it exists
         if (fcmValue !== null) {
             localStorage.setItem('fcm', fcmValue);
+        }
+
+        // Step 4: Set the 'deviceId' key back to its original value if it exists
+        if (deviceId !== null) {
+            localStorage.setItem('deviceId', deviceId);
         }
 
 

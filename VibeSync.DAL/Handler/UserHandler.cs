@@ -9,6 +9,7 @@ using VibeSync.DAL.Repository.QueryRepository;
 using VibeSyncModels;
 using VibeSyncModels.Request_ResponseModels;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace VibeSync.DAL.Handler
 {
@@ -67,20 +68,45 @@ namespace VibeSync.DAL.Handler
         public async Task<LoginDetails> Handle(LoginUser request, CancellationToken cancellationToken)
         {
             var userDetails = _userQueryRepository.ChecksIfUserIsValid(request.Email, request.Password);
-            if (userDetails!= null && !string.IsNullOrWhiteSpace(userDetails.Token))
+
+            if (userDetails != null)
             {
-                var isTokenActive = !IsTokenExpired(userDetails.Token);
-                if(isTokenActive)
-                    return new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj != "dj", Token = userDetails.Token };
+                // Fetch DjId from Dj table if userDetails is not null
+                var djId = userDetails.UserOrDj == "dj" ? _userQueryRepository.GetDjByUserId(userDetails.Id) : 0;
+
+                // Check if the token is active
+                if (!string.IsNullOrWhiteSpace(userDetails.Token))
+                {
+                    var isTokenActive = !IsTokenExpired(userDetails.Token);
+                    if (isTokenActive)
+                        return new LoginDetails
+                        {
+                            Id = userDetails.Id,
+                            IsUser = userDetails.UserOrDj != "dj",
+                            Token = userDetails.Token,
+                            DjId = djId > 0 ? djId : null // Include the DjId if applicable
+                        };
+                }
+
+                if (userDetails.Id > 0)
+                {
+                    var token = await _userCommandRepository.GenerateToken(userDetails);
+                    _logger.LogInformation("Token successful created for user with ID: {UserId}.", userDetails.Id);
+
+                    return new LoginDetails
+                    {
+                        Id = userDetails.Id,
+                        IsUser = userDetails.UserOrDj != "dj",
+                        Token = token.Token,
+                        RefreshToken = token.RefreshToken,
+                        DjId = djId > 0 ? djId : null  // Include the DjId if applicable
+                    };
+                }
             }
-            if (userDetails != null && userDetails.Id > 0)
-            {
-                var token = await _userCommandRepository.GenerateToken(userDetails);
-                _logger.LogInformation("Token successful created for user with ID: {UserId}.", userDetails.Id);
-                return new LoginDetails { Id = userDetails.Id, IsUser = userDetails.UserOrDj != "dj", Token = token.Token, RefreshToken = token.RefreshToken };
-            }
+
             return new LoginDetails();
         }
+
         private bool IsTokenExpired(string token)
         {
             var jwtHandler = new JwtSecurityTokenHandler();

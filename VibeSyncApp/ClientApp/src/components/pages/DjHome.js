@@ -39,7 +39,12 @@ export default function DjHome() {
         };
 
         if (!localStorage.getItem('fcm')) {
+            console.log(localStorage.getItem('DjId'))
             fetchToken(); // Fetch token only if it's not already in localStorage
+        }
+        else if (isAppleDevice() && isInStandaloneMode()) { 
+            console.log('On Apple device PWA')
+            fetchToken();
         }
     }, []);
 

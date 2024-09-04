@@ -7,7 +7,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
     {
         void AddSongHistoryForUser(PersistSongHistoryPaymentRequest request, out long songHistoryId);
         Task<string> UpdateSongHistory(SongHistoryModel request);
-        long UpdateSongHistoryFromWebHook(string orderId);
+        long UpdateSongHistoryFromWebHook(string orderId, out string songName);
 
     }
 }

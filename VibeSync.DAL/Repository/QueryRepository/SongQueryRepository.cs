@@ -185,5 +185,9 @@ namespace VibeSync.DAL.Repository.QueryRepository
 
             return query;
         }
+        public SongHistory GetSongHistoryById(long songHistoryId)
+        {
+            return _context.SongHistories.Where(x => x.Id == songHistoryId).FirstOrDefault();
+        }
     }
 }

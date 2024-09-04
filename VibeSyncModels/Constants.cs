@@ -20,5 +20,6 @@
         public const string SongStatusPlayed = "Played";
         public const string SongStatusPaymentInProgress = "Unpaid";
         public const string EventDeleted = "Deleted";
+        public const string Success = "Success";
     }
 }

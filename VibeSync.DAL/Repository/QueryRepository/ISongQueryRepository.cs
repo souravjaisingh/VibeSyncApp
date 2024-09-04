@@ -29,5 +29,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
         /// <param name="orderId"></param>
         /// <returns></returns>
         SongHistory GetSongHistoryByOrderId(string orderId);
+        SongHistory GetSongHistoryById(long songHistoryId);
+
     }
 }

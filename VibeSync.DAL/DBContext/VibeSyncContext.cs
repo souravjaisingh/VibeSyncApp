@@ -24,6 +24,7 @@ namespace VibeSync.DAL.DBContext
         public virtual DbSet<Settlement> Settlements { get; set; }
         public virtual DbSet<SongHistory> SongHistories { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<DeviceManagement> DeviceManagements { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -386,6 +387,28 @@ namespace VibeSync.DAL.DBContext
                     .IsRequired()
                     .HasMaxLength(5);
             });
+            modelBuilder.Entity<DeviceManagement>(entity =>
+            {
+                entity.ToTable("DeviceManagement");
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DeviceId)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FcmToken)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Dj)
+                    .WithMany(p => p.DeviceManagements)
+                    .HasForeignKey(d => d.DjId)
+                    .HasConstraintName("FK__DeviceMan__Creat__1C873BEC");
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,7 +74,7 @@ namespace VibeSync.DAL.Handler
 
         public async Task SendNotificationToDj(long songHistoryId, string songName)
         {
-            _logger.LogInformation($"SendNotificationToDj caled for songHistoryId: " + songHistoryId + " and songName: " + songName);
+            _logger.LogInformation($"SendNotificationToDj called for songHistoryId: " + songHistoryId + " and songName: " + songName);
 
             // Get the DJ ID associated with the song history
             var djId = _songQueryRepository.GetSongHistoryById(songHistoryId).DjId;
@@ -109,10 +110,10 @@ namespace VibeSync.DAL.Handler
             }
 
 
-            // Initialize a list to hold all FCM tokens
-            var registrationTokens = new List<string>();
+            // Initialize a HashSet to hold all unique FCM tokens
+            var registrationTokens = new HashSet<string>();
 
-            // Iterate through each device management record and add the FCM token to the list
+            // Iterate through each device management record and add the FCM token to the HashSet
             foreach (var device in deviceManagementList)
             {
                 if (!string.IsNullOrEmpty(device.FcmToken))
@@ -130,7 +131,7 @@ namespace VibeSync.DAL.Handler
             // Create a multicast message with the collected FCM tokens
             var message = new MulticastMessage()
             {
-                Tokens = registrationTokens,
+                Tokens = registrationTokens.ToList(),
                 Notification = notification
             };
 

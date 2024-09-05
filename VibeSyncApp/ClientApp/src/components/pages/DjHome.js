@@ -5,7 +5,7 @@ import '../pages/DjHome.css';
 import { DjTabs } from '../DjTabs';
 import { Link } from 'react-router-dom';
 import{ useEffect, useState } from 'react';
-import { requestForToken, onMessageListener } from '../firebase';
+import { requestForToken } from '../firebase';
 
 export default function DjHome() {
     const [notification, setNotification] = useState({ title: '', body: '' });

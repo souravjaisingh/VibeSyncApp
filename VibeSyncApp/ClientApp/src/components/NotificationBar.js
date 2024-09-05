@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { onMessageListener } from './firebase';
 import favi from '../Resources/favicon.png';
 
 const NotificationBar = () => {
@@ -9,34 +8,34 @@ const NotificationBar = () => {
     const [startY, setStartY] = useState(null);
     const notificationRef = useRef(null);
 
-    useEffect(() => {
-        const handleNotification = async () => {
-            while (true) {
-                try {
-                    const payload = await onMessageListener();
-                    if (payload.notification) {
-                        const { title, body } = payload.notification;
-                        setMessage(`${title}: ${body}`);
-                        setSwiping(false);
+    // useEffect(() => {
+    //     // const handleNotification = async () => {
+    //     //     while (true) {
+    //     //         try {
+    //     //             const payload = await onMessageListener();
+    //     //             if (payload.notification) {
+    //     //                 const { title, body } = payload.notification;
+    //     //                 setMessage(`${title}: ${body}`);
+    //     //                 setSwiping(false);
 
-                        // Clear the notification after 5 seconds
-                        setTimeout(() => {
-                            setMessage(null);
-                        }, 5000);
-                    }
-                } catch (error) {
-                    console.error('Error handling notification: ', error);
-                }
-            }
-        };
+    //     //                 // Clear the notification after 5 seconds
+    //     //                 setTimeout(() => {
+    //     //                     setMessage(null);
+    //     //                 }, 5000);
+    //     //             }
+    //     //         } catch (error) {
+    //     //             console.error('Error handling notification: ', error);
+    //     //         }
+    //     //     }
+    //     // };
 
-        handleNotification();
+    //     //handleNotification();
 
-        // Cleanup function if needed
-        return () => {
-            // Any cleanup code if necessary
-        };
-    }, []);
+    //     // Cleanup function if needed
+    //     return () => {
+    //         // Any cleanup code if necessary
+    //     };
+    // }, []);
 
     const handleTouchStart = (e) => {
         setSwiping(true);

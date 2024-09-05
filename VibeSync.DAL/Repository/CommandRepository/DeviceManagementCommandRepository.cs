@@ -4,6 +4,7 @@ using VibeSync.DAL.DBContext;
 using VibeSyncModels.EntityModels;
 using VibeSyncModels;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -17,6 +18,15 @@ namespace VibeSync.DAL.Repository.CommandRepository
 
         public async Task<bool> InsertDeviceManagement(DeviceManagement request)
         {
+            bool tokenExists = await _context.DeviceManagements
+                                .AnyAsync(dm => dm.FcmToken == request.FcmToken && dm.DjId == request.DjId);
+
+            if (tokenExists)
+            {
+                // If the token already exists, return false or handle as needed
+                return false;
+            }
+
             request.CreatedOn = DateTime.Now;
             _context.Set<DeviceManagement>().Add(request);
 

@@ -81,22 +81,22 @@ const generateUUID = () => {
 //         });
 // });
 
-export const onMessageListener = () =>
-    new Promise((resolve) => {
-        onMessage(messaging, (payload) => {
-            console.log("payload", payload)
+// export const onMessageListener = () =>
+//     new Promise((resolve) => {
+//         onMessage(messaging, (payload) => {
+//             console.log("payload", payload)
 
-            // Show a notification using the Notification API
-            if (payload.notification) {
-                const { title, body, icon } = payload.notification;
+//             // Show a notification using the Notification API
+//             if (payload.notification) {
+//                 const { title, body, icon } = payload.notification;
 
-                new Notification(title, {
-                    body: body,
-                    icon: icon || 'default-icon.png',
-                });
-            }
+//                 new Notification(title, {
+//                     body: body,
+//                     icon: icon || 'default-icon.png',
+//                 });
+//             }
 
-            resolve(payload);
-        });
-    });
+//             resolve(payload);
+//         });
+//     });
 

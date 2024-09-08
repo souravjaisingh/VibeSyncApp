@@ -711,7 +711,7 @@ function PaymentIndex() {
                 <textarea
                   id="message-mic-text"
                   placeholder="Type your message.."
-                  maxlength="40"
+                  maxlength="100"
                   className="mic-announcement-message"
                   value={micAnnouncementMessage}
                   onChange={(e) => {

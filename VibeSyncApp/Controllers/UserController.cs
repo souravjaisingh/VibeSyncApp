@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VibeSyncApp.Filters;
 using VibeSyncModels.Request_ResponseModels;
-using User = VibeSyncModels.Request_ResponseModels.User;
+using UserRequestModel = VibeSyncModels.Request_ResponseModels.UserRequestModel;
 
 namespace VibeSyncApp.Controllers
 {
@@ -38,7 +38,7 @@ namespace VibeSyncApp.Controllers
 
         [HttpPost]
         [ExcludeTokenAuthentication]
-        public async Task<IActionResult> RegisterUser([FromBody] User user)
+        public async Task<IActionResult> RegisterUser([FromBody] UserRequestModel user)
         {
             // Log the request parameter as JSON
             _logger.LogInformation($"Entered: {typeof(UserController)}, API: {typeof(UserController).GetMethod("RegisterUser")}, Request: {JsonConvert.SerializeObject(user)}");

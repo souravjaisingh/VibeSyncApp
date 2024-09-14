@@ -14,7 +14,7 @@ using VibeSync.DAL.DBContext;
 using VibeSyncModels;
 using VibeSyncModels.EntityModels;
 using VibeSyncModels.Request_ResponseModels;
-using User = VibeSyncModels.Request_ResponseModels.User;
+using UserRequestModel = VibeSyncModels.Request_ResponseModels.UserRequestModel;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -62,7 +62,7 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public async Task<LoginDetails> CreateUser(User user)
+        public async Task<LoginDetails> CreateUser(UserRequestModel user)
         {
             VibeSyncModels.EntityModels.User getUser = null;
 

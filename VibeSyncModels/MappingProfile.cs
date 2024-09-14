@@ -13,7 +13,7 @@ namespace VibeSyncModels
             CreateMap<EntityModels.User, LoginDetails>()
                  .ForMember(dest => dest.IsUser, opt => opt.MapFrom(src => src.UserOrDj == "user"))
                  .ReverseMap();
-            CreateMap<EntityModels.User, Request_ResponseModels.User>().ReverseMap();
+            CreateMap<EntityModels.User, Request_ResponseModels.UserRequestModel>().ReverseMap();
             CreateMap<SongHistory, SongHistoryModel>()
             .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.Payments.FirstOrDefault().PaymentId))
             .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Payments.FirstOrDefault().TotalAmount))

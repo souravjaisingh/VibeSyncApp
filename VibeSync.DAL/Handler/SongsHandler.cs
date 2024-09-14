@@ -142,6 +142,8 @@ namespace VibeSync.DAL.Handler
                     var jsonObject = JObject.Parse(responseContent);
                     var items = jsonObject["data"]["results"].ToString();
                     songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
+                    var language = new List<string> { "english", "hindi", "punjabi" };
+                    songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000);
                     break; // Break out of the loop if successful
                 }
                 catch (HttpRequestException ex) when (ex.StatusCode != System.Net.HttpStatusCode.OK && ex.StatusCode != System.Net.HttpStatusCode.NoContent)
@@ -158,14 +160,83 @@ namespace VibeSync.DAL.Handler
                         response.EnsureSuccessStatusCode();
                         var responseContent = await response.Content.ReadAsStringAsync();
                         var jsonObject = JObject.Parse(responseContent);
-                        var items = jsonObject["tracks"]["items"].ToString();
-                        songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
+                        var items = jsonObject["tracks"]["items"] as JArray;
+                        songDetails = new List<SongDetails>();
+                        // Map Spotify response to SongDetails using a for loop
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            var item = items[i] as JObject; // Safely cast to JObject
+
+                            if (item != null)
+                            {
+                                // Map Album
+                                var albumData = item["album"] as JObject; // Safely cast to JObject
+                                Album album = null;
+
+                                if (albumData != null)
+                                {
+                                    album = new Album
+                                    {
+                                        Id = albumData["id"]?.ToString(),
+                                        Name = albumData["name"]?.ToString(),
+                                        Images = new List<Image>()
+                                    };
+
+                                    // Map Album Images
+                                    var imagesArray = albumData["images"] as JArray;
+                                    if (imagesArray != null)
+                                    {
+                                        for (int j = 0; j < imagesArray.Count; j++)
+                                        {
+                                            var image = imagesArray[j] as JObject; // Safely cast to JObject
+                                            if (image != null)
+                                            {
+                                                album.Images.Add(new Image
+                                                {
+                                                    Url = image["url"]?.ToString()
+                                                    //Height = (int?)image["height"],
+                                                    //Width = (int?)image["width"]
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Map Artists
+                                var artistList = new List<Artist>();
+                                var artistsArray = item["artists"] as JArray;
+                                if (artistsArray != null)
+                                {
+                                    for (int k = 0; k < artistsArray.Count; k++)
+                                    {
+                                        var artist = artistsArray[k] as JObject; // Safely cast to JObject
+                                        if (artist != null)
+                                        {
+                                            artistList.Add(new Artist
+                                            {
+                                                Id = artist["id"]?.ToString(),
+                                                Name = artist["name"]?.ToString()
+                                            });
+                                        }
+                                    }
+                                }
+
+                                // Create and add SongDetails
+                                songDetails.Add(new SongDetails
+                                {
+                                    Id = item.Property("id").Value.ToString(),
+                                    Name = item.Property("name").Value.ToString(),
+                                    Album = album,
+                                    Artists = new Artists { Primary = artistList },
+                                    Image = album?.Images, // Using album images if available
+                                                           // Add other properties if needed
+                                });
+                            }
+                        }
                     }
                 }
             }
-            var language = new List<string> { "english", "hindi", "punjabi" };
-            songDetails = songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000)
-                .Where(x => !MusicKeywords.Any(keyword => x.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+            songDetails = songDetails.Where(x => !MusicKeywords.Any(keyword => x.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                 .Where(x => !HaryanviSongs.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
                 .Where(x => !BhojpuriSongs.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
                 .Where(x => !bhajans.Contains(x.Name, StringComparer.OrdinalIgnoreCase)).ToList();

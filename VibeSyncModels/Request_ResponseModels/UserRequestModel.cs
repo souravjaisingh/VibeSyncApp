@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VibeSyncModels.Request_ResponseModels
 {
-    public class User : IRequest<LoginDetails>
+    public class UserRequestModel : IRequest<LoginDetails>
     {
         public long Id { get; set; }
         [Required]

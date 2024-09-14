@@ -115,6 +115,10 @@ namespace VibeSyncApp
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vibe Sync", Version = "v1" });
+                services.AddSwaggerGen(c =>
+                {
+                    c.CustomSchemaIds(type => type.FullName); // This will use the full namespace as the schema ID
+                });
             });
         }
 

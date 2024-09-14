@@ -87,7 +87,7 @@ namespace VibeSync.DAL.Handler
         /// The access token URL.
         /// </value>
         private string AccessTokenUrl { get; set; }
-
+        private string SpotifyTrackSearchParams { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsHandler"/> class.
         /// </summary>
@@ -117,6 +117,7 @@ namespace VibeSync.DAL.Handler
             _songQueryRepository = songQueryRepository;
             _mapper = mapper;
             _songCommandRepository = songCommandRepository;
+            SpotifyTrackSearchParams = configuration["SpotifyApi:TrackSearch"];
         }
         /// <summary>
         /// Handles the specified request.
@@ -141,12 +142,6 @@ namespace VibeSync.DAL.Handler
                     var jsonObject = JObject.Parse(responseContent);
                     var items = jsonObject["data"]["results"].ToString();
                     songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
-                    var language = new List<string> { "english", "hindi", "punjabi" };
-                    songDetails = songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000)
-                        .Where(x => !MusicKeywords.Any(keyword => x.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
-                        .Where(x => !HaryanviSongs.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
-                        .Where(x => !BhojpuriSongs.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
-                        .Where(x => !bhajans.Contains(x.Name, StringComparer.OrdinalIgnoreCase)).ToList();
                     break; // Break out of the loop if successful
                 }
                 catch (HttpRequestException ex) when (ex.StatusCode != System.Net.HttpStatusCode.OK && ex.StatusCode != System.Net.HttpStatusCode.NoContent)
@@ -154,11 +149,26 @@ namespace VibeSync.DAL.Handler
                     retryAttempt++;
                     if (retryAttempt > maxRetryAttempts)
                     {
-                        throw; // Rethrow the exception if the max retry attempts are exceeded
+                        var accessToken = await GetSpotifyAccessToken();
+                        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                        queryParameters = string.Format(SpotifyTrackSearchParams, request.SongName, request.Offset, request.limit);
+
+                        var response = await _httpClient.GetAsync($"{SpotifyBaseUrl}{queryParameters}");
+                        response.EnsureSuccessStatusCode();
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        var jsonObject = JObject.Parse(responseContent);
+                        var items = jsonObject["tracks"]["items"].ToString();
+                        songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
                     }
                 }
             }
-        
+            var language = new List<string> { "english", "hindi", "punjabi" };
+            songDetails = songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000)
+                .Where(x => !MusicKeywords.Any(keyword => x.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+                .Where(x => !HaryanviSongs.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
+                .Where(x => !BhojpuriSongs.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
+                .Where(x => !bhajans.Contains(x.Name, StringComparer.OrdinalIgnoreCase)).ToList();
             return songDetails;
         }
         private List<SongDetails> FilterSongsByLanguage(List<SongDetails> songs, string language)

@@ -989,12 +989,7 @@ function PaymentIndex() {
             isVisible={isStickyBarVisible}
           />
         </div>
-        {(localStorage.getItem('userId') == null || localStorage.getItem('userId') == 0)?
-        (<div className="login-proposal" onClick={handleShow}>
-          <img className="login-img" src="images/log_in.png" />
-          <p>Login & Get 50% off instantly!</p>
-        </div>)
-        :(<></>)}
+       
 
                 {showLoginModal && (
                     <div className="modal-overlay" onClick={handleClose}>

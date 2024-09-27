@@ -469,9 +469,9 @@ useEffect(() => {
                                 {calculateRemainingTime(result.paymentDateTime) < 10 ? (<>
 
                                     <div key={index} className='song-announcement-request-container-red'>
-                                        <div className='request-announcement-amount'>
-                                            ₹{result.totalAmount}
-                                        </div>
+                                        {/*<div className='request-announcement-amount'>*/}
+                                        {/*    ₹{result.totalAmount}*/}
+                                        {/*</div>*/}
 
                                         {result.micAnnouncement ? (
                                             <>

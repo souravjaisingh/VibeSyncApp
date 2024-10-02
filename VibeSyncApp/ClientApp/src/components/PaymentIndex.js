@@ -381,7 +381,7 @@ function PaymentIndex() {
 
         // Check if it's a special announcement
         if (rowData.IsSpecialAnnouncement) {
-            rowData_to_change.minimumBidForSpecialRequest = 0;
+            rowData_to_change.minimumBidForSpecialRequest = Math.floor(rowData.minimumBidForSpecialRequest / 2);
         } else {
             rowData_to_change.minimumBid = Math.floor(rowData.minimumBid / 2);
         }

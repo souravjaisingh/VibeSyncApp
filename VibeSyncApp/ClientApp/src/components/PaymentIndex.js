@@ -353,7 +353,7 @@ function PaymentIndex() {
     };
 
     useEffect(() => {
-        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBidForSpecialRequest * 1.5) : rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBidForSpecialRequest ) : rowData.minimumBid);
     }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest]);
 
 
@@ -381,7 +381,7 @@ function PaymentIndex() {
 
         // Check if it's a special announcement
         if (rowData.IsSpecialAnnouncement) {
-            rowData_to_change.minimumBidForSpecialRequest = Math.floor(rowData.minimumBidForSpecialRequest / 2);
+            rowData_to_change.minimumBidForSpecialRequest = 0;
         } else {
             rowData_to_change.minimumBid = Math.floor(rowData.minimumBid / 2);
         }
@@ -537,7 +537,7 @@ function PaymentIndex() {
         image: VBLogo,
         image: VBLogo,
         order_id: res.orderId,
-        handler: function (response) {
+          handler: function (response) {
           setPaymentStatus({
             paymentId: response.razorpay_payment_id,
             orderId: response.razorpay_order_id,

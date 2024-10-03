@@ -97,5 +97,17 @@ namespace VibeSyncApp.Controllers
             else
                 throw new CustomException(uploadResult.Error.Message);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DjTransactionsInfo([FromQuery] GetDjTransactionsInfoRequest request)
+        {
+
+            _logger.LogInformation($"Entered: {typeof(DjController)}, API: {typeof(DjController).GetMethod("DjTransactionsInfo")}, Request: {JsonConvert.SerializeObject(request)}");
+
+            var res = await _mediator.Send(request).ConfigureAwait(false);
+
+            _logger.LogInformation($"{typeof(DjController).GetMethod("DjTransactionsInfo")}'s response: {JsonConvert.SerializeObject(res)}");
+            return Ok(res);
+        }
     }
 }

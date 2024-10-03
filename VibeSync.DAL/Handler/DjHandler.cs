@@ -12,7 +12,8 @@ namespace VibeSync.DAL.Handler
     public class DjHandler : IRequestHandler<UpdateDjCommandModel, string>, 
         IRequestHandler<GetDjProfileRequestModel, DjProfileResponseModel>,
         IRequestHandler<GetReviewRequestModel, IEnumerable<GetReviewResponseModel>>,
-        IRequestHandler<ReviewDetails,bool>
+        IRequestHandler<ReviewDetails,bool>,
+        IRequestHandler<GetDjTransactionsInfoRequest, GetDjTransactionsSummary>
     {
         /// <summary>
         /// The dj command repository
@@ -58,6 +59,11 @@ namespace VibeSync.DAL.Handler
         public async Task<bool> Handle(ReviewDetails request, CancellationToken cancellationToken)
         {
             return await _djCommandRepository.CreateReview(request);
+        }
+
+        public async Task<GetDjTransactionsSummary> Handle(GetDjTransactionsInfoRequest request, CancellationToken cancellationToken)
+        {
+            return await _djQueryRepository.GetDjTransactionSummary(request);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace VibeSync.DAL.Repository.QueryRepository
     public interface IDjQueryRepository
     {
         DjProfileResponseModel GetDjProfileByUserId(GetDjProfileRequestModel request);
+        Task<GetDjTransactionsSummary> GetDjTransactionSummary(GetDjTransactionsInfoRequest request);
         Task<IEnumerable<GetReviewResponseModel>> GetReviews(GetReviewRequestModel request);
     }
 }

@@ -353,7 +353,7 @@ function PaymentIndex() {
     };
 
     useEffect(() => {
-        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBidForSpecialRequest * 1.5) : rowData.minimumBid);
+        setAmount(isSpecialAnnouncement ? Math.round(rowData.minimumBidForSpecialRequest ) : rowData.minimumBid);
     }, [isSpecialAnnouncement, rowData.minimumBid, rowData.minimumBidForSpecialRequest]);
 
 
@@ -537,7 +537,7 @@ function PaymentIndex() {
         image: VBLogo,
         image: VBLogo,
         order_id: res.orderId,
-        handler: function (response) {
+          handler: function (response) {
           setPaymentStatus({
             paymentId: response.razorpay_payment_id,
             orderId: response.razorpay_order_id,

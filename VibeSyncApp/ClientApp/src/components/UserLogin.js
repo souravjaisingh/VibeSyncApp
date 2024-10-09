@@ -350,7 +350,7 @@ function Cards(props) {
                     {invalidPasswordError ? (<div style={{ color: 'red' }}>
                       Username or Password is incorrect!
                     </div>) : (<></>)}
-                    <input className='email-input input-field' id='email' placeholder='E-mail' value={email} onChange={(e) => handleInputChange(e)} />
+                    <input className='email-input ' id='email' placeholder='E-mail' value={email} onChange={(e) => handleInputChange(e)} />
                     <div className='password-input-field'>
                       <input className='password-input' id='password' type={showPassword ? "text" : "password"} placeholder='Password' value={password}
                         onChange={(e) => handleInputChange(e)} />

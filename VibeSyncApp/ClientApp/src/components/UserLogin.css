@@ -1,3 +1,4 @@
+
 .cards {
     background: #fff;
     background: linear-gradient(160deg, #d7defe 70%, #4C526C);
@@ -454,14 +455,16 @@ Button{
   transform: translateX(-10px);
 }
 
-.email-input{
-  width: 250px;
-  margin: auto;
-  margin-top: 10px;
-  padding: 5px 10px;
-  border-radius: 10px;
-  opacity: 0.7;
-  border: none;
+.email-input {
+    width: 250px ;
+/*    margin: auto;*/
+/*margin-left:10px;*/
+    margin-left: 5px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    opacity: 0.7;
+    border: none;
 }
 .password-input{
   width: 250px !important;

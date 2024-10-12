@@ -195,6 +195,12 @@ namespace VibeSync.DAL.Repository.QueryRepository
                  Contact = p.Contact
              }).FirstOrDefault();
         }
+
+        public string GetPaymentContactBySongHistoryId(long songHistoryId)
+        {
+            var response = _context.Payments.FirstOrDefault(x => x.SongHistoryId == songHistoryId);
+            return response.Contact;
+        }
         private int loggedInUserId()
         {
             int userId = 0;

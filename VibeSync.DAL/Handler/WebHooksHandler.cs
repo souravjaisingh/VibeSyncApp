@@ -9,9 +9,12 @@ using System.Linq;
 using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
+using VibeSync.DAL.Iservices;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
+using VibeSync.DAL.Services;
 using VibeSyncModels.EntityModels;
+using VibeSyncModels.Enums;
 using VibeSyncModels.Request_ResponseModels;
 using static Google.Apis.Requests.BatchRequest;
 
@@ -24,11 +27,14 @@ namespace VibeSync.DAL.Handler
         private readonly ISongCommandRepository _songCommandRepository;
         private readonly ISongQueryRepository _songQueryRepository;
         private readonly IDeviceManagementQueryRepository _deviceManagementQueryRepository;
+        private readonly IWhatsAppNotificationService _whatsAppNotificationService;
+
         private readonly ILogger<WebHooksHandler> _logger;
         public WebHooksHandler(IPaymentQueryRepository paymentQueryRepository
             , IPaymentCommandRepository paymentCommand
             , ISongCommandRepository songCommand
-            , ISongQueryRepository songQueryRepository, IDeviceManagementQueryRepository deviceManagementQueryRepository, ILogger<WebHooksHandler> logger)
+            , ISongQueryRepository songQueryRepository, IDeviceManagementQueryRepository deviceManagementQueryRepository , ILogger<WebHooksHandler> logger
+            , IWhatsAppNotificationService _whatsAppNotificationService)
         {
             _logger = logger;
             _paymentqueryRepository = paymentQueryRepository;
@@ -55,6 +61,8 @@ namespace VibeSync.DAL.Handler
                         {
                             _logger.LogInformation($"Calling SendNotificationToDj for songHistoryId: "+songHistoryId+" and songName: "+songName);
                             await SendNotificationToDj(songHistoryId, songName);
+                            if(!string.IsNullOrWhiteSpace(paymentEntity.contact))
+                                _ = _whatsAppNotificationService.SendWhatAppNotification(paymentEntity.contact, WhatsAppMsgTemplate.received_template);
                             return true;
                         }
                     }

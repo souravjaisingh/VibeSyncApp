@@ -5,14 +5,12 @@ using Razorpay.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
 using VibeSyncModels.Request_ResponseModels;
 using Constants = VibeSyncModels.Constants;
 using Payment = VibeSyncModels.EntityModels.Payment;
-using System.Text;
 
 namespace VibeSync.DAL.Repository.CommandRepository
 {
@@ -25,19 +23,16 @@ namespace VibeSync.DAL.Repository.CommandRepository
         /// The context
         /// </summary>
         private readonly VibeSyncContext _context;
-        private readonly string msg91AuthKey;
-        private readonly HttpClient _httpClient;
+
         /// <summary>
         /// ILogger
         /// </summary>
         private readonly ILogger<PaymentCommandRepository> _logger;
 
-        public PaymentCommandRepository(IDBContextFactory context, ILogger<PaymentCommandRepository> logger, IConfiguration configuration, HttpClient httpClient)
+        public PaymentCommandRepository(IDBContextFactory context, ILogger<PaymentCommandRepository> logger)
         {
-            _httpClient = httpClient;
             _context = context.GetDBContext();
             _logger = logger;
-            msg91AuthKey = configuration["Msg91:AuthKey"];
         }
         /// <summary>
         /// Persists orderid in payments table
@@ -136,41 +131,6 @@ namespace VibeSync.DAL.Repository.CommandRepository
             Refund refund = client.Payment.Fetch(paymentId).Refund(refundRequest);
             _logger.LogInformation("RefundPayment complete - response :" + JsonConvert.SerializeObject(refund));
             return await Task.FromResult(refund);
-        }
-        private async Task WhatsappMessage(string paymentId)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", msg91AuthKey);
-            var phoneNumbers = new List<string> { "+911234567890", "+919876543210" };
-            var jsonPayload = new
-            {
-                integrated_number = "917015900502",
-                content_type = "template",
-                payload = new
-                {
-                    messaging_product = "whatsapp",
-                    type = "template",
-                    template = new
-                    {
-                        name = "refunds_template",
-                        language = new
-                        {
-                            code = "en",
-                            policy = "deterministic"
-                        },
-                        to_and_components = phoneNumbers.Select(number => new
-                        {
-                            to = number,
-                            components = new object[] { }
-                        }).ToArray()
-                    }
-                }
-            };
-
-            var requestContent = new StringContent(JsonConvert.SerializeObject(jsonPayload), Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestContent);
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
         }
         
         public async Task<long> UpdatePaymentDetailsFromWebHook(string orderId, long songHistoryId, string paymentId, decimal totalAmount, string contact = null)

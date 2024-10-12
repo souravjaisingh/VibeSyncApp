@@ -18,6 +18,6 @@ namespace VibeSync.DAL.Repository.QueryRepository
         Task<bool> PromocodeApplicableForUser(
         PromocodeApplicableForUserQueryModel request);
         Task<PaymentResponseModel> GetInvoiceDetails(string paymentId);
-
+        string GetPaymentContactBySongHistoryId(long songHistoryId);
     }
 }

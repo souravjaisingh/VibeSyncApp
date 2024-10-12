@@ -12,8 +12,10 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VibeSync.DAL.Iservices;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
+using VibeSyncModels.Enums;
 using VibeSyncModels.Request_ResponseModels;
 
 namespace VibeSync.DAL.Handler
@@ -39,6 +41,7 @@ namespace VibeSync.DAL.Handler
         /// The song command repository
         /// </summary>
         private readonly ISongCommandRepository _songCommandRepository;
+        private readonly IPaymentQueryRepository _paymentQueryRepository;
         /// <summary>
         /// The mapper
         /// </summary>
@@ -92,7 +95,7 @@ namespace VibeSync.DAL.Handler
         /// Initializes a new instance of the <see cref="SongsHandler"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-
+        private readonly IWhatsAppNotificationService _whatsAppNotificationService;
         #region
         //Songs to be filtered out
         public string[] HaryanviSongs = { "52 GAJ KA DAMAN", "Chatak Matak", "COCO COLA", "Sandal", "Bahu Kale Ki", "Moto", "Left Right", " JUG JUG JEEVE", "Laad Piya Ke", "LALA LORI", "Father Saab", "Teri Aakhya Ka Yo Kajal", "Razzi Bolja", "4G Ka Jamana", "Gurjar Ka Kharcha", "Gypsy", " LOOT LIYA", "Ghunghat Bain", "Badli Badli Laage", "English Medium", "Mulakaat", " Teri Lat Lag Jagi", "UNCHI HAVELI", " Mera Chand", " Yaar Ki Shaadi", "SOLID BODY", "Bholenath", "4G Ka Jamana", "Desi Desi Na Bolya Kar Chori Re", "Mithi Boli", "Matak Chalungi", " Ghungroo Toot Jayega", "Halka Dupatta Tera Muh Dikhe", "Lilo Chaman", "Ghagra", "Thada Bhartar", "Jalebi Juda", " GodFather", " Middle Class", "Goli Chal Javegi", "Nazar", " TORA", "Bawli Tared", "Chhutti", "Pistal Te Mehnga Lehnga", "Laada Ka Lada", "Bhagatt Aadmi Tha", "Gunehgar", "Mouj Jamane Main", "Sapna Chaudhary", "Sapna Choudhary", "52 GAJ" };
@@ -105,7 +108,7 @@ namespace VibeSync.DAL.Handler
 
         #endregion
 
-        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository, IConfiguration configuration)
+        public SongsHandler(HttpClient client, ISongQueryRepository songQueryRepository, IMapper mapper, ISongCommandRepository songCommandRepository, IConfiguration configuration, IWhatsAppNotificationService whatsAppNotificationService, IPaymentQueryRepository paymentQueryRepository)
         {
             _httpClient = client;
             AccessTokenUrl = configuration["SpotifyApi:AccessTokenUrl"];
@@ -120,6 +123,8 @@ namespace VibeSync.DAL.Handler
             _mapper = mapper;
             _songCommandRepository = songCommandRepository;
             SpotifyTrackSearchParams = configuration["SpotifyApi:TrackSearch"];
+            _whatsAppNotificationService = whatsAppNotificationService;
+            _paymentQueryRepository = paymentQueryRepository;
         }
         /// <summary>
         /// Handles the specified request.
@@ -304,7 +309,20 @@ namespace VibeSync.DAL.Handler
 
         public async Task<string> Handle(SongHistoryModel request, CancellationToken cancellationToken)
         {
-            return await _songCommandRepository.UpdateSongHistory(request);
+            var response = await _songCommandRepository.UpdateSongHistory(request);
+            if (response != null && response == VibeSyncModels.Constants.UpdatedSuccessfully && (request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusPlayed, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusAccepted, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRefunded, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRejected, StringComparison.OrdinalIgnoreCase)))
+            {
+                var contact = _paymentQueryRepository.GetPaymentContactBySongHistoryId(request.Id);
+                WhatsAppMsgTemplate template = WhatsAppMsgTemplate.accepted_new_template;
+                if(request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusPlayed, StringComparison.OrdinalIgnoreCase))
+                    template = WhatsAppMsgTemplate.played_template;
+                else if(request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRefunded, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRejected, StringComparison.OrdinalIgnoreCase))
+                    template = WhatsAppMsgTemplate.refund_template;
+
+                if (!string.IsNullOrWhiteSpace(contact))
+                    _ = _whatsAppNotificationService.SendWhatAppNotification(contact, template);
+            }
+            return response;
         }
 
         #region Private methods        

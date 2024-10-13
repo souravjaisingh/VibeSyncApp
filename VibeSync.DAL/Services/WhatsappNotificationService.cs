@@ -30,7 +30,7 @@ namespace VibeSync.DAL.Services
             try
             {
                 var payload = GetPayload(new List<string> { phoneNumber });
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", msg91AuthKey);
+                _httpClient.DefaultRequestHeaders.Add("authkey", msg91AuthKey); 
                 var requestContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestContent);
                 response.EnsureSuccessStatusCode();
@@ -46,7 +46,7 @@ namespace VibeSync.DAL.Services
         {
             var jsonPayload = new
             {
-                integrated_number = "917015900502",
+                integrated_number = "918448298373",
                 content_type = "template",
                 payload = new
                 {

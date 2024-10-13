@@ -82,7 +82,7 @@ namespace VibeSyncApp
             services.AddScoped<ISettlementsCommandRepository, SettlementsCommandRepository>();
             services.AddScoped<IDeviceManagementCommandRepository, DeviceManagementCommandRepository>();
             services.AddScoped<IDeviceManagementQueryRepository, DeviceManagementQueryRepository>();
-            services.AddScoped<IWhatsAppNotificationService, WhatsappNotificationService>();
+            services.AddSingleton<IWhatsAppNotificationService, WhatsappNotificationService>();
             //services.AddScoped<IWeSocketQueryRepository, WebSocketQueryRepository>();
             //services.AddScoped<WebSocketHandler>();
 

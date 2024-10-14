@@ -320,7 +320,7 @@ namespace VibeSync.DAL.Handler
                     template = WhatsAppMsgTemplate.refund_template;
 
                 if (!string.IsNullOrWhiteSpace(contact))
-                    _ = _whatsAppNotificationService.SendWhatAppNotification(contact, template);
+                    _ = Task.Run(() => _whatsAppNotificationService.SendWhatAppNotification(contact, template));
             }
             return response;
         }

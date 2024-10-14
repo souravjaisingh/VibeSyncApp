@@ -47,6 +47,25 @@ namespace VibeSync.DAL.Services
         }
         private object GetPayload(string phoneNumber, string templateName)
         {
+            object components;
+            if (templateName == WhatsAppMsgTemplate.received_template.ToString() ||
+                templateName == WhatsAppMsgTemplate.accepted_new_template.ToString())
+            {
+                components = new
+                {
+                    button_1 = new
+                    {
+                        subtype = "url",
+                        type = "text",
+                        value = "<xyz>"
+                    }
+                };
+            }
+            else
+            {
+                components = new { };
+            }
+
             var jsonPayload = new
             {
                 integrated_number = "918448298373",
@@ -68,22 +87,14 @@ namespace VibeSync.DAL.Services
                             new
                             {
                                 to = new[] { phoneNumber },
-                                components = new
-                                {
-                                    button_1 = new
-                                    {
-                                        subtype = "url",
-                                        type = "text", 
-                                        value = "<xyz>"
-                                    }
-                                }
+                                 components
                             }
-                        }
-        }
-    }
-};
+                        }           
+                    }
+                }
+            };
 
-return jsonPayload;
+            return jsonPayload;
         }
     }
 }

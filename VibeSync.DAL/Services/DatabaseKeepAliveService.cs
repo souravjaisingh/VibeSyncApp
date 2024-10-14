@@ -86,7 +86,7 @@ namespace VibeSync.DAL.Services
 
                                     await _payment.RefundPayment(item.PaymentId, (decimal)item.TotalAmount, 0);
                                     if (!string.IsNullOrWhiteSpace(item.PhoneNumber))
-                                        _ = _whatsAppNotificationService.SendWhatAppNotification(item.PhoneNumber, WhatsAppMsgTemplate.refund_template);
+                                        _ = Task.Run(() => _whatsAppNotificationService.SendWhatAppNotification(item.PhoneNumber, WhatsAppMsgTemplate.refund_template));
                                     item.SongStatus = "Refunded";
                                     await _songCommandRepository.UpdateSongHistory(item);
 

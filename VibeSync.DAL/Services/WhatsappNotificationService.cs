@@ -1,15 +1,12 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using VibeSync.DAL.Iservices;
 using VibeSyncModels.Enums;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Text.Json;
 
 namespace VibeSync.DAL.Services
 {
@@ -24,14 +21,20 @@ namespace VibeSync.DAL.Services
             _httpClient = httpClient;
             msg91AuthKey = configuration["Msg91:AuthKey"];
             _logger = logger;
+            _httpClient.DefaultRequestHeaders.Add("authkey", msg91AuthKey);
         }
         public async Task SendWhatAppNotification(string phoneNumber, WhatsAppMsgTemplate msgTemplate)
         {
             try
             {
-                var payload = GetPayload(new List<string> { phoneNumber });
-                _httpClient.DefaultRequestHeaders.Add("authkey", msg91AuthKey); 
-                var requestContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                if (phoneNumber.StartsWith('+'))
+                    phoneNumber = phoneNumber.Substring(3);
+                var payload = GetPayload(phoneNumber, msgTemplate.ToString());
+                var jsonString = System.Text.Json.JsonSerializer.Serialize(payload, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes the JSON more readable (optional)
+                });
+                var requestContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestContent);
                 response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -42,7 +45,7 @@ namespace VibeSync.DAL.Services
 
             }
         }
-        private object GetPayload(List<string> phoneNumbers)
+        private object GetPayload(string phoneNumber, string templateName)
         {
             var jsonPayload = new
             {
@@ -54,29 +57,33 @@ namespace VibeSync.DAL.Services
                     type = "template",
                     template = new
                     {
-                        name = "refund_template",
+                        name = templateName,
                         language = new
                         {
                             code = "en",
                             policy = "deterministic"
                         },
-                        to_and_components = phoneNumbers.Select(number => new
+                        to_and_components = new[]
                         {
-                            to = number,
-                            components = new
+                            new
                             {
-                                button_1 = new
+                                to = new[] { phoneNumber },
+                                components = new
                                 {
-                                    subtype = "url",
-                                    type = "type",
-                                    value = "https://vibesync.in"
+                                    button_1 = new
+                                    {
+                                        subtype = "url",
+                                        type = "text", 
+                                        value = "<xyz>"
+                                    }
                                 }
                             }
-                        }).ToArray()
-                    }
-                }
-            };
-            return jsonPayload;
+                        }
+        }
+    }
+};
+
+return jsonPayload;
         }
     }
 }

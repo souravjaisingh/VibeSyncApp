@@ -310,7 +310,7 @@ namespace VibeSync.DAL.Handler
         public async Task<string> Handle(SongHistoryModel request, CancellationToken cancellationToken)
         {
             var response = await _songCommandRepository.UpdateSongHistory(request);
-            if (response != null && response == VibeSyncModels.Constants.UpdatedSuccessfully && (request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusPlayed, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusAccepted, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRefunded, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRejected, StringComparison.OrdinalIgnoreCase)))
+            if (response != null && response == VibeSyncModels.Constants.UpdatedSuccessfully && (request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusPlayed, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusAccepted, StringComparison.OrdinalIgnoreCase) || request.SongStatus.Equals(VibeSyncModels.Constants.SongStatusRefunded, StringComparison.OrdinalIgnoreCase)))
             {
                 var contact = _paymentQueryRepository.GetPaymentContactBySongHistoryId(request.Id);
                 WhatsAppMsgTemplate template = WhatsAppMsgTemplate.accepted_new_template;

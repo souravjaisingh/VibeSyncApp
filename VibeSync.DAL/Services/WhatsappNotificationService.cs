@@ -48,8 +48,8 @@ namespace VibeSync.DAL.Services
         private object GetPayload(string phoneNumber, string templateName)
         {
             object components;
-            if (templateName == WhatsAppMsgTemplate.received_template.ToString() ||
-                templateName == WhatsAppMsgTemplate.accepted_new_template.ToString())
+            if (templateName != WhatsAppMsgTemplate.received_template.ToString() &&
+                templateName != WhatsAppMsgTemplate.accepted_new_template.ToString())
             {
                 components = new
                 {

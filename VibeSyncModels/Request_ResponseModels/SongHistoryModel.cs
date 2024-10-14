@@ -137,6 +137,7 @@ namespace VibeSyncModels.Request_ResponseModels
         public string MicAnnouncement { get; set; }
         public string ScreenAnnouncement { get; set; }
         public string EventName { get; set; }
+        public string PhoneNumber { get; set; }
 
     }
 }

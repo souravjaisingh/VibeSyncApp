@@ -15,11 +15,12 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using VibeSync.DAL.BackgroundServices;
 using VibeSync.DAL.DBContext;
 using VibeSync.DAL.Handler;
+using VibeSync.DAL.Iservices;
 using VibeSync.DAL.Repository.CommandRepository;
 using VibeSync.DAL.Repository.QueryRepository;
+using VibeSync.DAL.Services;
 using VibeSyncApp.Filters;
 using VibeSyncApp.Middleware;
 using VibeSyncModels;
@@ -81,6 +82,7 @@ namespace VibeSyncApp
             services.AddScoped<ISettlementsCommandRepository, SettlementsCommandRepository>();
             services.AddScoped<IDeviceManagementCommandRepository, DeviceManagementCommandRepository>();
             services.AddScoped<IDeviceManagementQueryRepository, DeviceManagementQueryRepository>();
+            services.AddSingleton<IWhatsAppNotificationService, WhatsappNotificationService>();
             //services.AddScoped<IWeSocketQueryRepository, WebSocketQueryRepository>();
             //services.AddScoped<WebSocketHandler>();
 

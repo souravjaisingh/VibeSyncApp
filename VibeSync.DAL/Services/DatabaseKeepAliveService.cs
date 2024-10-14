@@ -7,20 +7,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VibeSync.DAL.DBContext;
+using VibeSync.DAL.Iservices;
 using VibeSync.DAL.Repository.CommandRepository;
+using VibeSyncModels.Enums;
 using VibeSyncModels.Request_ResponseModels;
 
-namespace VibeSync.DAL.BackgroundServices
+namespace VibeSync.DAL.Services
 {
     public class DatabaseKeepAliveService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<DatabaseKeepAliveService> _logger;
-
-        public DatabaseKeepAliveService(IServiceScopeFactory scopeFactory, ILogger<DatabaseKeepAliveService> logger)
+        private readonly IWhatsAppNotificationService _whatsAppNotificationService;
+        public DatabaseKeepAliveService(IServiceScopeFactory scopeFactory, ILogger<DatabaseKeepAliveService> logger, IWhatsAppNotificationService whatsAppNotificationService)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;
+            _whatsAppNotificationService = whatsAppNotificationService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -60,7 +63,8 @@ namespace VibeSync.DAL.BackgroundServices
                                 TotalAmount = payment.TotalAmount,
                                 UserId = songHistory.UserId,
                                 MicAnnouncement = songHistory.MicAnnouncement,
-                                ScreenAnnouncement = songHistory.ScreenAnnouncement
+                                ScreenAnnouncement = songHistory.ScreenAnnouncement,
+                                PhoneNumber = payment.Contact
                             })
                             .Where(x => x.SongStatus == "Pending")
                             .ToListAsync();
@@ -81,7 +85,8 @@ namespace VibeSync.DAL.BackgroundServices
                                     _logger.LogInformation("Refunding for: " + Newtonsoft.Json.JsonConvert.SerializeObject(item));
 
                                     await _payment.RefundPayment(item.PaymentId, (decimal)item.TotalAmount, 0);
-
+                                    if (!string.IsNullOrWhiteSpace(item.PhoneNumber))
+                                        _ = _whatsAppNotificationService.SendWhatAppNotification(item.PhoneNumber, WhatsAppMsgTemplate.refund_template);
                                     item.SongStatus = "Refunded";
                                     await _songCommandRepository.UpdateSongHistory(item);
 

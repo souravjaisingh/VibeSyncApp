@@ -61,8 +61,9 @@ namespace VibeSync.DAL.Handler
                         {
                             _logger.LogInformation($"Calling SendNotificationToDj for songHistoryId: "+songHistoryId+" and songName: "+songName);
                             await SendNotificationToDj(songHistoryId, songName);
-                            if(!string.IsNullOrWhiteSpace(paymentEntity.contact))
-                                _ = Task.Run(() => _whatsAppNotificationService.SendWhatAppNotification(paymentEntity.contact, WhatsAppMsgTemplate.received_template));
+                            _logger.LogInformation($"Contact :: {paymentEntity.contact}");
+                            if (!string.IsNullOrWhiteSpace(paymentEntity.contact))
+                                await _whatsAppNotificationService.SendWhatAppNotification(paymentEntity.contact, WhatsAppMsgTemplate.received_template);
                             return true;
                         }
                     }

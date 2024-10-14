@@ -27,10 +27,11 @@ namespace VibeSync.DAL.Services
         {
             try
             {
+                _logger.LogInformation($"inside SendWhatAppNotification :: {phoneNumber} :: template :: {msgTemplate}");
                 if (phoneNumber.StartsWith('+'))
                     phoneNumber = phoneNumber.Substring(3);
                 var payload = GetPayload(phoneNumber, msgTemplate.ToString());
-                var jsonString = System.Text.Json.JsonSerializer.Serialize(payload, new JsonSerializerOptions
+                var jsonString = JsonSerializer.Serialize(payload, new JsonSerializerOptions
                 {
                     WriteIndented = true // Makes the JSON more readable (optional)
                 });

@@ -150,7 +150,13 @@ namespace VibeSync.DAL.Handler
                     var items = jsonObject["data"]["results"].ToString();
                     songDetails = JsonConvert.DeserializeObject<List<SongDetails>>(items);
                     var language = new List<string> { "english", "hindi", "punjabi" };
-                    songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000);
+                    //songDetails.Where(x => language.Contains(x.Language) && x.PlayCount != null && x.PlayCount > 50000);
+
+                    songDetails = songDetails
+                                .Where(x => language.Contains(x.Language.ToLower()) // Ensure case-insensitive match
+                                            && x.PlayCount != null
+                                            && x.PlayCount > 50000)
+                                .ToList();
                     break; // Break out of the loop if successful
                 }
                 catch (HttpRequestException ex) when (ex.StatusCode != System.Net.HttpStatusCode.OK && ex.StatusCode != System.Net.HttpStatusCode.NoContent)

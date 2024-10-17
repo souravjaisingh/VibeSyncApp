@@ -1,7 +1,3 @@
-
-
-
-
 .screen-announcement-container {
     display: flex;
     align-items: center; /* Vertically center-align elements */
@@ -18,15 +14,6 @@
     display: flex;
     align-items: center; /* Vertically align upload section content */
 }
-
-
-
-
-
-
-
-
-/*awgterw*/
 textarea.mic-announcement-message,
 textarea.screen-announcement-message {
     width: 95%;
@@ -38,55 +25,27 @@ textarea.screen-announcement-message {
     font-size: 16px;
     transition: border-color 0.3s;
 }
-
     textarea.mic-announcement-message:focus,
     textarea.screen-announcement-message:focus {
         border-color: #3498db;
     }
-
 .screen-announcement-upload-section {
     margin-top: 10px;
     display: block;
     justify-content: center;
     align-items: center;
 }
-/*
-.upload-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border: 2px dashed #3498db;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: border-color 0.3s;
-}
 
-    .upload-container:hover {
-        border-color: #2980b9;
-    }*/
-
-/*.upload-icon {
-    font-size: 24px;
-    margin-right: 10px;
-    color: #3498db;
-}
-*/
 .upload-text {
     font-size: 16px;
     color: #3498db;
     cursor: pointer;
 }
+.upload-text:hover {
+    text-decoration: underline;
+}
 
-    .upload-text:hover {
-        text-decoration: underline;
-    }
-
-
-
-/*dsgdv*/
-
-
+/*  add ends  */
 .song-details {
     display: flex;
     flex-direction: column;
@@ -95,8 +54,6 @@ textarea.screen-announcement-message {
     background-attachment: scroll;
     background-size: cover;
 }
-
-
 
 .song-details-container{
     display:flex;

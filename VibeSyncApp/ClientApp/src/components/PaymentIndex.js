@@ -66,12 +66,13 @@ function PaymentIndex() {
     const [successMessage, setSuccessMessage] = useState("");
     const [showInfoBox, setShowInfoBox] = useState(false); // State variable to track visibility of info box
     const [userId, setUserId] = useState(localStorage.getItem('userId'));
-
     const [screenAnnouncementMessage, setScreenAnnouncementMessage] = useState("");
-    const [isScreenAnnouncement, setIsScreenAnnouncement] = useState(false)
-    const [fileUpload, setFileUpload] = useState(null);
-    const [announcement, setAnnouncement] = useState('');
 
+    const [isScreenAnnouncement, setIsScreenAnnouncement] = useState(false)
+
+    const [fileUpload, setFileUpload] = useState(null);
+
+    const [announcement, setAnnouncement] = useState('');
 
     const [gstAmount, setGstAmount] = useState(0);
     const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
@@ -142,19 +143,6 @@ function PaymentIndex() {
             otpReturnMessage // optional
         );
     }
-
-
-
-
-    useEffect(() => {
-        console.log("Mic Announcement Message:", micAnnouncementMessage);
-        console.log("Screen Announcement Message:", screenAnnouncementMessage);
-    }, [micAnnouncementMessage, screenAnnouncementMessage]);
-
-    //const handleInputChange = (e) => {
-    //    setAnnouncement(e.target.value);  
-    //};
-
 
     function startResendTimer() {
         document.getElementById('resendOtp').style.opacity = 0.6;
@@ -469,44 +457,70 @@ function PaymentIndex() {
     }, []);
 
 
-
-
+    //handel button click 
     const handleButtonClick = (message) => {
+
         // Update the state when a button is clicked
+
         setScreenAnnouncementMessage('');
+
         setMicAnnouncementMessage(message);
+
         if (localError) setLocalError(""); // Clear error message if there is one
+
     };
+
 
     const handleButtonClick1 = (message) => {
-        // Update the state when a button is clicked
-        setMicAnnouncementMessage('');
-        setScreenAnnouncementMessage(message);
-        if (localError) setLocalError(""); // Clear error message if there is one
-    };
 
+        // Update the state when a button is clicked
+
+        setMicAnnouncementMessage('');
+
+        setScreenAnnouncementMessage(message);
+
+        if (localError) setLocalError(""); // Clear error message if there is one
+
+    };
     // Function to handle Pay button click
     const handlePayButtonClick = async () => {
         setLoading(true);
         setLocalError("");
 
         // Log the announcement state
+
         console.log("isMicAnnouncement:", isMicAnnouncement);
+
         console.log("isScreenAnnouncement:", isScreenAnnouncement);
 
+
+
         // Check if mic announcement message is empty
+
         if (isSpecialAnnouncement) {
+
             if (isMicAnnouncement && !micAnnouncementMessage) {
+
                 setLocalError("Please give a message for mic announcement!");
+
                 setLoading(false);
+
                 return; // Stop execution if mic message is not provided
+
             }
 
+
+
             if (isScreenAnnouncement && !screenAnnouncementMessage) {
+
                 setLocalError("Please give a message for screen announcement!");
+
                 setLoading(false);
+
                 return; // Stop execution if screen message is not provided
+
             }
+
         }
 
         // Load the Razorpay script
@@ -514,11 +528,9 @@ function PaymentIndex() {
         const parsedAmount = parseFloat(
             isPromoApplied ? Math.max(amount / 2, amount - 250) : amount
         );
-
         if (isNaN(parsedAmount)) {
             setError(true);
             setErrorMessage("Invalid amount");
-            setLoading(false);
             return;
         }
 
@@ -555,56 +567,81 @@ function PaymentIndex() {
             albumImage = rowData.image[0].url;
         }
 
+
         const formData = new FormData();
 
+
         formData.append("amount", totalAmountWithGst * 100);
+
         formData.append("userId", localStorage.getItem("userId"));
+
         formData.append("TotalAmount", isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
+
         formData.append("EventId", rowData.eventId);
+
         formData.append("DjId", rowData.djId);
+
         formData.append("SongId", rowData.songId);
+
         formData.append("SongName", rowData.name);
+
         formData.append("ArtistId", artistId);
+
         formData.append("ArtistName", artistName);
+
         formData.append("AlbumName", albumName);
+
         formData.append("AlbumImage", albumImage);
 
+
+
         // Append Mic Announcement if present
+
         if (micAnnouncementMessage) {
+
             formData.append("MicAnnouncement", micAnnouncementMessage);
+
         }
+
+
 
         // Append Screen Announcement and Image if present
+
         if (screenAnnouncementMessage) {
+
             formData.append("ScreenAnnouncement", screenAnnouncementMessage || '');
 
+
+
             // Ensure that fileUpload (image) is only sent if it's part of the screen announcement
+
             if (fileUpload) {
+
                 formData.append("ScreenFileUpload", fileUpload);
+
             }
+
         }
+
+
 
         console.log("Payment Initiation FormData:", formData);
+
         // ** Log formData content **
+
         console.log("FormData being sent to the server:");
+
         for (let pair of formData.entries()) {
+
             console.log(pair[0] + ': ' + pair[1]);
+
         }
-
-
 
         try {
             const res = await GetPaymentInitiationDetails(formData);
             console.log("Payment initiation response:", res);
-
             setPaymentInitiationData(res);
 
-            //// Construct description based on mic or screen announcement
-            //const description = rowData.isMicAnnouncement
-            //    ? "Mic announcement request"
-            //    : rowData.isScreenAnnouncement
-            //        ? "Screen announcement request"
-            //        : "Song request"; // Default to Song Request
 
             // Dynamically construct the description based on announcements
             let description = "Song request";  // Default to Song Request
@@ -617,15 +654,15 @@ function PaymentIndex() {
             }
 
 
-
-
             const options = {
                 key: RazorPayAppId,
                 amount: parsedAmount * 100,
                 currency: "INR",
                 name: "VibeSync",
-                //description: rowData.isMicAnnouncement ? "Mic announcement request" : "Song request",
-                description: description,  // Use the dynamically constructed description
+                description: rowData.isMicAnnouncement
+                    ? "Mic announcement request"
+                    : "Song request",
+                image: VBLogo,
                 image: VBLogo,
                 order_id: res.orderId,
                 handler: function (response) {
@@ -636,6 +673,7 @@ function PaymentIndex() {
                     });
                     setShowSuccessMessage(true);
                     navigate("/songhistory");
+                    //upsertPaymentDetails(res.orderId, response.razorpay_payment_id);
                 },
                 prefill: {
                     name: res.userName,
@@ -649,10 +687,8 @@ function PaymentIndex() {
                 },
             };
 
-
             const rzp = new window.Razorpay(options);
             rzp.on("payment.failed", function (response) {
-                console.error("Payment failed:", response);
                 setPaymentStatus({
                     error: {
                         code: response.error.code,
@@ -668,8 +704,6 @@ function PaymentIndex() {
 
             rzp.open();
         } catch (error) {
-            console.error("Error during payment initiation:", error.message);
-
             // Handle error locally, preventing it from reaching the global handler
             setLocalError(error.message);
             console.error(error);
@@ -694,65 +728,118 @@ function PaymentIndex() {
     //    AlbumImage: rowData.album.images[0].url
     //};
 
-    // Upsert payment details
-    // Upsert payment details
     async function upsertPaymentDetails(orderId, payId) {
+
         try {
+
             const formData = new FormData();
 
+
+
             formData.append("UserId", localStorage.getItem("userId"));
+
             formData.append("OrderId", orderId);
+
             formData.append("TotalAmount", isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
+
             formData.append("PaymentId", payId);
+
             formData.append("EventId", rowData.eventId);
+
             formData.append("DjId", rowData.djId);
 
+
+
             // Check for mic announcement
+
             if (rowData.isMicAnnouncement) {
+
                 formData.append("MicAnnouncement", micAnnouncementMessage);
+
             }
+
+
+
 
             // Check for screen announcement
+
             if (rowData.isScreenAnnouncement) {
+
                 formData.append("ScreenAnnouncement", screenAnnouncementMessage || '');
 
+
+
                 // Append the image file if present for screen announcement
+
                 if (fileUpload) {
+
                     formData.append("ScreenFileUpload", fileUpload);
+
                 }
+
             }
+
+
 
             // If neither mic nor screen announcement, treat it as a song request
+
             if (!rowData.isMicAnnouncement && !rowData.isScreenAnnouncement) {
+
                 formData.append("SongId", rowData.songId);
+
                 formData.append("SongName", rowData.name);
+
                 formData.append("ArtistId", rowData.artists[0].id);
+
                 formData.append("ArtistName", rowData.artists[0].name);
+
                 formData.append("AlbumName", rowData.album.name);
+
                 formData.append("AlbumImage", rowData.album.images[0].url);
+
             }
+
+
 
             // Log form data for debugging
+
             console.log("FormData being sent to the server:");
+
             for (let pair of formData.entries()) {
+
                 console.log(`${pair[0]}: ${pair[1]}`);
+
             }
 
+
+
             // Send formData to server
+
             const res = await UpsertPayment(formData);
 
+
+
             // Navigate to song history after successful payment
+
             navigate("/songhistory");
+
         } catch (error) {
+
             // Handle error
+
             setError(true); // Assuming setError is a state variable to manage errors
+
             setErrorMessage(error.message); // Assuming setErrorMessage is a state variable to set error messages
 
-            // Log error for debugging
-            console.error("Error in upsertPaymentDetails:", error);
-        }
-    }
 
+
+            // Log error for debugging
+
+            console.error("Error in upsertPaymentDetails:", error);
+
+        }
+
+    }
 
     // Function to handle form submission
     const handleSubmit = async (e) => {
@@ -793,8 +880,7 @@ function PaymentIndex() {
                                 className="mic-announcement-button"
                                 onClick={() => {
                                     setIsMicAnnouncement(true);
-                                    setIsScreenAnnouncement(false); // Deactivate screen announcement
-                                }}
+                                    setIsScreenAnnouncement(false);                                 }}
                             >
                                 <img src="images/mic2.png" />
                                 <p>Mic Announcement</p>
@@ -802,13 +888,12 @@ function PaymentIndex() {
                                     className="check-box"
                                     src={
                                         isMicAnnouncement
-                                            ? "images/tick_checkbox.png" // Checked state
-                                            : "images/untick_checkbox.png" // Unchecked state
+                                            ? "images/tick_checkbox.png" 
+                                            : "images/untick_checkbox.png"
                                     }
                                 />
                             </div>
                         )}
-
                         {isMicAnnouncement && rowData.acceptingRequests && (
                             <>
                                 <div className="mic-announcement-buttons">
@@ -822,7 +907,6 @@ function PaymentIndex() {
                                         Congratulations
                                     </button>
                                 </div>
-
                                 <textarea
                                     id="message-mic-text"
                                     placeholder="Type your message.."
@@ -830,9 +914,10 @@ function PaymentIndex() {
                                     className="mic-announcement-message"
                                     value={micAnnouncementMessage}
                                     onChange={(e) => {
-                                        setScreenAnnouncementMessage(""); // Clear screen message
+                                        setMicAnnouncementMessage('');
+                                        setScreenAnnouncementMessage(''); 
                                         setMicAnnouncementMessage(e.target.value);
-                                        if (localError) setLocalError(""); // Clear error message on typing
+                                        if (localError) setLocalError(""); 
                                     }}
                                 />
                                 <div className="subheading-payment">
@@ -846,13 +931,12 @@ function PaymentIndex() {
                                 )}
                             </>
                         )}
-
                         {rowData.displayRequests && (
                             <div
                                 className="mic-announcement-button"
                                 onClick={() => {
-                                    setIsScreenAnnouncement(true); // Activate screen announcement
-                                    setIsMicAnnouncement(false); // Deactivate mic announcement
+                                    setIsScreenAnnouncement(true); 
+                                    setIsMicAnnouncement(false); 
                                 }}
                             >
                                 <img src="images/screen.png" />
@@ -867,7 +951,6 @@ function PaymentIndex() {
                                 />
                             </div>
                         )}
-
                         {isScreenAnnouncement && rowData.displayRequests && (
                             <>
                                 <div className="mic-announcement-buttons">
@@ -881,7 +964,6 @@ function PaymentIndex() {
                                         Congratulations
                                     </button>
                                 </div>
-
                                 <div className="screen-announcement-container">
                                     <textarea
                                         id="message-screen-text"
@@ -890,12 +972,12 @@ function PaymentIndex() {
                                         className="screen-announcement-message"
                                         value={screenAnnouncementMessage}
                                         onChange={(e) => {
+                                            setScreenAnnouncementMessage(""); 
                                             setMicAnnouncementMessage(""); // Clear mic message
                                             setScreenAnnouncementMessage(e.target.value);
                                             if (localError) setLocalError(""); // Clear error message on typing
                                         }}
                                     />
-
                                     <div className="screen-announcement-upload-section">
                                         <div className="upload-container">
                                             <input
@@ -907,15 +989,12 @@ function PaymentIndex() {
                                                     console.log("File uploaded:", e.target.files[0]);
                                                 }}
                                             />
-
-                                            {/* Trigger for file upload */}
                                             <div
                                                 className="upload-icon"
                                                 onClick={() => document.getElementById("file-upload").click()}
                                             >
                                                 &#128190;
                                             </div>
-
                                             <div
                                                 className="upload-text"
                                                 onClick={() => document.getElementById("file-upload").click()}
@@ -929,8 +1008,6 @@ function PaymentIndex() {
                         )}
                     </div>
                 ) : (
-              
-
                     <>
                         <div className="song-details-container">
                             <img

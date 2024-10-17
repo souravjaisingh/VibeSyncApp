@@ -1,3 +1,92 @@
+
+
+
+
+.screen-announcement-container {
+    display: flex;
+    align-items: center; /* Vertically center-align elements */
+    gap: 10px; /* Add space between textarea and upload section */
+}
+
+.screen-announcement-message {
+    flex-grow: 1; /* Allow textarea to take up available space */
+    height: 100px; /* Set a height for the textarea */
+    resize: none; /* Prevent manual resizing */
+}
+
+.screen-announcement-upload-section {
+    display: flex;
+    align-items: center; /* Vertically align upload section content */
+}
+
+
+
+
+
+
+
+
+/*awgterw*/
+textarea.mic-announcement-message,
+textarea.screen-announcement-message {
+    width: 95%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+    textarea.mic-announcement-message:focus,
+    textarea.screen-announcement-message:focus {
+        border-color: #3498db;
+    }
+
+.screen-announcement-upload-section {
+    margin-top: 10px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+/*
+.upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 2px dashed #3498db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+    .upload-container:hover {
+        border-color: #2980b9;
+    }*/
+
+/*.upload-icon {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #3498db;
+}
+*/
+.upload-text {
+    font-size: 16px;
+    color: #3498db;
+    cursor: pointer;
+}
+
+    .upload-text:hover {
+        text-decoration: underline;
+    }
+
+
+
+/*dsgdv*/
+
+
 .song-details {
     display: flex;
     flex-direction: column;

@@ -945,8 +945,8 @@ function PaymentIndex() {
                                     className="check-box"
                                     src={
                                         isScreenAnnouncement
-                                            ? "images/tick_checkbox.png" // Checked state
-                                            : "images/untick_checkbox.png" // Unchecked state
+                                            ? "images/tick_checkbox.png" 
+                                            : "images/untick_checkbox.png" 
                                     }
                                 />
                             </div>

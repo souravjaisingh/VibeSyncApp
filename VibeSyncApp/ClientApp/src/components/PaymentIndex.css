@@ -35,7 +35,6 @@ textarea.screen-announcement-message {
     justify-content: center;
     align-items: center;
 }
-
 .upload-text {
     font-size: 16px;
     color: #3498db;
@@ -44,7 +43,6 @@ textarea.screen-announcement-message {
 .upload-text:hover {
     text-decoration: underline;
 }
-
 /*  add ends  */
 .song-details {
     display: flex;
@@ -63,7 +61,6 @@ textarea.screen-announcement-message {
     max-width: 34rem;
     margin: auto;
 }
-
 
 .song-details-text{
     color:#39125C;

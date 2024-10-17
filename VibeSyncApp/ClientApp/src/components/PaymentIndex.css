@@ -43,7 +43,7 @@ textarea.screen-announcement-message {
 .upload-text:hover {
     text-decoration: underline;
 }
-/*  add ends  */
+/*  add ends   */
 .song-details {
     display: flex;
     flex-direction: column;

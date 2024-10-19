@@ -22,7 +22,6 @@ import { messages } from "./Constants";
 import {  loginWithOTPHelper } from '../Helpers/UserHelper';
 import loadOTPScript from './Msg91OTP';
 
-
 function PaymentIndex() {
   const { error, setError } = useContext(MyContext);
   const { errorMessage, setErrorMessage } = useContext(MyContext);

@@ -21,4 +21,4 @@ export async function RefundPayment(data){
 
 export async function isPromoCodeAvailable(){
     return handleAPIRequest('Payment/IsPromocodeApplicable', 'GET');
-}
+} 

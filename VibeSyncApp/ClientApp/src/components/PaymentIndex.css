@@ -38,8 +38,8 @@ textarea.screen-announcement-message {
     justify-content: center;
     align-items: center;
 }
-/*add ends*/
 
+/*add ends*/
 .song-details {
     display: flex;
     flex-direction: column;

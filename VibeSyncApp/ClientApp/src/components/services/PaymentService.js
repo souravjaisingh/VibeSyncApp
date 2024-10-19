@@ -4,7 +4,7 @@ import { handleAPIRequest } from './UserService';
 // Other functions you provided
 
 export async function GetPaymentInitiationDetails(data) {
-    return handleAPIRequest('Payment/GetPaymentOrderIdUserDetails', 'POST', data,true);
+    return handleAPIRequest('Payment/GetPaymentOrderIdUserDetails', 'POST', data);
 }
 
 export async function UpsertPayment(data) {

@@ -465,7 +465,7 @@ function PaymentIndex() {
    if (localError) setLocalError(""); 
   };
 
-  // Function to handle Pay button click
+  //Function to handle Pay button click
   const handlePayButtonClick = async () => {
     setLoading(true);
     setLocalError("");

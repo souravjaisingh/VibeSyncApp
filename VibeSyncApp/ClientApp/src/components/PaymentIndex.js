@@ -53,6 +53,10 @@ function PaymentIndex() {
   const [isSpecialAnnouncement, setIsSpecialAnnouncement] = useState(true);
   const [isMicAnnouncement, setIsMicAnnouncement] = useState(true);
   const [micAnnouncementMessage, setMicAnnouncementMessage] = useState(""); // New state for mic announcement message
+  const [screenAnnouncementMessage, setScreenAnnouncementMessage] = useState("");
+  const [isScreenAnnouncement, setIsScreenAnnouncement] = useState(false)
+  const [fileUpload, setFileUpload] = useState(null);
+  const [announcement, setAnnouncement] = useState('');
   const [localError, setLocalError] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showGoogleLogin, setShowGoogleLogin] = useState(false);
@@ -450,19 +454,44 @@ function PaymentIndex() {
       });
   }, []);
 
-  // Function to handle Pay button click
+  const handleButtonClick = (message) => {
+    setScreenAnnouncementMessage('');
+    setMicAnnouncementMessage(message);
+    if (localError) setLocalError("");
+  };
+  const handleButtonClick1 = (message) => {
+   setMicAnnouncementMessage('');
+   setScreenAnnouncementMessage(message);
+   if (localError) setLocalError(""); 
+  };
+
+  //Function to handle Pay button click
   const handlePayButtonClick = async () => {
     setLoading(true);
     setLocalError("");
 
-    // Check if mic announcement message is empty
-    if (isSpecialAnnouncement && !micAnnouncementMessage) {
-        setLocalError("Please give a message for announcement!");
-        setLoading(false);
-      console.log("Inside this function");
-      return; // Stop execution if message is not provided
-    }
-
+      // Log the announcement state
+      console.log("isMicAnnouncement:", isMicAnnouncement);
+      console.log("isScreenAnnouncement:", isScreenAnnouncement);
+      // Check if mic announcement message is empty
+      //if (isSpecialAnnouncement && !micAnnouncementMessage) {
+      //    setLocalError("Please give a message for announcement!");
+      //    setLoading(false);
+      //  console.log("Inside this function");
+      //  return; // Stop execution if message is not provided
+      //}
+      if (isSpecialAnnouncement) {
+          if (isMicAnnouncement && !micAnnouncementMessage) {
+              setLocalError("Please give a message for mic announcement!");
+              setLoading(false);
+              return; // Stop execution if mic message is not provided
+          }
+          if (isScreenAnnouncement && !screenAnnouncementMessage) {
+              setLocalError("Please give a message for screen announcement!");
+              setLoading(false);
+              return;
+          }
+      }
     // Load the Razorpay script
     // Once the script is loaded, proceed with payment initiation
     const parsedAmount = parseFloat(
@@ -507,33 +536,51 @@ function PaymentIndex() {
       albumImage = rowData.image[0].url;
     }
 
-    const obj = {
-      amount: totalAmountWithGst * 100,
-      userId: localStorage.getItem("userId"),
-      TotalAmount: isPromoApplied ? Math.max(amount / 2, amount - 250) : amount,
-      EventId: rowData.eventId,
-      DjId: rowData.djId,
-      SongId: rowData.songId,
-      SongName: rowData.name,
-      ArtistId: artistId,
-      ArtistName: artistName,
-      AlbumName: albumName,
-      AlbumImage: albumImage,
-      MicAnnouncement: micAnnouncementMessage,
-    };
+      const formData = new FormData();
+      formData.append("amount", totalAmountWithGst * 100);
+      formData.append("userId", localStorage.getItem("userId"));
+      formData.append("TotalAmount", isPromoApplied ? Math.max(amount / 2, amount - 250) : amount);
+      formData.append("EventId", rowData.eventId);
+      formData.append("DjId", rowData.djId);
+      formData.append("SongId", rowData.songId);
+      formData.append("SongName", rowData.name);
+      formData.append("ArtistId", artistId);
+      formData.append("ArtistName", artistName);
+      formData.append("AlbumName", albumName);
+      formData.append("AlbumImage", albumImage);
+      if (micAnnouncementMessage) {
+          formData.append("MicAnnouncement", micAnnouncementMessage);
+      }
+      if (screenAnnouncementMessage) {
+          formData.append("ScreenAnnouncement", screenAnnouncementMessage || '');
+          if (fileUpload) {
+              formData.append("ScreenFileUpload", fileUpload);
+          }
+      }
+      console.log("Payment Initiation FormData:", formData);
+      console.log("FormData being sent to the server:");
+      for (let pair of formData.entries()) {
+          console.log(pair[0] + ': ' + pair[1]);
+      }
 
     try {
-      const res = await GetPaymentInitiationDetails(obj);
-      setPaymentInitiationData(res);
-
+        const res = await GetPaymentInitiationDetails(formData);
+        setPaymentInitiationData(res);
+        // Dynamically construct the description based on announcements
+        let description = "Song request";  // Default to Song Request
+        if (micAnnouncementMessage && screenAnnouncementMessage) {
+            description = "Mic and Screen announcement request";
+        } else if (micAnnouncementMessage) {
+            description = "Mic announcement request";
+        } else if (screenAnnouncementMessage) {
+            description = "Screen announcement request";
+        }
       const options = {
         key: RazorPayAppId,
         amount: parsedAmount * 100,
         currency: "INR",
         name: "VibeSync",
-        description: rowData.isMicAnnouncement
-          ? "Mic announcement request"
-          : "Song request",
+        description: description,
         image: VBLogo,
         image: VBLogo,
         order_id: res.orderId,
@@ -672,40 +719,21 @@ function PaymentIndex() {
             {rowData.acceptingRequests && (
               <div
                 className="mic-announcement-button"
-                onClick={() => setIsMicAnnouncement(true)}
-              >
+                onClick={() => {
+                setIsMicAnnouncement(true);
+                setIsScreenAnnouncement(false);
+                }}>
                 <img src="images/mic2.png" />
                 <p>Mic Announcement</p>
-                <img className="check-box" src="images/tick_checkbox.png" />
+                <img className="check-box" src={isMicAnnouncement ? "images/tick_checkbox.png" : "images/untick_checkbox.png"} />
               </div>
             )}
             {rowData.acceptingRequests && isMicAnnouncement && (
               <>
                 <div className="mic-announcement-buttons">
-                  <button
-                    onClick={() =>
-                      (document.getElementById("message-mic-text").value =
-                        "Happy Birthday")
-                    }
-                  >
-                    Happy Birthday
-                  </button>
-                  <button
-                    onClick={() =>
-                      (document.getElementById("message-mic-text").value =
-                        "Happy Anniversary")
-                    }
-                  >
-                    Happy Anniversary
-                  </button>
-                  <button
-                    onClick={() =>
-                      (document.getElementById("message-mic-text").value =
-                        "Congratulations")
-                    }
-                  >
-                    Congratulations
-                  </button>
+                    <button onClick={() => handleButtonClick("Happy Birthday")}>Happy Birthday</button>
+                    <button onClick={() => handleButtonClick("Happy Anniversary")}>Happy Anniversary</button>
+                    <button onClick={() => handleButtonClick("Congratulations")}>Congratulations</button>
                 </div>
 
                 <textarea
@@ -715,6 +743,7 @@ function PaymentIndex() {
                   className="mic-announcement-message"
                   value={micAnnouncementMessage}
                   onChange={(e) => {
+                    setScreenAnnouncementMessage(""); 
                     setMicAnnouncementMessage(e.target.value);
                     if (localError) setLocalError(""); // Clear error message on typing
                   }} // Update the mic announcement message
@@ -742,58 +771,44 @@ function PaymentIndex() {
             {rowData.displayRequests && (
               <div
                 className="mic-announcement-button"
-                onClick={() => setIsMicAnnouncement(true)}
-              >
+                onClick={() => { setIsMicAnnouncement(false); setIsScreenAnnouncement(true); }}>              >
                 <img src="images/screen.png" />
                 <p>Screen Announcement</p>
-                <img className="check-box" src="images/tick_checkbox.png" />
+                <img className="check-box" src={isScreenAnnouncement ? "images/tick_checkbox.png" : "images/untick_checkbox.png"} />
               </div>
             )}
-            {rowData.displayRequests && isMicAnnouncement && (
+                      {rowData.displayRequests && isScreenAnnouncement && (
               <>
                 <div className="mic-announcement-buttons">
-                  <button
-                    onClick={() =>
-                      (document.getElementById("message-screen-text").value =
-                        "Happy Birthday")
-                    }
-                  >
-                    Happy Birthday
-                  </button>
-                  <button
-                    onClick={() =>
-                      (document.getElementById("message-screen-text").value =
-                        "Happy Anniversary")
-                    }
-                  >
-                    Happy Anniversary
-                  </button>
-                  <button
-                    onClick={() =>
-                      (document.getElementById("message-screen-text").value =
-                        "Congratulations")
-                    }
-                  >
-                    Congratulations
-                  </button>
+                    <button onClick={() => handleButtonClick1("Happy Birthday")}>Happy Birthday</button>
+                    <button onClick={() => handleButtonClick1("Happy Anniversary")}>Happy Anniversary</button>
+                    <button onClick={() => handleButtonClick1("Congratulations")}>Congratulations</button>
                 </div>
-                <div className="screen-announcement-upload-section">
-                  <textarea
-                    id="message-screen-text"
-                    placeholder="Type your message.."
-                    maxLength="40"
-                    className="screen-announcement-message"
-                  />
-                  <div
-                    className="upload-container"
-                    onClick={() =>
-                      document.getElementById("file-upload").click()
-                    }
-                  >
-                    <div className="upload-icon">&#128190;</div>
-                    <div className="upload-text">Upload File</div>
-                    <input type="file" id="file-upload" />
-                  </div>
+                <div className="screen-announcement-container">
+                                  <textarea
+                                      id="message-screen-text"
+                                      placeholder="Type your message.."
+                                      maxLength="100"
+                                      className="screen-announcement-message"
+                                      value={screenAnnouncementMessage}
+                                      onChange={(e) => {
+                                          setMicAnnouncementMessage(""); setScreenAnnouncementMessage(e.target.value);
+                                          if (localError) setLocalError("");
+                                      }} />
+                                  <div className="screen-announcement-upload-section">
+                                      <div className="upload-container">
+                                          <input
+                                              type="file"
+                                              id="file-upload"
+                                              style={{ display: "none" }}
+                                              onChange={(e) => {
+                                                  setFileUpload(e.target.files[0]);
+                                                  console.log("File uploaded:", e.target.files[0]);
+                                              }} />
+                                          <div className="upload-icon" onClick={() => document.getElementById("file-upload").click()}>&#128190;</div>
+                                          <div className="upload-text" onClick={() => document.getElementById("file-upload").click()}>Upload File</div>
+                                      </div>
+                                  </div>
                 </div>
               </>
             )}

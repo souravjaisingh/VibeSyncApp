@@ -1,3 +1,44 @@
+.screen-announcement-container {
+    display: flex;
+    align-items: center; 
+    gap: 10px; 
+}
+
+.screen-announcement-message {
+    flex-grow: 1;
+    height: 100px; 
+    resize: none; 
+}
+
+.screen-announcement-upload-section {
+    display: flex;
+    align-items: center;
+}
+
+textarea.mic-announcement-message,
+textarea.screen-announcement-message {
+    width: 95%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+    textarea.mic-announcement-message:focus,
+    textarea.screen-announcement-message:focus {
+        border-color: #3498db;
+    }
+
+.screen-announcement-upload-section {
+    margin-top: 10px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+/*added*/
 .song-details {
     display: flex;
     flex-direction: column;

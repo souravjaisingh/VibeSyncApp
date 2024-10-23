@@ -72,6 +72,10 @@ function PaymentIndex() {
     const [totalAmountWithGst, setTotalAmountWithGst] = useState(0);
     const [originalBid, setoriginalBid] = useState(rowData.IsSpecialAnnouncement ? rowData.minimumBidForSpecialRequest : rowData.minimumBid);
 
+    //CREATING A COPY OF ORIGINAL BID AMOUNT
+    const doubledRequestAmount = originalBid * 2; 
+    const discountCopy = originalBid; 
+
     const phoneRegex = /^[6-9]\d{9}$/;
     const [mobileNo, setMobileNo] = useState(null);
     const [otp, setOtp] = useState(new Array(4).fill(""));
@@ -828,7 +832,7 @@ function PaymentIndex() {
           <div className="amount-selection-division">
             <p className="minimum-bid-container">
               <div>Request Amount</div>
-                          <div className="minimum-bid-value"> ₹{ originalBid}</div>
+                          <div className="minimum-bid-value"> ₹{doubledRequestAmount}</div>
             </p>
             {loginDiscount&&(<div className="gst-info">
               <div>Discount</div>
@@ -836,7 +840,12 @@ function PaymentIndex() {
                         ? Math.max(1, rowData.minimumBidForSpecialRequest)
                         : Math.max(1, rowData.minimumBid)
                }</div>
-            </div>)}
+               </div>)}
+              {/*added*/}
+             <div className="gst-info">
+                 <div>Discount (50%)</div>  {/*original Bid*/}
+             <div> -₹{discountCopy}</div> 
+             </div>
             <div className="gst-info">
               <div>GST (18%)</div>
               <div>₹{gstAmount}</div>
